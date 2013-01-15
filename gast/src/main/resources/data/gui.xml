@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<gui>
+	<class package="org.fao.gast.gui.panels"/>
+	<precon type="stopped">
+		<image>22x22/stop.png</image>
+		<tip>${1}</tip>
+	</precon>
+	
+	<precon type="restart">
+		<image>22x22/reload.png</image>
+		<tip>${2}</tip>
+	</precon>
+	
+	<precon type="running">
+		<image>22x22/launch.png</image>
+		<tip>${3}</tip>
+	</precon>
+	
+	<!-- ========================================================== -->
+	<!-- Configuration -->
+	<!-- ========================================================== -->
+
+	<preselected>dbms</preselected> <!-- form element selected at startup -->
+
+	<container>
+		<image>22x22/configure.png</image>
+		<label>${4}</label>
+		
+		<!-- DBMS - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>dbms</id>
+			<image>16x16/package_settings.png</image>
+			<label>${9}</label>
+			<title>${10}</title>
+			<class>config.dbms.MainPanel</class>
+			<description>
+				${11}
+			</description>
+			
+			<button>
+				<image>16x16/filesave.png</image>
+				<label>${7}</label>
+				<action>overwrite</action>
+			</button>
+			
+			<button>
+				<image>16x16/filesave.png</image>
+				<label>${8}</label>
+				<action>saveasnew</action>
+			</button>
+
+			<precon type="restart">
+				${45}
+			</precon>
+		</form>
+	</container>
+	
+</gui>

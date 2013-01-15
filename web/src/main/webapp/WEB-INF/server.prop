@@ -1,0 +1,16 @@
+#GeoNetwork opensource properties. These are also used by both gast and geonetwork at runtime
+#Mon, 30 Jul 2012 17:42:56 +0200
+
+version=2.9.0
+subVersion=SNAPSHOT
+release=2.9.0
+javaVersion=1.5.0
+jre_url=http\://java.sun.com/javase/downloads
+ant.build.javac.target=1.5
+buildDate=2012-07-30T17\:42\:56+0200
+date=1242301742
+day=30-7-2012
+OS=Compiled on Windows 7 (win)
+debugOn=on
+svn_revision=207
+svn_url=https\://eos.geocat.net/svn/agiv/agiv

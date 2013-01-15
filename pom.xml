@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.geonetwork-opensource</groupId>
+  <artifactId>geonetwork</artifactId>
+  <packaging>pom</packaging>
+  <version>2.8.0-RC0</version>
+  <name>GeoNetwork opensource</name>
+  <description>GeoNetwork opensource is a standards based, Free and 
+    Open Source catalog application to manage spatially referenced 
+    resources through the web.</description>
+  <url>http://geonetwork-opensource.org</url>
+  <scm>
+    <connection>
+      scm:svn:https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk
+    </connection>
+    <url>https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk</url>
+  </scm>
+  <inceptionYear>2003</inceptionYear>
+  <issueManagement>
+    <system>trac</system>
+    <url>http://trac.osgeo.org/geonetwork/report</url>
+  </issueManagement>
+  <mailingLists>
+    <mailingList>
+      <name>Users</name>
+      <post>geonetwork-users@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-users</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-users</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-users-f2013074.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Utilisateurs (fr)</name>
+      <post>geonetwork-users-fr@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-users-fr</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-users-fr</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-users-francophone-f3246912.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Usuarios (es)</name>
+      <post>geonetwork-usuarios-es@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-usuarios-es</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-usuarios-es</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-users-espa-ol-f3246989.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Dev</name>
+      <post>geonetwork-devel@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-devel</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-devel</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-developer-f2014756.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Commits</name>
+      <post>geonetwork-commit@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-commit</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-commit</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-commit-f2020497.html</archive>
+    </mailingList>
+  </mailingLists>
+  
+  <!-- TODO developer part-->
+  <developers>
+    <developer>
+      <name/>
+      <id/>
+      <organization/>
+      <organizationUrl/>
+      <email/>
+      <roles>
+        <role/>
+      </roles>
+      <timezone/>
+    </developer>
+  </developers>
+  
+  <licenses>
+    <license>
+      <name>General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+    </license>
+  </licenses>
+  
+  <build>
+    
+    <!-- =========================================================== -->
+    <!--     Plugin Management                                       -->
+    <!--     If a POM declares one of those plugins, then it         -->
+    <!--     will use the version specified here. Otherwise, those   -->
+    <!--     plugins are ignored.                                    -->
+    <!-- =========================================================== -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>yuicompressor-maven-plugin</artifactId>
+          <version>0.9</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.1-alpha-2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      
+      <!--     Compilation.                                        -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>  <!-- The -source argument for the Java compiler. -->
+          <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
+          <debug>true</debug>   <!-- Whether to include debugging information.   -->
+          <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
+					<excludes>
+						<exclude>**/trash/*.java</exclude>
+					</excludes>
+        </configuration>
+      </plugin>
+
+      <!-- resources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <!-- This plugin Allows to deploy several webapps into a specific container (ie. jetty) -->
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <configuration>
+          <container>
+            <containerId>jetty7x</containerId>
+            <type>embedded</type>
+            <log>${project.build.directory}/server-logs</log>
+            <output>${project.build.directory}/server-output</output>
+            <systemProperties>
+              <GEOSERVER_DATA_DIR>release/data/geoserver_data</GEOSERVER_DATA_DIR>
+	      <mime-mappings>web/target/geonetwork/WEB-INF/mime-types.properties</mime-mappings>
+            </systemProperties>
+          </container>
+          <configuration>
+            <home>${project.build.directory}/test-server</home>
+            <properties>
+              <!-- Cargo VMARGS are not working. FIXME -->
+              <cargo.jvmargs>-Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m</cargo.jvmargs>
+              <cargo.servlet.port>8080</cargo.servlet.port>
+            </properties>
+            <deployables>
+              <deployable>
+                <location>${project.build.directory}/../web/target/geonetwork.war</location>
+                <type>war</type>
+              </deployable>
+<!--              <deployable>
+                <location>${project.build.directory}/../intermap/target/intermap.war</location>
+                <type>war</type>
+              </deployable> -->
+              <deployable>
+                <location>${project.build.directory}/../geoserver/target/geoserver.war</location>
+                <type>war</type>
+              </deployable>
+            </deployables>
+          </configuration>
+        </configuration>
+      </plugin>
+
+      <!-- artifact assembly -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-5</version>
+        <configuration>
+          <descriptors>
+            <descriptor>release/zip-war.xml</descriptor>
+            <descriptor>release/bin.xml</descriptor>
+          </descriptors>
+          <finalName>geonetwork-${version}</finalName>
+          <outputDirectory>${project.build.directory}/release</outputDirectory>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <!-- =========================================================== -->
+  <!--     Dependency Management                                   -->
+  <!--     If a POM declares one of those dependencies, then it    -->
+  <!--     will use the version specified here. Otherwise, those   -->
+  <!--     dependencies are ignored.                               -->
+  <!-- =========================================================== -->
+  <dependencyManagement>
+    <dependencies>
+
+        <!-- rewrite url servletfilter -->
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
+      <!-- XML -->
+      <dependency>
+        <groupId>org.jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>1.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>xalan</artifactId>
+        <version>2.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>saxon</artifactId>
+        <version>9.1.0.8b-patch</version> 
+      </dependency>
+			<dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>saxon-dom</artifactId>
+        <version>9.1.0.8b</version>
+      </dependency>
+
+			<!-- universal character set detector -->
+			<dependency>
+				<groupId>com.googlecode.juniversalchardet</groupId>
+				<artifactId>juniversalchardet</artifactId>
+				<version>1.0.3</version>
+			</dependency>
+
+      <!-- Thesaurus stuff -->
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>openrdf-model</artifactId>
+        <version>1.2.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>openrdf-util</artifactId>
+        <version>1.2.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>sesame</artifactId>
+        <version>1.2.7</version>
+      </dependency>	  
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>rio</artifactId>
+        <version>1.0.9</version>
+      </dependency>
+      
+      <!-- PDF stuff: Managed by Mapfish -->
+      <!--dependency>
+        <groupId>com.lowagie</groupId>
+        <artifactId>itext</artifactId>
+        <version>2.0.6</version>
+      </dependency-->
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>fop</artifactId>
+        <version>0.95</version>
+      </dependency>
+     
+      <!-- Jetty stuff -->
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlet</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-webapp</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+
+      <!-- Apache -->
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+        <!-- 1.0.2 in Geonetwork -->
+      </dependency>
+      <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+      <dependency>
+        <groupId>commons-digester</groupId>
+        <artifactId>commons-digester</artifactId>
+        <version>1.6</version>
+      </dependency>
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-pool</groupId>
+				<artifactId>commons-pool</artifactId>
+				<version>1.5.5</version>
+			</dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>1.2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-email</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>xmlgraphics-commons</artifactId>
+        <version>1.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>avalon-framework</groupId>
+        <artifactId>avalon-framework-api</artifactId>
+        <version>4.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.avalon.framework</groupId>
+        <artifactId>avalon-framework-impl</artifactId>
+        <version>4.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>batik</groupId>
+        <artifactId>batik-ext</artifactId>
+        <version>1.6</version>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.13</version>
+        <!-- Same as the dependency in commons-logging -->
+      </dependency>
+      <dependency>
+        <groupId>commons-httpclient</groupId>
+        <artifactId>commons-httpclient</artifactId>
+        <version>3.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>xml-resolver</groupId>
+        <artifactId>xml-resolver</artifactId>
+        <version>1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-core</artifactId>
+        <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-analyzers</artifactId>
+        <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.lucene</groupId>
+          <artifactId>lucene-misc</artifactId>
+          <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.lucene</groupId>
+          <artifactId>lucene-queries</artifactId>
+          <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>pcj</groupId>
+          <artifactId>pcj</artifactId>
+          <version>1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jcs</groupId>
+        <artifactId>jcs</artifactId>
+        <version>1.3</version> <!-- TODO check version -->
+      </dependency>
+      <dependency>
+        <groupId>jfree</groupId>
+	<artifactId>jfreechart</artifactId>
+	<version>1.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>jfree</groupId>
+        <artifactId>jcommon</artifactId>
+        <version>1.0.15</version>
+      </dependency>
+			<!-- May be required to register connection unwrappers with 
+			     geotools
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>2.5.3</version>
+      </dependency>
+			-->
+ 
+      <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>2.5.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.dspace</groupId>
+        <artifactId>cql-java</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jzkit</groupId>
+        <artifactId>a2j</artifactId>
+        <version>2.0.4</version>
+      </dependency>
+      <dependency>
+        <groupId>marc4j</groupId>
+        <artifactId>marc4j</artifactId>
+        <version>2.3.1</version>
+      </dependency>
+      <dependency> 
+        <groupId>jdbm</groupId>
+     	<artifactId>jdbm</artifactId>
+     	<version>1.0</version>
+      </dependency>
+
+      <!-- Geotools and spatial search stuff -->
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-api</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-gml3</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-cql</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-shapefile</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-filter</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-extension</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-referencing</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-hsql</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-postgis</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-postgis</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-h2</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-sqlserver</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-mysql</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-db2</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-oracle</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>lizard</groupId>
+        <artifactId>lizard-tiff</artifactId>
+        <version>1.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-annotations</artifactId>
+        <version>3.2.0.ga</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.media</groupId>
+        <artifactId>jai_codec</artifactId>
+        <version>1.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>persistence-api</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>eu.medsea.mimeutil</groupId>
+        <artifactId>mime-util</artifactId>
+        <version>2.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>1.5.2</version>
+      </dependency>
+      <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+        <version>2.1.4</version>
+      </dependency>
+
+      <!-- Security stuff -->
+      <dependency>
+        <groupId>jsch</groupId>
+        <artifactId>jsch</artifactId>
+        <version>0.1.8</version> <!-- TODO check version, latest from public repository -->
+      </dependency>
+      <dependency>
+        <groupId>globus</groupId>
+        <artifactId>cog-jglobus</artifactId>
+        <version>1.2-060802</version>
+      </dependency>
+
+      <!-- svnkit stuff -->
+      <dependency>
+        <groupId>org.tmatesoft.svnkit</groupId>
+        <artifactId>svnkit</artifactId>
+        <version>1.3.6-v1</version>
+      </dependency>
+
+      <!-- Databased stuff -->
+      <dependency>
+        <groupId>mckoi</groupId>
+        <artifactId>mckoi</artifactId>
+        <version>1.0.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.3.152</version>
+      </dependency> 
+      <!-- Other stuff -->
+      <dependency>
+        <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
+        <artifactId>dlib</artifactId>
+        <version>1.0</version> <!-- FIXME totally unknown -->
+      </dependency>
+
+        <!-- Lib utils -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r08</version>
+        </dependency>
+
+        <!-- Monitoring libraries -->
+        <dependency>
+            <groupId>com.yammer.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yammer.metrics</groupId>
+            <artifactId>metrics-servlet</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yammer.metrics</groupId>
+            <artifactId>metrics-web</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yammer.metrics</groupId>
+            <artifactId>metrics-log4j</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <!-- Tests -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.6</version>
+        <!--<scope>test</scope>-->
+      </dependency>
+
+      <!-- should we had this as scope test?-->
+      <dependency>
+        <groupId>xmlunit</groupId>
+        <artifactId>xmlunit</artifactId>
+        <version>1.2</version>
+      </dependency>
+
+      <!-- db -->
+      <dependency>
+        <groupId>postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>8.4-701.jdbc3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgis</groupId>
+        <artifactId>postgis-jdbc</artifactId>
+        <version>1.3.3</version>
+      </dependency>
+      <!-- Postgres JDBC4 for Java 1.6 -->  
+      <!--dependency>
+        <groupId>postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>8.4-701.jdbc4</version>
+      </dependency-->
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.12</version>
+      </dependency>
+      <dependency>
+        <groupId>ojdbc</groupId>
+        <artifactId>ojdbc</artifactId>
+        <version>14</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.izpack</groupId>
+        <artifactId>izpack-standalone-compiler</artifactId>
+        <version>4.3.1</version>
+      </dependency>
+        <!-- language detection -->
+       <dependency>
+          <groupId>com.cybozu.labs</groupId>
+          <artifactId>langdetect</artifactId>
+          <version>1.0.0.0</version>
+      </dependency>
+        <dependency>
+            <groupId>net.arnx.jsonic</groupId>
+            <artifactId>jsonic</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <!-- end language detection -->
+    </dependencies>
+  </dependencyManagement>
+
+  <!-- =========================================================== -->
+  <!--     Dependencies to be inherited by all modules.            -->
+  <!-- =========================================================== -->
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <!-- The version number is specified above. -->
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom</artifactId>
+    </dependency>
+    <dependency> 
+      <groupId>jdbm</groupId>
+      <artifactId>jdbm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+     
+  </dependencies>
+
+  <!-- ================================================================== -->
+  <!--     Repositories. This is where Maven looks for dependencies. The  -->
+  <!--     Maven repository is implicit and doesn't need to be specified. -->
+  <!-- ================================================================== -->
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>geotools</id>
+      <name>Geotools repository</name>
+      <url>http://download.osgeo.org/webdav/geotools/</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>k-int</id>
+      <name>Developer k-int repository</name>
+      <url>http://developer.k-int.com/maven2/</url>
+    </repository>
+    
+    <!-- Local repository which allow to handle temporarly local dependencies 
+     // FIXME : Should be a remote repository -->
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>localGeoNetwork</id>
+      <name>GeoNetwork local repository</name>
+      <url>file://maven_repo</url>
+    </repository>
+
+		<repository>
+			<id>mvnrepository.com</id>
+			<name>Repository that has juniversalchardet</name>
+			<url>http://mvnrepository.com/artifact</url>
+		</repository>
+
+
+	<!-- Mapfish repository -->
+    <repository>
+      <id>org.mapfish</id>
+      <url>http://dev.mapfish.org/maven/repository</url>
+    </repository>
+
+     <repository>
+        <id>thus.ch</id>
+        <name>Patrick Valsecchi's repository</name>
+        <url>http://www.thus.ch/~patrick/maven</url>
+    </repository>
+
+		<!-- tmatesoft repo for svnkit -->
+     <repository>
+        <id>org.tmatesoft.svnkit</id>
+        <name>svnkit repository</name>
+        <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
+    </repository>
+
+      <!-- seasar repo, has jsonic - used by langdetect -->
+      <repository>
+          <id>maven.seasar.org</id>
+          <name>The Seasar Foundation Maven2 Repository</name>
+          <url>http://maven.seasar.org/maven2</url>
+      </repository>
+
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <name>oss.sonatype.org - github-releases</name>
+      <id>oss.sonatype.org-github-releases</id>
+      <url>http://oss.sonatype.org/content/repositories/github-releases</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <!-- =========================================================== -->
+  <!--     Modules for the build in approximate dependency order   -->
+  <!-- =========================================================== -->
+  <modules>
+    
+    <!-- Remove comment tag to include documentation in the build. 
+      Python and Latex are required to build the documentation. -->
+    
+<!--    <module>docs</module> -->
+
+    <module>cachingxslt</module>
+    <module>jeeves</module> 
+    <module>oaipmh</module>
+    <module>sde</module>
+    <module>web-client</module>
+    <module>web</module>
+    <module>geoserver</module>
+  </modules>
+  
+  <profiles>
+    <profile>
+      <id>itests</id>
+      <modules>
+        <module>web-itest</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>gast</id>
+      <activation>
+        <file>
+          <exists>gast/pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+    <module>gast</module>
+  </modules>
+    </profile>
+  </profiles>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>scp-repository.geonetwork-opensource.org</id>
+      <name>GeoNetwork opensource repositories</name>
+      <url>scpexe://TO DEFINED</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <properties>
+    <jetty.version>7.3.1.v20110307</jetty.version>
+    <geotools.version>2.7.4</geotools.version>
+    <lucene.version>3.0.2</lucene.version>
+  </properties>
+</project>
