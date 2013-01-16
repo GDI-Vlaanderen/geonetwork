@@ -1015,6 +1015,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      *  Display a metadata record in a new window in XML format
      *
+     *
      */
     metadataXMLShow: function(uuid, schema){
         // Default GeoNetwork XML service
@@ -1034,6 +1035,33 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var url = service + '?uuid=' + uuid;
         window.open(url, this.windowName, this.windowOption);
     },
+    /** api: method[metadataXMLSave]
+     *  :param uuid: ``String`` uuid of the metadata to display
+     *
+     *  Save a metadata record in XML format
+     *
+     *
+     */
+    metadataXMLSave: function(uuid, schema){
+        var save = "_save";
+        // Default GeoNetwork XML service
+        var service = this.services.mdXMLGet;
+
+        // ISO 19139 or ISO profil will be displayed in ISO19139
+        if (schema === 'iso19139') {
+            service = this.services.mdXMLGet19139 + save;
+        } else if (schema === 'dublin-core') {
+            service = this.services.mdXMLGetDC + save;
+        } else if (schema === 'fgdc') {
+            service = this.services.mdXMLGetFGDC + save;
+        } else if (schema === 'iso19115') {
+            service = this.services.mdXMLGet19115 + save; // Force ISO19115 record to 19139
+        }
+
+        var url = service + '?uuid=' + uuid;
+        location.replace(url);
+    },
+
     /** api: method[metadataXMLShow]
      *  :param uuid: ``String`` uuid of the metadata to dislay
      *

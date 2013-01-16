@@ -298,7 +298,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             handler: function(){
                 var id = this.record.get('uuid');
                 var schema = this.record.get('schema');
-                this.catalogue.metadataXMLShow(id, schema);
+                // change for AGIV: save xml directly, do not open in new window
+                //this.catalogue.metadataXMLShow(id, schema);
+                this.catalogue.metadataXMLSave(id, schema);
             },
             scope: this
         });
