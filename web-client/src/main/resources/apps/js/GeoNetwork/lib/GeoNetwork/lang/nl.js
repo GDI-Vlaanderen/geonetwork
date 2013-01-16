@@ -404,7 +404,7 @@ GeoNetwork.Lang.nl = {
     'deleteConfirm': "Bent u zeker dat u dit metadatarecord wil verwijderen?",
     'deleteRecordSuccess': "Metadataracord verwijderd.",
     'deleteRecordFailure': "Fout bij het verwijderen van het metadatarecord.",
-    'unlockRecordSuccess': 'Metadatarecord unlocked',
+    'unlockRecordSuccess': 'Editeersessie geannuleerd',
     'unlockRecordFailure': 'Er is een fout opgetreden bij het unlocken van het metadatarecord.',
     'advancedSearchOptions': "Geavanceerd zoeken",
     'relatedservices': "Gerelateerde service",
