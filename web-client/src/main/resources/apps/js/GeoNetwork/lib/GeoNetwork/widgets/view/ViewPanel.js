@@ -165,11 +165,13 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         return viewButton;
     },
     updateViewMenu: function(){
-        var modes = Ext.query('span.mode', this.body.dom), menu = [], i, j, e, cmpId = this.getId(), isSimpleModeActive = true;
-        menu.push([OpenLayers.i18n('simpleViewMode'), 'view-simple', isSimpleModeActive]);
-        
+// change for AGIV: no simple view
+//        var modes = Ext.query('span.mode', this.body.dom), menu = [], i, j, e, cmpId = this.getId(), isSimpleModeActive = true;
+//        menu.push([OpenLayers.i18n('simpleViewMode'), 'view-simple', isSimpleModeActive]);
+        var modes = Ext.query('span.mode', this.body.dom), menu = [], i, j, e, cmpId = this.getId(), isSimpleModeActive = false;
+
         this.printMode = this.currTab;
-        
+
         for (i = 0; i < modes.length; i++) {
             if (modes[i].firstChild) {
                 var id = modes[i].getAttribute('id');

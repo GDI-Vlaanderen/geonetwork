@@ -91,25 +91,27 @@
     <xsl:param name="title"/>
     <xsl:param name="menu"/>
     <xsl:param name="default"/>
-    <ul>
-      <li>
-        <span class="mode" id="{$default}"><xsl:value-of select="$title"/></span>
+    <xsl:if test="$default != 'inspire'">
         <ul>
-          <xsl:variable name="loc" select="/root/gui"/>
-          <xsl:for-each select="$menu/*">
-            <xsl:variable name="labelId" select="@label"/>
-            <xsl:variable name="labelText" select="$loc/strings/*[name(.) = $labelId]|$loc/schemas/*[name(.) = $schema]/strings/*[name(.) = $labelId]"/>
-            <xsl:call-template name="displayTab">
-              <xsl:with-param name="tab">
-                <xsl:value-of select="."/>
-              </xsl:with-param>
-              <xsl:with-param name="text" select="if ($labelText != '') then $labelText else $labelId"/>
-              <xsl:with-param name="tabLink"/>
-            </xsl:call-template>
-          </xsl:for-each>
+          <li>
+            <span class="mode" id="{$default}"><xsl:value-of select="$title"/></span>
+            <ul>
+              <xsl:variable name="loc" select="/root/gui"/>
+              <xsl:for-each select="$menu/*">
+                <xsl:variable name="labelId" select="@label"/>
+                <xsl:variable name="labelText" select="$loc/strings/*[name(.) = $labelId]|$loc/schemas/*[name(.) = $schema]/strings/*[name(.) = $labelId]"/>
+                <xsl:call-template name="displayTab">
+                  <xsl:with-param name="tab">
+                    <xsl:value-of select="."/>
+                  </xsl:with-param>
+                  <xsl:with-param name="text" select="if ($labelText != '') then $labelText else $labelId"/>
+                  <xsl:with-param name="tabLink"/>
+                </xsl:call-template>
+              </xsl:for-each>
+            </ul>
+          </li>
         </ul>
-      </li>
-    </ul>
+    </xsl:if>
   </xsl:template>
 
   <!--
