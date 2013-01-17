@@ -23,7 +23,7 @@ import java.util.Map;
  * key : string. Name of validation type. E.g. "xsd", "schematron-rules-iso", "schematron-rules-inspire"
  * value: array of 3 integers where
  *     value[0] : can be 1 or 0, meaning validation succeeded (1) or failed (0).
- *     value[1] : only applicable to schematron validation types. Total number of asserts is this validation.
+ *     value[1] : only applicable to schematron validation types. Total number of asserts in this validation.
  *     value[2] : only applicable to schematron validation types. Number of failed asserts in this validation.
  *
  * @author heikki doeleman
@@ -65,11 +65,6 @@ public class AGIVValidationHook extends AbstractValidationHook {
     @Override
     public void onValidate(Object... args) throws ValidationHookException {
         try {
-            System.out.println("! AGIVValidationHook onValidate (doing nothing)");
-
-            //new Exception().printStackTrace();
-            //System.out.println("ok ok ok");
-
 
             for(Object o : args) {
                 System.out.println("AGIVValidationHook onValidate arg: " + o.toString());
@@ -160,16 +155,16 @@ public class AGIVValidationHook extends AbstractValidationHook {
             if(xsdValid && schematronValid) {
                 String hierarchyLevel = getHierarchyLevel(metadata);
                 if(hierarchyLevel.equals("service")) {
-                    transformMd(dbms, context, metadataId, metadata, schema, SERVICE_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
+                    transformMd(metadata, schema, SERVICE_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
                 }
                 else if(hierarchyLevel.equals("dataset") || hierarchyLevel.equals("series")) {
-                    transformMd(dbms, context, metadataId, metadata, schema, DATASET_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
+                    transformMd(metadata, schema, DATASET_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
                 }
             }
             // not valid
             else {
                 // empty metadataStandardname and metadataStandardVersion
-                transformMd(dbms, context, metadataId, metadata, schema, EMPTY_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
+                transformMd(metadata, schema, EMPTY_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
             }
             System.out.println("***** result of logISO19115Compliance:\n" + Xml.getString(metadata));
             System.out.println("***** end result of logISO19115Compliance..\n");
@@ -209,10 +204,10 @@ public class AGIVValidationHook extends AbstractValidationHook {
             boolean inspireValid = schematronResults[0] == 1;
             System.out.println("AGIV validation hook: INSPIRE compliant? " + inspireValid);
             if(inspireValid) {
-                metadata = transformMd(dbms, context, metadataId, metadata, schema, ADD_INSPIRE_KEYWORD);
+                metadata = transformMd(metadata, schema, ADD_INSPIRE_KEYWORD);
             }
             else {
-                metadata = transformMd(dbms, context, metadataId, metadata, schema, REMOVE_INSPIRE_KEYWORD);
+                metadata = transformMd(metadata, schema, REMOVE_INSPIRE_KEYWORD);
             }
             System.out.println("***** result of inspireCompliance:\n" + Xml.getString(metadata));
             System.out.println("***** end result of inspireCompliance..\n");
@@ -252,10 +247,10 @@ public class AGIVValidationHook extends AbstractValidationHook {
         try {
             boolean inspireValid = schematronResults[0] == 1;
             if(inspireValid) {
-                metadata = transformMd(dbms, context, metadataId, metadata, schema, ADD_AGIV_KEYWORD);
+                metadata = transformMd(metadata, schema, ADD_AGIV_KEYWORD);
             }
             else {
-                metadata = transformMd(dbms, context, metadataId, metadata, schema, REMOVE_AGIV_KEYWORD);
+                metadata = transformMd(metadata, schema, REMOVE_AGIV_KEYWORD);
             }
             System.out.println("***** result of logAGIVCompliance:\n" + Xml.getString(metadata));
             System.out.println("***** end result of logAGIVCompliance..\n");
@@ -299,16 +294,12 @@ public class AGIVValidationHook extends AbstractValidationHook {
     }
 
     /**
-     *
-     * @param dbms
-     * @param context
-     * @param id
      * @param md
      * @param schema
      * @param styleSheet
      * @throws Exception
      */
-    private Element transformMd(Dbms dbms, ServiceContext context, String id, Element md, String schema, String styleSheet) throws Exception {
+    private Element transformMd(Element md, String schema, String styleSheet) throws Exception {
         System.out.println("AVH transforming with stylesheet " + styleSheet);
         //--- do an XSL  transformation
         styleSheet = dm.getSchemaDir(schema) + styleSheet;
@@ -327,7 +318,7 @@ public class AGIVValidationHook extends AbstractValidationHook {
         nsList.add(Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd"));
         nsList.add(Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco"));
         String level = Xml.selectString(metadata, "//gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue", nsList);
-        System.out.println("\n\n\n\n@@@@@@@@@@@@ getHierarchyLevel: " + level + "\n\n\n\n");
+        System.out.println("getHierarchyLevel: " + level);
         return level;
     }
 }

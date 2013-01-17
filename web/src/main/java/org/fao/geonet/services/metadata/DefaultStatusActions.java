@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.MailSender;
@@ -186,7 +187,12 @@ public class DefaultStatusActions implements StatusActions {
                         unchanged.add(mid);
                 }
 
-                if(statusChangeAllowed(currentStatus, status, mid)) {
+                // check if this is a template
+                MdInfo mdInfo = dm.getMetadataInfo(dbms, mid);
+                boolean isTemplate = mdInfo.template.equals(MdInfo.Template.TEMPLATE) || mdInfo.template.equals(MdInfo.Template.SUBTEMPLATE);
+
+                // templates need not be valid, other md must be valid to change status to approved
+                if(isTemplate || statusChangeAllowed(currentStatus, status, mid)) {
                     System.out.println("Change status of metadata " + mid + " from " + currentStatus + " to " + status);
                     if (status.equals(Params.Status.APPROVED)) {
                         setAllOperations(mid); //- this is a short cut that could be enabled
