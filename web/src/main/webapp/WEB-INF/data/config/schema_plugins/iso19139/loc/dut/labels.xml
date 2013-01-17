@@ -430,7 +430,7 @@
 	<!-- ==================================================== -->
     <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code">
         <label>Geografische beschrijving</label>
-        <description>Geografische beschrijving</description>
+        <description>Beschrijving van het geografisch gebied</description>
     </element>
 	  <element name="gmd:code" id="208.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code">
         <label>Unieke code</label>
