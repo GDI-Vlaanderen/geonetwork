@@ -1,0 +1,7 @@
+*.iml
+target
+.props
+.build
+*mini*.js
+installer/svn.properties
+*/schematron-rules-none.xsl

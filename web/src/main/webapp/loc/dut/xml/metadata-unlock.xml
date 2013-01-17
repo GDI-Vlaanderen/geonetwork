@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <heading>Metadata Unlock Confirmation</heading>
-    <message>Editeersessie werd geannuleerd van metadatarecord met ID </message>
+    <message>Editeersessie werd geannuleerd voor metadatarecord met ID </message>
 </strings>
