@@ -613,7 +613,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:denominator">
-		<label>Toepassingsschaal</label>
+		<label>Toepassingsschaal 1 : </label>
 		<description>De beoogde schaal waarop het bestand waarheidsgetrouw gebruikt mag worden. Dit moet een positief numeriek getal zijn.  (Dus u moet hier 10000 invoeren als de schaal 1:10000 betreft.)</description>
 	<condition>mandatory</condition>
 	</element>

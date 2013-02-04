@@ -307,7 +307,7 @@
 
     <!-- Display code and codespace in same section -->
     <xsl:template mode="iso19139"
-    match="gmd:RS_Identifier" priority="10.0">
+                  match="gmd:RS_Identifier" priority="10.0">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
 
@@ -315,29 +315,29 @@
         <xsl:choose>
             <xsl:when test="$edit=true()">
                 <tr><td colspan="2">
-                <table class="gn">
-                    <tbody>
-                        <tr>
-                            <td class="col">
-                                <table class="gn">
-                                    <xsl:apply-templates mode="iso19139" select="gmd:code">
-                                        <xsl:with-param name="schema"  select="$schema"/>
-                                        <xsl:with-param name="edit"   select="$edit"/>   
-                                    </xsl:apply-templates>
-                                </table>
-                            </td>
-                            <td class="col">
-                                <table class="gn">
-                                    <xsl:apply-templates mode="iso19139" select="gmd:codeSpace">
-                                         <xsl:with-param name="schema"  select="$schema"/>
-                                         <xsl:with-param name="edit"   select="$edit"/>
-                                    </xsl:apply-templates>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                  </table>
-              </td></tr>
+                    <table class="gn">
+                        <tbody>
+                            <tr>
+                                <td class="col">
+                                    <table class="gn">
+                                        <xsl:apply-templates mode="iso19139" select="gmd:code">
+                                            <xsl:with-param name="schema"  select="$schema"/>
+                                            <xsl:with-param name="edit"   select="$edit"/>
+                                        </xsl:apply-templates>
+                                    </table>
+                                </td>
+                                <td class="col">
+                                    <table class="gn">
+                                        <xsl:apply-templates mode="iso19139" select="gmd:codeSpace">
+                                            <xsl:with-param name="schema"  select="$schema"/>
+                                            <xsl:with-param name="edit"   select="$edit"/>
+                                        </xsl:apply-templates>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td></tr>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="iso19139String">
@@ -458,6 +458,21 @@
                 </xsl:for-each>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:decimal-format name="separateThousandsBySpace" decimal-separator="," grouping-separator="&#160;" />
+
+    <xsl:template mode="iso19139" match="gmd:denominator" priority="100">
+        <xsl:param name="schema" />
+        <xsl:param name="edit" />
+        <xsl:variable name="text">
+            <xsl:value-of select="format-number(gco:Integer, '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
+        </xsl:variable>
+        <xsl:apply-templates mode="simpleElement" select=".">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="text"   select="$text"/>
+        </xsl:apply-templates>
     </xsl:template>
 
     <xsl:template name="iso19139String">
@@ -1374,51 +1389,51 @@
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="edit"    select="$edit"/>
                     <xsl:with-param name="content">-->
-                        <tr><td colspan="2">
-                            <table class="gn">
-                                <tbody>
-                                    <tr>
-                                        <td class="col">
-                                            <table class="gn">
-                                                <xsl:apply-templates mode="simpleElement" select="gmd:date">
-                                                    <xsl:with-param name="schema"  select="$schema"/>
-                                                    <xsl:with-param name="edit"   select="$edit"/>
-                                                    <xsl:with-param name="text">
+                <tr><td colspan="2">
+                    <table class="gn">
+                        <tbody>
+                            <tr>
+                                <td class="col">
+                                    <table class="gn">
+                                        <xsl:apply-templates mode="simpleElement" select="gmd:date">
+                                            <xsl:with-param name="schema"  select="$schema"/>
+                                            <xsl:with-param name="edit"   select="$edit"/>
+                                            <xsl:with-param name="text">
 
-                                                        <xsl:variable name="ref" select="gmd:date/gco:DateTime/geonet:element/@ref|gmd:date/gco:Date/geonet:element/@ref"/>
+                                                <xsl:variable name="ref" select="gmd:date/gco:DateTime/geonet:element/@ref|gmd:date/gco:Date/geonet:element/@ref"/>
 
-                                                        <xsl:variable name="format">
-                                                            <xsl:choose>
-                                                                <xsl:when test="gmd:date/gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
-                                                                <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
-                                                            </xsl:choose>
-                                                        </xsl:variable>
+                                                <xsl:variable name="format">
+                                                    <xsl:choose>
+                                                        <xsl:when test="gmd:date/gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+                                                        <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
+                                                    </xsl:choose>
+                                                </xsl:variable>
 
-                                                        
-                                                        <xsl:call-template name="calendar">
-                                                            <xsl:with-param name="ref" select="$ref"/>
-                                                            <xsl:with-param name="date" select="gmd:date/gco:DateTime/text()|gmd:date/gco:Date/text()"/>
-                                                            <xsl:with-param name="format" select="$format"/>
-                                                        </xsl:call-template>
 
-                                                    </xsl:with-param>
-                                                </xsl:apply-templates>
-                                            </table>
-                                        </td>
-                                        <td class="col">
-                                            <table class="gn">
-                                                <xsl:apply-templates mode="iso19139" select="gmd:dateType">
-                                                     <xsl:with-param name="schema"  select="$schema"/>
-                                                     <xsl:with-param name="edit"   select="$edit"/>
-                                                </xsl:apply-templates>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                              </table>
-                        </td></tr>
-                    <!--</xsl:with-param>
-                </xsl:apply-templates>-->
+                                                <xsl:call-template name="calendar">
+                                                    <xsl:with-param name="ref" select="$ref"/>
+                                                    <xsl:with-param name="date" select="gmd:date/gco:DateTime/text()|gmd:date/gco:Date/text()"/>
+                                                    <xsl:with-param name="format" select="$format"/>
+                                                </xsl:call-template>
+
+                                            </xsl:with-param>
+                                        </xsl:apply-templates>
+                                    </table>
+                                </td>
+                                <td class="col">
+                                    <table class="gn">
+                                        <xsl:apply-templates mode="iso19139" select="gmd:dateType">
+                                            <xsl:with-param name="schema"  select="$schema"/>
+                                            <xsl:with-param name="edit"   select="$edit"/>
+                                        </xsl:apply-templates>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td></tr>
+                <!--</xsl:with-param>
+            </xsl:apply-templates>-->
 
             </xsl:when>
             <xsl:otherwise>
@@ -1429,7 +1444,7 @@
             </xsl:otherwise>
         </xsl:choose>
 
-    </xsl:template>    
+    </xsl:template>
 
     <xsl:template mode="iso19139" match="gmd:date[gco:DateTime|gco:Date]|gmd:editionDate|gmd:dateOfNextUpdate" priority="2">
         <xsl:param name="schema"/>
@@ -2113,6 +2128,7 @@ can clutter up the rest of the metadata record! -->
             gmd:identificationInfo/srv:SV_ServiceIdentification|
             gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
             gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+
             <xsl:call-template name="complexElementGuiWrapper">
                 <xsl:with-param name="title">
                     <xsl:call-template name="getTitle">
@@ -2121,7 +2137,6 @@ can clutter up the rest of the metadata record! -->
                     </xsl:call-template>
                 </xsl:with-param>
                 <xsl:with-param name="content">
-
                     <xsl:apply-templates mode="elementEP" select="gmd:citation|geonet:child[string(@name)='citation']
           |gmd:abstract|geonet:child[string(@name)='abstract']
           |gmd:purpose|geonet:child[string(@name)='purpose']
@@ -2129,13 +2144,12 @@ can clutter up the rest of the metadata record! -->
           |gmd:status|geonet:child[string(@name)='status']
           |gmd:spatialRepresentationType|geonet:child[string(@name)='spatialRepresentationType']
           |gmd:spatialResolution|geonet:child[string(@name)='spatialResolution']
-          |gmd:language|geonet:child[string(@name)='language']
+		  |gmd:language|geonet:child[string(@name)='language']
           |gmd:characterSet|geonet:child[string(@name)='characterSet']
           |gmd:topicCategory|geonet:child[string(@name)='topicCategory']
           |gmd:supplementalInformation|geonet:child[string(@name)='supplementalInformation']
           |gmd:environmentDescription|geonet:child[string(@name)='environmentDescription']
-          |gmd:resourceMaintenance|geonet:child[string(@name)='resourceMaintenance']
-          ">
+          |gmd:resourceMaintenance|geonet:child[string(@name)='resourceMaintenance']">
                         <xsl:with-param name="schema" select="$schema"/>
                         <xsl:with-param name="edit"   select="$edit"/>
                         <xsl:with-param name="flat"   select="$flat"/>
@@ -2537,74 +2551,74 @@ can clutter up the rest of the metadata record! -->
         <xsl:variable name="id" select="generate-id(.)"/>
         <tr><td colspan="2"><div id="{$id}"/></td></tr>
 
-                <xsl:apply-templates mode="elementEP" select="gmd:linkage|geonet:child[string(@name)='linkage']">
-                    <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="edit"   select="true()"/>
-                </xsl:apply-templates>
+        <xsl:apply-templates mode="elementEP" select="gmd:linkage|geonet:child[string(@name)='linkage']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="true()"/>
+        </xsl:apply-templates>
 
-                <!-- use elementEP for geonet:child only -->
-                <xsl:apply-templates mode="elementEP" select="geonet:child[string(@name)='protocol']">
-                    <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="edit"   select="true()"/>
-                </xsl:apply-templates>
+        <!-- use elementEP for geonet:child only -->
+        <xsl:apply-templates mode="elementEP" select="geonet:child[string(@name)='protocol']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="true()"/>
+        </xsl:apply-templates>
 
-                <xsl:apply-templates mode="iso19139" select="gmd:protocol">
-                    <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="edit"   select="true()"/>
-                </xsl:apply-templates>
+        <xsl:apply-templates mode="iso19139" select="gmd:protocol">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="true()"/>
+        </xsl:apply-templates>
 
 
-                <xsl:apply-templates mode="elementEP" select="gmd:applicationProfile|geonet:child[string(@name)='applicationProfile']">
-                    <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="edit"   select="true()"/>
-                </xsl:apply-templates>
+        <xsl:apply-templates mode="elementEP" select="gmd:applicationProfile|geonet:child[string(@name)='applicationProfile']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="true()"/>
+        </xsl:apply-templates>
 
-                <xsl:choose>
-                    <xsl:when test="string(gmd:protocol[1]/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download'
+        <xsl:choose>
+            <xsl:when test="string(gmd:protocol[1]/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download'
             and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
-                        <xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
-                            <xsl:with-param name="access" select="'private'"/>
-                            <xsl:with-param name="id" select="$id"/>
-                        </xsl:apply-templates>
-                    </xsl:when>
-                    <xsl:when test="string(gmd:protocol[1]/gco:CharacterString)='DB:POSTGIS'
+                <xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
+                    <xsl:with-param name="access" select="'private'"/>
+                    <xsl:with-param name="id" select="$id"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:when test="string(gmd:protocol[1]/gco:CharacterString)='DB:POSTGIS'
             and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
-                        <xsl:apply-templates mode="iso19139GeoPublisher" select="gmd:name/gco:CharacterString">
-                            <xsl:with-param name="access" select="'db'"/>
-                            <xsl:with-param name="id" select="$id"/>
-                        </xsl:apply-templates>
-                    </xsl:when>
-                    <xsl:when test="(string(gmd:protocol[1]/gco:CharacterString)='FILE:GEO'
+                <xsl:apply-templates mode="iso19139GeoPublisher" select="gmd:name/gco:CharacterString">
+                    <xsl:with-param name="access" select="'db'"/>
+                    <xsl:with-param name="id" select="$id"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:when test="(string(gmd:protocol[1]/gco:CharacterString)='FILE:GEO'
             or string(gmd:protocol[1]/gco:CharacterString)='FILE:RASTER')
             and string(gmd:linkage/gmd:URL)!=''">
-                        <xsl:apply-templates mode="iso19139GeoPublisher" select="gmd:name/gco:CharacterString">
-                            <xsl:with-param name="access" select="'fileOrUrl'"/>
-                            <xsl:with-param name="id" select="$id"/>
-                        </xsl:apply-templates>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <!-- use elementEP for geonet:child only -->
-                        <xsl:apply-templates mode="elementEP" select="geonet:child[string(@name)='name']">
-                            <xsl:with-param name="schema" select="$schema"/>
-                            <xsl:with-param name="edit"   select="true()"/>
-                        </xsl:apply-templates>
-
-                        <xsl:apply-templates mode="iso19139" select="gmd:name">
-                            <xsl:with-param name="schema" select="$schema"/>
-                            <xsl:with-param name="edit"   select="true()"/>
-                        </xsl:apply-templates>
-                    </xsl:otherwise>
-                </xsl:choose>
-
-                <xsl:apply-templates mode="elementEP" select="gmd:description|geonet:child[string(@name)='description']">
+                <xsl:apply-templates mode="iso19139GeoPublisher" select="gmd:name/gco:CharacterString">
+                    <xsl:with-param name="access" select="'fileOrUrl'"/>
+                    <xsl:with-param name="id" select="$id"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- use elementEP for geonet:child only -->
+                <xsl:apply-templates mode="elementEP" select="geonet:child[string(@name)='name']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="true()"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gmd:function|geonet:child[string(@name)='function']">
+                <xsl:apply-templates mode="iso19139" select="gmd:name">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="true()"/>
                 </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:apply-templates mode="elementEP" select="gmd:description|geonet:child[string(@name)='description']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="true()"/>
+        </xsl:apply-templates>
+
+        <xsl:apply-templates mode="elementEP" select="gmd:function|geonet:child[string(@name)='function']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="true()"/>
+        </xsl:apply-templates>
     </xsl:template>
 
     <!-- ============================================================================= -->
@@ -3511,7 +3525,7 @@ can clutter up the rest of the metadata record! -->
                                                 then $fileName
                                                 else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
 
-                    <!-- display thumnail next to the edit fields -->
+                <!-- display thumnail next to the edit fields -->
 
                 <tr><td colspan="2">
                     <table class="gn">
@@ -3529,50 +3543,50 @@ can clutter up the rest of the metadata record! -->
                                     <table class="gn">
                                         <tr><td>
                                             <xsl:choose>
-                                            <xsl:when test="string($fileName)">
-                                                <xsl:variable name="langId">
-                                                    <xsl:call-template name="getLangId">
-                                                        <xsl:with-param name="langGui" select="/root/gui/language" />
-                                                        <xsl:with-param name="md"
-                                                                        select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
-                                                    </xsl:call-template>
-                                                </xsl:variable>
+                                                <xsl:when test="string($fileName)">
+                                                    <xsl:variable name="langId">
+                                                        <xsl:call-template name="getLangId">
+                                                            <xsl:with-param name="langGui" select="/root/gui/language" />
+                                                            <xsl:with-param name="md"
+                                                                            select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
+                                                        </xsl:call-template>
+                                                    </xsl:variable>
 
-                                                <xsl:variable name="imageTitle">
-                                                    <xsl:choose>
-                                                        <xsl:when test="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString
+                                                    <xsl:variable name="imageTitle">
+                                                        <xsl:choose>
+                                                            <xsl:when test="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString
               and not(gmd:MD_BrowseGraphic/gmd:fileDescription/@gco:nilReason)">
-                                                            <xsl:for-each select="gmd:MD_BrowseGraphic/gmd:fileDescription">
-                                                                <xsl:call-template name="localised">
-                                                                    <xsl:with-param name="langId" select="$langId"/>
-                                                                </xsl:call-template>
-                                                            </xsl:for-each>
-                                                        </xsl:when>
-                                                        <xsl:otherwise>
-                                                            <!-- Filename is not multilingual -->
-                                                            <xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
-                                                        </xsl:otherwise>
-                                                    </xsl:choose>
-                                                </xsl:variable>
+                                                                <xsl:for-each select="gmd:MD_BrowseGraphic/gmd:fileDescription">
+                                                                    <xsl:call-template name="localised">
+                                                                        <xsl:with-param name="langId" select="$langId"/>
+                                                                    </xsl:call-template>
+                                                                </xsl:for-each>
+                                                            </xsl:when>
+                                                            <xsl:otherwise>
+                                                                <!-- Filename is not multilingual -->
+                                                                <xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+                                                            </xsl:otherwise>
+                                                        </xsl:choose>
+                                                    </xsl:variable>
 
 
-                                                <xsl:if test="string($fileName)">
-                                                    <div class="md-view">
-                                                        <a rel="lightbox-viewset" href="{$url}">
-                                                            <img class="logo" src="{$url}">
-                                                                <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-                                                                <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-                                                            </img>
-                                                        </a>
-                                                        <!--<br/>
-                                                        <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>  -->
-                                                    </div>
-                                                </xsl:if>
-                                                <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Add thumbnail</a>
+                                                    <xsl:if test="string($fileName)">
+                                                        <div class="md-view">
+                                                            <a rel="lightbox-viewset" href="{$url}">
+                                                                <img class="logo" src="{$url}">
+                                                                    <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+                                                                    <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+                                                                </img>
+                                                            </a>
+                                                            <!--<br/>
+                                                            <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>  -->
+                                                        </div>
+                                                    </xsl:if>
+                                                    <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Add thumbnail</a>
 
 
 
-                                            </xsl:when>
+                                                </xsl:when>
 
                                                 <xsl:otherwise>
                                                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Add thumbnail</a>
@@ -3656,12 +3670,12 @@ can clutter up the rest of the metadata record! -->
         <xsl:variable name="info" select="ancestor::*[name(.) = 'gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info"></xsl:variable>
 
         <xsl:if test="string($fileName)">
-        <thumbnail>
-            <href><xsl:value-of select="geonet:get-thumbnail-url($fileName, $info, /root/gui/locService)"/></href>
-            <desc><xsl:value-of select="$desc"/></desc>
-            <mimetype><xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString"/></mimetype>
-            <type><xsl:value-of select="if (geonet:contains-any-of($desc, ('thumbnail', 'large_thumbnail'))) then 'local' else ''"/></type>
-        </thumbnail>
+            <thumbnail>
+                <href><xsl:value-of select="geonet:get-thumbnail-url($fileName, $info, /root/gui/locService)"/></href>
+                <desc><xsl:value-of select="$desc"/></desc>
+                <mimetype><xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString"/></mimetype>
+                <type><xsl:value-of select="if (geonet:contains-any-of($desc, ('thumbnail', 'large_thumbnail'))) then 'local' else ''"/></type>
+            </thumbnail>
         </xsl:if>
     </xsl:template>
 
