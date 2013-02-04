@@ -302,7 +302,7 @@ GeoNetwork.Lang.nl = {
     'updateChildren': "Wijzigen kinderen",
     'records': "metadatarecords",
     'record': "metadatarecord",
-    'help': "Help",
+    'help': "Help (via mouse-over)",
     'publishError': "Publicatie gefaald.",
     'outOfMemoryError': "Out of memory fout.",
     'publishErrorCode': "foutcode:",
