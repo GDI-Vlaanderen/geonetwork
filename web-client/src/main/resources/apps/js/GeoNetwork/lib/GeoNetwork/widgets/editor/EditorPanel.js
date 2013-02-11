@@ -1116,6 +1116,10 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         format: 'Y-m-d'
                     });
 
+                    //Small hack to put date button on its place
+                    if (Ext.isChrome){
+                        dCal.getEl().parent().setHeight("18");
+                    }
                     // See issue AGIV  #2783:
                     // For DateTimes you can give the gmd:dateTime the attribute nilreason ,
                     // then you do not need to include the gco:dateTime.
