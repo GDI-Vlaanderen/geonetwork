@@ -820,8 +820,12 @@ td.advsearchfields {
 }
 
 label {
-	padding-right: 3px;
-	padding-left: 3px;
+    padding-right: 3px;
+    padding-left: 3px;
+}
+
+label.status_disabled {
+    color: grey;
 }
 
 #openIMBtn{

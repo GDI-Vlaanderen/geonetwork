@@ -49,6 +49,14 @@
                                                     </xsl:if>
                                                 </xsl:if>
                                                 <label for="st{id}">
+                                                    <xsl:if test="name='approved' or name='retired' or name='rejected'">
+                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
+                                                    </xsl:if>
+                                                    <xsl:if test="not(contains($profile,'Admin'))">
+	                                                    <xsl:if test="name='draft' or name='unknown'">
+	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
+	                                                    </xsl:if>
+	                                                </xsl:if>
                                                     <xsl:value-of select="label/child::*[name() = $lang]"/>
                                                 </label>
                                             </input>
