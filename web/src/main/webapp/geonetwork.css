@@ -1405,4 +1405,6 @@ div#privileges {
   background-color: #dddddd;
   padding: 4px;
 }
-
+.x-form-field-wrap .x-form-date-trigger {
+	float: right;
+}
