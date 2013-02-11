@@ -534,7 +534,9 @@ GeoNetwork.app = function(){
             createLatestUpdate();
         } else {
             Ext.get('infoPanel').getUpdater().update({url:'home_eng.html'});
-            Ext.get('helpPanel').getUpdater().update({url:'help_eng.html'});
+            if(Ext.get('helpPanel')){
+                Ext.get('helpPanel').getUpdater().update({url:'help_eng.html'});
+            }
         }
     }
     /** private: methode[createInfoPanel]
@@ -736,7 +738,6 @@ GeoNetwork.app = function(){
             
             // Extra stuffs
             infoPanel = createInfoPanel();
-            helpPanel = createHelpPanel();
             tagCloudViewPanel = createTagCloud();
             
             // Register events on the catalogue
@@ -746,6 +747,12 @@ GeoNetwork.app = function(){
             var viewport = new Ext.Viewport({
                 layout: 'border',
                 id: 'vp',
+                listeners : {
+                    afterlayout : function(){
+                        if(!Ext.get("helpPanel"))
+                            helpPanel = createHelpPanel();
+                        }
+                },
                 items: [{
                     region: 'west',
                     id: 'west',
