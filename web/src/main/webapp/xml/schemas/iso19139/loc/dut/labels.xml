@@ -427,7 +427,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:code">
-		<label>Code</label>
+		<label>Identificator Geografisch gebied</label>
 		<description>Alfanumerieke waarde die een instance binnen een namespace uniek identificeerd.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -858,7 +858,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicDescription">
 		<label>Geometrische beschrijving</label>
-		<description>Beschrijving van de ruimtelijke dekking van de dataset (using identifiers)</description>
+		<description> Beschrijving van het geografisch gebied</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_TemporalExtent">
