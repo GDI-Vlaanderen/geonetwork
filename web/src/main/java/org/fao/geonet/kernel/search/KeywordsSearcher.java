@@ -51,8 +51,8 @@ import java.util.List;
  *
  */
 public class KeywordsSearcher {
-	private ThesaurusManager _thesaurusManager;
-	private String _query;
+    private ThesaurusManager _thesaurusManager;
+    private String _query;
     private String _lang;
     private List<KeywordBean> _results = new ArrayList<KeywordBean>();
 
@@ -63,9 +63,9 @@ public class KeywordsSearcher {
      *
      * @param tm thesaurusmanager
      */
-	public KeywordsSearcher(ThesaurusManager tm) {
-		_thesaurusManager = tm;
-	}
+    public KeywordsSearcher(ThesaurusManager tm) {
+        _thesaurusManager = tm;
+    }
 
     /**
      * TODO javadoc.
@@ -76,53 +76,53 @@ public class KeywordsSearcher {
      * @return keywordbean
      * @throws Exception hmm
      */
-	public KeywordBean searchById(String id, String sThesaurusName, String lang) throws Exception {
+    public KeywordBean searchById(String id, String sThesaurusName, String lang) throws Exception {
         //System.out.println("KeywordsSearcher searchById");
-		_query = "SELECT prefLab, note, id, lowc, uppc "
-			+ " FROM {id} rdf:type {skos:Concept}; "
-			+ " skos:prefLabel {prefLab};"
-			+ " [skos:scopeNote {note} WHERE lang(note) LIKE \""+lang+"*\"]; "
-			+ " [gml:BoundedBy {} gml:lowerCorner {lowc}]; "
-			+ " [gml:BoundedBy {} gml:upperCorner {uppc}] "
-			+ " WHERE lang(prefLab) LIKE \""+lang+"*\" "
-			+ " AND id LIKE \""+id+"\" "
-			+ " IGNORE CASE "
-			+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>, gml=<http://www.opengis.net/gml#> ";
+        _query = "SELECT prefLab, note, id, lowc, uppc "
+                + " FROM {id} rdf:type {skos:Concept}; "
+                + " skos:prefLabel {prefLab};"
+                + " [skos:scopeNote {note} WHERE lang(note) LIKE \""+lang+"*\"]; "
+                + " [gml:BoundedBy {} gml:lowerCorner {lowc}]; "
+                + " [gml:BoundedBy {} gml:upperCorner {uppc}] "
+                + " WHERE lang(prefLab) LIKE \""+lang+"*\" "
+                + " AND id LIKE \""+id+"\" "
+                + " IGNORE CASE "
+                + " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>, gml=<http://www.opengis.net/gml#> ";
 
-			Thesaurus thesaurus = _thesaurusManager.getThesaurusByName(sThesaurusName);
+        Thesaurus thesaurus = _thesaurusManager.getThesaurusByName(sThesaurusName);
 
-			// Perform request
-			QueryResultsTable resultsTable = thesaurus.performRequest(_query);
-			int rowCount = resultsTable.getRowCount();
-			int idKeyword = 0;
+        // Perform request
+        QueryResultsTable resultsTable = thesaurus.performRequest(_query);
+        int rowCount = resultsTable.getRowCount();
+        int idKeyword = 0;
 
-			if (rowCount == 0){
-				return null;
-			}
-            else{
-				// MUST be one because search by ID
+        if (rowCount == 0){
+            return null;
+        }
+        else{
+            // MUST be one because search by ID
 
-				// preflab
-				Value value = resultsTable.getValue(0, 0);
-				String sValue = "";
-				if (value != null) {
-					sValue = value.toString();
-				}
+            // preflab
+            Value value = resultsTable.getValue(0, 0);
+            String sValue = "";
+            if (value != null) {
+                sValue = value.toString();
+            }
 
 //				 uri (= id in RDF file != id in list)
-				Value uri = resultsTable.getValue(0, 2);
-				String sUri = "";
-				if (uri != null) {
-					sUri = uri.toString();
-				}
+            Value uri = resultsTable.getValue(0, 2);
+            String sUri = "";
+            if (uri != null) {
+                sUri = uri.toString();
+            }
 
-				KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getVersion(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
-				idKeyword++;
+            KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl());
+            idKeyword++;
 
-				return kb;
-			}
+            return kb;
+        }
 
-	}
+    }
 
     /**
      * TODO javadoc.
@@ -131,18 +131,18 @@ public class KeywordsSearcher {
      * @param params params
      * @throws Exception hmm
      */
-	public void search(ServiceContext srvContext, Element params) throws Exception {
+    public void search(ServiceContext srvContext, Element params) throws Exception {
         //System.out.println("KeywordsSearcher search");
-		// Get params from request and set default
-		String sKeyword = Util.getParam(params, "pKeyword");
-		
-		// Get max results number or set default one.
-		_maxResults = Util.getParam(params, "maxResults", _maxResults);
+        // Get params from request and set default
+        String sKeyword = Util.getParam(params, "pKeyword");
 
-		// Type of search
-		int pTypeSearch;
+        // Get max results number or set default one.
+        _maxResults = Util.getParam(params, "maxResults", _maxResults);
+
+        // Type of search
+        int pTypeSearch;
         // if param pTypeSearch not here
-		if (params.getChild("pTypeSearch") != null){
+        if (params.getChild("pTypeSearch") != null){
             pTypeSearch = Util.getParamAsInt(params, "pTypeSearch");
 
             // Thesaurus to search in
@@ -157,43 +157,43 @@ public class KeywordsSearcher {
             boolean bAll = true;
 
             // if param pThesauri not here
-		    if (params.getChild("pThesauri") != null){
-			    listThesauri = params.getChildren("pThesauri");
-			    bAll = false;
+            if (params.getChild("pThesauri") != null){
+                listThesauri = params.getChildren("pThesauri");
+                bAll = false;
 
-			    // Check empty child and remove empty ones.
-			    for (Iterator<Element> it = listThesauri.iterator(); it.hasNext();) {
-				    Element th = it.next();
-				    if ("".equals(th.getTextTrim())) {
-					    it.remove();
+                // Check empty child and remove empty ones.
+                for (Iterator<Element> it = listThesauri.iterator(); it.hasNext();) {
+                    Element th = it.next();
+                    if ("".equals(th.getTextTrim())) {
+                        it.remove();
                     }
-			    }
-			
-			    if (listThesauri.size() == 0) {
-				    bAll = true;
                 }
-		    }
 
-		    //	If no thesaurus search in all.
-		    if (bAll){
-			    ConcurrentHashMap<String, Thesaurus> tt = _thesaurusManager.getThesauriMap();
+                if (listThesauri.size() == 0) {
+                    bAll = true;
+                }
+            }
 
-			    Enumeration<String> e = tt.keys();
-			    boolean add = true;
+            //	If no thesaurus search in all.
+            if (bAll){
+                ConcurrentHashMap<String, Thesaurus> tt = _thesaurusManager.getThesauriMap();
+
+                Enumeration<String> e = tt.keys();
+                boolean add = true;
                 // Fill the list with all thesauri available
-		        while (e.hasMoreElements()) {
-		    	    Thesaurus thesaurus = tt.get(e.nextElement());
-		    	    if (pTypeThesaurus != null){
+                while (e.hasMoreElements()) {
+                    Thesaurus thesaurus = tt.get(e.nextElement());
+                    if (pTypeThesaurus != null){
                         add = thesaurus.getDname().equals(pTypeThesaurus);
-		    	    }
+                    }
 
-		    	    if (add){
-		    		    Element el = new Element("pThesauri");
-			    	    el.addContent(thesaurus.getKey());
-			    	    listThesauri.add(el);
-		    	    }
-		        }
-		    }
+                    if (add){
+                        Element el = new Element("pThesauri");
+                        el.addContent(thesaurus.getKey());
+                        listThesauri.add(el);
+                    }
+                }
+            }
             // Keyword to look for
             if (!sKeyword.equals("")) {
                 String lang = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(srvContext.getLanguage());
@@ -228,10 +228,10 @@ public class KeywordsSearcher {
                     endResults.add(keywordBeanWithoutLanguage);
                 }
             }
-             _results = endResults;
+            _results = endResults;
 
-		}
-	}
+        }
+    }
 
     /**
      * Searches. Global _query must have been created before calling this.
@@ -251,15 +251,9 @@ public class KeywordsSearcher {
         for (Element thesaurusName : listThesauri) {
             Thesaurus thesaurus = _thesaurusManager.getThesaurusByName(thesaurusName.getTextTrim());
 
-            QueryResultsTable resultsTable;
             // Perform request
-            if(thesaurus != null) {
-                resultsTable = thesaurus.performRequest(_query);
-            }
-            else {
-                System.err.println("WARNING: KeywordsSearcher.search() using null thesaurus. Thesaurus name was " + thesaurusName.getTextTrim());
-                return;
-            }
+            QueryResultsTable resultsTable = thesaurus.performRequest(_query);
+
             int rowCount = resultsTable.getRowCount();
 
             for (int row = 0; row < rowCount; row++) {
@@ -308,7 +302,7 @@ public class KeywordsSearcher {
                 }
 
                 KeywordBean kb = new KeywordBean(idKeyword, sValue, sDefinition, sUri, sEast, sWest, sSouth, sNorth, thesaurusName.getTextTrim(),
-                        false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getVersion(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
+                        false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl());
                 _results.add(kb);
                 idKeyword++;
             }
@@ -330,26 +324,26 @@ public class KeywordsSearcher {
         // This will cause multilingual metadata search quite complex !!
         // Quid Lucene and thesaurus ?
         _query = "SELECT prefLab, note, id, lowc, uppc "
-            + " FROM {id} rdf:type {skos:Concept}; "
-            + " skos:prefLabel {prefLab};"
-            + " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"*\"]; "
-            + " [gml:BoundedBy {} gml:lowerCorner {lowc}]; "
-            + " [gml:BoundedBy {} gml:upperCorner {uppc}] "
-            + " WHERE lang(prefLab) LIKE \""+_lang+"*\""
-            + " AND prefLab LIKE ";
+                + " FROM {id} rdf:type {skos:Concept}; "
+                + " skos:prefLabel {prefLab};"
+                + " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"*\"]; "
+                + " [gml:BoundedBy {} gml:lowerCorner {lowc}]; "
+                + " [gml:BoundedBy {} gml:upperCorner {uppc}] "
+                + " WHERE lang(prefLab) LIKE \""+_lang+"*\""
+                + " AND prefLab LIKE ";
 
         switch (pTypeSearch) {
-        case 0: // Start with
-            _query += "\""+ sKeyword+ "*\" ";
-            break;
-        case 1: // contains
-            _query += "\"*"+ sKeyword+ "*\" ";
-            break;
-        case 2: // exact match
-            _query += "\""+ sKeyword+ "\" ";
-            break;
-        default:
-            break;
+            case 0: // Start with
+                _query += "\""+ sKeyword+ "*\" ";
+                break;
+            case 1: // contains
+                _query += "\"*"+ sKeyword+ "*\" ";
+                break;
+            case 2: // exact match
+                _query += "\""+ sKeyword+ "\" ";
+                break;
+            default:
+                break;
         }
         _query 	+= " IGNORE CASE "
                 + " LIMIT "+ _maxResults
@@ -364,16 +358,16 @@ public class KeywordsSearcher {
      * @param request request
      * @throws Exception hmm
      */
-	public void searchBN(ServiceContext srvContext, Element params, String request) throws Exception {
+    public void searchBN(ServiceContext srvContext, Element params, String request) throws Exception {
         //System.out.println("KeywordsSearcher searchBN");
-		// TODO : Add geonetinfo elements.
-		String id = Util.getParam(params, "id");
-		String sThesaurusName = Util.getParam(params, "thesaurus");
+        // TODO : Add geonetinfo elements.
+        String id = Util.getParam(params, "id");
+        String sThesaurusName = Util.getParam(params, "thesaurus");
 
         String _lang = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(srvContext.getLanguage());
 
-		searchBN(id, sThesaurusName, request, _lang);
-	}
+        searchBN(id, sThesaurusName, request, _lang);
+    }
 
     /**
      * TODO javadoc.
@@ -384,85 +378,85 @@ public class KeywordsSearcher {
      * @param _lang language
      * @throws Exception hmm
      */
-	public void searchBN(String id, String sThesaurusName, String request, String _lang) throws Exception {
+    public void searchBN(String id, String sThesaurusName, String request, String _lang) throws Exception {
         //System.out.println("KeywordsSearcher searchBN 2");
 
-		Thesaurus thesaurus = _thesaurusManager.getThesaurusByName(sThesaurusName);
-		_results = new ArrayList<KeywordBean>();
-		String _query = "SELECT prefLab, note, id "
-			+ " from {id} rdf:type {skos:Concept};"
-			+ " skos:prefLabel {prefLab};"
-			+ " [skos:"+request+" {b}];"
-			+ " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"*\"] "
-			+ " WHERE lang(prefLab) LIKE \""+_lang+"*\""
-			+ " AND b LIKE \"*"+id+"\""
-			+ " IGNORE CASE "
-			+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>, gml=<http://www.opengis.net/gml#> ";
+        Thesaurus thesaurus = _thesaurusManager.getThesaurusByName(sThesaurusName);
+        _results = new ArrayList<KeywordBean>();
+        String _query = "SELECT prefLab, note, id "
+                + " from {id} rdf:type {skos:Concept};"
+                + " skos:prefLabel {prefLab};"
+                + " [skos:"+request+" {b}];"
+                + " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"*\"] "
+                + " WHERE lang(prefLab) LIKE \""+_lang+"*\""
+                + " AND b LIKE \"*"+id+"\""
+                + " IGNORE CASE "
+                + " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>, gml=<http://www.opengis.net/gml#> ";
 
-		//	Perform request
-		QueryResultsTable resultsTable = thesaurus.performRequest(_query);
+        //	Perform request
+        QueryResultsTable resultsTable = thesaurus.performRequest(_query);
 
-		int rowCount = resultsTable.getRowCount();
-		int idKeyword = 0;
+        int rowCount = resultsTable.getRowCount();
+        int idKeyword = 0;
 
-		for (int row = 0; row < rowCount; row++) {
+        for (int row = 0; row < rowCount; row++) {
 
-			// preflab
-			Value value = resultsTable.getValue(row, 0);
-			String sValue = "";
-			if (value != null) {
-				sValue = value.toString();
-			}
+            // preflab
+            Value value = resultsTable.getValue(row, 0);
+            String sValue = "";
+            if (value != null) {
+                sValue = value.toString();
+            }
 
 //			 uri (= id in RDF file != id in list)
-			Value uri = resultsTable.getValue(row, 2);
-			String sUri = "";
-			if (uri != null) {
-				sUri = uri.toString();
-			}
+            Value uri = resultsTable.getValue(row, 2);
+            String sUri = "";
+            if (uri != null) {
+                sUri = uri.toString();
+            }
 
-			KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getVersion(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
-			_results.add(kb);
-			idKeyword++;
-		}
-	}
+            KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl());
+            _results.add(kb);
+            idKeyword++;
+        }
+    }
 
     /**
      *
      * @return size of results
      */
-	public int getNbResults() {
-		return _results.size();
-	}
+    public int getNbResults() {
+        return _results.size();
+    }
 
     /**
      * TODO javadoc.
      *
      * @param tri direction
      */
-	public void sortResults(String tri) {
+    public void sortResults(String tri) {
         if ("label".equals(tri)) {
-			// sort by label
-			Collections.sort(_results, new Comparator() {
-				public int compare(final Object o1, final Object o2) {
-					final KeywordBean kw1 = (KeywordBean) o1;
-					final KeywordBean kw2 = (KeywordBean) o2;
-					return kw1.getValue().compareToIgnoreCase(kw2.getValue());
-				}
-			});
-		}
-		if ("definition".equals(tri)) {
-			// sort by def
-			Collections.sort(_results, new Comparator() {
-				public int compare(final Object o1, final Object o2) {
-					final KeywordBean kw1 = (KeywordBean) o1;
-					final KeywordBean kw2 = (KeywordBean) o2;
-					return kw1.getDefinition().compareToIgnoreCase(
-							kw2.getDefinition());
-				}
-			});
-		}
-	}
+            // sort by label
+            Collections.sort(_results, new Comparator() {
+                public int compare(final Object o1, final Object o2) {
+                    final KeywordBean kw1 = (KeywordBean) o1;
+                    final KeywordBean kw2 = (KeywordBean) o2;
+                    return kw1.getValue().compareToIgnoreCase(kw2.getValue());
+                }
+            });
+        }
+        if ("definition".equals(tri)) {
+            // sort by def
+            Collections.sort(_results, new Comparator() {
+                public int compare(final Object o1, final Object o2) {
+                    final KeywordBean kw1 = (KeywordBean) o1;
+                    final KeywordBean kw2 = (KeywordBean) o2;
+                    return kw1.getDefinition().compareToIgnoreCase(
+                            kw2.getDefinition());
+                }
+            });
+        }
+    }
 
     /**
      * TODO javadoc.
@@ -470,62 +464,62 @@ public class KeywordsSearcher {
      * @return element
      * @throws Exception hmm
      */
-	public Element getResults() throws Exception {
+    public Element getResults() throws Exception {
 
-		Element elDescKeys = new Element("descKeys");
+        Element elDescKeys = new Element("descKeys");
 
-		int nbResults = (this.getNbResults()<=_maxResults?this.getNbResults():_maxResults);
+        int nbResults = (this.getNbResults()<=_maxResults?this.getNbResults():_maxResults);
 
-		//for (int i = from; i <= to; i++) {
-		for (int i = 0; i <= nbResults - 1; i++) {
-			KeywordBean kb = _results.get(i);
+        //for (int i = from; i <= to; i++) {
+        for (int i = 0; i <= nbResults - 1; i++) {
+            KeywordBean kb = _results.get(i);
             toRawElement(elDescKeys, kb);
-		}
+        }
 
-		return elDescKeys;
-	}
+        return elDescKeys;
+    }
 
     public static Element toRawElement(Element elDescKeys, KeywordBean kb) {
-			Element elKeyword = new Element("keyword");
-			Element elSelected = new Element("selected");
-			// TODO : Add Thesaurus name
+        Element elKeyword = new Element("keyword");
+        Element elSelected = new Element("selected");
+        // TODO : Add Thesaurus name
 
-			if (kb.isSelected()) {
-				elSelected.addContent("true");
-			} else {
-				elSelected.addContent("false");
-			}
-			Element elId = new Element("id");
-			elId.addContent(Integer.toString(kb.getId()));
-			Element elValue = new Element("value");
-			elValue.addContent(kb.getValue());
-			Element elDefiniton = new Element("definition");
-			elDefiniton.addContent(kb.getDefinition());
-			Element elTh = new Element("thesaurus");
-			elTh.addContent(kb.getThesaurus());
-			Element elUri = new Element("uri");
-			elUri.addContent(kb.getCode());
-			
-			addBbox(kb, elKeyword);
-			
-			elKeyword.addContent(elSelected);
-			elKeyword.addContent(elId);
-			elKeyword.addContent(elValue);
-			elKeyword.addContent(elDefiniton);
-			elKeyword.addContent(elTh);
-			elKeyword.addContent(elUri);
-			elDescKeys.addContent(elKeyword);
+        if (kb.isSelected()) {
+            elSelected.addContent("true");
+        } else {
+            elSelected.addContent("false");
+        }
+        Element elId = new Element("id");
+        elId.addContent(Integer.toString(kb.getId()));
+        Element elValue = new Element("value");
+        elValue.addContent(kb.getValue());
+        Element elDefiniton = new Element("definition");
+        elDefiniton.addContent(kb.getDefinition());
+        Element elTh = new Element("thesaurus");
+        elTh.addContent(kb.getThesaurus());
+        Element elUri = new Element("uri");
+        elUri.addContent(kb.getCode());
 
-		return elDescKeys;
-	}
+        addBbox(kb, elKeyword);
+
+        elKeyword.addContent(elSelected);
+        elKeyword.addContent(elId);
+        elKeyword.addContent(elValue);
+        elKeyword.addContent(elDefiniton);
+        elKeyword.addContent(elTh);
+        elKeyword.addContent(elUri);
+        elDescKeys.addContent(elKeyword);
+
+        return elDescKeys;
+    }
 
     /**
      * TODO javadoc.
      *
      * @param params parameters
      */
-	public void selectUnselectKeywords(Element params) {
-		List listIdKeywordsSelected = params.getChildren("pIdKeyword");
+    public void selectUnselectKeywords(Element params) {
+        List listIdKeywordsSelected = params.getChildren("pIdKeyword");
         for (Object aListIdKeywordsSelected : listIdKeywordsSelected) {
             Element el = (Element) aListIdKeywordsSelected;
             int keywordId = Integer.decode(el.getTextTrim());
@@ -537,90 +531,90 @@ public class KeywordsSearcher {
                 }
             }
         }
-	}
+    }
 
-	/**
+    /**
      * TODO javadoc.
      *
-	 * @return an element describing the list of selected keywords
-	 */
-	public Element getSelectedKeywords() {
-		Element elDescKeys = new Element("descKeys");
-		int nbSelectedKeywords = 0;
-		for (int i = 0; i < this.getNbResults(); i++) {
-			KeywordBean kb = _results.get(i);
-			if (kb.isSelected()) {
-				Element elKeyword = new Element("keyword");
-				// keyword type
-				String thesaurusType = kb.getThesaurus();
-				thesaurusType = thesaurusType.replace('.', '-');
-				thesaurusType =  thesaurusType.split("-")[1];
-				elKeyword.setAttribute("type", thesaurusType);
-				Element elValue = new Element("value");
-				elValue.addContent(kb.getValue());
-				Element elCode = new Element("code");
-				String code=kb.getRelativeCode();
-				//code = code.split("#")[1];
-				elCode.addContent(code);
-				addBbox(kb, elKeyword);
-				elKeyword.addContent(elCode);
-				elKeyword.addContent(elValue);
-				elDescKeys.addContent(elKeyword);
-				nbSelectedKeywords++;
-			}
-		}
-		Element elNbTot = new Element("nbtot");
-		elNbTot.addContent(Integer.toString(nbSelectedKeywords));
-		elDescKeys.addContent(elNbTot);
+     * @return an element describing the list of selected keywords
+     */
+    public Element getSelectedKeywords() {
+        Element elDescKeys = new Element("descKeys");
+        int nbSelectedKeywords = 0;
+        for (int i = 0; i < this.getNbResults(); i++) {
+            KeywordBean kb = _results.get(i);
+            if (kb.isSelected()) {
+                Element elKeyword = new Element("keyword");
+                // keyword type
+                String thesaurusType = kb.getThesaurus();
+                thesaurusType = thesaurusType.replace('.', '-');
+                thesaurusType =  thesaurusType.split("-")[1];
+                elKeyword.setAttribute("type", thesaurusType);
+                Element elValue = new Element("value");
+                elValue.addContent(kb.getValue());
+                Element elCode = new Element("code");
+                String code=kb.getRelativeCode();
+                //code = code.split("#")[1];
+                elCode.addContent(code);
+                addBbox(kb, elKeyword);
+                elKeyword.addContent(elCode);
+                elKeyword.addContent(elValue);
+                elDescKeys.addContent(elKeyword);
+                nbSelectedKeywords++;
+            }
+        }
+        Element elNbTot = new Element("nbtot");
+        elNbTot.addContent(Integer.toString(nbSelectedKeywords));
+        elDescKeys.addContent(elNbTot);
 
-		return elDescKeys;
-	}
+        return elDescKeys;
+    }
 
-	/**
-	 * Adds bounding box of keyword if one available.
-	 * 
-	 * @param kb	The keyword to analyze.
-	 * @param elKeyword	The XML fragment to update.
-	 */
-	private static void addBbox(KeywordBean kb, Element elKeyword) {
-		if (kb.getCoordEast() != null && kb.getCoordWest() != null
-				&& kb.getCoordSouth() != null
-				&& kb.getCoordNorth() != null && !kb.getCoordEast().equals("") 
-				&& !kb.getCoordWest().equals("")
-				&& !kb.getCoordSouth().equals("")
-				&& !kb.getCoordNorth().equals("")) {
-			Element elBbox = new Element("geo");
-			Element elEast = new Element("east");
-			elEast.addContent(kb.getCoordEast());
-			Element elWest = new Element("west");
-			elWest.addContent(kb.getCoordWest());
-			Element elSouth = new Element("south");
-			elSouth.addContent(kb.getCoordSouth());
-			Element elNorth = new Element("north");
-			elNorth.addContent(kb.getCoordNorth());
-			elBbox.addContent(elEast);
-			elBbox.addContent(elWest);
-			elBbox.addContent(elSouth);
-			elBbox.addContent(elNorth);
-			elKeyword.addContent(elBbox);
-		}
-	}
+    /**
+     * Adds bounding box of keyword if one available.
+     *
+     * @param kb	The keyword to analyze.
+     * @param elKeyword	The XML fragment to update.
+     */
+    private static void addBbox(KeywordBean kb, Element elKeyword) {
+        if (kb.getCoordEast() != null && kb.getCoordWest() != null
+                && kb.getCoordSouth() != null
+                && kb.getCoordNorth() != null && !kb.getCoordEast().equals("")
+                && !kb.getCoordWest().equals("")
+                && !kb.getCoordSouth().equals("")
+                && !kb.getCoordNorth().equals("")) {
+            Element elBbox = new Element("geo");
+            Element elEast = new Element("east");
+            elEast.addContent(kb.getCoordEast());
+            Element elWest = new Element("west");
+            elWest.addContent(kb.getCoordWest());
+            Element elSouth = new Element("south");
+            elSouth.addContent(kb.getCoordSouth());
+            Element elNorth = new Element("north");
+            elNorth.addContent(kb.getCoordNorth());
+            elBbox.addContent(elEast);
+            elBbox.addContent(elWest);
+            elBbox.addContent(elSouth);
+            elBbox.addContent(elNorth);
+            elKeyword.addContent(elBbox);
+        }
+    }
 
     /**
      * TODO javadoc.
      *
      * @return list of keywordbeans
      */
-	public List<KeywordBean> getSelectedKeywordsInList() {
-		List<KeywordBean> keywords = new ArrayList<KeywordBean>();
-		for (int i = 0; i < this.getNbResults(); i++) {
-			KeywordBean kb = _results.get(i);
-			if (kb.isSelected()) {
-					keywords.add(kb);
-				}
-			}
-		return keywords;
-	}
+    public List<KeywordBean> getSelectedKeywordsInList() {
+        List<KeywordBean> keywords = new ArrayList<KeywordBean>();
+        for (int i = 0; i < this.getNbResults(); i++) {
+            KeywordBean kb = _results.get(i);
+            if (kb.isSelected()) {
+                keywords.add(kb);
+            }
+        }
+        return keywords;
+    }
 
     /**
      * TODO javadoc.
@@ -628,16 +622,16 @@ public class KeywordsSearcher {
      * @param id id
      * @return keywordbean
      */
-	public KeywordBean existsResult(String id) {
-		KeywordBean keyword = null;
-		for (int i = 0; i < this.getNbResults(); i++) {
-			KeywordBean kb = _results.get(i);
-			if (kb.getId() == Integer.parseInt(id)) {
-					keyword = kb;
-					break;
-				}
-			}
-		return keyword;
-	}
+    public KeywordBean existsResult(String id) {
+        KeywordBean keyword = null;
+        for (int i = 0; i < this.getNbResults(); i++) {
+            KeywordBean kb = _results.get(i);
+            if (kb.getId() == Integer.parseInt(id)) {
+                keyword = kb;
+                break;
+            }
+        }
+        return keyword;
+    }
 
 }
