@@ -46,7 +46,8 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         frame: false,
         collapsible: true,
         collapsed: true,
-        iconCls: 'validateMetadata'
+        iconCls: 'validateMetadata',
+        layout: 'fit'
     },
     validate: function(){
         this.editor.validate(function(){
@@ -135,6 +136,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
             store: this.store,
             colModel: colModel,
             loadMask: true,
+            layout: 'fit',
             plugins: expander,
             view: new Ext.grid.GroupingView({
                 forceFit: true,
