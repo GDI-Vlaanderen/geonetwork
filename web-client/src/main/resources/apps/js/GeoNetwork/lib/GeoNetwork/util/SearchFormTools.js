@@ -377,6 +377,10 @@ GeoNetwork.util.SearchFormTools = {
             id: 'E_sortBy',
             inputType: 'hidden'
         });
+        
+        //AGIV specific: default value for sorting
+        sortByField.setValue("changeDate");
+        
         var sortOrderField = new Ext.form.TextField({
             name: 'E_sortOrder',
             id: 'sortOrder',
