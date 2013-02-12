@@ -997,17 +997,24 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 record = store.getAt(store.find('id', id));
             }
             
-            var win = new GeoNetwork.view.ViewWindow({
-                serviceUrl: url,
-                currTab: GeoNetwork.defaultViewMode || 'simple',
-                catalogue: this,
-                maximized: maximized || false,
-                record: record,
-                metadataUuid: record ? record.get('uuid') : undefined,
-                resultsView: this.resultsView
+            if(record){
+                var win = new GeoNetwork.view.ViewWindow({
+                    serviceUrl: url,
+                    currTab: GeoNetwork.defaultViewMode || 'simple',
+                    catalogue: this,
+                    maximized: maximized || false,
+                    record: record,
+                    metadataUuid: record ? record.get('uuid') : undefined,
+                    resultsView: this.resultsView
+                    });
+                win.show(this.resultsView);
+                win.alignTo(Ext.getBody(), 'r-r');
+            } else {
+                Ext.MessageBox.alert(OpenLayers.i18n('error'), 
+                        OpenLayers.i18n('error-login'), function(){
+                    window.location = "../search";
                 });
-            win.show(this.resultsView);
-            win.alignTo(Ext.getBody(), 'r-r');
+            }
         }
     },
     /** api: method[metadataXMLShow]

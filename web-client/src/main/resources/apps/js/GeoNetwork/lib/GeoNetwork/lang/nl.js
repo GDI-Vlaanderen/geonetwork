@@ -526,7 +526,9 @@ GeoNetwork.Lang.nl = {
     'where': 'Waar',
     'Advanced': 'Geavanceerd',
     'About': 'Over',
-    'List': 'Resultatenlijst'
+    'List': 'Resultatenlijst',
+
+    'error-login': 'Je moet eerst inloggen om deze pagina te bekijken.'
 
 };
 

@@ -529,7 +529,9 @@ GeoNetwork.lang.en = {
     'where': 'Where',
     'Advanced': 'Advanced',
     'About': 'About',
-    'List': 'List'
+    'List': 'List',
+    
+    'error-login': 'You have to login first to access this page.'
 
 };
 
