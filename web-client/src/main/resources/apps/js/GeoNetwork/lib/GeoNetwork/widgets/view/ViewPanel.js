@@ -102,6 +102,12 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             type = record.get('type');
         var el = Ext.get(table[0]);
         var exist = el.child('tr td[class*=' + type + ']');
+        
+        //In case we have long titles with underscores, be able to wrap them
+        if(record.data.title) {
+            record.data.title = record.data.title.replace(/_/g, "_&#8203;");
+        }
+        
         var link = this.relatedTpl.apply(record.data)
             
         if (exist !== null) {
