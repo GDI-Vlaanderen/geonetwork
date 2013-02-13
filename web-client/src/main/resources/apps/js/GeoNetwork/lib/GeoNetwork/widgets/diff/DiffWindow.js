@@ -38,13 +38,13 @@ GeoNetwork.view.DiffWindow = Ext.extend(Ext.Window, {
     defaultConfig: {
         layout: 'fit',
         width: 1200,
-        height: 740,
+        height: 900,
         border: false,
         /** api: config[lang]
          *  The language to use to call GeoNetwork services in the print mode (which is opened in a new window).
          */
         lang: 'en',
-        autoScroll: true,
+        autoScroll: false,
         /** api: config[closeAction]
          *  The close action. Default is 'destroy'.
          */
@@ -88,14 +88,16 @@ GeoNetwork.view.DiffWindow = Ext.extend(Ext.Window, {
             catalogue: this.catalogue,
             resultsView: this.resultsView,
             border: false,
-            frame: false,
-            autoScroll: true
+            frame: false
         }));
 
         this.on('beforeshow', function(el) {
-            el.setSize(
-                el.getWidth() > Ext.getBody().getWidth() ? Ext.getBody().getWidth() : el.getWidth(),
-                el.getHeight() > Ext.getBody().getHeight() ? Ext.getBody().getHeight() : el.getHeight());
+            var width = 
+                el.getWidth() > Ext.getBody().getWidth() ? Ext.getBody().getWidth() : el.getWidth();
+            var height =
+                el.getHeight() > Ext.getBody().getHeight() ? Ext.getBody().getHeight() : el.getHeight();
+                
+            el.setSize(width, height);
         });
     }
 });

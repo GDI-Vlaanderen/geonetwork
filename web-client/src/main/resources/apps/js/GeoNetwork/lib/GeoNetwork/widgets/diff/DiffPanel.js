@@ -44,12 +44,13 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
          *  The language to use to call GeoNetwork services in the print mode (which is opened in a new window).
          */
         lang: 'en',
-        autoScroll: true,
+        autoScroll: false,
 
         /** api: config[currTab]
          *  The default view mode to use. Default is 'simple'.
          */
         currTab: 'simple',
+        layout: 'fit',
 
         /** api: config[relationTypes]
          *  List of types of relation to be displayed in header.
@@ -67,6 +68,19 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
     resultsView: undefined,
 
     afterDiffLoad: function(){
+
+        //set height of container to parent height
+        
+        Ext.each(Ext.query("#source-container"), function(el){
+            var height = Ext.get(el).parent().getHeight();
+            Ext.get(el).setHeight(height  - 25);
+        });
+        Ext.each(Ext.query("#target-container"), function(el){
+            var height = Ext.get(el).parent().getHeight();
+            Ext.get(el).setHeight(height  - 25);
+        });
+
+
         var source_md = Ext.query('.source-md');
         var target_md = Ext.query('.target-md');
 
@@ -84,10 +98,6 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
 
         // Create map panel for extent visualization
         this.catalogue.extentMap.initMapDiv();
-
-        //set height of container to parent height
-        //Ext.get('source-container').setHeight(this.parent.height);
-
     },
     getPanelTbar: function(){
         if (this.edit) return [this.createSwitchMenu(),'->',{text:'save',handler:function(){
@@ -141,12 +151,12 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
                 callback: this.afterDiffLoad,
                 scope: this
             },
+            layout: 'fit',
             border: false,
             frame: false,
-            autoScroll: true,
+            autoScroll: false,
             tbar: this.getPanelTbar()
         }));
-
     }
 });
 

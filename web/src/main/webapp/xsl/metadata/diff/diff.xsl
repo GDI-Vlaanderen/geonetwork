@@ -25,13 +25,13 @@
                 <xsl:call-template name="content"/>
             </body>
         </html> -->
-        <div style="float: left; width: 50%">
+        <div style="float: left; height: inherit; width: 50%">
             <xsl:for-each select="/root/response/source/*">
 
                 <xsl:variable name="metadata" select="."/>
                 <xsl:variable name="schema" select="$metadata/geonet:info/schema"/>
 
-                <div class="metadata">
+                <div class="metadata" style="height: inherit">
                     <div class="x-toolbar x-small-editor x-toolbar-layout-ct" style="padding:5px;">
                         <xsl:choose>
                             <xsl:when test="string(geonet:info/workspace)='true'">
@@ -44,7 +44,7 @@
                     </div>
 
 
-                    <div id="source-container" style="position:relative;overflow:auto;height:100%;max-height:800px;">
+                    <div id="source-container" style="position:relative;overflow:auto;height:inherit;">
                         <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
 
                         <saxon:call-template name="{$schemaTemplate}">
@@ -59,14 +59,14 @@
             </xsl:for-each>
         </div>
 
-        <div style="float: left; width: 50%">
+        <div style="float: left; height: inherit; width: 50%">
             <xsl:for-each select="/root/response/target/*">
 
                 <xsl:variable name="metadata" select="."/>
                 <xsl:variable name="schema" select="$metadata/geonet:info/schema"/>
 
-                <div class="metadata">
-                    <div class="x-toolbar x-small-editor x-toolbar-layout-ct" style="padding:5px;">
+                <div class="metadata" style="height: inherit">
+                    <div class="x-toolbar x-small-editor x-toolbar-layout-ct" style="padding:5px;height:13px;">
                         <xsl:choose>
                             <xsl:when test="string(geonet:info/workspace)='true'">
                                 <xsl:value-of select="/root/gui/strings/workspaceview"/>
@@ -78,7 +78,7 @@
                     </div>
 
 
-                    <div id="target-container" style="position:relative;overflow:auto;heigth:800px;max-height:800px;border-left:2px solid #ccc">
+                    <div id="target-container" style="position:relative;overflow:auto;height:inherit;border-left:2px solid #ccc">
                         <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
 
                         <saxon:call-template name="{$schemaTemplate}">
