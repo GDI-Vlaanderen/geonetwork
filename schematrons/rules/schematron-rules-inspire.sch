@@ -500,7 +500,9 @@ USA.
 
 			<!-- cardinality of accessconstraints is [1..n] -->
 			<sch:let name="accessConstraints_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)])"/>
-			
+			<sch:let name="accessConstraints_classification_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)]) + count(gmd:resourceConstraints/*/gmd:classification/*[string(@codeListValue)])"/>
+
+
 			<!-- If the value of accessConstraints is otherRestrictions
 				there shall be instances of otherConstraints expressing
 				limitations on public access. This is because the
@@ -520,10 +522,10 @@ USA.
 			<sch:let name="otherConstraintInfo" 
 				value="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
 
-			<sch:assert test="$accessConstraints_count">
+			<sch:assert test="$accessConstraints_classification_count">
 				<sch:value-of select="$loc/strings/alert.M45.ca/div"/>
 			</sch:assert>
-			<sch:report test="$accessConstraints_count">
+			<sch:report test="$accessConstraints_classification_count">
 				<sch:value-of select="$loc/strings/report.M45.ca/div"/>
 			</sch:report>
 			<sch:assert test="not($accessConstraints)">
