@@ -2464,6 +2464,16 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Identificatie</label>
 		<description>Unieke identificatie voor dit gml element.  Moet uniek zijn binnen dit XML document.</description>
 	</element>
+
+    <element name="gml:identifier" context="gmd:verticalCRS">
+        <label>Identificatie</label>
+        <description>Unieke identificatie voor dit gml element.  Moet uniek zijn binnen dit XML document.</description>
+        <helper relAtt="codeSpace">
+            <option value="TAW" title="NGI">Tweede Algemene Waterpassing</option>
+            <option value="LAT" title="IHO-S44">Lowest Astronomical Tide</option>
+            <option value="1094" title="EPSG">High Water (EPSG(version 8.0 released 10/8/2012):1094)</option>
+        </helper>
+    </element>
 	<!-- ==================================================== -->
     <element name="gml:TimePeriod">
 		<label>Periode</label>
