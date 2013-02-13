@@ -1510,7 +1510,7 @@
                             <xsl:variable name="format">
                                 <xsl:choose>
                                     <!-- Add basic support of %Y-%m-%d format in edit mode -->
-                                    <xsl:when test="string-length(text()) = 10"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+                                    <xsl:when test="string-length(text()) = 10 or name(.)='gml:beginPosition' or name(.)='gml:endPosition'"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
                                     <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
                                 </xsl:choose>
                             </xsl:variable>
