@@ -3581,11 +3581,12 @@ can clutter up the rest of the metadata record! -->
                                                             <!--<br/>
                                                             <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>  -->
                                                         </div>
+                                                        <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail();">Remove thumbnail</a>
                                                     </xsl:if>
-                                                    <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Add thumbnail</a>
 
-
-
+                                                    <xsl:if test="not(string($fileName))">
+                                                        <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Add thumbnail</a>
+                                                    </xsl:if>
                                                 </xsl:when>
 
                                                 <xsl:otherwise>
