@@ -68,6 +68,8 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
     resultsView: undefined,
 
     afterDiffLoad: function(){
+        
+        console.log("afterDiffLoad");
 
         //set height of container to parent height
         
@@ -97,7 +99,9 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         }
 
         // Create map panel for extent visualization
-        this.catalogue.extentMap.initMapDiv();
+        if(this.catalogue && this.catalogue.extentMap) {
+            this.catalogue.extentMap.initMapDiv();
+        }
     },
     getPanelTbar: function(){
         if (this.edit) return [this.createSwitchMenu(),'->',{text:'save',handler:function(){
@@ -144,19 +148,26 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
 
         GeoNetwork.view.DiffPanel.superclass.initComponent.call(this);
 
-        this.add(new Ext.Panel({
+        var panel = new Ext.Panel({
             autoLoad: {
                 url: this.serviceUrl,
                 scripts:true,
-                callback: this.afterDiffLoad,
-                scope: this
+                scope: this,
+                scripts: true
             },
             layout: 'fit',
             border: false,
             frame: false,
             autoScroll: false,
             tbar: this.getPanelTbar()
-        }));
+        });
+        
+        panel.afterDiffLoad = this.afterDiffLoad;
+        
+        panel.on('afterrender', function() {
+                    this.getUpdater().on('update', this.afterDiffLoad);
+                }, panel);
+        this.add(panel);
     }
 });
 

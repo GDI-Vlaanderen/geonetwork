@@ -25,6 +25,7 @@
                 <xsl:call-template name="content"/>
             </body>
         </html> -->
+        
         <div style="float: left; height: inherit; width: 50%">
             <xsl:for-each select="/root/response/source/*">
 
@@ -44,7 +45,7 @@
                     </div>
 
 
-                    <div id="source-container" style="position:relative;overflow:auto;height:inherit;">
+                    <div id="source-container" style="position:relative;overflow:auto;height:97%;">
                         <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
 
                         <saxon:call-template name="{$schemaTemplate}">
@@ -78,7 +79,7 @@
                     </div>
 
 
-                    <div id="target-container" style="position:relative;overflow:auto;heigth:inherit;border-left:2px solid #ccf">
+                    <div id="target-container" style="position:relative;overflow:auto;heigth:97%;border-left:2px solid #ccf">
                         <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
 
                         <saxon:call-template name="{$schemaTemplate}">
