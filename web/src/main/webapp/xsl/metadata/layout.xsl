@@ -1042,7 +1042,9 @@
       <xsl:choose>
         <!-- In dublin core element contains value.
 					In ISO, attribute also but element contains characterString which contains the value -->
-        <xsl:when test="$attribute=true() or $schema = 'dublin-core'">
+
+        <!-- Added special case for gml:identifier as doesn't contain gco:CharacterString, but requires suggestions -->
+        <xsl:when test="$attribute=true() or $schema = 'dublin-core' or name(.) = 'gml:identifier'">
           <xsl:value-of select="name(.)"/>
         </xsl:when>
         <xsl:otherwise>
