@@ -106,9 +106,12 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         //In case we have long titles with underscores, be able to wrap them
         if(record.data.title) {
             record.data.title = record.data.title.replace(/_/g, "_&#8203;");
+            record.data.title = record.data.title.replace(/\//g, "/&#8203;");
         }
         
-        var link = this.relatedTpl.apply(record.data)
+        var link = this.relatedTpl.apply(record.data);
+        
+        console.log(record);
             
         if (exist !== null) {
             exist.next().child('li').insertHtml('afterEnd', link);
