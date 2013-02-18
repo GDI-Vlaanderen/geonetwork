@@ -107,13 +107,18 @@ public class UpdateStatus implements Service {
 		metadataIds.add(id);
 
 		Set<String> unchanged = saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
-
+		    
 		//--- reindex metadata
         boolean workspace = false;
         dataMan.indexMetadata(dbms, id, false, workspace, true);
         // TODO index workspace ????
 
-		//--- return id for showing
-		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
+        if(unchanged.size() > 0){
+            return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Jeeves.Elem.ERROR).setText("Change of status failed for metadata with id: " + id));
+        }
+        else {
+    		//--- return id for showing
+    		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
+        }
 	}
 }
