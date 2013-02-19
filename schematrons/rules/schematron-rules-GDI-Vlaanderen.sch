@@ -24,18 +24,19 @@
 	<!-- GDI-Vlaanderen SC2-->
 	<sch:pattern>
 		<sch:title>GDI-Vlaanderen SC-2: MD_Metadata.referenceSystemInfo/*/RS_identifier/code (ISO element nr 207) is aanwezig en niet leeg. </sch:title>
+
 		<sch:rule context="//gmd:MD_Metadata[
-			gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
-			or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
-			or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']">
-			<sch:let name="ReferenceSystemInfo" value="gmd:referenceSystemInfo and not(normalize-space(gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code)= '')"/>
-			<sch:let name="ReferenceSystemInfoCodeValue" value="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/*/text()"/>
-			<sch:assert test="$ReferenceSystemInfo">
-      		Referentie systeem code ontbreekt of is leeg.  Er dient een horizontaal of verticaal referentiesysteem gedocumenteerd te worden.
-      </sch:assert>
-			<sch:report test="$ReferenceSystemInfo">Code van een horizontaal of verticaal referentiesysteem is aanwezig:  <sch:value-of select="$ReferenceSystemInfoCodeValue"/>
-			</sch:report>
-		</sch:rule>
+        			gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+        			or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+        			or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']/gmd:referenceSystemInfo">
+                        <sch:let name="ReferenceSystemInfo" value="not(normalize-space(gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code)= '')"/>
+        			<sch:let name="ReferenceSystemInfoCodeValue" value="gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/*/text()"/>
+        			<sch:assert test="$ReferenceSystemInfo">
+              		Referentie systeem code ontbreekt of is leeg.  Er dient een horizontaal of verticaal referentiesysteem gedocumenteerd te worden.
+              </sch:assert>
+        			<sch:report test="$ReferenceSystemInfo">Code van een horizontaal of verticaal referentiesysteem is aanwezig:  <sch:value-of select="$ReferenceSystemInfoCodeValue"/>
+        			</sch:report>
+        		</sch:rule>
 	</sch:pattern>
 	<!-- GDI-Vlaanderen SC3 -->
 	<sch:pattern>
