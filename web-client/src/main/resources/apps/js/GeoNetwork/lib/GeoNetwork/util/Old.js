@@ -93,9 +93,17 @@ function radioModalUpdate(div, service, modalbox, title) {
     });
     
     catalogue.doAction(service + pars, null, null, title, function(response){
-        Ext.getDom(div).innerHTML = response.responseText;
+        if(Ext.getDom(div)) {
+            Ext.getDom(div).innerHTML = response.responseText;
+        }
         if ((service === 'metadata.status') || (service === 'metadata.grab.lock')) {
             Ext.getCmp('modalWindow').close();
+        }
+        if(response.responseXML.getElementsByTagName("error").length > 0) {
+            var errorst = "";
+            Ext.each(response.responseXML.getElementsByTagName("error"), 
+                    function(e) {errorst += e.textContent || e.innerText;});
+            Ext.MessageBox.alert(OpenLayers.i18n('error'), errorst);
         }
     }, null);
 }
