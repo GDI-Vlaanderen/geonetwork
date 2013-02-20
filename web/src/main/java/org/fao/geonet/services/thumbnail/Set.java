@@ -63,95 +63,122 @@ public class    Set implements Service {
 	//--------------------------------------------------------------------------
 
     /**
-     * TODO Javadoc.
-     *
+     * TODO Javadoc. AGIV specific changes
+     * 
      * @param params
      * @param context
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		String  id            = Util.getParam     (params, Params.ID);
-		String  type          = Util.getParam     (params, Params.TYPE);
-		String  file          = Util.getParam     (params, Params.FNAME);
-		String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR);
-		boolean scaling       = Util.getParam     (params, Params.SCALING, false);
-		int     scalingFactor = Util.getParamAsInt(params, Params.SCALING_FACTOR);
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        String id = Util.getParam(params, Params.ID);
+        // String type = Util.getParam(params, Params.TYPE);
+        String file = Util.getParam(params, Params.FNAME);
+        // boolean scaling = Util.getParam(params, Params.SCALING, false);
 
-		boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
-		String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
-		int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
+        // boolean createSmall = Util.getParam(params, Params.CREATE_SMALL,
+        // false);
+        // String smallScalingDir = Util.getParam(params,
+        // Params.SMALL_SCALING_DIR, "");
+        // int smallScalingFactor = Util.getParam(params,
+        // Params.SMALL_SCALING_FACTOR, 0);
 
-		Lib.resource.checkEditPrivilege(context, id);
+        Lib.resource.checkEditPrivilege(context, id);
 
-		//-----------------------------------------------------------------------
-		//--- environment vars
+        // -----------------------------------------------------------------------
+        // --- environment vars
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getDataManager();
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getDataManager();
 
-		//-----------------------------------------------------------------------
-		//--- create destination directory
+        // -----------------------------------------------------------------------
+        // --- create destination directory
 
-		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-		new File(dataDir).mkdirs();
+        String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+        new File(dataDir).mkdirs();
 
-		//-----------------------------------------------------------------------
-		//--- create the small thumbnail, removing the old one
+        Double scalingFactor = shouldScale(context.getUploadDir() + "/" + file);
 
-		if (createSmall)
-		{
-			String smallFile = getFileName(file, true);
-			String inFile    = context.getUploadDir() + file;
-			String outFile   = dataDir + smallFile;
+        if (Math.abs(scalingFactor) > 1) { // We need to make it smaller
+            String newFile = getFileName(file, false);
+            String inFile = context.getUploadDir() + file;
+            String outFile = dataDir + newFile;
 
-			removeOldThumbnail(context, id, "small");
-			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, id, true, smallFile);
-		}
+            removeOldThumbnail(context, id, "big");
 
-		//-----------------------------------------------------------------------
-		//--- create the requested thumbnail, removing the old one
+            String scalingDir = "width";
+            if (scalingFactor < 0) {
+                scalingDir = "height";
+            }
+            createThumbnail(inFile, outFile, 120, scalingDir);
 
-		removeOldThumbnail(context, id, type);
+            if (!new File(inFile).delete())
+                context.error("Error while deleting thumbnail : " + inFile);
 
-		if (scaling)
-		{
-			String newFile = getFileName(file, type.equals("small"));
-			String inFile  = context.getUploadDir() + file;
-			String outFile = dataDir + newFile;
+            dataMan.setThumbnail(context, id, false, newFile);
+        } else {// Image of exactly 120x120. Big thumbnail, no scale
+            // or image too small, just upload as it is (small thumbnail)
+            String type = "big";
+            if (Math.abs(scalingFactor) < 1) {
+                type = "small";
+            }
+            
+            removeOldThumbnail(context, id, type);
+            
+            String newFile = getFileName(file, type.equals("small"));
+            File inFile = new File(context.getUploadDir() + file);
+            File outFile = new File(dataDir, newFile);
+            
+            try {
+                FileUtils.moveFile(inFile, outFile);
+            } catch (Exception e) {
+                inFile.delete();
+                throw new Exception(
+                        "Unable to move uploaded thumbnail to destination: "
+                                + outFile + ". Error: " + e.getMessage());
+            }
+            
+            dataMan.setThumbnail(context, id, type.equals("small"), file);
+        }
 
-			createThumbnail(inFile, outFile, scalingFactor, scalingDir);
+        Element response = new Element("a");
+        response.addContent(new Element("id").setText(id));
 
-			if (!new File(inFile).delete())
-				context.error("Error while deleting thumbnail : "+inFile);
+        return response;
+    }
 
-			dataMan.setThumbnail(context, id, type.equals("small"), newFile);
-		}
-		else
-		{
-			//--- move uploaded file to destination directory
+    /**
+     * Check if image should be scaled (AGIV)
+     * 
+     * @param inFile
+     * @return
+     */
+    private Double shouldScale(String inFile) {
+        BufferedImage origImg;
+        double maxSize = 120d;
+        double scale = -1d;
+        try {
+            origImg = getImage(inFile);
+            double imgWidth = origImg.getWidth();
+            double imgHeight = origImg.getHeight();
+            if (imgWidth > maxSize && imgWidth > imgHeight) {
+                scale = imgWidth / maxSize;
+            } else if (imgHeight > maxSize) {
+                scale = -imgHeight / maxSize;
+            } else if (imgWidth > imgHeight) {
+                scale = imgWidth / maxSize;
+            } else {
+                scale = -imgHeight / maxSize;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-			File inFile  = new File(context.getUploadDir(), file);
-			File outFile = new File(dataDir,                file);
+        return scale;
 
-			try {
-				FileUtils.moveFile(inFile, outFile);
-			} catch (Exception e) {
-				inFile.delete();
-				throw new Exception(
-						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
-			}
-
-			dataMan.setThumbnail(context, id, type.equals("small"), file);
-		}
-
-		Element response = new Element("a");
-		response.addContent(new Element("id").setText(id));
-
-		return response;
-	}
-
+    }
 
     /**
      * // FIXME : not elegant.

@@ -99,7 +99,7 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
             this.thumbnailUploadWindow = new Ext.Window({
                 title: OpenLayers.i18n('thumbnailUploadWindow'),
                 width: 300,
-                height: 300,
+                height: 100,
                 layout: 'fit',
                 modal: true,
                 items: this.uploadForm,
@@ -231,7 +231,7 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
                         buttonCfg: {
                             iconCls: 'thumbnailAddIcon'
                         }
-                    }, {
+                    }/*, {
                         xtype: 'radio',
                         checked: true,
                         fieldLabel: 'Type',
@@ -269,7 +269,7 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
                         minValue: 100,
                         maxValue: 220,
                         increment: 20
-                    }],
+                    }*/],
                     buttons: [{
                         text: OpenLayers.i18n('upload'),
                         formBind: true,
