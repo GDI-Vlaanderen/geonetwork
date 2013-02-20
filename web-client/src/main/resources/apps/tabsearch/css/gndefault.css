@@ -254,7 +254,7 @@ table.related * a:hover,
 .WWWDOWNLOAD {
   background-image : url(../../images/default/database_yellow.png);
 }
-.OGCWMS {
+.OGCWMS, .WMS {
   background-image : url(../../images/default/map/server_picture.png);
 }
 .OGCWFS {

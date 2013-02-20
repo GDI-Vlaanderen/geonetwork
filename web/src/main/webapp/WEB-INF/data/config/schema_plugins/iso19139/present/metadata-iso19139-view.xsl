@@ -522,11 +522,20 @@
         <xsl:for-each-group select="descendant::gmd:onLine[gmd:CI_OnlineResource/gmd:linkage/gmd:URL!='']" group-by="gmd:CI_OnlineResource/gmd:protocol">
          <xsl:choose>
            <xsl:when test="contains(current-grouping-key(), 'WMS')">
+           
             <tr>
 	          <td class="main">
 	            <!-- Usually, protocole format is OGC:WMS-version-blahblah, remove ':' and get
 	            prefix of the protocol to set the CSS icon class-->
-	            <span class="{translate(substring-before(current-grouping-key(), '-'), ':', '')} icon">
+	            <span>
+		            <xsl:choose>
+		                <xsl:when test="contains(current-grouping-key(), '-')">
+		                  <xsl:attribute name="class" select="concat(translate(substring-before(current-grouping-key(), '-'), ':', ''),' icon')"/>
+		                </xsl:when>
+		                <xsl:otherwise>
+		                  <xsl:attribute name="class" select="concat(translate(current-grouping-key(), ':', ''),' icon')"/>
+		                </xsl:otherwise>
+		            </xsl:choose>
 	              <xsl:value-of
 	                select="/root/gui/strings/protocolChoice[@value=normalize-space(current-grouping-key())]"
 	              />
