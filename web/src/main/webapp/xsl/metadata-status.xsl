@@ -49,9 +49,13 @@
                                                     </xsl:if>
                                                 </xsl:if>
                                                 <label for="st{id}">
-                                                    <xsl:if test="name='approved' or name='retired' or name='rejected'">
-                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-                                                    </xsl:if>
+                                                 <!-- some status values are not available to Editors -->
+                                                   <xsl:if test="$profile='Editor'">
+	                                                    <xsl:if test="name='approved' or name='retired' or name='rejected'">
+	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
+	                                                    </xsl:if>
+	                                                </xsl:if>
+                                                <!-- status value draft and unknown is reserved for administrators  -->
                                                     <xsl:if test="not(contains($profile,'Admin'))">
 	                                                    <xsl:if test="name='draft' or name='unknown'">
 	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
