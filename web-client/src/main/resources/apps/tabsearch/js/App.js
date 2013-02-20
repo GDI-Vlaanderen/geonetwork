@@ -1178,9 +1178,14 @@ Ext.onReady(function () {
             try{RowTitle=record.data.title;} catch (e) {}
             var RowLabel =  RowTitle;
             if (RowLabel.length > 18) RowLabel =  RowLabel.substr(0,17)+"...";
+            
+            var extra = "";
+            if(record.data.status === "1"){
+                extra = "&fromWorkspace=true";
+            }
 
             var aResTab = new GeoNetwork.view.ViewPanel({
-                    serviceUrl: catalogue.services.mdView + '?uuid=' + uuid,
+                    serviceUrl: catalogue.services.mdView + '?uuid=' + uuid + extra,
                     lang: catalogue.lang,
                 autoScroll:true,
                 resultsView: app.getMetadataResultsView(),
