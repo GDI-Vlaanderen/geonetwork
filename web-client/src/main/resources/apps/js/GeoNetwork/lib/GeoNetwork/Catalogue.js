@@ -1012,7 +1012,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             } else {
                 Ext.MessageBox.alert(OpenLayers.i18n('error'), 
                         OpenLayers.i18n('error-login'), function(){
-                    window.location = "../search";
+                    window.location = "../tabsearch";
                 });
             }
         }

@@ -102,11 +102,15 @@ public class    Set implements Service {
         Double scalingFactor = shouldScale(context.getUploadDir() + "/" + file);
 
         if (Math.abs(scalingFactor) > 1) { // We need to make it smaller
-            String newFile = getFileName(file, false);
             String inFile = context.getUploadDir() + file;
-            String outFile = dataDir + newFile;
+            String outFile = dataDir + file;
+            
+            File outFile_ = new File(outFile);
+            if(outFile_.exists()) {
+                outFile_.delete();
+            }
 
-            removeOldThumbnail(context, id, "big");
+            removeOldThumbnail(context, id, "large");
 
             String scalingDir = "width";
             if (scalingFactor < 0) {
@@ -117,19 +121,22 @@ public class    Set implements Service {
             if (!new File(inFile).delete())
                 context.error("Error while deleting thumbnail : " + inFile);
 
-            dataMan.setThumbnail(context, id, false, newFile);
+            dataMan.setThumbnail(context, id, false, file);
         } else {// Image of exactly 120x120. Big thumbnail, no scale
             // or image too small, just upload as it is (small thumbnail)
-            String type = "big";
+            String type = "large";
             if (Math.abs(scalingFactor) < 1) {
                 type = "small";
             }
             
             removeOldThumbnail(context, id, type);
             
-            String newFile = getFileName(file, type.equals("small"));
             File inFile = new File(context.getUploadDir() + file);
-            File outFile = new File(dataDir, newFile);
+            File outFile = new File(dataDir, file);
+            
+            if(outFile.exists()) {
+                outFile.delete();
+            }
             
             try {
                 FileUtils.moveFile(inFile, outFile);

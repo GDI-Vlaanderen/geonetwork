@@ -71,6 +71,7 @@ public class Unset implements Service {
 
 		Lib.resource.checkEditPrivilege(context, id);
 
+        String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
 		//-----------------------------------------------------------------------
 		//--- extract thumbnail filename
 
@@ -82,7 +83,7 @@ public class Unset implements Service {
 
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);
-
+		
 		result = result.getChild(type);
 
 		if (result == null)
@@ -95,6 +96,10 @@ public class Unset implements Service {
 
 		dataMan.unsetThumbnail(context, id, type.equals("small"));
 		
+		if(file.contains("fname")){
+		    file = file.substring(file.indexOf("fname") + 6);
+		    file = dataDir + "/" + file;
+		}
 		File thumbnail = new File(file);
 		if (thumbnail.exists()) {
 			if (!thumbnail.delete()) {
