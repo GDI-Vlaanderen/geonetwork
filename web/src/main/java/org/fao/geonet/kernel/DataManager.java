@@ -2796,7 +2796,12 @@ public class DataManager {
      * @throws Exception
      */
 	public Element getThumbnails(Dbms dbms, String id) throws Exception {
-		Element md = xmlSerializer.select(dbms, "Metadata", id);
+
+	    Element md = xmlSerializer.select(dbms, "Workspace", id);
+
+	    if (md == null) {
+	      md = xmlSerializer.select(dbms, "Metadata", id);
+	    }
 
 		if (md == null)
 			return null;
