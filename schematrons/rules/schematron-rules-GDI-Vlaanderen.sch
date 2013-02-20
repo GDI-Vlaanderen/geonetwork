@@ -25,6 +25,16 @@
 	<sch:pattern>
 		<sch:title>GDI-Vlaanderen SC-2: MD_Metadata.referenceSystemInfo/*/RS_identifier/code (ISO element nr 207) is aanwezig en niet leeg. </sch:title>
 
+        <sch:rule context="//gmd:MD_Metadata[
+             gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+             or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+             or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']">
+                            <sch:let name="referenceSystemInfo" value="gmd:referenceSystemInfo"/>
+             <sch:assert test="$referenceSystemInfo">
+                   Referentie systeem ontbreekt Er dient een horizontaal of verticaal referentiesysteem gedocumenteerd te worden.
+                  </sch:assert>
+        </sch:rule>
+
 		<sch:rule context="//gmd:MD_Metadata[
         			gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
         			or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
