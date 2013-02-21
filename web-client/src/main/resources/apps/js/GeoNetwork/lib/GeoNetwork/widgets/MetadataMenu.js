@@ -475,7 +475,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.diffWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
         this.viewOriginalCopyAction.setDisabled(!(isLocked && isEditable));
         this.diffOriginalCopyAction.setDisabled(!(isLocked && isEditable));
-        this.diffOriginalCopyEditModeAction.setDisabled(!(isLocked && isEditable));
+        this.diffOriginalCopyEditModeAction.setDisabled(this.editAction.isDisabled());
         this.printWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
         if (this.versioningAction) this.versioningAction.setDisabled(!((!isLocked || sameLockedByAndLoggedUser)  && (!isHarvested || GeoNetwork.Settings.editor.editHarvested)));
 
