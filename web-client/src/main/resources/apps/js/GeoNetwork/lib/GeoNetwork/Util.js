@@ -138,11 +138,9 @@ GeoNetwork.Util = {
     
     findContainerId: function(node) {
 	  if(node == null) {
-		  console.log('container id not found');
 		  return null;
 	  }
 	  if(node.parentNode.tagName == 'DIV' && node.parentNode.id) {
-	  	console.log('found container id: ' + node.parentNode.id);
 	  	return node.parentNode.id;
 	  }
 	  return GeoNetwork.Util.findContainerId(node.parentNode);
