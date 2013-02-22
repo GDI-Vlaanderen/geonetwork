@@ -148,6 +148,83 @@ GeoNetwork.Util = {
 	  return GeoNetwork.Util.findContainerId(node.parentNode);
     },
     
+
+    openSections: function(current) {
+        var current = Ext.get(current);
+        
+        while(current) {
+            
+            if(current.dom.tagName === 'FORM') {
+                break;
+            }
+            
+            if(current.id.startsWith("toggled")) {
+                this._openSections_down(current.prev());
+            }
+            
+            current = current.parent();
+        }
+    },
+    _openSections_down: function(current) {
+        var current = Ext.get(current);
+        
+        Ext.each(current.dom.childNodes, function(e) {
+            if(e.className && e.className.contains("tgRight")) {
+                e.onclick();
+            }
+            if(e.childNodes.length > 0) {
+                GeoNetwork.Util._openSections_down(e);
+            }
+        });
+    },
+    
+    findClosestSiblingPair: function(current) {
+        var res = undefined;
+        while(!res) {
+            if(current.prev()) {
+               current = current.prev();
+            } else if (current.next()) {
+               current = current.next();
+            } else {
+               current = this._findClosestSiblingPair_goToParent(current);
+            }
+            
+            if(current == null) {
+                return null;
+            }
+            
+            var classes = current.dom.className.split(" ");
+            Ext.each(classes, function(e) {
+                if(e.contains("pair")) {
+                    res = current;
+                }
+            });
+            
+            if(!res) {
+                res = this.findClosestSiblingPair(current);
+            }
+         }
+        
+        return res;
+    },
+
+    _findClosestSiblingPair_goToParent: function(current) {
+        current = current.parent();
+        if(!current) {
+            return null;
+        }
+        if(current.prev()) {
+            current = current.prev();
+        } else if(current.next()) {
+            current = current.next();
+        } else {
+            current = this._findClosestSiblingPair_goToParent(current);
+            if(!current.dom.className.contains("pair") && current.dom.children.length > 0) {
+                current = Ext.get(current.dom.children[0]);
+            }
+        }
+    },
+    
     getTopLeft: function (elm) {
 
 		var x, y = 0;

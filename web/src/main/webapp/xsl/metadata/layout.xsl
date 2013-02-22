@@ -1287,30 +1287,58 @@
               <xsl:attribute name="onclick">
                   // to know whether we're on source or target doc
                   var containerId = GeoNetwork.Util.findContainerId(this);
-                  var id = this.id;
-                  console.log('this ' + id + ' containerId: ' +  containerId);
                   var selected = Ext.query('.<xsl:value-of select="$pairClassName"/>');
+                  
+                  
+                  var id = this.id;
                   var correspondingElement;
                   var thisTop;
                   var correspondingElementTop;
+                  
+                  //Look for elements and calculate top height to display them
                   for(var i = 0; i &lt; selected.length; i++) {
-                  // the element being hovered
-                  if(selected[i].id == id)  {
-                  	if (!thisTop) thisTop = GeoNetwork.Util.getTopLeft(selected[i]).Top;  
+	                  // the element being hovered
+	                  if(selected[i].id == id)  {
+	                  	if (!thisTop) {
+	                  	    thisTop = GeoNetwork.Util.getTopLeft(selected[i]).Top;  
+	                    }
+	                  }
+	                  // the corresponding element in the other doc
+	                  else {
+	                  	if (!correspondingElementTop) {
+                             GeoNetwork.Util.openSections(selected[i]);
+	                  	     correspondingElementTop = GeoNetwork.Util.getTopLeft(selected[i]).Top;
+	                    }
+	                  }
                   }
-                  // the corresponding element in the other doc
-                  else {
-                  	if (!correspondingElementTop) correspondingElementTop = GeoNetwork.Util.getTopLeft(selected[i]).Top;
+                  
+                  //If pair does not exists, look for closest sibling pair
+                  var current = Ext.get(id);
+                  if(!correspondingElementTop) {
+                        console.log("experimental");
+	                  current = GeoNetwork.Util.findClosestSiblingPair(current);
+	                  if(current) {
+	                    correspondingElementTop = GeoNetwork.Util.getTopLeft(current);
+                        GeoNetwork.Util.openSections(current);
+	                  }
                   }
-                  }
+                  
+                  
                   if(containerId == 'source-container') {
-                    if (correspondingElementTop) $('target-container').scrollTop = correspondingElementTop-200;
-                  	if (thisTop) $('source-container').scrollTop = thisTop-200;
+	                    if (correspondingElementTop) {
+	                        $('target-container').scrollTop = correspondingElementTop-200;
+	                    }
+	                  	if (thisTop) {
+	                  	     $('source-container').scrollTop = thisTop-200;
+	                  	}
                   }
                   else if(containerId == 'target-container' || containerId == 'hiddenFormElements') {
-                  	if (correspondingElementTop) $('source-container').scrollTop = correspondingElementTop-200;
-                    if (thisTop)  $('target-container').scrollTop = thisTop-200;
-
+	                  	if (correspondingElementTop) {
+	                  	     $('source-container').scrollTop = correspondingElementTop-200;
+	                  	}
+	                    if (thisTop) {
+	                        $('target-container').scrollTop = thisTop-200;
+	                    }
                   }
               </xsl:attribute>
           </xsl:if>
