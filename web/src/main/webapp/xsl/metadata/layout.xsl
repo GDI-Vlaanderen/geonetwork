@@ -1307,7 +1307,7 @@
                     if (correspondingElementTop) $('target-container').scrollTop = correspondingElementTop-200;
                   	if (thisTop) $('source-container').scrollTop = thisTop-200;
                   }
-                  else if(containerId == 'target-container') {
+                  else if(containerId == 'target-container' || containerId == 'hiddenFormElements') {
                   	if (correspondingElementTop) $('source-container').scrollTop = correspondingElementTop-200;
                     if (thisTop)  $('target-container').scrollTop = thisTop-200;
 
