@@ -184,7 +184,7 @@ GeoNetwork.Util = {
         
         current = current.dom.className;
         
-        while(current.length > 0) {
+        while(current.length > 5) {
             
            var tmp = GeoNetwork.Util._findClosestSiblingPair(current, id);
            if(tmp) {
@@ -208,18 +208,7 @@ GeoNetwork.Util = {
                     Ext.each(elems, function(elem){
                         if(elem.id != id && !rejected.contains(elem.className)
                                 &&!selected.contains(elem)) {
-                            var tmp = Ext.get(elem);
-                            var isVisible = true;
-                            while(tmp && isVisible) {
-                                if(!tmp.isVisible()) {
-                                    isVisible = false;
-                                    rejected.push(elem.className);
-                                }
-                                tmp = tmp.parent();
-                            }
-                            if(isVisible) {
                                 selected.push(elem);
-                            }
                         }
                     });
                 } else {
@@ -228,12 +217,19 @@ GeoNetwork.Util = {
             }
         });
         
+        var res = null;
+        
         if(selected.length > 0) {
             selected.sort();
-            return selected[selected.length - 1];
+            var elems = Ext.query("." + selected[selected.length - 1].className);
+            Ext.each(elems, function(e){
+                if(Ext.query("*[id=" + e.id + "]", Ext.get("source-container").dom).length == 0) {
+                    res = e;
+                }
+            });
         }
         
-        return null;
+        return res;
     },
     
     getTopLeft: function (elm) {

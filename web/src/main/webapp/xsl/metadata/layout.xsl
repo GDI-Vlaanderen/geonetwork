@@ -1317,8 +1317,8 @@
                   if(!correspondingElementTop) {
 	                  current = GeoNetwork.Util.findClosestSiblingPair(current);
 	                  if(current) {
-	                    correspondingElementTop = GeoNetwork.Util.getTopLeft(current);
-	                    GeoNetwork.Util.openSections(current);
+                        GeoNetwork.Util.openSections(current);
+	                    correspondingElementTop = GeoNetwork.Util.getTopLeft(current).Top;
 	                  }
                   }
                   
@@ -1332,6 +1332,7 @@
 	                  	}
                   }
                   else if(containerId == 'target-container' || containerId == 'hiddenFormElements') {
+                    
 	                  	if (correspondingElementTop) {
 	                  	     $('source-container').scrollTop = correspondingElementTop-200;
 	                  	}
