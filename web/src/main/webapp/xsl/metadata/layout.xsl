@@ -1315,11 +1315,10 @@
                   //If pair does not exists, look for closest sibling pair
                   var current = Ext.get(id);
                   if(!correspondingElementTop) {
-                        console.log("experimental");
 	                  current = GeoNetwork.Util.findClosestSiblingPair(current);
 	                  if(current) {
 	                    correspondingElementTop = GeoNetwork.Util.getTopLeft(current);
-                        GeoNetwork.Util.openSections(current);
+	                    GeoNetwork.Util.openSections(current);
 	                  }
                   }
                   

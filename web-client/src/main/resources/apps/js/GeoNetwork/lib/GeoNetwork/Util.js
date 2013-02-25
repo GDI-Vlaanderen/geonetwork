@@ -176,51 +176,64 @@ GeoNetwork.Util = {
         });
     },
     
-    findClosestSiblingPair: function(current) {
-        var res = undefined;
-        while(!res) {
-            if(current.prev()) {
-               current = current.prev();
-            } else if (current.next()) {
-               current = current.next();
-            } else {
-               current = this._findClosestSiblingPair_goToParent(current);
-            }
-            
-            if(current == null) {
-                return null;
-            }
-            
-            var classes = current.dom.className.split(" ");
-            Ext.each(classes, function(e) {
-                if(e.contains("pair")) {
-                    res = current;
-                }
-            });
-            
-            if(!res) {
-                res = this.findClosestSiblingPair(current);
-            }
-         }
+    findClosestSiblingPair: function(current, id) {
+        var current = Ext.get(current);
+        if(!id) {
+            id = current.id;
+        }
         
-        return res;
+        current = current.dom.className;
+        
+        while(current.length > 0) {
+            
+           var tmp = GeoNetwork.Util._findClosestSiblingPair(current, id);
+           if(tmp) {
+               return tmp;
+           }
+           var index = current.length - 1;
+           current = current.substring(0, index);
+        }
     },
 
-    _findClosestSiblingPair_goToParent: function(current) {
-        current = current.parent();
-        if(!current) {
-            return null;
-        }
-        if(current.prev()) {
-            current = current.prev();
-        } else if(current.next()) {
-            current = current.next();
-        } else {
-            current = this._findClosestSiblingPair_goToParent(current);
-            if(!current.dom.className.contains("pair") && current.dom.children.length > 0) {
-                current = Ext.get(current.dom.children[0]);
+    _findClosestSiblingPair: function(current, id) {
+        
+        var pairs = Ext.query("*[class*=" + current + "]");
+        var rejected = [];
+        var selected = [];
+        Ext.each(pairs, function(pair){
+            if(!rejected.contains(pair.className)) {
+                var elems = Ext.query("*[class=" + pair.className + "]");
+                
+                if(elems.length > 1) {
+                    Ext.each(elems, function(elem){
+                        if(elem.id != id && !rejected.contains(elem.className)
+                                &&!selected.contains(elem)) {
+                            var tmp = Ext.get(elem);
+                            var isVisible = true;
+                            while(tmp && isVisible) {
+                                if(!tmp.isVisible()) {
+                                    isVisible = false;
+                                    rejected.push(elem.className);
+                                }
+                                tmp = tmp.parent();
+                            }
+                            if(isVisible) {
+                                selected.push(elem);
+                            }
+                        }
+                    });
+                } else {
+                    rejected.push(pair.className);
+                }
             }
+        });
+        
+        if(selected.length > 0) {
+            selected.sort();
+            return selected[selected.length - 1];
         }
+        
+        return null;
     },
     
     getTopLeft: function (elm) {
