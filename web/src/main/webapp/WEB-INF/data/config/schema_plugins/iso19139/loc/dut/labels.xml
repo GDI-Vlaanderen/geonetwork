@@ -2665,9 +2665,9 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
         <label>Categorie</label>
         <description>Toepassingsdomein van de entiteiten gedefinieerd in deze objectencatalogus</description>
     </element>
-    <element name="gmx:versionDate">
-        <label>Versiedatum</label>
-        <description>Datum van deze versie van de objectencatalogus</description>
+    <element name="gmx:versionNumber">
+        <label>Versie</label>
+        <description>Versie van de objectencatalogus</description>
     </element>
     <element name="gmx:versionDate">
         <label>Versiedatum</label>

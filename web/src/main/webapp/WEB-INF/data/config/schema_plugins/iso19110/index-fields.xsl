@@ -44,10 +44,10 @@
 
 			<!-- not tokenized title for sorting -->
 			<Field name="_title"
-                string="{string(/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
-                /gfc:FC_FeatureCatalogue/gfc:scope/gco:CharacterString|
-                /gfc:FC_FeatureType/gfc:definition/gco:CharacterString">
-				store="false" index="true"/>
+                string="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
+                /gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
+                /gfc:FC_FeatureType/gfc:typeName/gco:LocalName"
+                store="false" index="true"/>
 
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
