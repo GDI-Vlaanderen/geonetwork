@@ -528,8 +528,9 @@ GeoNetwork.Lang.nl = {
     'About': 'Over',
     'List': 'Resultatenlijst',
 
-    'error-login': 'Je moet eerst inloggen om deze pagina te bekijken.'
+    'error-login': 'Je moet eerst inloggen om deze pagina te bekijken.',
 
+    'statusChangeFailed': 'De statuswijziging is niet gelukt aangezien het metadatarecord niet gevalideerd kon worden. Editeer het metadatarecord om de validatiefouten te zien.'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);
