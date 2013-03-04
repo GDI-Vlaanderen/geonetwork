@@ -114,7 +114,7 @@ public class UpdateStatus implements Service {
         // TODO index workspace ????
 
         if(unchanged.size() > 0){
-            return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Jeeves.Elem.ERROR).setText("Change of status failed for metadata with id: " + id));
+            return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Jeeves.Elem.ERROR).setText("statusChangeFailed"));
         }
         else {
     		//--- return id for showing

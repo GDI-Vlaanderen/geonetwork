@@ -1180,7 +1180,8 @@ Ext.onReady(function () {
             if (RowLabel.length > 18) RowLabel =  RowLabel.substr(0,17)+"...";
             
             var extra = "";
-            if(record.data.status === "1"){
+            if(record.data.locked === "y" && record.data.edit === 'true'){
+            //Show always workspace version
                 extra = "&fromWorkspace=true";
             }
 
