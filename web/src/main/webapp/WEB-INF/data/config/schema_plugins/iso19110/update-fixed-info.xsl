@@ -25,7 +25,7 @@
 	
 	<!-- =================================================================-->
 	
-	<xsl:template match="gfc:versionDate">
+	<xsl:template match="gfc:versionDate|gmx:versionDate">
         <xsl:choose>
             <xsl:when test="/root/env/changeDate">
                 <xsl:copy>
