@@ -2610,19 +2610,22 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Type name</label>
 		<description/>
 		<helper>
-			<option value="BOOLEAN">BOOLEAN</option>
-			<option value="BYTE">BYTE</option>
-			<option value="CHARACTER">CHARACTER</option>
-			<option value="DATE">DATE</option>
-			<option value="DATETIME">DATETIME</option>
-			<option value="DOUBLE">DOUBLE</option>
-			<option value="FLOAT">FLOAT</option>
-			<option value="INTEGER">INTEGER</option>
-			<option value="NUMERIC">NUMERIC</option>
-			<option value="REAL">REAL</option>
-			<option value="SERIAL">SERIAL</option>
-			<option value="VARCHAR">VARCHAR</option>
-			<option value="TEXT">TEXT</option>
+			<option value="Punt">Punt</option>
+			<option value="Curve">Curve</option>
+			<option value="Vlak">Vlak</option>
+			<option value="Pixel">Pixel</option>
+			<option value="Band">Band</option>
+			<option value="Grid">Grid</option>
+			<option value="Getal (&lt;n&gt;,&lt;m&gt;)">Getal (&lt;n&gt;,&lt;m&gt;)</option>
+			<option value="Tekst (&lt;n&gt;)">Tekst (&lt;n&gt;)</option>
+			<option value="Memo">Memo</option>
+			<option value="Datum">Datum</option>
+			<option value="Periode (van &lt;tijdstip/datum&gt; tot &lt;tijdstip/datum&gt;)">Periode (van &lt;tijdstip/datum&gt; tot &lt;tijdstip/datum&gt;)</option>
+			<option value="Tijdstip">Tijdstip</option>
+			<option value="Tijdsduur">Tijdsduur</option>
+			<option value="Boolean">Boolean</option>
+			<option value="URI">URI</option>
+			<option value="Breuk (&lt;n&gt;,&lt;m&gt;)">Breuk (&lt;n&gt;,&lt;m&gt;)</option>
 		</helper>
 	</element>
     <element name="gmx:FileName">
