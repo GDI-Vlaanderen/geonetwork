@@ -43,7 +43,8 @@
 
     <!-- in case gmd:MD_DataIdentification does not have a gmd:descriptiveKeywords using  'GDI-Vlaanderen Trefwoorden' thesaurus, insert it at correct position -->
     <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification">
-        <xsl:if test="count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[gco:CharacterString = 'GDI-Vlaanderen Trefwoorden']) = 0">
+        <xsl:choose>
+            <xsl:when test="count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[gco:CharacterString = 'GDI-Vlaanderen Trefwoorden']) = 0">
             <!-- all elements allowed to follow descriptiveKeywords in MD_DataIdentification -->
             <xsl:variable name="elements-after" select="gmd:resourceSpecificUsage|gmd:resourceConstraints|gmd:aggregationInfo|gmd:spatialRepresentationType|gmd:spatialResolution|gmd:language|gmd:characterSet|gmd:topicCategory|gmd:environmentDescription|gmd:extent|gmd:supplementalInformation"/>
             <xsl:copy>
@@ -76,7 +77,12 @@
                 </gmd:descriptiveKeywords>
                 <xsl:copy-of select="$elements-after"/>
             </xsl:copy>
-        </xsl:if>
+            </xsl:when>
+            <!-- does have a gmd:descriptiveKeywords using 'GDI-Vlaanderen Trefwoorden' thesaurus: just put out  -->
+            <xsl:otherwise>
+                <xsl:copy-of select="."></xsl:copy-of>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="@*|node()">
