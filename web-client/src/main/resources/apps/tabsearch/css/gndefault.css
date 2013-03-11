@@ -413,3 +413,7 @@ dl.xml {
 dl.xml * dd {
   padding-left : 2px;
 }
+
+.ext-ie7 .x-panel-bwrap .x-panel.x-panel-noborder,.ext-ie7 .x-panel-body.x-panel-body-noborder, .ext-ie7 .x-panel-bwrap {
+    height: 100%;
+}
