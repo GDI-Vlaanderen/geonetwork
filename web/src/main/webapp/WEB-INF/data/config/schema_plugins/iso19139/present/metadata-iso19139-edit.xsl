@@ -2096,7 +2096,7 @@ can clutter up the rest of the metadata record! -->
             </xsl:call-template>
         </xsl:variable>
 
-        <xsl:call-template name="complexElementGui">
+        <!-- <xsl:call-template name="complexElementGui">
             <xsl:with-param name="title" select="/root/gui/strings/metametadata"/>
             <xsl:with-param name="validationLink" select="$validationLink"/>
 
@@ -2107,7 +2107,7 @@ can clutter up the rest of the metadata record! -->
                 </xsl:call-template>
             </xsl:with-param>
             <xsl:with-param name="edit" select="true()"/>
-            <xsl:with-param name="content">
+            <xsl:with-param name="content"> -->
 
                 <!-- if the parent is root then display fields not in tabs -->
                 <xsl:choose>
@@ -2144,9 +2144,9 @@ can clutter up the rest of the metadata record! -->
                     </xsl:otherwise>
                 </xsl:choose>
 
-            </xsl:with-param>
+            <!-- </xsl:with-param>
             <xsl:with-param name="schema" select="$schema"/>
-        </xsl:call-template>
+        </xsl:call-template> -->
 
     </xsl:template>
 
