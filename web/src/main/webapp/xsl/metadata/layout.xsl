@@ -2124,6 +2124,9 @@
         <!-- not editable text/codelists -->
         <xsl:variable name="label"
           select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code=$value]/label"/>
+          
+        <xsl:variable name="name_parent" select="name(..)"/>
+          
         <xsl:choose>
           <xsl:when test="$label">
             <xsl:value-of select="$label"/>
@@ -2132,6 +2135,19 @@
             <xsl:apply-templates mode="localised" select="..">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
+          </xsl:when>
+          <!-- AGIV changing one boolean to other string -->
+          <xsl:when test="$name_parent='gmd:pass'">
+            <xsl:variable name="value_" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = 'gmd:pass']/entry[code=$value]/label"/>
+            
+            <xsl:choose>
+                <xsl:when test="$value_">
+                    <xsl:value-of select="$value_"/> 
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$value"/>
+                </xsl:otherwise>
+            </xsl:choose>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$value"/>

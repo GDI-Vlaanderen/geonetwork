@@ -2040,4 +2040,14 @@ serviceType definitie. Metadata voor data wordt niet geleverd in de service meta
 			<label>Input/output</label>
 		</entry>
 	</codelist>
+    <codelist name="gmd:pass">
+        <entry>
+            <code>true</code>
+            <label>Conform</label>
+        </entry>
+        <entry>
+            <code>false</code>
+            <label>Niet-conform</label>
+        </entry>
+    </codelist> 
 </codelists>
