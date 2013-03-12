@@ -535,11 +535,23 @@
         <xsl:variable name="text">
             <xsl:value-of select="format-number(gco:Integer, '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
         </xsl:variable>
-        <xsl:apply-templates mode="simpleElement" select=".">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="text"   select="$text"/>
-        </xsl:apply-templates>
+       
+       <xsl:choose>
+	       <xsl:when test="$edit"> 
+		       <xsl:apply-templates mode="simpleElement" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	          </xsl:apply-templates>
+	       </xsl:when>
+	       <xsl:otherwise>
+               <xsl:apply-templates mode="simpleElement" select=".">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+                <xsl:with-param name="text"   select="$text"/>
+              </xsl:apply-templates>
+          </xsl:otherwise>
+       </xsl:choose>
+       
     </xsl:template>
 
     <xsl:template name="iso19139String">
