@@ -532,26 +532,41 @@
     <xsl:template mode="iso19139" match="gmd:denominator" priority="100">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
+
         <xsl:variable name="text">
             <xsl:value-of select="format-number(gco:Integer, '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
         </xsl:variable>
-       
-       <xsl:choose>
-	       <xsl:when test="$edit"> 
-		       <xsl:apply-templates mode="simpleElement" select=".">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-	          </xsl:apply-templates>
-	       </xsl:when>
-	       <xsl:otherwise>
-               <xsl:apply-templates mode="simpleElement" select=".">
-                <xsl:with-param name="schema" select="$schema"/>
-                <xsl:with-param name="edit"   select="$edit"/>
-                <xsl:with-param name="text"   select="$text"/>
-              </xsl:apply-templates>
-          </xsl:otherwise>
-       </xsl:choose>
-       
+
+        <xsl:choose>
+            <xsl:when test="$edit">
+                <xsl:apply-templates mode="simpleElement" select="gco:Integer">
+                    <xsl:with-param name="schema"   select="$schema"/>
+                    <xsl:with-param name="edit"     select="$edit"/>
+                    <xsl:with-param name="helpLink">
+                        <xsl:call-template name="getHelpLink">
+                            <xsl:with-param name="name" select="name(.)"/>
+                            <xsl:with-param name="schema" select="$schema"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+
+                    <xsl:with-param name="title">
+                        <xsl:call-template name="getTitle">
+                            <xsl:with-param name="name" select="name(.)"/>
+                            <xsl:with-param name="schema" select="$schema"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                    <xsl:with-param name="text"   select="$text"/>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:template>
 
     <xsl:template name="iso19139String">
