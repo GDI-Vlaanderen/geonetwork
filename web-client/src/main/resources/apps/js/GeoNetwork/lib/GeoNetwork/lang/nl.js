@@ -511,9 +511,10 @@ GeoNetwork.Lang.nl = {
     'delTplElTT': 'Verwijder geselecteerd element uit de folder.',
 
     'metadataLocked': 'Metadatarecord in editeer sessie',
-    'diffWorkspaceCopy': 'Vergelijk met werkdocument',
-    'diffWorkspaceCopyEditMode': 'Vergelijk met werkdocument in editeer modus',
+    'diffWorkspaceCopy': 'Vergelijk met origineel',
+    'diffWorkspaceCopyEditMode': 'Vergelijk met origineel in editeer modus',
     'diffOriginalCopy': 'Vergelijk met origineel',
+    'diffOriginalCopyTT': 'Vergelijk met origineel',
     'diffOriginalCopyEditMode': 'Vergelijk met origineel in editeer modus',
     'allowedToUnlockMetadata': 'U kan de editeer sessie overnemen',
     'allowedToEditMetadata': 'U kan dit metadatarecord wijzigen',

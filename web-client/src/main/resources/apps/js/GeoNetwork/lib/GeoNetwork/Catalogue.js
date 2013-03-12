@@ -886,6 +886,42 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 this.windowName, this.windowOption);
         }
     },
+    metadataOriginalCopyShow: function(uuid, maximized, width, height){
+        // UUID may contains special character like #
+        var url = this.services.mdView + '?uuid=' + escape(uuid) + '&fromWorkspace=false';
+        var bd = Ext.getBody();
+
+        if (this.resultsView) {
+            var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid));
+
+            // No current search available with this record information
+            if (!record) {
+                // Retrieve information in synchrone mode
+                var store = GeoNetwork.data.MetadataResultsFastStore();
+                this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                record = store.getAt(store.find('uuid', uuid));
+            }
+
+            var win = new GeoNetwork.view.ViewWindow({
+                serviceUrl: url,
+                lang: this.lang,
+                currTab: GeoNetwork.defaultViewMode || 'simple',
+                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+                catalogue: this,
+                maximized: maximized || false,
+                metadataUuid: uuid,
+                record: record,
+                resultsView: this.resultsView,
+                workspaceCopy: false
+            });
+            win.show(this.resultsView);
+            win.alignTo(bd, 'tr-tr');
+        } else {
+            // Not really used - use old service
+            window.open( this.services.mdView + '?uuid=' + escape(uuid) + '&fromWorkspace=false',
+                this.windowName, this.windowOption);
+        }
+    },
     metadataWorkspaceCopyShow: function(uuid, maximized, width, height){
         // UUID may contains special character like #
         var url = this.services.mdView + '?uuid=' + escape(uuid) + '&fromWorkspace=true';

@@ -513,9 +513,10 @@ GeoNetwork.lang.en = {
 
     'viewWorkspaceCopy': 'View workspace copy',
     'viewOriginalCopy': 'View original copy',
+    'viewOriginalCopyTT': 'View original copy',
     'metadataLocked': 'Metadata locked',
-    'diffWorkspaceCopy': 'Compare with workspace copy',
-    'diffWorkspaceCopyEditMode': 'Compare in edit mode with workspace copy',
+    'diffWorkspaceCopy': 'Compare with original',
+    'diffWorkspaceCopyEditMode': 'Compare in edit mode with original copy',
     'diffOriginalCopy': 'Compare with original',
     'diffOriginalCopyEditMode': 'Compare in edit mode with original',
     'allowedToUnlockMetadata': 'You are allowed to unlock this metadata',

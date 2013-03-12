@@ -249,7 +249,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             iconCls : 'md-mn-view',
             handler: function(){
                 var id = this.record.get('uuid');
-                this.catalogue.metadataShow(id);
+                this.catalogue.metadataOriginalCopyShow(id);
             },
             scope: this
         });
