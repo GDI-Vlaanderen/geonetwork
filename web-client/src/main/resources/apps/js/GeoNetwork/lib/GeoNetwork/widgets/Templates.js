@@ -183,18 +183,18 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
 
             // locked information
             '<tpl if="locked==\'y\'">',
-            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/lock.png" alt="'+  OpenLayers.i18n('metadataLocked') + '" title="'+  OpenLayers.i18n('metadataLocked') + '"/>',
+            '<img class="md_status" style="position:static;"  width="30" height="30" src="{[catalogue.URL]}/images/lock.png" alt="'+  OpenLayers.i18n('metadataLocked') + '" title="'+  OpenLayers.i18n('metadataLocked') + '"/>',
             '</tpl>',
 
             // can unlock information
             '<tpl if="values.canunlock==\'y\'">',
 
-            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/keys.png" alt="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '" title="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '"/>',
+            '<img class="md_status" style="position:static;"  width="30" height="30" src="{[catalogue.URL]}/images/keys.png" alt="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '" title="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '"/>',
             '</tpl>',
 
             // can edit information
             '<tpl if="values.canedit==\'y\'">',
-            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/edit.png" alt="'+  OpenLayers.i18n('allowedToEditMetadata') + '" title="'+  OpenLayers.i18n('allowedToEditMetadata') + '"/>',
+            '<img class="md_status" style="position:static;"  width="30" height="30" src="{[catalogue.URL]}/images/edit.png" alt="'+  OpenLayers.i18n('allowedToEditMetadata') + '" title="'+  OpenLayers.i18n('allowedToEditMetadata') + '"/>',
             '</tpl>',
             '</div>',
             '</tpl>',
@@ -273,18 +273,18 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
 
             // locked information
             '<tpl if="locked==\'y\'">',
-            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/lock.png" alt="'+  OpenLayers.i18n('metadataLocked') + '" title="'+  OpenLayers.i18n('metadataLocked') + '"/>',
+            '<img class="md_status"  style="position:static;" width="30" height="30" src="{[catalogue.URL]}/images/lock.png" alt="'+  OpenLayers.i18n('metadataLocked') + '" title="'+  OpenLayers.i18n('metadataLocked') + '"/>',
             '</tpl>',
 
             // can unlock information
             '<tpl if="values.canunlock==\'y\'">',
 
-            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/keys.png" alt="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '" title="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '"/>',
+            '<img class="md_status" style="position:static;"  width="30" height="30" src="{[catalogue.URL]}/images/keys.png" alt="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '" title="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '"/>',
             '</tpl>',
 
             // can edit information
             '<tpl if="values.canedit==\'y\'">',
-            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/edit.png" alt="'+  OpenLayers.i18n('allowedToEditMetadata') + '" title="'+  OpenLayers.i18n('allowedToEditMetadata') + '"/>',
+            '<img class="md_status" style="position:static;"  width="30" height="30" src="{[catalogue.URL]}/images/edit.png" alt="'+  OpenLayers.i18n('allowedToEditMetadata') + '" title="'+  OpenLayers.i18n('allowedToEditMetadata') + '"/>',
             '</tpl>',
             '</div>',
             '</tpl>',
@@ -392,3 +392,16 @@ GeoNetwork.Templates.Relation = {
                    '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
                  '</li>']
 };
+
+
+GeoNetwork.Templates.KEYWORD_ITEM = new Ext.XTemplate(
+    '<tpl for=".">',
+        '<div class="ux-mselect-item" title="{definition}">{value}</div>',
+    '</tpl>'
+);
+
+GeoNetwork.Templates.THESAURUS_HEADER = new Ext.XTemplate(
+    '<tpl for=".">',
+        '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
+    '</tpl>'
+);
