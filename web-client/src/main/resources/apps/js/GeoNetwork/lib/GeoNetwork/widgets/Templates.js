@@ -222,7 +222,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '</tpl></p>',
             '</tpl>',
             '<div class="md-links">',
-            '<a href="?uuid={uuid}&hl={catalogue.lang}" class="md-mn md-mn-bookmark" title="{[OpenLayers.i18n(\'view\')]} {title}" alt="{[OpenLayers.i18n(\'view\')]}">&nbsp;</a>',
+            '<a href="?uuid={uuid}&hl={catalogue.lang}" target="_blank" class="md-mn md-mn-bookmark" title="{[OpenLayers.i18n(\'view\')]} {title}" alt="{[OpenLayers.i18n(\'view\')]}">&nbsp;</a>',
             // FIXME : this call require the catalogue to be named catalogue, static call ?
             // FIXME : ref to app
             '<tpl for="links">',
