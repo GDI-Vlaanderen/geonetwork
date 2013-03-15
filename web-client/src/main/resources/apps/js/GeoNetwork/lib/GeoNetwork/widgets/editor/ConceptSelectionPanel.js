@@ -430,7 +430,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 load: function (store, records, options) {
                     // Check that requested thesaurus is available
                     var thesaurus = store.query('id', self.thesaurusIdentifier);
-                    if (thesaurus.getCount() === 1) {
+                    if (thesaurus.getCount() >= 1) {
+                        //if more than one, consider the first one
                         self.thesaurusSelector.setValue(thesaurus.get(0).get('id'));
                         self.setThesaurusInfo(thesaurus.get(0));
                         self.thesaurusSelector.fireEvent('select');
@@ -638,6 +639,16 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
     
     for (var idx = 0; idx < thesaurusPickers.length; ++idx) {
         var thesaurusPicker = thesaurusPickers[idx];
+        
+        //AGIV: First make all parents visible, so the sizes are properly calculated
+        var current = Ext.get(thesaurusPicker);
+        while(current) {
+            if(!current.isVisible()) {
+                current.setVisible(true);
+            }
+            current = current.parent();
+        }
+        
         if (thesaurusPicker !== null) {
             var id = thesaurusPicker.getAttribute("id"), 
                 config = thesaurusPicker.getAttribute("config"),
