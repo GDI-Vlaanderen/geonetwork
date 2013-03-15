@@ -1443,9 +1443,8 @@
             and count(*/geonet:attribute[@name='codeList'])=0 
             ">
             <!-- Display attributes if used and not only contains a gco:nilReason = missing. -->
-            <!--  AGIV specific -->
-            <xsl:variable name="visibleAttributes" select="false"/>
-            <div class="attr">
+            <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and  normalize-space()!='missing']) > 0"/>
+             <div class="attr">
               <div title="{/root/gui/strings/editAttributes}" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));" style="display: none;">
                 <xsl:attribute name="class">
                   <xsl:choose>
@@ -1820,8 +1819,7 @@
           <legend id="stip.{$helpLink}|{$id}">
             <span>
               <xsl:if test="/root/gui/config/metadata-view-toggleTab">
-                <!-- AGIV specific -->
-                <div class="toggle button tgRight" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
+                <div class="toggle button tgDown" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
                   >&#160;</div>
               </xsl:if>
 
@@ -1852,7 +1850,7 @@
             </span>
           </legend>
           <!-- Check if divs could be used instead ? -->
-          <table class="gn" id="toggled{$id}" style="display:none">
+          <table class="gn" id="toggled{$id}">
             <tbody>
               <xsl:copy-of select="$content"/>
             </tbody>
