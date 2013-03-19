@@ -132,6 +132,7 @@
             "GeoNetwork/widgets/view/ViewPanel.js",
             "GeoNetwork/widgets/diff/DiffWindow.js",
             "GeoNetwork/widgets/diff/DiffPanel.js",
+            "GeoNetwork/widgets/editor/ConceptSelectionPanel.js",
             "GeoNetwork/widgets/editor/KeywordSelectionPanel.js",
             "GeoNetwork/widgets/editor/CRSSelectionPanel.js",
             "GeoNetwork/widgets/editor/SubTemplateSelectionPanel.js",
