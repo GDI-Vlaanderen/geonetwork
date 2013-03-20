@@ -2097,7 +2097,10 @@
             ) and $edit">
             <xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
           </xsl:if>
-          <xsl:value-of select="text()"/>
+          <xsl:choose>
+            <xsl:when test="not(text())">&#8203;</xsl:when>
+            <xsl:otherwise><xsl:value-of select="string(text())"/></xsl:otherwise>
+          </xsl:choose>
         </textarea>
         <xsl:call-template name="helper">
           <xsl:with-param name="schema" select="$schema"/>
