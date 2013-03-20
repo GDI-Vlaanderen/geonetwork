@@ -169,7 +169,9 @@ label + span {
 
 /* Form - start */
 
-
+.metadata * .debug {
+	display:none;
+}
 .metadata * input,
 .metadata * textarea,
 .metadata * select {
