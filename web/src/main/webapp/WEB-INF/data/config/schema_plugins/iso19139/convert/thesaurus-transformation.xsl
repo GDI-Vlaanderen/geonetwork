@@ -56,7 +56,7 @@
 					<xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
 					
 					<!-- Loop on all keyword from the same thesaurus -->
-					<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+					<xsl:for-each select="//keyword[thesaurus]">
 						<gmd:keyword>
 							<xsl:choose>
 								<xsl:when test="$withAnchor">
