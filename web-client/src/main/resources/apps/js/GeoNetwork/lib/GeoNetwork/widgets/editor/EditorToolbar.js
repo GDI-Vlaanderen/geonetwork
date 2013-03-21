@@ -289,7 +289,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
      *  TODO : what to do in destroy ?
      */
     onDestroy: function(){
-        GeoNetwork.EditorToolbar.superclass.onDestroy.apply(this, arguments);
+        GeoNetwork.editor.EditorToolbar.superclass.onDestroy.apply(this, arguments);
     }
 });
 

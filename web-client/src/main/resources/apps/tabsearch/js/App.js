@@ -748,7 +748,7 @@ GeoNetwork.app = function(){
                 layout: 'fit',
                 modal: false,
                 items: this.editorPanel,
-                closeAction: 'hide',
+                closeAction: 'close',
                 collapsible: true,
                 collapsed: false,
                 maximizable: true,
@@ -758,7 +758,14 @@ GeoNetwork.app = function(){
                 width: 980,
                 height: 800
             });
+            
+            var this_ = this;
+            this.editorWindow.on('destroy', function() {
+                this_.editorWindow = undefined;
+                this_.editorPanel = undefined;
+            });
             this.editorPanel.setContainer(this.editorWindow);
+            
             this.editorPanel.on('editorClosed', function(){
                 Ext.getCmp('searchBt').fireEvent('click');
             });

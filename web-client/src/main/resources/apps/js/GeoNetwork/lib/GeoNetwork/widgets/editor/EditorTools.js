@@ -362,7 +362,17 @@ function doRemoveElementAction(action, ref, parentref, id, min){
 
 function doRemoveAttributeAction(action, ref, parentref)
 {
-	var metadataId = document.mainForm.id.value;
+	var metadataId = undefined;
+	
+	if(document.mainForm) {
+	    metadataId = document.mainForm.id.value;
+	} else {
+	    var tmp = Ext.query("li[id*=GNtabs__][class*=x-tab-strip-closable]");
+	    if(tmp.length > 0) {
+	        metadataId = tmp[0].id.substring(8);
+	    }
+	}
+	
 	var thisElement = Ext.get(ref + '_block');
 	Ext.Ajax.request({
 		url: catalogue.services.rootUrl + action,

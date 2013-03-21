@@ -640,22 +640,13 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
     for (var idx = 0; idx < thesaurusPickers.length; ++idx) {
         var thesaurusPicker = thesaurusPickers[idx];
         
-        //AGIV: First make all parents visible, so the sizes are properly calculated
-        var current = Ext.get(thesaurusPicker);
-        while(current) {
-            if(!current.isVisible()) {
-                current.setVisible(true);
-            }
-            current = current.parent();
-        }
-        
         if (thesaurusPicker !== null) {
             var id = thesaurusPicker.getAttribute("id"), 
                 config = thesaurusPicker.getAttribute("config"),
                 jsonConfig = Ext.decode(config);
             var p = Ext.get(id + '_panel');
             
-            if (p.dom.innerHTML === '') {
+//            if (p.dom.innerHTML === '') {
                 var panel = new GeoNetwork.editor.ConceptSelectionPanel({
                     catalogue: catalogue,
                     thesaurus: jsonConfig.thesaurus,
@@ -666,7 +657,7 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
                     xmlField: id + '_xml',
                     renderTo: id + '_panel'
                 });
-            }
+//            }
         }
     }
 };

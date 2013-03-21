@@ -68,9 +68,6 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
     resultsView: undefined,
 
     afterDiffLoad: function(){
-        
-        console.log("afterDiffLoad");
-
         //set height of container to parent height
         
         Ext.each(Ext.query("#source-container"), function(el){
@@ -102,6 +99,9 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         if(this.catalogue && this.catalogue.extentMap) {
             this.catalogue.extentMap.initMapDiv();
         }
+
+
+        GeoNetwork.editor.ConceptSelectionPanel.init();
     },
     getPanelTbar: function(){
         if (this.edit) return [this.createSwitchMenu(),'->',{text:'save',handler:function(){
