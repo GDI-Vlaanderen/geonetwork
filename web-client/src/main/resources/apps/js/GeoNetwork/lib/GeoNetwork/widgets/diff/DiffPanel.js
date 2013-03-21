@@ -107,7 +107,7 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         if (this.edit) return [this.createSwitchMenu(),'->',{text:'save',handler:function(){
             Ext.Ajax.request({
                 method:"POST",
-                form:Ext.get('diffEditForm'),
+                form:Ext.get('editForm'),
                 success:function(){alert('Metadata Saved')},
                 failure:function(){alert('Metadata save failed')
             }});
