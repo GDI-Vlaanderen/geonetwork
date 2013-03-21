@@ -220,7 +220,16 @@ function doNewAttributeAction(action, ref, name, id, what){
 }
 
 function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
-    var metadataId = document.mainForm.id.value;
+    var metadataId = undefined;
+    
+    if(document.mainForm != null) {
+        metadataId = document.mainForm.id.value;
+    } else if (Ext.get('editForm')) {
+        metadataId = Ext.get('editForm').id.value;
+    } else {
+        return;
+    }
+    
     var pars = "&id=" + metadataId + "&ref=" + ref + "&name=" + name;
     if (child != null) pars += "&child=" + child;
     var thisElement = Ext.get(id);
@@ -276,7 +285,15 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
 }
 
 function doRemoveElementAction(action, ref, parentref, id, min){
-    var metadataId = document.mainForm.id.value;
+    var metadataId = undefined;
+
+    if(document.mainForm != null) {
+        metadataId = document.mainForm.id.value;
+    } else if (Ext.get('editForm')) {
+        metadataId = Ext.get('editForm').id.value;
+    } else {
+        return;
+    }
     var thisElement = Ext.get(id);
     var nextElement = thisElement.next();
     var prevElement = thisElement.prev();
@@ -302,7 +319,7 @@ function doRemoveElementAction(action, ref, parentref, id, min){
                 if (bottomElement(thisElement)) {
                     var doSwapControls = true;
 
-                    if (document.mainForm.currTab.value === 'simple') {
+                    if (document.mainForm && document.mainForm.currTab.value === 'simple') {
                         // only swap if are the same element type in simple view
                         doSwapControls = (originalElementType === prevElementType);
                     }
@@ -594,12 +611,22 @@ function getControlsFromElement(el){
         return [];
     }
     
+    var controls = [];
+    
     var id = el.getAttribute('id');
-    var controls = Ext.get('buttons_' + id).query('a');
+    if(Ext.get('buttons_' + id)) {        
+        controls = Ext.get('buttons_' + id).query('a');
+    } else {
+       var tmp = Ext.query("*[id*=buttons_]", el.dom);
+       Ext.each(tmp, function(e) {
+           Ext.each(Ext.get(e).query("a"), function(a) {
+               controls.push(a);
+           });
+       });
+    }
     for (var i = 0; i < controls.length; i++) {
         controls[i] = Ext.get(controls[i]).setVisibilityMode(Ext.Element.DISPLAY);
     }
-    
     return controls;
 }
 
