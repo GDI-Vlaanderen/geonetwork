@@ -55,6 +55,7 @@ import jeeves.utils.SOAPUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -666,13 +667,24 @@ public class ServiceManager
 
 			String contentDisposition = BinaryFile.getContentDisposition(response);
 			String contentLength      = BinaryFile.getContentLength(response);
-
-			int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
-
-			req.beginStream(contentType, cl, contentDisposition, cache);
-			BinaryFile.write(response, req.getOutputStream());
-			req.endStream();
-			BinaryFile.removeIfTheCase(response);
+			
+			if(contentLength == null) {
+			    //This means the response is not a pointer to the file, but the file itself to download
+			    XMLOutputter outp = new XMLOutputter();
+			    String s = outp.outputString(response);
+                byte[] bytes = s.getBytes("UTF-8");
+			    
+                req.beginStream(contentType, bytes.length, contentDisposition, cache);
+                outp.output(response, req.getOutputStream());
+                req.endStream();
+			} else {
+    			int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
+    
+    			req.beginStream(contentType, cl, contentDisposition, cache);
+    			BinaryFile.write(response, req.getOutputStream());
+    			req.endStream();
+    			BinaryFile.removeIfTheCase(response);
+    		}
 		}
 
 		//--- BLOB output
