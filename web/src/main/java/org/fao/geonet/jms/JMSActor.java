@@ -41,8 +41,8 @@ public abstract class JMSActor {
     
     protected MessageConsumer consumer;
     protected MessageProducer producer;
-    protected Session session;
-    protected Connection connection;
+    protected static Session session;
+    protected static Connection connection;
     protected Destination destination;
 
     /**
@@ -51,23 +51,8 @@ public abstract class JMSActor {
      * @throws ClusterException hmm
      */
     public JMSActor() throws ClusterException {
-        try {
-            if(!ClusterConfig.isEnabled()) {
-                return;
-            }
-            // Getting JMS connection from the server
-            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ClusterConfig.getBrokerURL());
-            connection = connectionFactory.createConnection();
-            connection.setClientID(ClusterConfig.getClientID());
-            connection.start();
-
-            // Creating session for sending and receiving messages
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        }
-        catch(JMSException x) {
-            System.err.println(x.getMessage());
-            x.printStackTrace();
-            throw new ClusterException(x.getMessage(), x);
+        if(!ClusterConfig.isEnabled()) {
+            return;
         }
     }
 
@@ -84,8 +69,6 @@ public abstract class JMSActor {
             if(producer != null) {
                 producer.close();
             }
-            session.close();
-            connection.close();
         }
         catch(JMSException x) {
             System.err.println(x.getMessage());

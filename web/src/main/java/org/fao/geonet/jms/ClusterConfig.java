@@ -27,6 +27,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.jms.message.harvest.HarvestMessageHandler;
@@ -48,6 +49,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Session;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,6 +76,16 @@ public class ClusterConfig {
      * Site id is used for JMS queue names, so different GeoNetwork clusters can use same JMS server
      */
     private static String siteID;
+
+    /**
+     * JMS session
+     */
+    private static Session session;
+
+    /**
+     * JMS connection
+     */
+    private static Connection connection;
 
     /**
      * URL to ActiveMQ broker.
@@ -103,7 +118,25 @@ public class ClusterConfig {
      */
     public static void shutdown() throws ClusterException {
         for(JMSActor participant : jmsActors) {
-            participant.shutdown();
+            // Capture exceptions to continue closing the rest of JMSActors.
+            // Exceptions are logged in JMSActor.shutdown
+            try {
+                participant.shutdown();
+            } catch (ClusterException ex) {
+
+            }
+
+        }
+
+        // Close session and connection
+        try {
+            if (session != null) session.close();
+            if (connection != null) connection.close();
+
+        } catch(JMSException x) {
+            System.err.println(x.getMessage());
+            x.printStackTrace();
+            throw new ClusterException(x.getMessage(), x);
         }
     }
 
@@ -147,6 +180,30 @@ public class ClusterConfig {
         return brokerURL;
     }
 
+
+    private static void initJMSConnection() throws ClusterException {
+        try {
+            // Getting JMS connection from the server
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ClusterConfig.getBrokerURL());
+            connection = connectionFactory.createConnection();
+            connection.setClientID(ClusterConfig.getClientID());
+            connection.start();
+
+            // Creating session for sending and receiving messages
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            // Set connection and session for all JMSActors
+            JMSActor.connection = connection;
+            JMSActor.session = session;
+
+        }
+        catch(JMSException x) {
+            System.err.println(x.getMessage());
+            x.printStackTrace();
+            throw new ClusterException(x.getMessage(), x);
+        }
+    }
+
     /**
      *
      * @param context servicecontext everywhere
@@ -156,8 +213,12 @@ public class ClusterConfig {
         try {
             Log.info(Geonet.JMS, "initializing JMS actors");
             shutdown();
+
+            initJMSConnection();
+
             jmsActors.clear();
             producerMap.clear();
+
             //
             // producers
             //

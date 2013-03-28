@@ -52,7 +52,7 @@ public class Consumer extends JMSActor {
                     break;
                 case PUBLISH_SUBSCRIBE:
                     destination = session.createTopic(queueName + destinationName);
-                    consumer = session.createDurableSubscriber((Topic)destination, queueName + destinationName);
+                    consumer = session.createDurableSubscriber((Topic)destination, ClusterConfig.getClientID() + destinationName);
                     break;
                 default:
                     throw new ClusterException("Incorrect messaging domain: " + messagingDomain.name());
