@@ -59,17 +59,6 @@
 			</sch:report>
 		</sch:rule>
 	</sch:pattern>
-	<!-- GDI-Vlaanderen SC4 -->
-	<sch:pattern>
-		<sch:title>GDI-Vlaanderen SC-4: RS_Identifier (ISO-element 208) is aanwezig binnen elk voorkomen van report.DQ_DomainConsistency.measureIdentification en is niet leeg.</sch:title>
-		<sch:rule context="//gmd:measureIdentification">
-			<sch:let name="RS_Identifier" value="gmd:RS_Identifier and not(normalize-space(gmd:RS_Identifier/gmd:code)= '')"/>
-			<sch:let name="RS_IdentifierValue" value="gmd:RS_Identifier/gmd:code/*/text()"/>
-			<sch:assert test="$RS_Identifier">RS_Identifier binnen measureIdentification ontbreekt of is leeg.</sch:assert>
-			<sch:report test="$RS_Identifier">RS_Identifier is aanwezig : <sch:value-of select="$RS_IdentifierValue"/>
-			</sch:report>
-		</sch:rule>
-	</sch:pattern>
 	<!-- GDI-Vlaanderen SC5 -->
 	<sch:pattern>
 		<sch:title>Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)</sch:title>

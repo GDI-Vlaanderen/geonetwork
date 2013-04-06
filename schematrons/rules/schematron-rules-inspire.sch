@@ -324,23 +324,21 @@ USA.
 		<sch:title>$loc/strings/geo</sch:title>
 		
 		<sch:rule context="//gmd:MD_DataIdentification[
-			../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
-			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
-			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']
-			/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox
-			|
-			//*[@gco:isoType='gmd:MD_DataIdentification' and (
-			../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
-			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
-			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]
-			/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox
+		    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+		    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+		    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']
+		    |
+		    //*[@gco:isoType='gmd:MD_DataIdentification' and (
+		    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+		    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+		    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]
 			">
 		
-			<sch:let name="west" value="number(gmd:westBoundLongitude/gco:Decimal/text())"/>
-			<sch:let name="east" value="number(gmd:eastBoundLongitude/gco:Decimal/text())"/>
-			<sch:let name="north" value="number(gmd:northBoundLatitude/gco:Decimal/text())"/>
-			<sch:let name="south" value="number(gmd:southBoundLatitude/gco:Decimal/text())"/>
-			
+			<sch:let name="west" value="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text())"/>
+			<sch:let name="east" value="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text())"/>
+			<sch:let name="north" value="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text())"/>
+			<sch:let name="south" value="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text())"/>
+		
 			<!-- assertions and report -->
 			<sch:assert test="(-180.00 &lt;= $west) and ( $west &lt;= 180.00)"><sch:value-of select="$loc/strings/alert.M41.W/div"/></sch:assert>
 			<sch:report test="(-180.00 &lt;= $west) and ( $west &lt;= 180.00)"><sch:value-of select="$loc/strings/report.M41.W/div"/>
