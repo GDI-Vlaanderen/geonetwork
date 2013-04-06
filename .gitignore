@@ -5,3 +5,7 @@ target
 *mini*.js
 installer/svn.properties
 */schematron-rules-none.xsl
+.project
+.classpath
+.settings
+*/.settings

@@ -65,7 +65,7 @@
     </version>
     <version id="280">
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-"/>
-      <java class="v280.MigrationTask"/>
+      <java class="org.fao.geonet.MigrationTask"/>
     </version>
   </migrate>
 </db>

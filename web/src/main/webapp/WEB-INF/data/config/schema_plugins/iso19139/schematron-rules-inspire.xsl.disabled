@@ -1559,12 +1559,47 @@
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
+      <xsl:variable name="accessConstraints_count"
+                    select="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)])"/>
+      <xsl:variable name="accessConstraints_classification_count"
+                    select="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)]) + count(gmd:resourceConstraints/*/gmd:classification/*[string(@codeListValue)])"/>
       <xsl:variable name="accessConstraints"
                     select="     count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])&gt;0      and (     not(gmd:resourceConstraints/*/gmd:otherConstraints)          or gmd:resourceConstraints/*/gmd:otherConstraints[@gco:nilReason='missing']     )"/>
-      <xsl:variable name="otherConstraints"
-                    select="     gmd:resourceConstraints/*/gmd:otherConstraints and     gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString!='' and      count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])=0     "/>
       <xsl:variable name="otherConstraintInfo"
                     select="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
+
+		    <!--ASSERT -->
+<xsl:choose>
+         <xsl:when test="$accessConstraints_classification_count"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                test="$accessConstraints_classification_count">
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>
+				              <xsl:text/>
+                  <xsl:copy-of select="$loc/strings/alert.M45.ca/div"/>
+                  <xsl:text/>
+			            </svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--REPORT -->
+<xsl:if test="$accessConstraints_classification_count">
+         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 test="$accessConstraints_classification_count">
+            <xsl:attribute name="location">
+               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+            </xsl:attribute>
+            <svrl:text>
+				           <xsl:text/>
+               <xsl:copy-of select="$loc/strings/report.M45.ca/div"/>
+               <xsl:text/>
+			         </svrl:text>
+         </svrl:successful-report>
+      </xsl:if>
 
 		    <!--ASSERT -->
 <xsl:choose>
@@ -1584,28 +1619,10 @@
          </xsl:otherwise>
       </xsl:choose>
 
-		    <!--ASSERT -->
-<xsl:choose>
-         <xsl:when test="not($otherConstraints)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
-                                test="not($otherConstraints)">
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>
-				              <xsl:text/>
-                  <xsl:copy-of select="$loc/strings/alert.M45.or/div"/>
-                  <xsl:text/>
-			            </svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
 		    <!--REPORT -->
-<xsl:if test="$otherConstraintInfo!='' and not($accessConstraints) and not($otherConstraints)">
+<xsl:if test="$otherConstraintInfo!='' and not($accessConstraints)">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
-                                 test="$otherConstraintInfo!='' and not($accessConstraints) and not($otherConstraints)">
+                                 test="$otherConstraintInfo!='' and not($accessConstraints)">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
             </xsl:attribute>
@@ -1695,7 +1712,7 @@
                </xsl:attribute>
                <svrl:text>
 				              <xsl:text/>
-                  <xsl:copy-of select="$loc/strings/alert.M45.ul/div"/>
+                  <xsl:copy-of select="$loc/strings/alert.M45.us/div"/>
                   <xsl:text/>
 			            </svrl:text>
             </svrl:failed-assert>
@@ -1711,7 +1728,7 @@
             </xsl:attribute>
             <svrl:text>
 				           <xsl:text/>
-               <xsl:copy-of select="$loc/strings/report.M45.ul/div"/>
+               <xsl:copy-of select="$loc/strings/report.M45.us/div"/>
                <xsl:text/>
 				           <xsl:text/>
                <xsl:copy-of select="$useLimitation"/>
