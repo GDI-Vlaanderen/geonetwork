@@ -71,7 +71,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionOrderProcess">
-		<label>Bestelproces</label>
+		<label>Bestelinformatie</label>
 		<description>Voorziet informatie over hoe de bron bekomen kan worden, samen met gerelateerde handleiding en prijsinformatie.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -262,7 +262,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:alternateTitle">
-		<label>Alternatieve titel</label>
+		<label>Alternatieve titel dataset</label>
 		<description>Korte titel, afkorting of titel in een andere taal.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -688,13 +688,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionFormat">
-		<label>Distributie formaat</label>
-		<description>Distributie formaat</description>
+		<label>Distributieformaat</label>
+		<description>Distributieformaat</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionInfo">
-		<label>Distributie info</label>
+		<label>Distributie</label>
 		<description>Geeft informatie over de verdeler van de informatie of de wijze waarop de verdeling wordt gerealiseerd.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -854,7 +854,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:edition">
-		<label>Editie</label>
+		<label>Versie dataset</label>
 		<description>Versie of editie.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1060,7 +1060,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicOverview">
-		<label>Voorbeeldweergave</label>
+		<label>Voorbeeldweergave dataset</label>
 		<description>Een figuur die de inhoud van de dataset of datasetserie weergeeft (inclusief legende).</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1154,8 +1154,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:language">
-		<label>Taal</label>
-		<description>Taal waarin de (meta)data is beschreven.</description>
+		<label>Taal dataset</label>
+		<description>Taal waarin de data is beschreven.</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1576,12 +1576,12 @@
 	</element>
 	<!-- ==================================================== -->
 	 <element name="gmd:name" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:series/gmd:CI_Series/gmd:name" id="292.0">
-        <label>Naam van de serie</label>
+        <label>Naam van de datasetserie</label>
         <description>Naam van de serie</description>
     </element>
 	
 	 <element name="gmd:name" context="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:offLine/gmd:MD_Medium/gmd:name" id="292.0">
-        <label>Medium naam</label>
+        <label>Medium</label>
         <description>Name of the medium on which the resource can be received</description>
     </element>
 	<element name="gmd:name">
@@ -1716,7 +1716,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:pointOfContact">
-		<label>Contactgegevens voor de data</label>
+		<label>Contactgegevens dataset</label>
 		<description>Gegevens van de voor de dataset verantwoordelijke organisatie.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1957,12 +1957,12 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:spatialRepresentationType">
-		<label>Ruimtelijk schema</label>
+		<label>Ruimtelijk schema dataset</label>
 		<description>Methode die gebruikt wordt om de geografische informatie ruimtelijk te representeren (bijv. vector).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:spatialResolution">
-		<label>Ruimtelijke resolutie</label>
+		<label>Ruimtelijke resolutie dataset</label>
 		<description>Factor waarmee de dichtheid van de gegevens in de dataset wordt aangegeven.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2006,7 +2006,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:title">
-		<label>Titel</label>
+		<label>Titel dataset</label>
 		<description>Titel of naam</description>
 	<condition>mandatory</condition>
 	</element>
@@ -2028,7 +2028,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transferOptions">
-		<label>Leveringsopties</label>
+		<label>Overdracht</label>
 		<description>Geeft informatie over de technische middelen en media via de welke het bestand kan verkregen worden van de verdeler.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2059,7 +2059,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:turnaround">
-		<label>Doorlooptijd</label>
+		<label>Doorlooptijd bestelprocedure</label>
 		<description>Typische doorlooptijd van een bestelling (bv 10 werkdagen)</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2074,7 +2074,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:unitsOfDistribution">
-		<label>Gebruikseenheid</label>
+		<label>Leveringseenheid</label>
 		<description>Eenheid waarin de data wordt geleverd.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2680,4 +2680,26 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
         <label>Toepassingsgebied</label>
         <description>Toepassingsgebied</description>
     </element>
+	<element name="gmd:dateType" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType">
+		<label>Versiedatum type</label>
+		<description>Gebeurtenis waar de datum betrekking op heeft.</description>
+	<condition>mandatory</condition>
+	</element>
+	<element name="gmd:date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
+		<label>Versiedatum</label>
+		<description>Datum van creatie, publicatie of wijziging. Het type gebeurtenis waar de datum op slaat is weergegeven in het datum type. Het formaat van de datum is JJJJ-MM-DD. </description>
+	<condition>mandatory</condition>
+	</element>
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Versiedatum dataset</label>
+		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	  <element name="gmd:RS_Identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier">
+		<label>Dataset identificator</label>
+		<description>Unieke code gebruikt voor referentiesystemen.</description>
+    </element>
+	<element name="gmd:MD_Format" context="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format">
+		<label>Formaatnaam</label>
+		<description>Beschrijving van de wijze waarop de informatie wordt opgeslagen in een record, bestand, bericht, opslagmedium of anders.</description>
+	</element>
 </labels>

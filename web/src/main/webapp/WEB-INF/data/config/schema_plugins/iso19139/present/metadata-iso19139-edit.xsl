@@ -92,16 +92,16 @@
 	                             <!--<br/>
 	                             <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>  -->
 	                         </div>
-	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail();">Remove thumbnail</a>
+	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail();">Voorbeeld verwijderen</a>
 	                     </xsl:if>
 	
 	                     <xsl:if test="not(string($fileName))">
-	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Add thumbnail</a>
+	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Voorbeeld toevoegen</a>
 	                     </xsl:if>
 	                 </xsl:when>
 	
 	                 <xsl:otherwise>
-	                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Add thumbnail</a>
+	                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Voorbeeld toevoegen</a>
 	
 	                 </xsl:otherwise>
 	             </xsl:choose>
@@ -171,7 +171,7 @@
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
-              gmd:metadataConstraints|gmd:DQ_CompletenessOmission|gmd:DQ_AbsoluteExternalPositionalAccuracy|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_DomainConsistency|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|gmd:LI_ProcessStep">
+              gmd:metadataConstraints|gmd:DQ_CompletenessOmission|gmd:DQ_AbsoluteExternalPositionalAccuracy|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_DomainConsistency|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|gmd:LI_ProcessStep|gmd:distributionOrderProcess">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -380,30 +380,36 @@
 
         <xsl:choose>
             <xsl:when test="$edit=true()">
-                <tr><td colspan="2">
+                <xsl:apply-templates mode="complexElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="edit"    select="$edit"/>
+                    <xsl:with-param name="content">
+<!--                <tr><td colspan="2">
                     <table class="gn">
-                        <tbody>
-                            <tr>
-                                <td class="col">
-                                    <table class="gn">
-                                        <xsl:apply-templates mode="iso19139" select="gmd:code">
-                                            <xsl:with-param name="schema"  select="$schema"/>
-                                            <xsl:with-param name="edit"   select="$edit"/>
-                                        </xsl:apply-templates>
-                                    </table>
-                                </td>
-                                <td class="col">
-                                    <table class="gn">
-                                        <xsl:apply-templates mode="iso19139" select="gmd:codeSpace">
-                                            <xsl:with-param name="schema"  select="$schema"/>
-                                            <xsl:with-param name="edit"   select="$edit"/>
-                                        </xsl:apply-templates>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody>-->
+	                            <tr>
+	                                <td class="col">
+	                                    <table class="gn">
+	                                        <xsl:apply-templates mode="iso19139" select="gmd:code">
+	                                            <xsl:with-param name="schema"  select="$schema"/>
+	                                            <xsl:with-param name="edit"   select="$edit"/>
+	                                        </xsl:apply-templates>
+	                                    </table>
+	                                </td>
+	                                <td class="col">
+	                                    <table class="gn">
+	                                        <xsl:apply-templates mode="iso19139" select="gmd:codeSpace">
+	                                            <xsl:with-param name="schema"  select="$schema"/>
+	                                            <xsl:with-param name="edit"   select="$edit"/>
+	                                        </xsl:apply-templates>
+	                                    </table>
+	                                </td>
+	                            </tr>
+                        <!--</tbody>
                     </table>
-                </td></tr>
+                	</td></tr>-->
+                	</xsl:with-param>
+            	</xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="iso19139String">
@@ -1510,13 +1516,13 @@
 
         <xsl:choose>
             <xsl:when test="$edit=true()">
-                <!--<xsl:apply-templates mode="complexElement" select=".">
+                <xsl:apply-templates mode="complexElement" select=".">
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="edit"    select="$edit"/>
-                    <xsl:with-param name="content">-->
-                <tr><td colspan="2">
+                    <xsl:with-param name="content">
+<!--                <tr><td colspan="2">
                     <table class="gn">
-                        <tbody>
+                        <tbody>-->
                             <tr>
                                 <td class="col">
                                     <table class="gn">
@@ -1554,11 +1560,11 @@
                                     </table>
                                 </td>
                             </tr>
-                        </tbody>
+                        <!--</tbody>
                     </table>
-                </td></tr>
-                <!--</xsl:with-param>
-            </xsl:apply-templates>-->
+                </td></tr>-->
+                </xsl:with-param>
+            </xsl:apply-templates>
 
             </xsl:when>
             <xsl:otherwise>
@@ -1892,7 +1898,7 @@
 
                     <xsl:if test="$core and $dataset">
                         <xsl:apply-templates mode="elementEP" select="gmd:spatialRepresentationType|geonet:child[string(@name)='spatialRepresentationType']
-            |gmd:spatialResolution|geonet:child[string(@name)='spatialResolution']">
+			            |gmd:spatialResolution|geonet:child[string(@name)='spatialResolution']">
                             <xsl:with-param name="schema" select="$schema"/>
                             <xsl:with-param name="edit"   select="$edit"/>
                         </xsl:apply-templates>
