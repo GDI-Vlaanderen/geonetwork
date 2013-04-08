@@ -956,12 +956,19 @@
    </svrl:text>
 
 	  <!--RULE -->
-<xsl:template match="//gmd:MD_DataIdentification[    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']    |    //*[@gco:isoType='gmd:MD_DataIdentification' and (    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]" priority="1001" mode="M13">
-		<svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="//gmd:MD_DataIdentification[    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']    |    //*[@gco:isoType='gmd:MD_DataIdentification' and (    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'    or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]"/>
-		<xsl:variable name="west" select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text())"/>
-		<xsl:variable name="east" select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text())"/>
-		<xsl:variable name="north" select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text())"/>
-		<xsl:variable name="south" select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text())"/>
+<xsl:template match="//gmd:MD_DataIdentification[       ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']       |       //*[@gco:isoType='gmd:MD_DataIdentification' and (       ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]    "
+                 priority="1001"
+                 mode="M13">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="//gmd:MD_DataIdentification[       ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']       |       //*[@gco:isoType='gmd:MD_DataIdentification' and (       ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]    "/>
+      <xsl:variable name="west"
+                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text())"/>
+      <xsl:variable name="east"
+                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text())"/>
+      <xsl:variable name="north"
+                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text())"/>
+      <xsl:variable name="south"
+                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text())"/>
 
 		    <!--ASSERT -->
 <xsl:choose>
@@ -1556,12 +1563,47 @@
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
+      <xsl:variable name="accessConstraints_count"
+                    select="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)])"/>
+      <xsl:variable name="accessConstraints_classification_count"
+                    select="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)]) + count(gmd:resourceConstraints/*/gmd:classification/*[string(@codeListValue)])"/>
       <xsl:variable name="accessConstraints"
                     select="     count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])&gt;0      and (     not(gmd:resourceConstraints/*/gmd:otherConstraints)          or gmd:resourceConstraints/*/gmd:otherConstraints[@gco:nilReason='missing']     )"/>
-      <xsl:variable name="otherConstraints"
-                    select="     gmd:resourceConstraints/*/gmd:otherConstraints and     gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString!='' and      count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])=0     "/>
       <xsl:variable name="otherConstraintInfo"
                     select="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
+
+		    <!--ASSERT -->
+<xsl:choose>
+         <xsl:when test="$accessConstraints_classification_count"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                test="$accessConstraints_classification_count">
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>
+				              <xsl:text/>
+                  <xsl:copy-of select="$loc/strings/alert.M45.ca/div"/>
+                  <xsl:text/>
+			            </svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--REPORT -->
+<xsl:if test="$accessConstraints_classification_count">
+         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 test="$accessConstraints_classification_count">
+            <xsl:attribute name="location">
+               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+            </xsl:attribute>
+            <svrl:text>
+				           <xsl:text/>
+               <xsl:copy-of select="$loc/strings/report.M45.ca/div"/>
+               <xsl:text/>
+			         </svrl:text>
+         </svrl:successful-report>
+      </xsl:if>
 
 		    <!--ASSERT -->
 <xsl:choose>
@@ -1581,28 +1623,10 @@
          </xsl:otherwise>
       </xsl:choose>
 
-		    <!--ASSERT -->
-<xsl:choose>
-         <xsl:when test="not($otherConstraints)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
-                                test="not($otherConstraints)">
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>
-				              <xsl:text/>
-                  <xsl:copy-of select="$loc/strings/alert.M45.or/div"/>
-                  <xsl:text/>
-			            </svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
 		    <!--REPORT -->
-<xsl:if test="$otherConstraintInfo!='' and not($accessConstraints) and not($otherConstraints)">
+<xsl:if test="$otherConstraintInfo!='' and not($accessConstraints)">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
-                                 test="$otherConstraintInfo!='' and not($accessConstraints) and not($otherConstraints)">
+                                 test="$otherConstraintInfo!='' and not($accessConstraints)">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
             </xsl:attribute>
@@ -1692,7 +1716,7 @@
                </xsl:attribute>
                <svrl:text>
 				              <xsl:text/>
-                  <xsl:copy-of select="$loc/strings/alert.M45.ul/div"/>
+                  <xsl:copy-of select="$loc/strings/alert.M45.us/div"/>
                   <xsl:text/>
 			            </svrl:text>
             </svrl:failed-assert>
@@ -1708,7 +1732,7 @@
             </xsl:attribute>
             <svrl:text>
 				           <xsl:text/>
-               <xsl:copy-of select="$loc/strings/report.M45.ul/div"/>
+               <xsl:copy-of select="$loc/strings/report.M45.us/div"/>
                <xsl:text/>
 				           <xsl:text/>
                <xsl:copy-of select="$useLimitation"/>

@@ -218,18 +218,10 @@
             <xsl:attribute name="document">
                <xsl:value-of select="document-uri(/)"/>
             </xsl:attribute>
-            <xsl:attribute name="name">GDI-Vlaanderen SC-4: RS_Identifier (ISO-element 208) is aanwezig binnen elk voorkomen van report.DQ_DomainConsistency.measureIdentification en is niet leeg.</xsl:attribute>
-            <xsl:apply-templates/>
-         </svrl:active-pattern>
-         <xsl:apply-templates select="/" mode="M11"/>
-         <svrl:active-pattern>
-            <xsl:attribute name="document">
-               <xsl:value-of select="document-uri(/)"/>
-            </xsl:attribute>
             <xsl:attribute name="name">Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)</xsl:attribute>
             <xsl:apply-templates/>
          </svrl:active-pattern>
-         <xsl:apply-templates select="/" mode="M12"/>
+         <xsl:apply-templates select="/" mode="M11"/>
       </svrl:schematron-output>
    </xsl:template>
 
@@ -400,57 +392,13 @@
       <xsl:apply-templates select="*" mode="M10"/>
    </xsl:template>
 
-   <!--PATTERN GDI-Vlaanderen SC-4: RS_Identifier (ISO-element 208) is aanwezig binnen elk voorkomen van report.DQ_DomainConsistency.measureIdentification en is niet leeg.-->
-<svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">GDI-Vlaanderen SC-4: RS_Identifier (ISO-element 208) is aanwezig binnen elk voorkomen van report.DQ_DomainConsistency.measureIdentification en is niet leeg.</svrl:text>
-
-	  <!--RULE -->
-<xsl:template match="//gmd:measureIdentification" priority="1000" mode="M11">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="//gmd:measureIdentification"/>
-      <xsl:variable name="RS_Identifier"
-                    select="gmd:RS_Identifier and not(normalize-space(gmd:RS_Identifier/gmd:code)= '')"/>
-      <xsl:variable name="RS_IdentifierValue" select="gmd:RS_Identifier/gmd:code/*/text()"/>
-
-		    <!--ASSERT -->
-<xsl:choose>
-         <xsl:when test="$RS_Identifier"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
-                                test="$RS_Identifier">
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>RS_Identifier binnen measureIdentification ontbreekt of is leeg.</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--REPORT -->
-<xsl:if test="$RS_Identifier">
-         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
-                                 test="$RS_Identifier">
-            <xsl:attribute name="location">
-               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-            </xsl:attribute>
-            <svrl:text>RS_Identifier is aanwezig : <xsl:text/>
-               <xsl:copy-of select="$RS_IdentifierValue"/>
-               <xsl:text/>
-			         </svrl:text>
-         </svrl:successful-report>
-      </xsl:if>
-      <xsl:apply-templates select="*" mode="M11"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M11"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M11">
-      <xsl:apply-templates select="*" mode="M11"/>
-   </xsl:template>
-
    <!--PATTERN Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)-->
 <svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)</svrl:text>
 
 	  <!--RULE -->
 <xsl:template match="//gmd:MD_DataIdentification[/gmd:MD_Metadata/gmd:language/*/text()='dut']"
                  priority="1000"
-                 mode="M12">
+                 mode="M11">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
                        context="//gmd:MD_DataIdentification[/gmd:MD_Metadata/gmd:language/*/text()='dut']"/>
       <xsl:variable name="inspire-thesaurus"
@@ -507,10 +455,10 @@
 			</svrl:text>
          </svrl:successful-report>
       </xsl:if>
-      <xsl:apply-templates select="*" mode="M12"/>
+      <xsl:apply-templates select="*" mode="M11"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M12"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M12">
-      <xsl:apply-templates select="*" mode="M12"/>
+   <xsl:template match="text()" priority="-1" mode="M11"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M11">
+      <xsl:apply-templates select="*" mode="M11"/>
    </xsl:template>
 </xsl:stylesheet>

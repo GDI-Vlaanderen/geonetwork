@@ -825,10 +825,10 @@
     <module>cachingxslt</module>
     <module>jeeves</module> 
     <module>oaipmh</module>
-    <module>sde</module>
+<!--    <module>sde</module> -->
     <module>web-client</module>
     <module>web</module>
-    <module>geoserver</module>
+<!--        <module>geoserver</module> -->
   </modules>
   
   <profiles>
