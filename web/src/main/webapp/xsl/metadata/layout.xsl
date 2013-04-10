@@ -1929,9 +1929,17 @@
       <!-- list of values -->
       <xsl:when test="geonet:element/geonet:text">
 
+		 <!-- Agiv specific -->
+          <xsl:variable name="agivmandatory">
+          	<xsl:call-template name="getMandatoryType">
+		    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
+		    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+			</xsl:call-template>
+          </xsl:variable>
+
         <xsl:variable name="mandatory"
-          select="geonet:element/@min='1' and
-          geonet:element/@max='1' and not(@gco:nilReason)"/>
+          select="(geonet:element/@min='1' and
+          geonet:element/@max='1' and not(@gco:nilReason)) or $agivmandatory != ''"/>
 
         <!-- This code is mainly run under FGDC 
           but also for enumeration like topic category and 
@@ -2061,10 +2069,19 @@
                 <xsl:attribute name="style">display:none;</xsl:attribute>
               </xsl:if>
 
+			 <!-- Agiv specific -->
+	          <xsl:variable name="agivmandatory">
+	          	<xsl:call-template name="getMandatoryType">
+			    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
+			    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+				</xsl:call-template>
+	          </xsl:variable>
+	
               <xsl:variable name="mandatory"
                 select="(name(.)='gmd:LocalisedCharacterString'
                 and ../../geonet:element/@min='1')
-                or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>
+                or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))
+                or $agivmandatory != ''"/>
 
               <xsl:choose>
                 <!-- Numeric field -->
@@ -2111,10 +2128,19 @@
           <xsl:if test="$visible = false()">
             <xsl:attribute name="style">display:none;</xsl:attribute>
           </xsl:if>
+          
+		 <!-- Agiv specific -->
+          <xsl:variable name="agivmandatory">
+          	<xsl:call-template name="getMandatoryType">
+		    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
+		    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+			</xsl:call-template>
+          </xsl:variable>
           <xsl:if
             test="(
             (name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
             or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))
+            or $agivmandatory != ''
             ) and $edit">
             <xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
           </xsl:if>
