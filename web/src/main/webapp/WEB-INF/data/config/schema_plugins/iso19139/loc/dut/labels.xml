@@ -31,7 +31,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:associationType">
-		<label>Type relatie</label>
+		<label>Type verwantschap</label>
 		<description>Type relatie</description>
 	</element>
 	<!-- ==================================================== -->
@@ -247,7 +247,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:accessConstraints">
-		<label>(Juridische) toegangsrestrictie</label>
+		<label>(Juridische) toegangsbeperking</label>
 		<description>Toegangseisen die er zorg voor dragen dat privacy of intellectueel eigendom gewaarborgd zijn en elke andere speciale beperkingen voor het verkrijgen van de metadata of data. </description>
 	</element>
 	<!-- ==================================================== -->
@@ -262,7 +262,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:alternateTitle">
-		<label>Alternatieve titel dataset</label>
+		<label>Alternatieve titel</label>
 		<description>Korte titel, afkorting of titel in een andere taal.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -415,7 +415,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:classification">
-		<label>Veiligheidsrestricties</label>
+		<label>Type veiligheidsbeperking</label>
 		<description>Beperkingen opgelegd omdat informatie vertrouwelijk is.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -448,7 +448,7 @@
     </element>
 
     <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code">
-        <label>Identificator Geografisch gebied</label>
+        <label>Identificator geografische begrenzing</label>
         <description>Beschrijving van het geografisch gebied</description>
     </element>
 	  <element name="gmd:code" id="208.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code">
@@ -526,7 +526,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contact">
-		<label>Metadata auteur</label>
+		<label>Metadata-auteur</label>
 		<description>Organisatie die verantwoordelijk is voor de metadata.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -593,7 +593,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:date">
-		<label>Datum</label>
+		<label>Versiedatum</label>
 		<description>Datum van creatie, publicatie of wijziging. Het type gebeurtenis waar de datum op slaat is weergegeven in het datum type. Het formaat van de datum is JJJJ-MM-DD. </description>
 	<condition>mandatory</condition>
 	</element>
@@ -604,18 +604,18 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateStamp">
-		<label>Metadata datum</label>
+		<label>Metadata wijzigingsdatum</label>
 		<description>Datum waarop de metadata is gecreeerd of gewijzigd.(JJJJ-MM-DD).</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateTime">
-		<label>Datum</label>
+		<label>Versiedatum</label>
 		<description>Datum waarop de bewerkingen of metingen zijn gestart.(JJJJ-MM-DD).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateType">
-		<label>Datum type</label>
+		<label>Type versiedatum</label>
 		<description>Gebeurtenis waar de datum betrekking op heeft.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -910,7 +910,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicBoundingBox">
-		<label>Geografische begrenzing</label>
+		<label>Omschrijvende rechthoek</label>
 		<description>Meest westelijke, oostelijke, zuidelijke en noordelijke coordinaat uit de horizontale begrenzing van de dataset weergegeven in longitude en lattitude en decimale graden (noord en oost als positieve waarden). Gebruik WGS84 als coordinaat referentie systeem.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1000,7 +1000,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileIdentifier">
-		<label>Metadata ID (fileidentifier) </label>
+		<label>Metadata identificator (fileIdentifier)</label>
 		<description>Unieke Identifier voor de metadata file.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1075,13 +1075,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevel">
-		<label>Hierarchisch niveau</label>
-		<description>Hierarchisch niveau waar de metadata betrekking op heeft.</description>
+		<label>Hiërarchisch niveau</label>
+		<description>Hiërarchisch niveau waar de metadata betrekking op heeft.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevelName">
-		<label>Beschrijving hierarchisch niveau</label>
-		<description>Naam van het hierarchische niveau waarop de metadata betrekking heeft.</description>
+		<label>Beschrijving hiërarchisch niveau</label>
+		<description>Naam van het hiërarchische niveau waarop de metadata betrekking heeft.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hoursOfService">
@@ -1209,7 +1209,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maintenanceAndUpdateFrequency">
-		<label>Herzieningsfrequentie</label>
+		<label>Frequentie</label>
 		<description>Frequentie waarmee de data herzien wordt.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -1225,7 +1225,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maximumValue">
-		<label>Maximum waarde</label>
+		<label>Maximumwaarde (in m)</label>
 		<description>Hoogste verticale waarde die de dataset bevat</description>
 	<condition>mandatory</condition>
 	</element>
@@ -1383,7 +1383,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_LegalConstraints">
-		<label>Legale beperkingen</label>
+		<label>Legale beperkingen voor toegang en gebruik</label>
 		<description>Toegangsbeperkingen en legale vereisten voor toegang en gebruik van de dataset of datasetserie.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1479,7 +1479,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_SecurityConstraints">
-		<label>Veiligheidsrestricties </label>
+		<label>Veiligheidsbeperkingen</label>
 		<description>Gebruiksbeperkingen rustend op de dataset of datasetserie voor nationale veiligheid of gelijkaardige veiligheidsmaatregelen.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1499,7 +1499,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopicCategoryCode">
-		<label>Thema</label>
+		<label>Categorie(ë)</label>
 		<description>Hoofdthema van de dataset.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -1555,17 +1555,17 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataStandardName">
-		<label>Metadata standaard naam.</label>
+		<label>Naam metadatastandaard</label>
 		<description>Naam van de gebruikte metadata-standaard.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataStandardVersion">
-		<label>Metadata standaard versie</label>
+		<label>Versie metadatastandaard</label>
 		<description>Versie (profiel) van de metadata-standaard die wordt gebruikt.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:minimumValue">
-		<label>Minimum waarde</label>
+		<label>Minimumwaarde (in m)</label>
 		<description>Laagste verticale waarde die de dataset bevat.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -1683,7 +1683,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:parentIdentifier">
-		<label>Parent identifier</label>
+		<label>Parent identificator</label>
 		<description>Unieke code van de metadata waarvan deze metadata een subset (child) is.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1828,12 +1828,12 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceMaintenance">
-		<label>Beheer van de bron</label>
+		<label>Herziening</label>
 		<description>Geeft informatie over de frequentie en het bereik van het bijwerken van de databron.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceSpecificUsage">
-		<label>Informatie betreffende het gebruik</label>
+		<label>Toepassing</label>
 		<description>Geeft informatie over de toepassingen waarvoor de data gebruikt kan worden.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1973,7 +1973,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:specificUsage">
-		<label>Potentieel gebruik</label>
+		<label>Omschrijving van het gebruik</label>
 		<description>Korte beschrijving van de gebruiksmogelijkheden.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -2006,7 +2006,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:title">
-		<label>Titel dataset</label>
+		<label>Titel</label>
 		<description>Titel of naam</description>
 	<condition>mandatory</condition>
 	</element>
@@ -2099,7 +2099,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation">
-		<label>Gebruiksbeperkingen</label>
+		<label>Beschrijving gebruiksbeperkingen</label>
 		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2148,7 +2148,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:verticalElement">
-		<label>Verticaal element</label>
+		<label>Verticale begrenzing</label>
 		<description>Geeft de verticale component van de begrenzing van het gerefereerde object.</description>
 	<condition>conditional</condition>
 	</element>
@@ -2220,12 +2220,12 @@
 	
 	<element name="gml:beginPosition">
 		<label>Begindatum</label>
-		<description>Als in 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:endPosition">
 		<label>Einddatum</label>
-		<description>Als in 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:relatedTime">
@@ -2454,7 +2454,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="codeSpace">
-		<label>Referentie Authoriteit</label>
+		<label>Codespace</label>
 		<description>Authoriteit verantwoordelijk voor de codes. bv EPSG</description>
 	</element>
 	<element name="gco:aName">
@@ -2480,12 +2480,12 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	</element>    
 
 	<element name="gml:identifier">
-		<label>Identificatie</label>
+		<label>Unieke code</label>
 		<description>Unieke identificatie voor dit gml element.  Moet uniek zijn binnen dit XML document.</description>
 	</element>
 
     <element name="gml:identifier" context="gmd:verticalCRS">
-        <label>Identificatie</label>
+        <label>Unieke code</label>
         <description>Unieke identificatie voor dit gml element.  Moet uniek zijn binnen dit XML document.</description>
         <helper relAtt="codeSpace">
             <option value="TAW" title="NGI">Tweede Algemene Waterpassing</option>
@@ -2680,6 +2680,16 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
         <label>Toepassingsgebied</label>
         <description>Toepassingsgebied</description>
     </element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
+		<label>Titel dataset</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel dataset</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
+<!--
 	<element name="gmd:dateType" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType">
 		<label>Versiedatum type</label>
 		<description>Gebeurtenis waar de datum betrekking op heeft.</description>
@@ -2690,6 +2700,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<description>Datum van creatie, publicatie of wijziging. Het type gebeurtenis waar de datum op slaat is weergegeven in het datum type. Het formaat van de datum is JJJJ-MM-DD. </description>
 	<condition>mandatory</condition>
 	</element>
+-->
 	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date">
 		<label>Versiedatum dataset</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
@@ -2698,8 +2709,65 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Dataset identificator</label>
 		<description>Unieke code gebruikt voor referentiesystemen.</description>
     </element>
-	<element name="gmd:MD_Format" context="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format">
+	<element name="gmd:MD_Format">
 		<label>Formaatnaam</label>
 		<description>Beschrijving van de wijze waarop de informatie wordt opgeslagen in een record, bestand, bericht, opslagmedium of anders.</description>
+	</element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title">
+		<label>Titel verwante dataset</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel verwante dataset</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Versiedatum verwante dataset</label>
+		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	  <element name="gmd:RS_Identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier">
+		<label>Identificator verwante dataset</label>
+		<description>Unieke code gebruikt voor referentiesystemen.</description>
+    </element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:thesaurusName/gmd:CI_Citation/gmd:title">
+		<label>Titel thesaurus</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:thesaurusName/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel thesaurus</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:thesaurusName/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Versiedatum thesaurus</label>
+		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	<element name="gmd:language" context="gmd:MD_Metadata/gmd:language">
+		<label>Taal metadataset</label>
+		<description>Taal waarin de data is beschreven.</description>
+	<condition>conditional</condition>
+	</element>
+	<element name="gmd:characterSet" context="gmd:MD_Metadata/gmd:characterSet">
+		<label>Karakterset metadataset</label>
+		<description>Volledige naam van de karakterset die is gebruikt voor de opslag van de (meta)data.</description>
+	<condition>conditional</condition>
+	</element>
+	<element name="gmd:useLimitation" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints">
+		<label>Beschrijving legale beperkingen</label>
+		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
+	</element>
+	<element name="gmd:useLimitation" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints">
+		<label>Beschrijving veiligheidsbeperkingen</label>
+		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
+	</element>
+	<element name="gmd:description" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:description">
+		<label>Omschrijving geografische begrenzing</label>
+		<description>Beschrijving</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gml:VerticalCRS">
+		<label>Verticaal CRS identificator</label>
+		<description>Verticaal coordinaat referentiesysteem identificator</description>
 	</element>
 </labels>

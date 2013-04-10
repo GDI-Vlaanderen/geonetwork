@@ -169,8 +169,8 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
-        System.out.println("******************************* search");
         if(Log.isDebugEnabled(Geonet.LUCENE)) {
+        	Log.debug(Geonet.LUCENE, "******************************* search");
             Log.debug(Geonet.LUCENE, "LuceneSearcher search()");
         }
 
@@ -265,7 +265,9 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
 	public Element present(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
-        System.out.println("******************************* present");
+        if(Log.isDebugEnabled(Geonet.LUCENE)) {
+        	Log.debug(Geonet.LUCENE, "******************************* present");
+        }
 		updateSearchRange(request);
 
 		GeonetContext gc = null;
@@ -297,7 +299,9 @@ public class LuceneSearcher extends MetaSearcher {
 
 			int nrHits = getTo() - (getFrom()-1);
 
-            System.out.println("************** # hits " + nrHits);
+			if(Log.isDebugEnabled(Geonet.LUCENE)) {
+	        	Log.debug(Geonet.LUCENE, "************** # hits " + nrHits);
+			}
 
 			if (tdocs.scoreDocs.length >= nrHits) {
 				for (int i = 0; i < nrHits; i++) {
@@ -316,12 +320,16 @@ public class LuceneSearcher extends MetaSearcher {
                     boolean getWorkspaceCopy = accessMan.canEdit(srvContext, id) && gc.getDataManager().isLocked(dbms, id);
 
 					if (fast) {
-                        System.out.println("********* option 1");
+						if(Log.isDebugEnabled(Geonet.LUCENE)) {
+				        	Log.debug(Geonet.LUCENE, "********* option 1");
+						}
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null);
 					}
                     // used by q service
                     else if ("index".equals(sFast)) {
-                        System.out.println("********* option 2");
+                    	if(Log.isDebugEnabled(Geonet.LUCENE)) {
+                        	Log.debug(Geonet.LUCENE, "********* option 2");
+                    	}
                         // Retrieve information from the index for the record
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _luceneConfig.getDumpFields());
 					    
@@ -330,15 +338,21 @@ public class LuceneSearcher extends MetaSearcher {
                     }
                     // used by classic search
                     else if (srvContext != null) {
-                        System.out.println("********* option 3");
+                    	if(Log.isDebugEnabled(Geonet.LUCENE)) {
+                        	Log.debug(Geonet.LUCENE, "********* option 3");
+                    	}
                         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
                         if(getWorkspaceCopy) {
-                            System.out.println("SEARCH RESULT FROM WORKSPACE: " + id);
+                        	if(Log.isDebugEnabled(Geonet.LUCENE)) {
+                            	Log.debug(Geonet.LUCENE, "SEARCH RESULT FROM WORKSPACE: " + id);
+                        	}
                             md = gc.getDataManager().getMetadataFromWorkspace(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes, true);
                         }
                         else {
                             md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
-                            System.out.println("SEARCH RESULT FROM METADATA: " + id);
+                            if(Log.isDebugEnabled(Geonet.LUCENE)) {
+                            	Log.debug(Geonet.LUCENE, "SEARCH RESULT FROM METADATA: " + id);
+                            }
                         }
 					}
 
@@ -594,11 +608,13 @@ public class LuceneSearcher extends MetaSearcher {
                     // only for debugging -- might cause NPE is query was wrongly constructed
                     //Query rw = _query.rewrite(_reader);
                     //if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _query);
-                    //System.out.println("** rewritten:\n"+ rw);
+/*                	if(Log.isDebugEnabled(Geonet.LUCENE)) {
+                    	Log.debug(Geonet.LUCENE, "** rewritten:\n"+ rw);
+                	}*/
                 }
                 catch(Throwable x){
                     Log.warning(Geonet.SEARCH_ENGINE,"Error rewriting Lucene query: " + _query);
-                    //System.out.println("** error rewriting query: "+x.getMessage());
+                    //Log.error(Geonet.LUCENE, "** error rewriting query: "+x.getMessage());
                 }
 			}
 		    
@@ -734,7 +750,9 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception hmm
      */
 	private TopDocs performQuery(int startHit, int endHit, boolean buildSummary) throws Exception {
-        System.out.println("******************************* performQuery from " + startHit + " to " + endHit);
+        if(Log.isDebugEnabled(Geonet.LUCENE)) {
+        	Log.debug(Geonet.LUCENE, "******************************* performQuery from " + startHit + " to " + endHit);        	
+        }
         int numHits;
 		
 		boolean computeSummary = false;
@@ -1293,10 +1311,12 @@ public class LuceneSearcher extends MetaSearcher {
         if(query != null && reader != null && Log.isDebugEnabled(Geonet.SEARCH_ENGINE )){
             try {
                 Query rw = query.rewrite(reader);
-                System.out.println("Lucene query (re-written): " + rw.toString());
+                if(Log.isDebugEnabled(Geonet.LUCENE)) {
+                	Log.debug(Geonet.LUCENE, "Lucene query (re-written): " + rw.toString());
+                }
             }
             catch(NullPointerException x) {
-                System.out.println("Re-written query threw NPE ! Non-rewritten Lucene query: " + query.toString());
+            	Log.error(Geonet.LUCENE, "Re-written query threw NPE ! Non-rewritten Lucene query: " + query.toString());
             }
         }
 
