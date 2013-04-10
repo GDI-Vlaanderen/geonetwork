@@ -1280,7 +1280,12 @@
       <xsl:attribute name="class">
         <!-- Add codelist value in CSS class -->
         <xsl:value-of select="$pairClassName"/> <xsl:if test="*/@codeListValue and not($edit)"><xsl:value-of select="*/@codeListValue"/></xsl:if>
-      </xsl:attribute>
+        <xsl:text> </xsl:text>
+       	<xsl:call-template name="getMandatoryType">
+       		<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+       		<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+       	</xsl:call-template>
+       </xsl:attribute>
       
       <xsl:if test="$pairClassName != ''">
 
@@ -1379,10 +1384,22 @@
           <xsl:value-of select="geonet:clear-string-for-css(name(.))"/>
           <xsl:text> </xsl:text>
           <xsl:if test="$isXLinked">xlinked</xsl:if>
+          <xsl:text> </xsl:text>
           <xsl:if test="geonet:element/@min='1' and $edit">mandatory</xsl:if>
+          <xsl:text> </xsl:text>
+	   	  <xsl:call-template name="getMandatoryType">
+	        <xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+	       	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+	      </xsl:call-template>
         </xsl:attribute>
         <label
           for="_{if (gco:CharacterString) then gco:CharacterString/geonet:element/@ref else if (gmd:file) then '' else ''}">
+          <xsl:attribute name="class">
+          	<xsl:call-template name="getMandatoryType">
+          		<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+          		<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+          	</xsl:call-template>
+          </xsl:attribute>
           <xsl:choose>
             <xsl:when test="$helpLink!=''">
               <xsl:value-of select="$title"/>
@@ -1419,6 +1436,10 @@
         <xsl:choose>
           <xsl:when test="$edit">
             <xsl:copy-of select="$text"/>
+          	<xsl:call-template name="getAdditionalTooltip">
+          		<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+          		<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+          	</xsl:call-template>
           </xsl:when>
           <xsl:when test="count($textnode/*) &gt; 0">
             <!-- In some templates, text already contains HTML (eg. codelist, link for download).

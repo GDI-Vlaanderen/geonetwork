@@ -1,0 +1,38 @@
+/**ISO MANDATORY**/
+tr.iso th.mandatory + td span textarea, tr.iso th.mandatory + td input {
+	border-color: #00ff00;
+}
+
+tr.iso th.mandatory + td span textarea.error, tr.iso th.mandatory + td input.error {
+	border-color: #ddff00;
+}
+
+tr.iso th.mandatory label {
+	color: #00ff00;
+}
+
+/**INSPIRE MANDATORY**/
+tr.inspire th.mandatory + td span textarea, tr.inspire th.mandatory + td input {
+	border-color: #ffff00;
+}
+
+tr.inspire th.mandatory + td span textarea.error, tr.inspire th.mandatory + td input.error {
+	border-color: #ffee00;
+}
+
+tr.inspire th.mandatory label {
+	color: #ffff00;
+}
+
+/**GDI MANDATORY**/
+tr.gdi th.mandatory + td span textarea, tr.gdi th.mandatory + td input {
+	border-color: #0000ff;
+}
+
+tr.gdi th.mandatory + td span textarea.error, tr.gdi th.mandatory + td input.error {
+	border-color: #ff00ff;
+}
+
+tr.gdi th.mandatory label {
+	color: #0000ff;
+}
