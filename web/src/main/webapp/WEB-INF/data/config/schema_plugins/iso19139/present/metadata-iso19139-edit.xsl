@@ -171,7 +171,8 @@
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
-              gmd:metadataConstraints|gmd:DQ_CompletenessOmission|gmd:DQ_AbsoluteExternalPositionalAccuracy|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_DomainConsistency|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|gmd:LI_ProcessStep|gmd:distributionOrderProcess">
+              gmd:metadataConstraints|gmd:DQ_CompletenessOmission|gmd:DQ_AbsoluteExternalPositionalAccuracy|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_DomainConsistency|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|gmd:LI_ProcessStep|
+              gmd:distributionOrderProcess|gmd:resourceMaintenance">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -741,6 +742,8 @@
     <xsl:template mode="iso19139" match="gml:identifier|gml:axisDirection|gml:descriptionReference">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
+	    <xsl:variable name="parentName" select="name(parent::node())"/>
+	    <xsl:variable name="name" select="name(.)"/>
 
         <xsl:apply-templates mode="complexElement" select=".">
             <xsl:with-param name="schema"   select="$schema"/>
@@ -760,10 +763,20 @@
                 </xsl:apply-templates>
 
             </xsl:with-param>
+            <xsl:with-param name="title">
+				<xsl:if test="$name='gml:identifier'">
+	    			<xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name='gml:VerticalCRS']/label)"/>
+    			</xsl:if>
+				<xsl:if test="$name!='gml:identifier'">
+			      <xsl:call-template name="getTitle">
+			        <xsl:with-param name="name" select="$name"/>
+			        <xsl:with-param name="schema" select="$schema"/>
+			      </xsl:call-template>
+				</xsl:if>
+			</xsl:with-param>
         </xsl:apply-templates>
     </xsl:template>
-
-
+    
     <!-- gmx:FileName could be used as substitution of any
     gco:CharacterString. To turn this on add a schema
     suggestion.
@@ -1317,17 +1330,19 @@
     
     <!-- FIXME : layout should move to metadata.xsl -->
     <col>
+      <xsl:apply-templates mode="elementEP" select="gmd:thesaurusName|geonet:child[string(@name)='thesaurusName']">
+        <xsl:with-param name="schema" select="$schema"/>
+        <xsl:with-param name="edit"   select="$edit"/>
+      </xsl:apply-templates>
+<!--
+    </col>
+    <col>                    
+-->
       <xsl:apply-templates mode="elementEP" select="gmd:keyword|geonet:child[string(@name)='keyword']">
         <xsl:with-param name="schema" select="$schema"/>
         <xsl:with-param name="edit"   select="$edit"/>
       </xsl:apply-templates>
       <xsl:apply-templates mode="elementEP" select="gmd:type|geonet:child[string(@name)='type']">
-        <xsl:with-param name="schema" select="$schema"/>
-        <xsl:with-param name="edit"   select="$edit"/>
-      </xsl:apply-templates>
-    </col>
-    <col>                    
-      <xsl:apply-templates mode="elementEP" select="gmd:thesaurusName|geonet:child[string(@name)='thesaurusName']">
         <xsl:with-param name="schema" select="$schema"/>
         <xsl:with-param name="edit"   select="$edit"/>
       </xsl:apply-templates>
