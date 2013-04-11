@@ -1089,7 +1089,14 @@
                         <!-- codelist in edit mode -->
                         <select class="md" name="_{../geonet:element/@ref}_{name(.)}" id="_{../geonet:element/@ref}_{name(.)}" size="1">
                             <!-- Check element is mandatory or not -->
-                            <xsl:if test="../../geonet:element/@min='1' and $edit">
+							 <!-- Agiv specific -->
+					          <xsl:variable name="agivmandatory">
+					          	<xsl:call-template name="getMandatoryType">
+							    	<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+							    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+								</xsl:call-template>
+					          </xsl:variable>
+                            <xsl:if test="(../../geonet:element/@min='1' and $edit) or $agivmandatory != ''">
                                 <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
                             </xsl:if>
                             <xsl:if test="$isXLinked">

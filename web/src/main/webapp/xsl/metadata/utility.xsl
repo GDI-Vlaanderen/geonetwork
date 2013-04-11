@@ -229,6 +229,50 @@
 
 
 
+    <!--
+    	AGIV specific:
+    	
+        If the element is mandatory (xsd and labels.xml), it returns a string with the
+        reason of the mandatory (iso, inspire, gdi).
+    -->
+    <xsl:template name="getMandatoryType">
+        <xsl:param name="name"/>
+        <xsl:param name="schema"/>
+        
+        <xsl:value-of select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/mandatory)"/>
+         
+    </xsl:template>
+    <!--
+    	AGIV specific:
+    	
+        If the element has an additional tooltip (additional_info tag), then show it with
+        an icon.
+    -->
+    <xsl:template name="getAdditionalTooltip">
+        <xsl:param name="name"/>
+        <xsl:param name="schema"/>
+
+		<xsl:variable name="tooltip" select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/additional_info)"/>
+        <xsl:choose>
+            <xsl:when test="normalize-space($tooltip) != ''">
+			    <img src="../../apps/images/default/info.png" >
+			    	 <xsl:attribute name="class">
+			    		<xsl:call-template name="getMandatoryType">
+					    	<xsl:with-param name="name"><xsl:value-of select="$name"/></xsl:with-param>
+					    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+			    		</xsl:call-template>
+			        </xsl:attribute>
+			    	<xsl:attribute name="alt">
+			    		<xsl:value-of select="$tooltip"/>
+			    	</xsl:attribute>
+			    	<xsl:attribute name="title">
+			    		<xsl:value-of select="$tooltip"/>
+			    	</xsl:attribute>
+			    </img>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+
 
 
   <!-- build attribute name (in place of standard attribute name) as a 
