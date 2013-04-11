@@ -73,7 +73,12 @@ GeoNetwork.util.SearchTools = {
      *
      */
     doQuery: function(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async){
-        OpenLayers.Request.GET({
+/*
+    	Ext.Msg.prompt("Query to execute",
+    			cat.services.rootUrl + metadataStore.service + "?" + query,
+			);
+*/
+    	OpenLayers.Request.GET({
             url: cat.services.rootUrl + metadataStore.service + "?" + query,
             async: async === false ? false : true,
             success: function(result){

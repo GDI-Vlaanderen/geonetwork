@@ -1177,7 +1177,7 @@ Ext.onReady(function () {
         else {
             // Retrieve information in synchrone mode    todo: this doesn't work here
             var store = GeoNetwork.data.MetadataResultsFastStore();
-            catalogue.kvpSearch("fast=index", null, null, null, true, store, null, false);
+            catalogue.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
             var record = store.getAt(store.find('uuid', uuid));
 
             var RowTitle = uuid;

@@ -863,7 +863,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             if (!record) {
                 // Retrieve information in synchrone mode
                 var store = GeoNetwork.data.MetadataResultsFastStore();
-                this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                this.kvpSearch("fast=index&_uuid=" + escape(uuid), null, null, null, true, store, null, false);
                 record = store.getAt(store.find('uuid', uuid));
             }
             
@@ -882,7 +882,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             win.alignTo(bd, 'tr-tr');
         } else {
             // Not really used - use old service
-            window.open(this.services.mdShow + '?uuid=' + uuid,
+            window.open(this.services.mdShow + '?uuid=' + escape(uuid),
                 this.windowName, this.windowOption);
         }
     },
@@ -898,7 +898,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             if (!record) {
                 // Retrieve information in synchrone mode
                 var store = GeoNetwork.data.MetadataResultsFastStore();
-                this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                this.kvpSearch("fast=index&_uuid=" + escape(uuid), null, null, null, true, store, null, false);
                 record = store.getAt(store.find('uuid', uuid));
             }
 
@@ -934,7 +934,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             if (!record) {
                 // Retrieve information in synchrone mode
                 var store = GeoNetwork.data.MetadataResultsFastStore();
-                this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                this.kvpSearch("fast=index&_uuid=" + escape(uuid), null, null, null, true, store, null, false);
                 record = store.getAt(store.find('uuid', uuid));
             }
 
@@ -1075,7 +1075,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             service = this.services.mdXMLGet19115; // Force ISO19115 record to 19139
         }
         
-        var url = service + '?uuid=' + uuid;
+        var url = service + '?uuid=' + escape(uuid);
         window.open(url, this.windowName, this.windowOption);
     },
     /** api: method[metadataXMLSave]
@@ -1101,7 +1101,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             service = this.services.mdXMLGet19115 + save; // Force ISO19115 record to 19139
         }
 
-        var url = service + '?uuid=' + uuid;
+        var url = service + '?uuid=' + escape(uuid);
         location.replace(url);
     },
 
@@ -1112,7 +1112,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      */
     metadataPrint: function(uuid, fromWorkspace){
-        var url = this.services.mdPrint + '?uuid=' + uuid + '&fromWorkspace=' + fromWorkspace;
+        var url = this.services.mdPrint + '?uuid=' + escape(uuid) + '&fromWorkspace=' + fromWorkspace;
         location.replace(url);
     },
     /** api: method[metadataMEF]
@@ -1122,7 +1122,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      */
     metadataMEF: function(uuid){
-        var url = this.services.mdMEF + '?version=2&uuid=' + uuid;
+        var url = this.services.mdMEF + '?version=2&uuid=' + escape(uuid);
         location.replace(url);
     },
     /** api: method[metadataEdit]
@@ -1150,7 +1150,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Create a metadata by duplication of an existing one
      */
     metadataDuplicate: function(uuid){
-        window.open(this.services.mdDuplicate + '?uuid=' + uuid, this.windowName, this.windowOption);
+        window.open(this.services.mdDuplicate + '?uuid=' + escape(uuid), this.windowName, this.windowOption);
     },
     /** api: method[metadataCreateChild]
      *  :param uuid: ``String`` Uuid of the metadata to duplicate
@@ -1158,7 +1158,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Create a child metadata record from an existing one
      */
     metadataCreateChild: function(uuid){
-        window.open(this.services.mdDuplicate + '?child=y&uuid=' + uuid, this.windowName, this.windowOption);
+        window.open(this.services.mdDuplicate + '?child=y&uuid=' + escape(uuid), this.windowName, this.windowOption);
     },
     /** api: method[metadataDuplicateWithSchema]
      *  :param schema: ``String`` Schema
@@ -1166,7 +1166,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Create a metadata record in one of the schema
      */
     metadataDuplicateWithSchema: function(uuid, schema){
-        window.open(this.services.mdDuplicate + '?uuid=' + uuid +
+        window.open(this.services.mdDuplicate + '?uuid=' + escape(uuid) +
         "&schema=" +
         schema, this.windowName, this.windowOption);
     },

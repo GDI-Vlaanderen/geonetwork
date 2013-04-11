@@ -165,7 +165,7 @@
     <!-- these elements should be boxed -->
     <!-- ===================================================================== -->
 
-    <xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:thesaurusName|
+    <xsl:template mode="iso19139" match="gmd:DQ_DataQuality|gmd:identificationInfo|gmd:distributionInfo|gmd:thesaurusName|
               *[name(..)='gmd:resourceConstraints']|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
@@ -377,8 +377,6 @@
                   match="gmd:RS_Identifier" priority="10.0">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
-
-
         <xsl:choose>
             <xsl:when test="$edit=true()">
                 <xsl:apply-templates mode="complexElement" select=".">
@@ -410,6 +408,12 @@
                     </table>
                 	</td></tr>-->
                 	</xsl:with-param>
+		            <xsl:with-param name="title">
+				      <xsl:call-template name="getParentTitle">
+				        <xsl:with-param name="name" select="name(.)"/>
+				        <xsl:with-param name="schema" select="$schema"/>
+				      </xsl:call-template>
+					</xsl:with-param>
             	</xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
@@ -742,9 +746,6 @@
     <xsl:template mode="iso19139" match="gml:identifier|gml:axisDirection|gml:descriptionReference">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-	    <xsl:variable name="parentName" select="name(parent::node())"/>
-	    <xsl:variable name="name" select="name(.)"/>
-
         <xsl:apply-templates mode="complexElement" select=".">
             <xsl:with-param name="schema"   select="$schema"/>
             <xsl:with-param name="edit"     select="$edit"/>
@@ -764,15 +765,10 @@
 
             </xsl:with-param>
             <xsl:with-param name="title">
-				<xsl:if test="$name='gml:identifier'">
-	    			<xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name='gml:VerticalCRS']/label)"/>
-    			</xsl:if>
-				<xsl:if test="$name!='gml:identifier'">
-			      <xsl:call-template name="getTitle">
-			        <xsl:with-param name="name" select="$name"/>
-			        <xsl:with-param name="schema" select="$schema"/>
-			      </xsl:call-template>
-				</xsl:if>
+		      <xsl:call-template name="getParentTitle">
+		        <xsl:with-param name="name" select="name(.)"/>
+		        <xsl:with-param name="schema" select="$schema"/>
+		      </xsl:call-template>
 			</xsl:with-param>
         </xsl:apply-templates>
     </xsl:template>
@@ -1089,7 +1085,14 @@
                         <!-- codelist in edit mode -->
                         <select class="md" name="_{../geonet:element/@ref}_{name(.)}" id="_{../geonet:element/@ref}_{name(.)}" size="1">
                             <!-- Check element is mandatory or not -->
-                            <xsl:if test="../../geonet:element/@min='1' and $edit">
+							 <!-- Agiv specific -->
+					          <xsl:variable name="agivmandatory">
+					          	<xsl:call-template name="getMandatoryType">
+							    	<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+							    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+								</xsl:call-template>
+					          </xsl:variable>
+                            <xsl:if test="(../../geonet:element/@min='1' and $edit) or $agivmandatory != ''">
                                 <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
                             </xsl:if>
                             <xsl:if test="$isXLinked">

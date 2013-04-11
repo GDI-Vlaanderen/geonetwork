@@ -45,6 +45,49 @@
     <xsl:if test="count(. | ../@*) = count(../@*)">/@<xsl:value-of select="name()"/></xsl:if>
   </xsl:template>
 
+  <!--
+    Returns the title of the parent of an element. 
+    * with fullcontext
+    * with no context
+    and if not found return the getTitle of the element.
+    If not found return the getTitle template of the element.
+  -->
+  <xsl:template name="getParentTitle">
+    <xsl:param name="name"/>
+    <xsl:param name="schema"/>
+	<xsl:variable name="fullContext">
+		<xsl:call-template name="getParentXPath"/>
+	</xsl:variable>
+	<xsl:variable name="parentName" select="name(..)"/>
+	<xsl:variable name="parentLabelFullContext" select="string(/root/gui/schemas/iso19139/labels/element[@name=$parentName and @context=$fullContext]/label)"/>
+	<xsl:variable name="parentLabel" select="string(/root/gui/schemas/iso19139/labels/element[@name=$parentName and not(@context)]/label)"/>
+	<xsl:choose>
+		<xsl:when test="normalize-space($parentLabelFullContext)!=''">
+			<xsl:value-of select="$parentLabelFullContext"/>
+		</xsl:when>
+		<xsl:when test="normalize-space($parentLabel)!=''">
+			<xsl:value-of select="$parentLabel"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="getTitle">
+				<xsl:with-param name="name" select="$name"/>
+				<xsl:with-param name="schema" select="$schema"/>
+	      	</xsl:call-template>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="getParentXPath">
+    <xsl:for-each select="ancestor-or-self::*">
+      <xsl:if test="not(position() = 1) and not(position() = last())">
+        <xsl:value-of select="name()"/>
+      </xsl:if>
+      <xsl:if test="not(position() = 1) and position() &lt; last()-1">
+        <xsl:text>/</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
+  </xsl:template>
+
   <xsl:template name="getTitleColor">
     <xsl:param name="name"/>
     <xsl:param name="schema"/>
@@ -228,6 +271,50 @@
   </xsl:template>
 
 
+
+    <!--
+    	AGIV specific:
+    	
+        If the element is mandatory (xsd and labels.xml), it returns a string with the
+        reason of the mandatory (iso, inspire, gdi).
+    -->
+    <xsl:template name="getMandatoryType">
+        <xsl:param name="name"/>
+        <xsl:param name="schema"/>
+        
+        <xsl:value-of select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/mandatory)"/>
+         
+    </xsl:template>
+    <!--
+    	AGIV specific:
+    	
+        If the element has an additional tooltip (additional_info tag), then show it with
+        an icon.
+    -->
+    <xsl:template name="getAdditionalTooltip">
+        <xsl:param name="name"/>
+        <xsl:param name="schema"/>
+
+		<xsl:variable name="tooltip" select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/additional_info)"/>
+        <xsl:choose>
+            <xsl:when test="normalize-space($tooltip) != ''">
+			    <img src="../../apps/images/default/info.png" >
+			    	 <xsl:attribute name="class">
+			    		<xsl:call-template name="getMandatoryType">
+					    	<xsl:with-param name="name"><xsl:value-of select="$name"/></xsl:with-param>
+					    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+			    		</xsl:call-template>
+			        </xsl:attribute>
+			    	<xsl:attribute name="alt">
+			    		<xsl:value-of select="$tooltip"/>
+			    	</xsl:attribute>
+			    	<xsl:attribute name="title">
+			    		<xsl:value-of select="$tooltip"/>
+			    	</xsl:attribute>
+			    </img>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
 
 
 

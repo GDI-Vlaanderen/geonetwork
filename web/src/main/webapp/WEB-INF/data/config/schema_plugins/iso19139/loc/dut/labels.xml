@@ -277,7 +277,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:applicationSchemaInfo">
-		<label>Applicatie schema info</label>
+		<label>Applicatie schema</label>
 		<description>Geeft informatie over het conceptuele schema.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -360,7 +360,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Date">
-		<label>Datum</label>
+		<label>Versiedatum</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
 	</element>
 	<!-- ==================================================== -->
@@ -431,7 +431,7 @@
 	</element>
 	<!-- ==================================================== -->
     <element name="gmd:code" id="207.0" context="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
-        <label>Unique resource identifier</label>
+        <label>Unieke code</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
 
@@ -457,24 +457,24 @@
         <condition>mandatory</condition>
     </element>
       <element name="gmd:code" id="208.0" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_CompletenessOmission/gmd:measureIdentification/gmd:RS_Identifier/gmd:code">
-        <label>Code kwaliteitsbeschrijving</label>
+        <label>Unieke code</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
     </element>
      <element name="gmd:code" id="209.0" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_AbsoluteExternalPositionalAccuracy/gmd:measureIdentification/gmd:RS_Identifier/gmd:code">
-        <label>Code kwaliteitsbeschrijving</label>
+        <label>Unieke code</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
     </element>
 
     <element name="gmd:code" id="210.0" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ThematicClassificationCorrectness/gmd:measureIdentification/gmd:RS_Identifier/gmd:code">
-        <label>Code kwaliteitsbeschrijving</label>
+        <label>Unieke code</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
     </element>
 
     <element name="gmd:code" id="211.0" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:measureIdentification/gmd:RS_Identifier/gmd:code">
-        <label>Code kwaliteitsbeschrijving</label>
+        <label>Unieke code</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
     </element>
@@ -520,7 +520,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:constraintLanguage">
-		<label>Taal van het applicatieschema</label>
+		<label>Formele taal applicatieschema</label>
 		<description>Formele taal die gebruikt wordt in het applicatieschema.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -576,7 +576,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataQualityInfo">
-		<label>Data kwaliteitsbeschrijving</label>
+		<label>Kwaliteit</label>
 		<description>Geeft de kwaliteit aan van de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -737,7 +737,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_AbsoluteExternalPositionalAccuracy">
-		<label>Absolute external positional accuracy</label>
+		<label>Geometrische nauwkeurigheid</label>
 		<description>Nabijheid van de gerapporteerde coordinaat waarden tot de werkelijke (of als werkelijk aanvaarde) coordinaten.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -752,7 +752,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_CompletenessOmission">
-		<label>Ontbrekende data</label>
+		<label>Volledigheid</label>
 		<description>Data welke niet aanwezig is in de dataset zoals beschreven in het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -762,12 +762,12 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ConformanceResult">
-		<label>Resultaat conformiteit met de specificatie </label>
+		<label>Resultaat</label>
 		<description>Resultaat van de conformiteit met de specificatie.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_DataQuality">
-		<label>Data kwaliteit</label>
+		<label>Kwaliteitsinformatie</label>
 		<description>Informatie over de kwaliteit van de data op het niveau (dataset of serie) waar de kwaliteitsbeschrijving betrekking op heeft. </description>
 	</element>
 	<!-- ==================================================== -->
@@ -802,7 +802,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_QuantitativeResult">
-		<label>Kwantitatieve resultaten</label>
+		<label>Kwantitatief resultaat</label>
 		<description>Informatie over de waarde(n) die bekomen worden door een kwaliteitsmeting toe te passen.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -828,7 +828,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ThematicClassificationCorrectness">
-		<label>Correctheid thematische classificatie</label>
+		<label>Thematische classificatie</label>
 		<description>Vergelijking van de klassen toegewezen aan objecten of hun attributen met de werkelijkheid.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1065,8 +1065,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicsFile">
-		<label>Grafisch bestand</label>
-		<description>Volledig applicatieschema in een grafisch bestand.</description>
+		<label>Grafisch bestand applicatieschema</label>
+		<description>Volledig applicatieschema als beeldbestand.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:handlingDescription">
@@ -1170,7 +1170,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:level">
-		<label>Niveau kwaliteitsbeschrijving</label>
+		<label>Niveau kwaliteitsinformatie</label>
 		<description>Niveau (dataset of datasetserie) waar de kwaliteitsbeschrijving betrekking op heeft.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -1520,12 +1520,12 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:measureDescription">
-		<label>Beschrijving van de kwaliteitsmeting</label>
+		<label>Meetmethode</label>
 		<description>Beschrijving van de kwaliteitsmeting</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:measureIdentification">
-		<label>Meting dentificatie</label>
+		<label>Kwaliteitsrapport identificator</label>
 		<description>Code die een geregistreerde standaardmeetprocedure identificeert.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1688,7 +1688,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:pass">
-		<label>Indicatie van conformiteit met de specificatie</label>
+		<label>Conform verklaard</label>
 		<description>Indicatie van de conformiteit met de specificatie </description>
 	<condition>mandatory</condition>
 	</element>
@@ -1796,7 +1796,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:referenceSystemIdentifier">
-		<label>Referentiesysteem identifier</label>
+		<label>Referentiesysteem identificator</label>
 		<description>Unieke code voor het referentie systeem.</description>
 	<condition>conditional</condition>
 	</element>
@@ -1876,7 +1876,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:schemaLanguage">
-		<label>Schema taal</label>
+		<label>Schemataal</label>
 		<description>Identificatie van de gebruikte taal van het applicatieschema.</description>
 	<condition>mandatory</condition>
 	</element>
@@ -2535,7 +2535,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	</element>
 	<!-- ==================================================== -->
     <element name="gco:Record">
-		<label>Record</label>
+		<label>Waarde</label>
 		<description>Een Record is een string of XML fragment dat data bevat volgens een structuur beschreven door het RecordType. </description>
 	</element>      
 	<!-- ==================================================== -->
@@ -2646,13 +2646,13 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		</element>
 
 	<element name="gco:Binary" context="gmd:MD_Metadata/gmd:applicationSchemaInfo/gmd:MD_ApplicationSchemaInformation/gmd:graphicsFile/gco:Binary">
-        <label>Grafisch bestand</label>
-        <description/>
+        <label>Grafisch bestand applicatieschema</label>
+        <description>Volledig applicatieschema als beeldbestand</description>
     </element>
 
     <element name="gco:Binary" context="gmd:MD_Metadata/gmd:applicationSchemaInfo/gmd:MD_ApplicationSchemaInformation/gmd:softwareDevelopmentFile/gco:Binary">
-        <label>Code bestand</label>
-        <description/>
+        <label>Code bestand applicatieschema</label>
+        <description>Volledig applicatieschema in softwarespecifiek bestand</description>
     </element>
 
     <element name="gco:Binary">
@@ -2705,7 +2705,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Versiedatum dataset</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
 	</element>
-	  <element name="gmd:RS_Identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier">
+	  <element name="gmd:identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier">
 		<label>Dataset identificator</label>
 		<description>Unieke code gebruikt voor referentiesystemen.</description>
     </element>
@@ -2726,22 +2726,48 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Versiedatum verwante dataset</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
 	</element>
-	  <element name="gmd:RS_Identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier">
+	  <element name="gmd:identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:identifier">
 		<label>Identificator verwante dataset</label>
 		<description>Unieke code gebruikt voor referentiesystemen.</description>
     </element>
-	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:thesaurusName/gmd:CI_Citation/gmd:title">
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title">
 		<label>Titel thesaurus</label>
 		<description>Titel of naam</description>
 		<condition>mandatory</condition>
 	</element>
-	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:thesaurusName/gmd:CI_Citation/gmd:alternateTitle">
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:alternateTitle">
 		<label>Alternatieve titel thesaurus</label>
 		<description>Korte titel, afkorting of titel in een andere taal.</description>
 	</element>
-	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:thesaurusName/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:date/gmd:CI_Date">
 		<label>Versiedatum thesaurus</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:applicationSchemaInfo/gmd:MD_ApplicationSchemaInformation/gmd:name/gmd:CI_Citation/gmd:title">
+		<label>Titel applicatieschema</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:applicationSchemaInfo/gmd:MD_ApplicationSchemaInformation/gmd:name/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel applicatieschema</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/*/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+		<label>Titel specificatie</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ThematicClassificationCorrectness/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel specificatie</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ThematicClassificationCorrectness/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Versiedatum specificatie</label>
+		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	<element name="gml:identifier" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ThematicClassificationCorrectness/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Unieke code</label>
+		<description>Unieke identificatie voor dit gml element.  Moet uniek zijn binnen dit XML document.</description>
 	</element>
 	<element name="gmd:language" context="gmd:MD_Metadata/gmd:language">
 		<label>Taal metadataset</label>
@@ -2769,5 +2795,13 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	<element name="gml:VerticalCRS">
 		<label>Verticaal CRS identificator</label>
 		<description>Verticaal coordinaat referentiesysteem identificator</description>
+	</element>
+	<element name="gmd:dateTime" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_CompletenessOmission/gmd:dateTime">
+		<label>Datum meting</label>
+		<description>Datum waarop de bewerkingen of metingen zijn gestart.(JJJJ-MM-DD).</description>
+	</element>
+	<element name="gml:UnitDefinition">
+		<label>Eenheid</label>
+		<description/>
 	</element>
 </labels>
