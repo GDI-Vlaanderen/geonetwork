@@ -1024,7 +1024,7 @@ GeoNetwork.app = function(){
             Ext.get('E_any').setWidth(285);
             Ext.get('E_any').setHeight(28);
 
-            metadataResultsView.addMap( Ext.getCmp('resultsMap').map);
+            metadataResultsView.addMap( Ext.getCmp('resultsMap').map, true);
 
             if (GeoNetwork.searchDefault.activeMapControlExtent) {
                 Ext.getCmp('geometryMap').setExtent();

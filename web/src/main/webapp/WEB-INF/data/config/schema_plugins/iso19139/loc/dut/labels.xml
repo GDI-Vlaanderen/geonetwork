@@ -649,7 +649,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:description">
-		<label>Beschrijving</label>
+		<label>Beschrijving bewerking</label>
 		<description>Beschrijving</description>
 	<condition>mandatory</condition>
 	</element>
@@ -1187,7 +1187,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_ProcessStep">
-		<label>Processtap</label>
+	<label>Processtappen</label>
 		<description>Informatie over een gebeurtenis in het productieproces van de data gespecifieerd door het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1197,7 +1197,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:lineage">
-		<label>Herkomst</label>
+		<label>Bewerkingen</label>
 		<description>Niet-kwantitative kwalitietsinformatie betreffende de herkomst van de dataset zoals gespecifieerd door het toepassingsgebied.</description>
 	<condition>conditional</condition>
 	</element>
@@ -2752,7 +2752,33 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Alternatieve titel applicatieschema</label>
 		<description>Korte titel, afkorting of titel in een andere taal.</description>
 	</element>
-	<element name="gmd:title" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/*/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_CompletenessOmission/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+		<label>Titel specificatie</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_CompletenessOmission/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel specificatie</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_CompletenessOmissiony/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Versiedatum specificatie</label>
+		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_AbsoluteExternalPositionalAccuracy/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+		<label>Titel specificatie</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_AbsoluteExternalPositionalAccuracy/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel specificatie</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_AbsoluteExternalPositionalAccuracy/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Versiedatum specificatie</label>
+		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ThematicClassificationCorrectness/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
 		<label>Titel specificatie</label>
 		<description>Titel of naam</description>
 		<condition>mandatory</condition>
@@ -2795,6 +2821,10 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	<element name="gml:VerticalCRS">
 		<label>Verticaal CRS identificator</label>
 		<description>Verticaal coordinaat referentiesysteem identificator</description>
+	</element>
+	<element name="gmd:dateTime" context="gmd:LI_ProcessStep">
+		<label>Datum bewerking</label>
+		<description>Datum waarop de bewerkingen of metingen zijn gestart.(JJJJ-MM-DD).</description>
 	</element>
 	<element name="gmd:dateTime" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_CompletenessOmission/gmd:dateTime">
 		<label>Datum meting</label>

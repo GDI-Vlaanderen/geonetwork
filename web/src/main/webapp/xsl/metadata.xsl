@@ -81,8 +81,7 @@
                * from config-gui.xml (ancestor or element)
           -->
         <xsl:variable name="exception" select="
-		  @name='graphicOverview'
-			or count(ancestor::*[contains($ancestorException, local-name())]) > 0
+			count(ancestor::*[contains($ancestorException, local-name())]) > 0
 			or contains($elementException, @name)
 			"/>
         <!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
@@ -1360,71 +1359,81 @@
                     </xsl:when>
                     <!-- not a boolean -->
                     <xsl:otherwise>
-                        <input class="md" type="{$input_type}" value="{text()}" size="{$cols}">
-                            <!-- ugly hack to make the coords inputs for bbox smaller, to get a smaller width map in diff view -->
-                            <xsl:choose>
-                                <xsl:when test="$cols = 'smaller-map-for-diff-view'">
-                                    <xsl:attribute name="style">
-                                        <xsl:text>width:40px;</xsl:text>
-                                    </xsl:attribute>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="size">
-                                        <xsl:value-of select="$cols"/>
-                                    </xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <xsl:if test="$isXLinked">
-                                <xsl:attribute name="disabled">disabled</xsl:attribute>
-                            </xsl:if>
-                            <xsl:choose>
-                                <xsl:when test="$no_name=false()">
-                                    <xsl:attribute name="name">_<xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
-                                    <xsl:attribute name="id">_<xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="id"><xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-
-                            <xsl:if test="$visible = 'false'">
-                                <xsl:attribute name="style">display:none;</xsl:attribute>
-                            </xsl:if>
-
-                            <xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString'
-									and ../../geonet:element/@min='1')
-									or ../geonet:element/@min='1'"/>
-
-                            <xsl:choose>
-                                <!-- Numeric field -->
-                                <xsl:when test="name(.)='gco:Integer' or
-									name(.)='gco:Decimal' or name(.)='gco:Real'">
-                                    <xsl:choose>
-                                        <xsl:when test="name(.)='gco:Integer'">
-                                            <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="not($mandatory)"/>, false);</xsl:attribute>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="not($mandatory)"/>, true);</xsl:attribute>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </xsl:when>
-                                <!-- Mandatory field (with extra validator) -->
-                                <xsl:when test="$mandatory
-									and $edit">
-                                    <xsl:attribute name="onkeyup">
-                                        validateNonEmpty(this);
-                                    </xsl:attribute>
-                                </xsl:when>
-                                <!-- Custom validator -->
-                                <xsl:when test="$validator">
-                                    <xsl:attribute name="onkeyup"><xsl:value-of select="$validator"/></xsl:attribute>
-                                </xsl:when>
-                            </xsl:choose>
-                        </input>
-                        <xsl:call-template name="helper">
-                            <xsl:with-param name="schema" select="$schema"/>
-                            <xsl:with-param name="attribute" select="false()"/>
-                        </xsl:call-template>
+                    	<table>
+						<tr>
+							<td>
+		                        <xsl:call-template name="helper">
+		                            <xsl:with-param name="schema" select="$schema"/>
+		                            <xsl:with-param name="attribute" select="false()"/>
+		                        </xsl:call-template>
+							</td>
+						</tr>
+						<tr>
+							<td>
+		                        <input class="md" type="{$input_type}" value="{text()}" size="{$cols}">
+		                            <!-- ugly hack to make the coords inputs for bbox smaller, to get a smaller width map in diff view -->
+		                            <xsl:choose>
+		                                <xsl:when test="$cols = 'smaller-map-for-diff-view'">
+		                                    <xsl:attribute name="style">
+		                                        <xsl:text>width:40px;</xsl:text>
+		                                    </xsl:attribute>
+		                                </xsl:when>
+		                                <xsl:otherwise>
+		                                    <xsl:attribute name="size">
+		                                        <xsl:value-of select="$cols"/>
+		                                    </xsl:attribute>
+		                                </xsl:otherwise>
+		                            </xsl:choose>
+		                            <xsl:if test="$isXLinked">
+		                                <xsl:attribute name="disabled">disabled</xsl:attribute>
+		                            </xsl:if>
+		                            <xsl:choose>
+		                                <xsl:when test="$no_name=false()">
+		                                    <xsl:attribute name="name">_<xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
+		                                    <xsl:attribute name="id">_<xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
+		                                </xsl:when>
+		                                <xsl:otherwise>
+		                                    <xsl:attribute name="id"><xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
+		                                </xsl:otherwise>
+		                            </xsl:choose>
+		
+		                            <xsl:if test="$visible = 'false'">
+		                                <xsl:attribute name="style">display:none;</xsl:attribute>
+		                            </xsl:if>
+		
+		                            <xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString'
+											and ../../geonet:element/@min='1')
+											or ../geonet:element/@min='1'"/>
+		
+		                            <xsl:choose>
+		                                <!-- Numeric field -->
+		                                <xsl:when test="name(.)='gco:Integer' or
+											name(.)='gco:Decimal' or name(.)='gco:Real'">
+		                                    <xsl:choose>
+		                                        <xsl:when test="name(.)='gco:Integer'">
+		                                            <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="not($mandatory)"/>, false);</xsl:attribute>
+		                                        </xsl:when>
+		                                        <xsl:otherwise>
+		                                            <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="not($mandatory)"/>, true);</xsl:attribute>
+		                                        </xsl:otherwise>
+		                                    </xsl:choose>
+		                                </xsl:when>
+		                                <!-- Mandatory field (with extra validator) -->
+		                                <xsl:when test="$mandatory
+											and $edit">
+		                                    <xsl:attribute name="onkeyup">
+		                                        validateNonEmpty(this);
+		                                    </xsl:attribute>
+		                                </xsl:when>
+		                                <!-- Custom validator -->
+		                                <xsl:when test="$validator">
+		                                    <xsl:attribute name="onkeyup"><xsl:value-of select="$validator"/></xsl:attribute>
+		                                </xsl:when>
+		                            </xsl:choose>
+		                        </input>
+							</td>
+						</tr>
+						</table>
 
                     </xsl:otherwise>
                 </xsl:choose>
@@ -1547,12 +1556,21 @@
                 </select>
             </xsl:when>
             <xsl:when test="$edit=true() and $rows=1">
-                <input class="md" type="text" id="_{../geonet:element/@ref}_{$updatename}" name="_{../geonet:element/@ref}_{$updatename}" value="{string()}" size="{$cols}" />
-
-                <xsl:call-template name="helper">
-                    <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="attribute" select="true()"/>
-                </xsl:call-template>
+				<table>
+				<tr>
+					<td>
+		                <xsl:call-template name="helper">
+		                    <xsl:with-param name="schema" select="$schema"/>
+		                    <xsl:with-param name="attribute" select="true()"/>
+		                </xsl:call-template>
+					</td>
+				</tr>
+				<tr>
+					<td>
+		                <input class="md" type="text" id="_{../geonet:element/@ref}_{$updatename}" name="_{../geonet:element/@ref}_{$updatename}" value="{string()}" size="{$cols}" />
+					</td>
+				</tr>
+				</table>
             </xsl:when>
             <xsl:when test="$edit=true()">
                 <textarea class="md" name="_{../geonet:element/@ref}_{$updatename}" id="_{../geonet:element/@ref}_{$updatename}" rows="{$rows}" cols="{$cols}">

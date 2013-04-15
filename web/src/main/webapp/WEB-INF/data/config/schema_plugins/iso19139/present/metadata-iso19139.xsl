@@ -142,16 +142,24 @@
                     &#160;
                     <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
                     &#160;
-                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
-                           value="{gco:Distance/@uom}" size="10"/>
-
-                    <xsl:for-each select="gco:Distance">
-                        <xsl:call-template name="helper">
-                            <xsl:with-param name="schema" select="$schema"/>
-                            <xsl:with-param name="attribute" select="false()"/>
-                        </xsl:call-template>
-                    </xsl:for-each>
-
+                    <table>
+                    <tr>
+	                    <td>
+		                    <xsl:for-each select="gco:Distance">
+		                        <xsl:call-template name="helper">
+		                            <xsl:with-param name="schema" select="$schema"/>
+		                            <xsl:with-param name="attribute" select="false()"/>
+		                        </xsl:call-template>
+		                    </xsl:for-each>
+	                    </td>
+                    </tr>
+                    <tr>
+	                    <td>
+		                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+        		                   value="{gco:Distance/@uom}" size="10"/>
+	                    </td>
+                    </tr>
+                    </table>
                 </xsl:variable>
 
                 <xsl:apply-templates mode="simpleElement" select=".">

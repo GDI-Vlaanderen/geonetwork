@@ -65,9 +65,9 @@
 	
 	                     <xsl:variable name="imageTitle">
 	                         <xsl:choose>
-	                             <xsl:when test="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString
+	                             <xsl:when test="gmd:fileDescription/gco:CharacterString
 	and not(gmd:MD_BrowseGraphic/gmd:fileDescription/@gco:nilReason)">
-	                                 <xsl:for-each select="gmd:MD_BrowseGraphic/gmd:fileDescription">
+	                                 <xsl:for-each select="gmd:fileDescription">
 	                                     <xsl:call-template name="localised">
 	                                         <xsl:with-param name="langId" select="$langId"/>
 	                                     </xsl:call-template>
@@ -75,7 +75,7 @@
 	                             </xsl:when>
 	                             <xsl:otherwise>
 	                                 <!-- Filename is not multilingual -->
-	                                 <xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+	                                 <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
 	                             </xsl:otherwise>
 	                         </xsl:choose>
 	                     </xsl:variable>
@@ -172,7 +172,7 @@
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
               gmd:metadataConstraints|gmd:DQ_CompletenessOmission|gmd:DQ_AbsoluteExternalPositionalAccuracy|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_DomainConsistency|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|gmd:LI_ProcessStep|
-              gmd:distributionOrderProcess|gmd:resourceMaintenance">
+              gmd:distributionOrderProcess|gmd:lineage">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -218,16 +218,24 @@
                     &#160;
                     <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
                     &#160;
-                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
-                           value="{gco:Distance/@uom}" style="width:30px;"/>
-
-                    <xsl:for-each select="gco:Distance">
-                        <xsl:call-template name="helper">
-                            <xsl:with-param name="schema" select="$schema"/>
-                            <xsl:with-param name="attribute" select="false()"/>
-                        </xsl:call-template>
-                    </xsl:for-each>
-
+                    <table>
+                    <tr>
+	                    <td>
+		                    <xsl:for-each select="gco:Distance">
+		                        <xsl:call-template name="helper">
+		                            <xsl:with-param name="schema" select="$schema"/>
+		                            <xsl:with-param name="attribute" select="false()"/>
+		                        </xsl:call-template>
+		                    </xsl:for-each>
+	                    </td>
+                    </tr>
+                    <tr>
+	                    <td>
+		                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+		                           value="{gco:Distance/@uom}" style="width:30px;"/>
+	                    </td>
+                    </tr>
+                    </table>
                 </xsl:variable>
 
                 <xsl:apply-templates mode="simpleElement" select=".">
@@ -1098,18 +1106,33 @@
                             <xsl:if test="$isXLinked">
                                 <xsl:attribute name="disabled">disabled</xsl:attribute>
                             </xsl:if>
+							<xsl:variable name="sort" select="not(contains(concat('MD_CharacterSetCode','MD_ScopeCode','MD_SpatialRepresentationTypeCode','CI_RoleCode','CI_DateTypeCode','MD_ProgressCode','MD_MaintenanceFrequencyCode','MD_RestrictionCode','MD_ClassificationCode','DS_AssociationTypeCode','MD_MediumNameCode'),$name))"/>
                             <option name=""/>
-                            <xsl:for-each select="$codelist/entry[not(@hideInEditMode)]">
-                                <xsl:sort select="label"/>
-                                <option>
-                                    <xsl:if test="code=$value">
-                                        <xsl:attribute name="selected"/>
-                                    </xsl:if>
-                                    <xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
-                                    <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
-                                    <xsl:value-of select="label"/>
-                                </option>
-                            </xsl:for-each>
+                            <xsl:if test="not($sort)">
+	                            <xsl:for-each select="$codelist/entry[not(@hideInEditMode)]">
+	                                <option>
+	                                    <xsl:if test="code=$value">
+	                                        <xsl:attribute name="selected"/>
+	                                    </xsl:if>
+	                                    <xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
+	                                    <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
+	                                    <xsl:value-of select="label"/>
+	                                </option>
+	                            </xsl:for-each>
+                           	</xsl:if>
+                            <xsl:if test="$sort">
+	                            <xsl:for-each select="$codelist/entry[not(@hideInEditMode)]">
+	                                <xsl:sort select="label"/>
+	                                <option>
+	                                    <xsl:if test="code=$value">
+	                                        <xsl:attribute name="selected"/>
+	                                    </xsl:if>
+	                                    <xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
+	                                    <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
+	                                    <xsl:value-of select="label"/>
+	                                </option>
+	                            </xsl:for-each>
+                           </xsl:if>
                         </select>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1491,7 +1514,10 @@
 
                                 <xsl:variable name="hiddenId" select="concat('_X', geonet:element/@ref, '_gcoCOLONDateTime')" />
                                 <xsl:variable name="format">
-                                    <xsl:text>%Y-%m-%dT%H:%M:00</xsl:text>
+                                    <xsl:choose>
+                                        <xsl:when test="name(..)='gmd:LI_ProcessStep'"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+                                        <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
+                                    </xsl:choose>
                                 </xsl:variable>
 
                                 <xsl:call-template name="calendar">
@@ -3662,7 +3688,7 @@ can clutter up the rest of the metadata record! -->
       If fileName does not start with http://, just display as
       simple elements.
     -->
-    <xsl:template mode="iso19139" match="gmd:graphicOverview" priority="2">
+    <xsl:template mode="iso19139" match="gmd:graphicOverview|geonet:child[string(@name)='graphicOverview']" priority="2">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
 
@@ -4322,4 +4348,45 @@ to build the XML fragment in the editor. -->
     
   </xsl:template>
   
+    <!-- Display maintenance information -->
+    <xsl:template mode="iso19139"
+                  match="gmd:resourceMaintenance">
+        <xsl:param name="schema" />
+        <xsl:param name="edit" />
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:apply-templates mode="complexElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="edit"    select="$edit"/>
+                    <xsl:with-param name="content">
+						<tr>
+						    <td class="col">
+						        <table class="gn">
+						            <xsl:apply-templates mode="iso19139" select="gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency">
+						                <xsl:with-param name="schema"  select="$schema"/>
+						                <xsl:with-param name="edit"   select="$edit"/>
+						            </xsl:apply-templates>
+						        </table>
+						    </td>
+						    <td class="col">
+						        <table class="gn">
+						            <xsl:apply-templates mode="iso19139" select="gmd:MD_MaintenanceInformation/gmd:dateOfNextUpdate">
+						                <xsl:with-param name="schema"  select="$schema"/>
+						                <xsl:with-param name="edit"   select="$edit"/>
+						            </xsl:apply-templates>
+						        </table>
+						    </td>
+						</tr>
+                	</xsl:with-param>
+            	</xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="iso19139String">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
+
+    </xsl:template>
 </xsl:stylesheet>
