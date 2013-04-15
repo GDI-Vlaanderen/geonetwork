@@ -4,8 +4,12 @@ target
 .build
 *mini*.js
 installer/svn.properties
-*/schematron-rules-none.xsl
+schematron-rules-*.xml
 .project
 .classpath
 .settings
+.externalToolBuilders
+*/.project
+*/.classpath
 */.settings
+*/.externalToolBuilders
