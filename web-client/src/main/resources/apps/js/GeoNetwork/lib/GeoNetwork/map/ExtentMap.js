@@ -448,13 +448,13 @@ GeoNetwork.map.ExtentMap = function(){
         var combo = new Ext.form.ComboBox({
             store: store,
             //displayField: "labels['en']",
-            tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label[\'' + OpenLayers.Lang.getCode() + '\']]}</div></tpl>',// TODO if language code does not exist in labels field store
+            tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label[\'' + GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()) + '\']]}</div></tpl>',// TODO if language code does not exist in labels field store
             typeAhead: true,
             mode: 'local',
             triggerAction: 'all',
             emptyText: OpenLayers.i18n('selectRegion'),
             selectOnFocus: true,
-            width: 135,
+            width: 200,
             listeners: {
                 focus: {
                     fn: function(el){
@@ -609,7 +609,7 @@ GeoNetwork.map.ExtentMap = function(){
                             Ext.get("_" + wsen[3]).dom.value = r.data.north;
                             updateBboxForRegion(maps[eltRef], watchedBbox, eltRef, true); // Region are in WGS84
                             if (Ext.get("_" + this.descRef) !== null) {
-                                Ext.get("_" + this.descRef).dom.value = r.data.label[OpenLayers.Lang.getCode()];
+                                Ext.get("_" + this.descRef).dom.value = r.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())];
                             }
                         }.bind({
                             extentMap: this,

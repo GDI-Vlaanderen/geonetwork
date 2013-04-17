@@ -327,12 +327,14 @@ GeoNetwork.app = function(){
                 item.setVisible(true);
             });
             GeoNetwork.util.SearchFormTools.reload(this);
+            Ext.getCmp('searchForm').doLayout();
         });
         catalogue.on('afterLogout', function(){
             Ext.each(adminFields, function(item){
                 item.setVisible(false);
             });
             GeoNetwork.util.SearchFormTools.reload(this);
+            Ext.getCmp('searchForm').doLayout();
         });
         var hitsPerPage =  [['10'], ['20'], ['50'], ['100']];
         var hitsPerPageField = new Ext.form.ComboBox({
@@ -367,7 +369,7 @@ GeoNetwork.app = function(){
             items:[
                 // Simple search form and search buttons
                 {
-                    bodyStyle:{'padding-top':'50px'},
+                    bodyStyle:{'padding-top':'10px'},
                     layout: {
                         type: 'hbox',
                         pack: 'center',
@@ -872,7 +874,6 @@ GeoNetwork.app = function(){
                             {//basic search panel
                                 title:OpenLayers.i18n('Home'),
                                 //contentEl:'dvZoeken',
-                                
                                 layout:'fit',
                                 closable:false,
                                 autoScroll:true,

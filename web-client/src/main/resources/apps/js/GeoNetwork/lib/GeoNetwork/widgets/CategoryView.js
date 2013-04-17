@@ -101,7 +101,7 @@ GeoNetwork.CategoryView = Ext.extend(Ext.DataView, {
             '<tpl for="."><div class="category-view-item">',
             '<a href="javascript:void(catalogue.kvpSearch(\'fast=' + this.catalogue.metadataStore.fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + this.searchField + '={name}\', ' + this.onSuccess + ',' + this.onFailure + ', null));" alt="{name}">',
             this.imgUrl ? '<img src="' + this.imgUrl + '{name}.png" border="0" />' : '',
-            '{[values.label.' + OpenLayers.Lang.getCode() + ']}</a></div></tpl>');
+            '{[values.label.' + GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()) + ']}</a></div></tpl>');
 
         this.store = GeoNetwork.data.CategoryStore(this.url);
         this.store.load();

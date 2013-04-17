@@ -92,7 +92,21 @@
 	                             <!--<br/>
 	                             <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>  -->
 	                         </div>
-	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail();">Voorbeeld verwijderen</a>
+							<xsl:if test="not((gmd:fileDescription/gco:CharacterString = 'large_thumbnail' or gmd:fileDescription/gco:CharacterString = 'thumbnail') and gmd:fileName/gco:CharacterString != '')">
+							    <xsl:variable name="id" select="../geonet:element/@uuid"/>
+							    <xsl:variable name= "nodeName" select="name(..)" />
+							    <xsl:variable name="siblingsCount" select="count(../preceding-sibling::*[name() = $nodeName]) + count(../following-sibling::*[name() = $nodeName])" />
+							    <xsl:variable name="minCardinality">
+							      <xsl:choose>        
+							        <xsl:when test="($currTab = 'simple') and (../geonet:element/@min = 0) and (../geonet:element/@del='true') and ($siblingsCount = 0)">1</xsl:when>
+							        <xsl:otherwise><xsl:value-of select="../geonet:element/@min" /></xsl:otherwise>
+							      </xsl:choose>
+							    </xsl:variable>
+		                         <a href="#" onclick="javascript:doRemoveElementAction('metadata.elem.delete.new',{../geonet:element/@ref},{../geonet:element/@parent},'{$id}',{$minCardinality});">Voorbeeld verwijderen</a>
+	                        </xsl:if>
+							<xsl:if test="(gmd:fileDescription/gco:CharacterString = 'large_thumbnail' or gmd:fileDescription/gco:CharacterString = 'thumbnail') and gmd:fileName/gco:CharacterString != ''">
+		                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail();">Voorbeeld verwijderen</a>
+	                        </xsl:if>
 	                     </xsl:if>
 	
 	                     <xsl:if test="not(string($fileName))">
@@ -218,24 +232,16 @@
                     &#160;
                     <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
                     &#160;
-                    <table>
-                    <tr>
-	                    <td>
-		                    <xsl:for-each select="gco:Distance">
-		                        <xsl:call-template name="helper">
-		                            <xsl:with-param name="schema" select="$schema"/>
-		                            <xsl:with-param name="attribute" select="false()"/>
-		                        </xsl:call-template>
-		                    </xsl:for-each>
-	                    </td>
-                    </tr>
-                    <tr>
-	                    <td>
-		                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
-		                           value="{gco:Distance/@uom}" style="width:30px;"/>
-	                    </td>
-                    </tr>
-                    </table>
+                    <xsl:for-each select="gco:Distance">
+                    	<div>
+	                        <xsl:call-template name="helper">
+	                            <xsl:with-param name="schema" select="$schema"/>
+	                            <xsl:with-param name="attribute" select="false()"/>
+	                        </xsl:call-template>
+                    	</div>
+                    </xsl:for-each>
+                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+                           value="{gco:Distance/@uom}" style="width:30px;"/>
                 </xsl:variable>
 
                 <xsl:apply-templates mode="simpleElement" select=".">
