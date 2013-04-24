@@ -111,7 +111,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         
         var link = this.relatedTpl.apply(record.data);
         
-        console.log(record);
+//        console.log(record);
             
         if (exist !== null) {
             exist.next().child('li').insertHtml('afterEnd', link);
@@ -382,18 +382,24 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         
         this.tbar = [this.createViewMenu(), this.createActionMenu(), '->', this.createPrintMenu(), this.createTooltipMenu()];
         
-        GeoNetwork.view.ViewPanel.superclass.initComponent.call(this);
         this.metadataSchema = this.record ? this.record.get('schema') : '';
-        this.add(new Ext.Panel({
-            autoLoad: {
-                url: this.serviceUrl + '&currTab=' + this.currTab,
-                callback: this.afterMetadataLoad,
-                scope: this
-            },
-            border: false,
-            frame: false,
-            autoScroll: true
-        }));
+        Ext.applyIf(this, {
+        	items:
+        		new Ext.Panel({
+                    autoLoad: {
+                        url: this.serviceUrl + '&currTab=' + this.currTab,
+                        callback: this.afterMetadataLoad,
+                        scope: this
+                    },
+                    border: false,
+                    frame: false,
+                    layout: 'fit',
+                    bodyStyle:'padding:5px',
+                    autoHeight: true,
+                    autoWidth: true
+                })
+        });
+        GeoNetwork.view.ViewPanel.superclass.initComponent.call(this);
     }
 });
 

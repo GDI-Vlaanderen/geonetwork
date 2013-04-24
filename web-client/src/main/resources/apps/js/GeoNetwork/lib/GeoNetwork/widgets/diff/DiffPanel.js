@@ -116,7 +116,7 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         else return [this.createSwitchMenu()];
     },
     closeWin: function(){
-        console.log(this);
+//        console.log(this);
     },
     createSwitchMenu: function(){
         this.switchButton =  new Ext.Button({

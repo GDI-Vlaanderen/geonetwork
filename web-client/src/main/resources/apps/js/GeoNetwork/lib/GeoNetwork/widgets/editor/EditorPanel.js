@@ -1140,7 +1140,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     // As a consequence the template contains empy gmd:dateTime elements.
                     // In the GeoNetwork GUI this means that no Datetime control is shown.
                     if (cal.className.contains("dynamicDate")) {
-                        dtCal.on('change', function() {
+                        dCal.on('change', function() {
                             GeoNetwork.Util.updateDateValue(this.id.substring(1), false);
                         });
 

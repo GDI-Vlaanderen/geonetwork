@@ -170,7 +170,8 @@ public class GeonetworkDataDirectory {
 								+ System.getProperty("user.name") + ").");
 				useDefaultDataDir = true;
 			}
-	
+/*
+			// commented otherwise mapped drives can not be used
 			if (!systemDataFolder.isAbsolute()) {
 				Log.warning(
 						Geonet.DATA_DIRECTORY,
@@ -180,6 +181,7 @@ public class GeonetworkDataDirectory {
 								+ KEY_SUFFIX + " or geonetwork.dir environment variable.");
 				useDefaultDataDir = true;
 			}
+*/
 		}
 		
 		if (useDefaultDataDir) {

@@ -458,7 +458,7 @@ GeoNetwork.admin.HarvesterPanel = Ext.extend(Ext.Panel, {
                     var h = this.harvesterGrid.getStore().getAt(rowIndex);
                     this.currentHarvester = h;
                     
-                    console.log(h);
+//                    console.log(h);
                     
                     var form = Ext.getCmp('harvesterEditorForm').getForm();
                     form.loadRecord(h);

@@ -730,7 +730,9 @@ GeoNetwork.app = function(){
             // Top navigation widgets
             createModeSwitcher();
             createLanguageSwitcher(lang);
-            createLoginForm();
+            if (Ext.get("login-form")) {
+                createLoginForm();
+            }
             edit();
             
             // Search result

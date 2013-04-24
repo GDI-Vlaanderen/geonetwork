@@ -1326,7 +1326,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Format">
-		<label>Formaat</label>
+		<label>Formaatnaam</label>
 		<description>Beschrijving van de wijze waarop de informatie wordt opgeslagen in een record, bestand, bericht, opslagmedium of anders.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2709,10 +2709,6 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Dataset identificator</label>
 		<description>Unieke code gebruikt voor referentiesystemen.</description>
     </element>
-	<element name="gmd:MD_Format">
-		<label>Formaatnaam</label>
-		<description>Beschrijving van de wijze waarop de informatie wordt opgeslagen in een record, bestand, bericht, opslagmedium of anders.</description>
-	</element>
 	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title">
 		<label>Titel verwante dataset</label>
 		<description>Titel of naam</description>

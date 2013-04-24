@@ -384,7 +384,9 @@ GeoNetwork.adminApp = function() {
 
             // Top navigation widgets
             createLanguageSwitcher();
-            createLoginForm();
+            if (Ext.get("login-form")) {
+                createLoginForm();
+            }
 
             // Register events on the catalogue
 

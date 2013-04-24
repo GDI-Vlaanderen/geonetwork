@@ -701,7 +701,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 text:OpenLayers.i18n('add'),
                 scope: this,
                 handler: function(){
-                    console.log(this.createThesaurusFromLocalFileForm);
+//                    console.log(this.createThesaurusFromLocalFileForm);
                     if (this.createThesaurusFromLocalFileForm.getForm().isValid()) {
                         this.createThesaurusFromLocalFileForm.getForm().getEl().dom.enctype="multipart/form-data";
                         this.createThesaurusFromLocalFileForm.bodyCfg.enctype="multipart/form-data";

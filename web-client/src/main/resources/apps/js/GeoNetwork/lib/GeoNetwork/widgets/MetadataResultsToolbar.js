@@ -423,6 +423,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this
         });
+/*
         var selectAllAction = new Ext.Action({
             text: OpenLayers.i18n('all'),
             handler: function(){
@@ -431,6 +432,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this
         });
+*/
         var selectNoneAction = new Ext.Action({
             text: OpenLayers.i18n('none'),
             handler: function(){
@@ -451,7 +453,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                     xtype: 'menu',
                     items: [
                         '<b class="menu-title">' + OpenLayers.i18n('select') + '</b>',
-                        selectAllAction, 
+//                        selectAllAction, 
                         selectAllInPageAction, 
                         selectNoneAction]
                 }
@@ -467,10 +469,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             }, selectAllInPageAction, {
                 xtype: 'tbtext',
                 text: ', '
-            }, selectAllAction, {
+            },/* selectAllAction, {
                 xtype: 'tbtext',
                 text: ', '
-            }, selectNoneAction
+            },*/ selectNoneAction
             ];
         }
     },

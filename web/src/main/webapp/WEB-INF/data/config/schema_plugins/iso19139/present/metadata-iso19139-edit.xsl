@@ -1273,8 +1273,7 @@
               use a snippet editor. 
               TODO : check that the thesaurus is available in the catalogue to not 
               to try to initialize a widget with a non existing thesaurus. -->
-              <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
-                gmd:identifier/gmd:MD_Identifier/gmd:code">
+              <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
                 
                 <xsl:apply-templates select="gmd:MD_Keywords" mode="snippet-editor">
                   <xsl:with-param name="edit" select="$edit"/>

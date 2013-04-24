@@ -285,7 +285,7 @@ GeoNetwork.util.INSPIRESearchFormTools = {
         return [this.getAnnexField(multi),
                         this.getServiceTypeField(multi),
                         this.getClassificationDataServicesField(services, multi),
-                        this.getThemesField(services, multi), 
-                        this.getRelatedField()];
+                        this.getThemesField(services, multi)/*, 
+                        this.getRelatedField()*/];
     }
 };

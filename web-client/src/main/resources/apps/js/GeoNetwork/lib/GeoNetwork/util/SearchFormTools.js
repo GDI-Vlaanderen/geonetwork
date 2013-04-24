@@ -229,8 +229,11 @@ GeoNetwork.util.SearchFormTools = {
         var options = GeoNetwork.util.SearchFormTools.getOptions(services);
         
         fields.push(fullTextField, advancedTextField, titleField, abstractField, themekeyField, orgNameField, 
-                        geoFields, types, mapTypes, denominatorField, when, 
-                        catalogueField, this.groupField, metadataTypeField, categoryField, options, accuracySettings);
+                        geoFields, types, /*mapTypes, denominatorField, */when);
+        if (GeoNetwork.Settings.nodeType != "agiv") {
+        	fields.push(catalogueField);	
+        } 
+        fields.push(this.groupField, metadataTypeField, categoryField, options, accuracySettings);
         
         return fields;
     },

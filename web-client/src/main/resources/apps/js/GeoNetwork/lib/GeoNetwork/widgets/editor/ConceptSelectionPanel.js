@@ -363,7 +363,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 }
             });
         } else {
-            console.log('No transformation defined. Using default transformation');
+//            console.log('No transformation defined. Using default transformation');
         }
     },
     /** private: method[generateXML]
@@ -437,7 +437,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         self.thesaurusSelector.fireEvent('select');
                     } else {
                         // TODO : improve alert
-                        console.log('Error: thesaurus not found in catalog.');
+//                        console.log('Error: thesaurus not found in catalog.');
                     }
                 }
             }
@@ -510,7 +510,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 exception: function (misc) {
                     // TODO : improve error
-                    console.log(misc);
+//                    console.log(misc);
                 },
                 'beforeload': function (store, options) {
                     if (this.nbResultsField !== null) {

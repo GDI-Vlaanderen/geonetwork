@@ -124,7 +124,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
                             this.un('aftermapmove', this.setField, this);
                         }
                     },
-                    scope : panel
+                    scope : this
                 }
             });
             this.getTopToolbar().add(action);

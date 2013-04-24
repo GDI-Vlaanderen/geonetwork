@@ -464,13 +464,20 @@ public final class Xml
 			System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
 			//e.printStackTrace();
 		} finally {
-			Transformer t = transFact.newTransformer(srcSheet);
-			if (params != null) {
-				for (String param : params.keySet()) {
-					t.setParameter(param,params.get(param));
+			try {
+				Transformer t = transFact.newTransformer(srcSheet);
+				if (params != null) {
+					for (String param : params.keySet()) {
+						t.setParameter(param,params.get(param));
+					}
 				}
+				t.transform(srcXml, result);
 			}
-			t.transform(srcXml, result);
+			catch (Exception e) {
+				System.out.println(srcSheet);
+				e.printStackTrace();
+				throw e;
+			}
 		}
 	}
 

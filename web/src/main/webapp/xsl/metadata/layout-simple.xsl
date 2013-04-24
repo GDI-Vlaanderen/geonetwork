@@ -17,7 +17,7 @@
 
     <table class="gn">
       <tr>
-        <td colspan="2">
+        <td>
           <span class="title">
             <xsl:value-of select="$title"/>
           </span>
@@ -27,12 +27,14 @@
         <td>
           <xsl:copy-of select="$abstract"/>
         </td>
+<!-- 
         <td class="right">
           <xsl:copy-of select="$logo"/>
         </td>
+-->
       </tr>
       <tr>
-        <td colspan="2">
+        <td>
           <xsl:copy-of select="$relatedResources"/>
           <xsl:copy-of select="$tabs"/>
         </td>
