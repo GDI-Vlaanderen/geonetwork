@@ -34,7 +34,6 @@ Mapping between :
     <xsl:param name="uuid">uuid</xsl:param>
 	<xsl:param name="lang">eng</xsl:param>
 	<xsl:param name="topic"></xsl:param>
-	
 	<!-- ============================================================================= -->
 	
 	<xsl:include href="resp-party.xsl"/>
@@ -236,8 +235,7 @@ Mapping between :
 					<scope>
 						<DQ_Scope>
 							<level>
-								<MD_ScopeCode codeListValue="service"
-									codeList="./resources/codeList.xml#MD_ScopeCode" />
+								<MD_ScopeCode codeListValue="service" codeList="./resources/codeList.xml#MD_ScopeCode"/>
 							</level>
 							<levelDescription>
 								<MD_ScopeDescription>
@@ -246,13 +244,50 @@ Mapping between :
 							</levelDescription>
 						</DQ_Scope>
 					</scope>
-					<lineage>
-						<LI_Lineage>
-							<statement gco:nilReason="missing">
-								<gco:CharacterString/>
-							</statement>
-						</LI_Lineage>
-					</lineage>
+					<report>
+						<DQ_DomainConsistency>
+							<measureIdentification>
+								<RS_Identifier>
+									<code>
+										<gco:CharacterString>Conformity_001</gco:CharacterString>
+									</code>
+									<codeSpace>
+										<gco:CharacterString>INSPIRE</gco:CharacterString>
+									</codeSpace>
+								</RS_Identifier>
+							</measureIdentification>
+							<result>
+								<DQ_ConformanceResult>
+									<specification>
+										<CI_Citation>
+											<title>
+												<gco:CharacterString>Implementing
+													Directive 2007/2/EC of the European
+													Parliament and of the Council as regards
+													the Network Services</gco:CharacterString>
+											</title>
+											<date>
+												<CI_Date>
+													<date>
+														<gco:Date>2008-11-28</gco:Date>
+													</date>
+													<dateType>
+														<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</CI_DateTypeCode>
+													</dateType>
+												</CI_Date>
+											</date>
+										</CI_Citation>
+									</specification>
+									<explanation>
+										<gco:CharacterString>See the referenced specification</gco:CharacterString>
+									</explanation>
+									<pass>
+										<gco:Boolean>true</gco:Boolean>
+									</pass>
+								</DQ_ConformanceResult>
+							</result>
+						</DQ_DomainConsistency>
+					</report>
 				</DQ_DataQuality>
 			</dataQualityInfo>
 			<!--mdConst -->

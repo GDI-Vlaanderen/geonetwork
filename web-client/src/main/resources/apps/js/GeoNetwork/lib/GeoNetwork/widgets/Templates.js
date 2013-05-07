@@ -130,10 +130,10 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<tpl if="thumbnail==\'\'"></tpl>',
             '</div>',
             '<tpl for="links">',
-            '<tpl if="values.type == \'application/vnd.ogc.wms_xml\'">',
+            '<!--<tpl if="values.type == \'application/vnd.ogc.wms_xml\'">',
             // FIXME : ref to app
             '<a href="#" class="md-mn addLayer" title="{title}" alt="{title}" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{id}\']]);">&nbsp;</a>',
-            '</tpl>',
+            '</tpl>-->',
             '</tpl>',
 
             '</div>',
@@ -224,9 +224,9 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             // FIXME : this call require the catalogue to be named catalogue, static call ?
             // FIXME : ref to app
             '<tpl for="links">',
-            '<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
-            '<a href="#" class="md-mn addLayer" title="' + OpenLayers.i18n('addToMap') + ' {title}" alt="Add layer to map" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{[escape(values.title)]}\', \'{href}\', \'{name}\', \'{id}\']]);">&nbsp;</a>',
-            '</tpl>',
+//            '<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
+//            '<a href="#" class="md-mn addLayer" title="' + OpenLayers.i18n('addToMap') + ' {title}" alt="Add layer to map" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{[escape(values.title)]}\', \'{href}\', \'{name}\', \'{id}\']]);">&nbsp;</a>',
+//            '</tpl>',
             '<tpl if="values.type == \'application/vnd.google-earth.kml+xml\'">',
             '<a href="{href}" class="md-mn md-mn-kml" title="' + OpenLayers.i18n('viewKml') + ' {title}" alt="Open kml">&nbsp;</a>',
             '</tpl>',

@@ -33,14 +33,18 @@ GeoNetwork.map.printCapabilities = "../../pdf";
 
 // Config for WGS84 based maps
 GeoNetwork.map.PROJECTION = "EPSG:4326";
+GeoNetwork.map.UNITS = "dd"; //degrees
 GeoNetwork.map.EXTENT = new OpenLayers.Bounds(2.55791, 50.67460, 5.92000, 51.49600);
-//GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-180,-90,180,90);
-//GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-5.1,41,9.7,51);
+
+GeoNetwork.map.RESOLUTIONS = [1.40625000000000000000, 0.70312500000000000000, 0.35156250000000000000, 0.17578125000000000000, 0.08789062500000000000, 0.04394531250000000000, 0.02197265625000000000, 0.01098632812500000000, 0.00549316406250000000, 0.00274658203125000000, 0.00137329101562500000, 0.00068664550781250000, 0.00034332275390625000, 0.00017166137695312500, 0.00008583068847656250, 0.00004291534423828120, 0.00002145767211914060, 0.00001072883605957030, 0.00000536441802978516, 0.00000268220901489258, 0.00000134110450744629, 0.00000067055225372314, 0.00000033527612686157];
+GeoNetwork.map.MAXRESOLUTION = 1.40625000000000000000;
+GeoNetwork.map.NUMZOOMLEVELS = 6;
+GeoNetwork.map.TILESIZE = new OpenLayers.Size(512,512);
 
 GeoNetwork.map.BACKGROUND_LAYERS = [
     //new OpenLayers.Layer.WMS(OpenLayers.i18n('backgroundLayer'), "http://www2.demis.nl/wms/wms.ashx?WMS=BlueMarble", {layers: 'Earth Image,Borders,Coastlines', format: 'image/jpeg'}, {isBaseLayer: true})
     //new OpenLayers.Layer.WMS("GRB", 'http://grb.agiv.be/geodiensten/raadpleegdiensten/GRB-basiskaart/wms', { layers: 'GRB_BASISKAART', transparent: false, format: 'image/png' }, { isBaseLayer: true , transitionEffect: 'resize'})
-    new OpenLayers.Layer.WMS("GRB", 'http://wms.agiv.be/inspire/wms/administratieve_eenheden', { layers: 'Refgem,Refarr,Refprv,Refgew', transparent: true, format: 'image/png' }, { isBaseLayer: true , transitionEffect: 'resize'})    
+    new OpenLayers.Layer.WMS("GRB", 'http://wms.agiv.be/inspire/wms/administratieve_eenheden', { layers: 'Refgem,Refarr,Refprv,Refgew', transparent: true, format: 'image/png'}, { isBaseLayer: true , transitionEffect: 'resize', singleTile: true})    
     //new OpenLayers.Layer.TMS(OpenLayers.i18n('backgroundLayer'), "http://grb.agiv.be/geodiensten/raadpleegdiensten/geocache/tms/", {layername: 'grb_bsk@WGS84VL', type: 'png', tileOrigin: new OpenLayers.LonLat(-180, -90), serverResolutions: [1.40625000000000000000, 0.70312500000000000000, 0.35156250000000000000, 0.17578125000000000000, 0.08789062500000000000, 0.04394531250000000000, 0.02197265625000000000, 0.01098632812500000000, 0.00549316406250000000, 0.00274658203125000000, 0.00137329101562500000, 0.00068664550781250000, 0.00034332275390625000, 0.00017166137695312500, 0.00008583068847656250, 0.00004291534423828120, 0.00002145767211914060, 0.00001072883605957030, 0.00000536441802978516, 0.00000268220901489258, 0.00000134110450744629, 0.00000067055225372314, 0.00000033527612686157]}, {isBaseLayer: true})
 
     //new OpenLayers.Layer.WMS("Background layer", "/geoserver/wms", {layers: 'gn:world,gn:ne_50m_boundary_da,gn:ne_50m_boundary_lines_land,gn:ne_50m_coastline', format: 'image/jpeg'}, {isBaseLayer: true})
@@ -56,15 +60,36 @@ GeoNetwork.map.BACKGROUND_LAYERS = [
 //    //new OpenLayers.Layer.Google("Google Streets");
 //    ];
 
+GeoNetwork.map.EXTENT_MAP_OPTIONS = {
+    projection: GeoNetwork.map.PROJECTION,
+    units: GeoNetwork.map.UNITS,
+    resolutions: GeoNetwork.map.RESOLUTIONS,
+    maxResolution: GeoNetwork.map.MAXRESOLUTION,
+//    numZoomLevels: GeoNetwork.map.NUMZOOMLEVELS,
+//	tileSize: GeoNetwork.map.TILESIZE,
+//	controls: [],
+	maxExtent: GeoNetwork.map.EXTENT,
+	restrictedExtent: GeoNetwork.map.EXTENT
+};
 GeoNetwork.map.MAP_OPTIONS = {
     projection: GeoNetwork.map.PROJECTION,
-    maxExtent: GeoNetwork.map.EXTENT,
-    restrictedExtent: GeoNetwork.map.EXTENT,
-    controls: []
+    units: GeoNetwork.map.UNITS,
+    resolutions: GeoNetwork.map.RESOLUTIONS,
+    maxResolution: GeoNetwork.map.MAXRESOLUTION,
+//    numZoomLevels: GeoNetwork.map.NUMZOOMLEVELS,
+//	tileSize: GeoNetwork.map.TILESIZE,
+	controls: [],
+	maxExtent: GeoNetwork.map.EXTENT,
+	restrictedExtent: GeoNetwork.map.EXTENT
 };
 GeoNetwork.map.MAIN_MAP_OPTIONS = {
     projection: GeoNetwork.map.PROJECTION,
-    maxExtent: GeoNetwork.map.EXTENT,
-    restrictedExtent: GeoNetwork.map.EXTENT,
-    controls: []
+    units: GeoNetwork.map.UNITS,
+    resolutions: GeoNetwork.map.RESOLUTIONS,
+    maxResolution: GeoNetwork.map.MAXRESOLUTION,
+//    numZoomLevels: GeoNetwork.map.NUMZOOMLEVELS,
+//	tileSize: GeoNetwork.map.TILESIZE,
+	controls: [],
+	maxExtent: GeoNetwork.map.EXTENT,
+	restrictedExtent: GeoNetwork.map.EXTENT
 };

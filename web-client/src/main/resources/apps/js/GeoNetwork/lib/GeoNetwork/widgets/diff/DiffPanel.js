@@ -158,7 +158,7 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
             layout: 'fit',
             border: false,
             frame: false,
-            autoScroll: false,
+            autoScroll: true,
             tbar: this.getPanelTbar()
         });
         

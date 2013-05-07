@@ -3841,6 +3841,7 @@
                                     <a href="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}" rel="lightbox-viewset">
                                         <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
                                         <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+                                        <xsl:attribute name="target">_blank</xsl:attribute>
                                         <img class="thumbnail" src="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}"/>
                                     </a>
                                     <br/>

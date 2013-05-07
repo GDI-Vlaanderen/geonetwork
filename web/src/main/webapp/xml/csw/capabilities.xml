@@ -162,15 +162,15 @@
 			</ows:DCP>
 		</ows:Operation>
 		<ows:Operation name="Harvest">
-            <ows:Parameter name="ResourceType">
-                <ows:Value>http://www.isotc211.org/schemas/2005/gmd/</ows:Value>
-            </ows:Parameter>
 			<ows:DCP>
 				<ows:HTTP>
                     <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication" />
                     <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication"  />
 				</ows:HTTP>
 			</ows:DCP>
+            <ows:Parameter name="ResourceType">
+                <ows:Value>http://www.isotc211.org/schemas/2005/gmd/</ows:Value>
+            </ows:Parameter>
 		</ows:Operation>
         <ows:Parameter name="service">
             <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
@@ -219,10 +219,10 @@
                 <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
 								<!-- LessThanOrEqualTo is in OGC Filter Spec, LessThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
-                <ogc:ComparisonOperator>LessThanOrEqualTo</ogc:ComparisonOperator>
+<!--               <ogc:ComparisonOperator>LessThanOrEqualTo</ogc:ComparisonOperator>-->
 								<!-- GreaterThanOrEqualTo is in OGC Filter Spec, GreaterThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
-                <ogc:ComparisonOperator>GreaterThanOrEqualTo</ogc:ComparisonOperator>
+<!--                <ogc:ComparisonOperator>GreaterThanOrEqualTo</ogc:ComparisonOperator>-->
                 <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>

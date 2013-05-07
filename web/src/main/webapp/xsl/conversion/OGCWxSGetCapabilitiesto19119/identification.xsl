@@ -9,6 +9,7 @@
 										xmlns:xlink="http://www.w3.org/1999/xlink"
 										xmlns:wfs="http://www.opengis.net/wfs"
 										xmlns:ows="http://www.opengis.net/ows"
+										xmlns:owsg="http://www.opengeospatial.net/ows"
 										xmlns:ows11="http://www.opengis.net/ows/1.1"
 										xmlns:wcs="http://www.opengis.net/wcs"
 										xmlns:wms="http://www.opengis.net/wms"
@@ -92,28 +93,78 @@
 		</abstract>
 
 		<!--idPurp-->
-
+<!--
 		<status>
 			<MD_ProgressCode codeList="./resources/codeList.xml#MD_ProgressCode" codeListValue="completed" />
 		</status>
-
+-->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="//ContactInformation|//wcs:responsibleParty|//wms:responsibleParty">
+		<xsl:choose>
+			<xsl:when test="$s/wms:ContactInformation|
+				$s/wfs:ContactInformation|
+				$s/wms:ContactInformation|
+                   ows:ServiceProvider|
+				owsg:ServiceProvider|
+				ows11:ServiceProvider">
+				<xsl:for-each select="$s/wms:ContactInformation|
+					$s/wfs:ContactInformation|
+					$s/wms:ContactInformation|
+                       ows:ServiceProvider|
+					owsg:ServiceProvider|
+					ows11:ServiceProvider">
+					<pointOfContact>
+						<CI_ResponsibleParty>
+							<xsl:apply-templates select="." mode="RespParty"/>
+						</CI_ResponsibleParty>
+					</pointOfContact>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<contact gco:nilReason="missing"/>
+			</xsl:otherwise>
+		</xsl:choose>
+<!--
+		<xsl:for-each select="Service/ContactInformation|Service/wcs:responsibleParty|Service/wms:responsibleParty">
 			<pointOfContact>
 				<CI_ResponsibleParty>
 					<xsl:apply-templates select="." mode="RespParty"/>
 				</CI_ResponsibleParty>
 			</pointOfContact>
 		</xsl:for-each>
-		<xsl:for-each select="//ows:ServiceProvider|//ows11:ServiceProvider">
+		<xsl:for-each select="Service/ows:ServiceProvider|Service/ows11:ServiceProvider">
 			<pointOfContact>
 				<CI_ResponsibleParty>
 					<xsl:apply-templates select="." mode="RespParty"/>
 				</CI_ResponsibleParty>
 			</pointOfContact>
 		</xsl:for-each>
-		
+-->
+		<descriptiveKeywords>
+			<MD_Keywords>
+				<keyword>
+					<gco:CharacterString>infoMapAccessService</gco:CharacterString>
+				</keyword>
+				<thesaurusName>
+					<CI_Citation>
+						<title>
+							<gco:CharacterString> D.4 van de verordening (EG) NR. 1205/2008 van de Commissie</gco:CharacterString>
+						</title>
+						<date>
+							<CI_Date>
+								<date>
+									<gco:Date>2008-12-03</gco:Date>
+								</date>
+								<dateType>
+									<CI_DateTypeCode codeListValue="publication" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode">publication</CI_DateTypeCode>
+								</dateType>
+							</CI_Date>
+						</date>
+					</CI_Citation>
+				</thesaurusName>
+			</MD_Keywords>
+		</descriptiveKeywords>
+
 		<!-- resMaint -->
 		<!-- graphOver -->
 		<!-- dsFormat-->
@@ -127,22 +178,36 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		
+		<resourceConstraints>
+			<MD_Constraints>
+				<useLimitation>
+					<gco:CharacterString><xsl:value-of select="$s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees"/></gco:CharacterString>
+				</useLimitation>
+			</MD_Constraints>
+		</resourceConstraints>
+
+		<resourceConstraints>
+			<MD_LegalConstraints>
+				<accessConstraints>
+					<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
+				</accessConstraints>
+				<otherConstraints>
+					<gco:CharacterString><xsl:value-of select="$s/wms:AccessConstraints"/></gco:CharacterString>
+				</otherConstraints>
+			</MD_LegalConstraints>
+		</resourceConstraints>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+		
 		<srv:serviceType>
-			<gco:LocalName codeSpace="www.w3c.org">
-				<xsl:choose>
-					<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">OGC:WMS</xsl:when>
-					<xsl:when test="name(.)='WCS_Capabilities'">OGC:WCS</xsl:when>
-					<xsl:when test="name(.)='wps:Capabilities'">OGC:WPS</xsl:when>
-					<xsl:otherwise>OGC:WFS</xsl:otherwise>
-				</xsl:choose>
-			</gco:LocalName>
+			<gco:LocalName>view</gco:LocalName>
 		</srv:serviceType>
 		<srv:serviceTypeVersion>
 			<gco:CharacterString><xsl:value-of select='@version'/></gco:CharacterString>
 		</srv:serviceTypeVersion>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
+<!--	
 		<srv:accessProperties>
 			<MD_StandardOrderProcess>
 				<fees>
@@ -150,7 +215,7 @@
 				</fees>
 			</MD_StandardOrderProcess>
 		</srv:accessProperties>
-		
+-->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		Extent in OGC spec are somehow differents !
 		

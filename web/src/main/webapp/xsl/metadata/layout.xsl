@@ -1022,21 +1022,10 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Create an helper list for the current input element.
-		Current input could be an element or an attribute (eg. uom). 
-	
-	In editing mode, for gco:CharacterString elements (with no codelist 
-	or enumeration defined in the schema) an helper list could be defined 
-	in loc files using the helper tag. Then a list of values
-	is displayed next to the input field.
-	
-	One related element (sibbling) could be link to current element using the @rel attribute.
-	This related element is updated with the title value of the selected option.
-	-->
-  <xsl:template name="helper">
+  <xsl:template name="helperList">
     <xsl:param name="schema"/>
     <xsl:param name="attribute"/>
-
+    <xsl:param name="helperElement"/>
     <!-- Define the element to look for. -->
     <xsl:variable name="parentName">
       <xsl:choose>
@@ -1063,8 +1052,6 @@
       </xsl:for-each>
     </xsl:variable>
 
-    <!-- Look for the helper -->
-    <xsl:variable name="helper">
       <xsl:choose>
         <xsl:when
           test="starts-with($schema,'iso19139')">
@@ -1102,8 +1089,30 @@
           />
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:variable>
+</xsl:template>
 
+  <!-- Create an helper list for the current input element.
+		Current input could be an element or an attribute (eg. uom). 
+	
+	In editing mode, for gco:CharacterString elements (with no codelist 
+	or enumeration defined in the schema) an helper list could be defined 
+	in loc files using the helper tag. Then a list of values
+	is displayed next to the input field.
+	
+	One related element (sibbling) could be link to current element using the @rel attribute.
+	This related element is updated with the title value of the selected option.
+	-->
+  <xsl:template name="helper">
+    <xsl:param name="schema"/>
+    <xsl:param name="attribute"/>
+
+    <!-- Look for the helper -->
+    <xsl:variable name="helper">
+	    <xsl:call-template name="helperList">
+	        <xsl:with-param name="schema" select="$schema"/>
+	        <xsl:with-param name="attribute" select="$attribute"/>
+	    </xsl:call-template>
+    </xsl:variable>
 
     <!-- Display the helper list -->
     <xsl:if test="normalize-space($helper)!=''">
@@ -1576,7 +1585,7 @@
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-        <input class="md" type="number" id="{$eltRef}" value="{text()}" readonly="readonly"
+        <input class="md" type="text" id="{$eltRef}" value="{text()}" readonly="readonly"
           size="{$size}"/>
         <input class="md" type="hidden" id="_{$eltRef}" name="_{$eltRef}" value="{text()}"
           readonly="readonly"/>
@@ -2187,8 +2196,8 @@
             </xsl:apply-templates>
           </xsl:when>
           <!-- AGIV changing one boolean to other string -->
-          <xsl:when test="$name_parent='gmd:pass'">
-            <xsl:variable name="value_" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = 'gmd:pass']/entry[code=$value]/label"/>
+          <xsl:when test="$name_parent='gmd:pass' or $name_parent='gmd:includedWithDataset'">
+            <xsl:variable name="value_" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name_parent]/entry[code=$value]/label"/>
             
             <xsl:choose>
                 <xsl:when test="$value_">
@@ -2324,18 +2333,4 @@
       </div>
     </div>
   </xsl:template>
-
-    <!--
-    	AGIV specific:
-    	
-        If the element is mandatory (xsd and labels.xml), it returns a string with the
-        reason of the mandatory (iso, inspire, gdi).
-    -->
-    <xsl:template name="getMandatoryType">
-        <xsl:param name="name"/>
-        <xsl:param name="schema"/>
-        
-        <xsl:value-of select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/mandatory)"/>
-         
-    </xsl:template>
 </xsl:stylesheet>

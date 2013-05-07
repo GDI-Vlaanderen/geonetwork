@@ -39,7 +39,7 @@
 
 					<!-- large thumbnail link -->
 					<xsl:when test="$metadata/image[@type='overview']">
-						<a href="javascript:popWindow('{$metadata/image[@type='overview']}')">
+						<a href="javascript:popWindow('{$metadata/image[@type='overview']}')" target="_blank">
 							<img src="{$metadata/image[@type='thumbnail']}" alt="{/root/gui/strings/thumbnail}"/>
 						</a>
 					</xsl:when>

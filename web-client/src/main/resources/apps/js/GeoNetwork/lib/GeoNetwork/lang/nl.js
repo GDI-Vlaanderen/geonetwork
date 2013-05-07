@@ -525,7 +525,7 @@ GeoNetwork.Lang.nl = {
     'backgroundLayer': 'Achtergrond laag',
     'what': 'Wat',
     'where': 'Waar',
-    'Advanced': 'Geavanceerd',
+    'Advanced': 'Geavanceerd zoeken',
     'About': 'Over',
     'List': 'Resultatenlijst',
 

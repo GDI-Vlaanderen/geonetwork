@@ -111,7 +111,9 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				String id = gc.getDataManager().getMetadataId(dbms, uuid);
-				
+				if (id==null) {
+					id = gc.getDataManager().getMetadataId(dbms, uuid.toUpperCase());
+				}
 				// Metadata not found, search for next ids
 				if (id == null)
 					continue;

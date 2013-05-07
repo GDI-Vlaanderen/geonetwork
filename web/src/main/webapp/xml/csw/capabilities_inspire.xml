@@ -164,15 +164,15 @@
 			</ows:DCP>
 		</ows:Operation>
 		<ows:Operation name="Harvest">
-            <ows:Parameter name="ResourceType">
-                <ows:Value>http://www.isotc211.org/schemas/2005/gmd/</ows:Value>
-            </ows:Parameter>
 			<ows:DCP>
 				<ows:HTTP>
                     <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication" />
                     <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication"  />
 				</ows:HTTP>
 			</ows:DCP>
+            <ows:Parameter name="ResourceType">
+                <ows:Value>http://www.isotc211.org/schemas/2005/gmd/</ows:Value>
+            </ows:Parameter>
 		</ows:Operation>
         <ows:Parameter name="service">
             <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
@@ -210,12 +210,12 @@
             </inspire_common:TemporalReference>
 
             <inspire_common:Conformity>
-				<inspire_common:Specification xsi:type="inspire_common:citationInspireInteroperabilityRegulation_eng">
-                    <inspire_common:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_common:Title>
+				<inspire_common:Specification xsi:type="inspire_common:citationInspireInteroperabilityRegulation_dut">
+                    <inspire_common:Title>VERORDENING (EU) Nr. 1089/2010 VAN DE COMMISSIE van 23 november 2010 ter uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens</inspire_common:Title>
 					<inspire_common:DateOfPublication>2010-12-08</inspire_common:DateOfPublication>
-					<inspire_common:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_common:URI>
+					<inspire_common:URI>OJ:L:2010:323:0011:0102:NL:PDF</inspire_common:URI>
 					<inspire_common:ResourceLocator>
-						<inspire_common:URL>http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:EN:PDF</inspire_common:URL>
+						<inspire_common:URL>http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:NL:PDF</inspire_common:URL>
 						<inspire_common:MediaType>application/pdf</inspire_common:MediaType>
 					</inspire_common:ResourceLocator>
 				</inspire_common:Specification>
@@ -289,10 +289,10 @@
                 <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
 								<!-- LessThanOrEqualTo is in OGC Filter Spec, LessThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
-                <ogc:ComparisonOperator>LessThanOrEqualTo</ogc:ComparisonOperator>
+<!--               <ogc:ComparisonOperator>LessThanOrEqualTo</ogc:ComparisonOperator>-->
 								<!-- GreaterThanOrEqualTo is in OGC Filter Spec, GreaterThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
-                <ogc:ComparisonOperator>GreaterThanOrEqualTo</ogc:ComparisonOperator>
+<!--                <ogc:ComparisonOperator>GreaterThanOrEqualTo</ogc:ComparisonOperator>-->
                 <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>

@@ -89,7 +89,7 @@ GeoNetwork.map.ExtentMap = function(){
     var wgsProjCode = "EPSG:4326";
     var wgsProj = new OpenLayers.Projection(wgsProjCode);
     var mainProj = null;
-    var units = 'm'; //degrees
+    var units = 'dd'; //degrees
     var alternateProj = null;
     
     
@@ -120,15 +120,15 @@ GeoNetwork.map.ExtentMap = function(){
                 projection: mainProjCode,
                 theme: null
             },
-            map = new OpenLayers.Map(options);
+            map = new OpenLayers.Map(/*options*/GeoNetwork.map.EXTENT_MAP_OPTIONS);
         
         
         
         // Disable mouse wheel and navigation toolbar in view mode.
         // User can still pan the map.
         if (!edit) {
-            var navigationControl = map.getControlsByClass('OpenLayers.Control.Navigation')[0];
-            navigationControl.disableZoomWheel();
+//            var navigationControl = map.getControlsByClass('OpenLayers.Control.Navigation')[0];
+//            navigationControl.disableZoomWheel();
             map.removeControl(map.getControlsByClass('OpenLayers.Control.PanZoom')[0]);
         }
         

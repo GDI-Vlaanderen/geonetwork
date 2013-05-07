@@ -569,12 +569,15 @@
 	                            <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
 	                          </xsl:otherwise>
 	                        </xsl:choose>
-	                  </a>&#160;
+	                  </a>
+<!--
+	                  &#160;
 	                  <a href="#" class="md-mn addLayer"
 	                    onclick="app.switchMode('1', true);app.getIMap().addWMSLayer([[
 	                              '{gmd:CI_OnlineResource/gmd:description/gco:CharacterString}', 
 	                              '{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}', 
 	                              '{gmd:CI_OnlineResource/gmd:name/gco:CharacterString}', '{generate-id()}']]);">&#160;</a>
+-->	                              
                   </li>
 	              </xsl:for-each>
 	            </ul>
@@ -597,7 +600,7 @@
         then $fileName 
         else geonet:get-thumbnail-url($fileName, //geonet:info, /root/gui/locService)"/>
   
-      <a href="{$url}" rel="lightbox-viewset">
+      <a href="{$url}" rel="lightbox-viewset" target="_blank">
         <img class="logo" src="{$url}" alt="thumbnail"
           title="{gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString}"/>
       </a>

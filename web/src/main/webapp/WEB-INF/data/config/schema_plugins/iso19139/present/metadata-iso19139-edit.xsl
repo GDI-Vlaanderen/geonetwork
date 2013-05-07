@@ -83,7 +83,7 @@
 	
 	                     <xsl:if test="string($fileName)">
 	                         <div class="md-view">
-	                             <a rel="lightbox-viewset" href="{$url}">
+	                             <a rel="lightbox-viewset" href="{$url}" target="_blank">
 	                                 <img class="logo" src="{$url}">
 	                                     <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
 	                                     <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
@@ -349,13 +349,18 @@
                         <xsl:otherwise>
                             <select onchange="javascript:Ext.getDom('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
                                 <option></option>
-                                <xsl:for-each select="//srv:operatesOn[@uuidref!='']">
-                                    <option value="{@uuidref}">
-                                        <xsl:if test="@uuidref = $currentUuid">
+                                <xsl:for-each select="//srv:operatesOn[@xlink:href!='']">
+									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,'&amp;id=')"/>
+									<xsl:variable name="uuid">
+										<xsl:if test="contains(idParamValue,'&amp;')"><xsl:value-of select="substring-before($idParamValue,'&amp;')"/></xsl:if>
+										<xsl:if test="not(contains(idParamValue,'&amp;'))"><xsl:value-of select="$idParamValue"/></xsl:if>
+									</xsl:variable>
+                                    <option value="{$uuid}">
+                                        <xsl:if test="$uuid = $currentUuid">
                                             <xsl:attribute name="selected">selected</xsl:attribute>
                                         </xsl:if>
                                         <xsl:call-template name="getMetadataTitle">
-                                            <xsl:with-param name="uuid" select="@uuidref"/>
+                                            <xsl:with-param name="uuid" select="$uuid"/>
                                         </xsl:call-template>
                                     </option>
                                 </xsl:for-each>
@@ -374,9 +379,15 @@
                 <xsl:apply-templates mode="simpleElement" select=".">
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="text">
-                        <a href="#" onclick="javascript:catalogue.metadataShow('{gco:CharacterString}');return false;">
+                    	<xsl:variable name="mduuidValue" select="gco:CharacterString"/>
+						<xsl:variable name="idParamValue" select="substring-after(//srv:operatesOn[@uuidref=$mduuidValue][1]/@xlink:href,';id=')"/>
+						<xsl:variable name="uuid">
+							<xsl:if test="contains($idParamValue,';')"><xsl:value-of select="substring-before($idParamValue,';')"/></xsl:if>
+							<xsl:if test="not(contains($idParamValue,';'))"><xsl:value-of select="$idParamValue"/></xsl:if>
+						</xsl:variable>
+                        <a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
                             <xsl:call-template name="getMetadataTitle">
-                                <xsl:with-param name="uuid" select="gco:CharacterString"/>
+                                <xsl:with-param name="uuid" select="$mduuidValue"/>
                             </xsl:call-template>
                         </a>
                     </xsl:with-param>
@@ -385,7 +396,98 @@
         </xsl:choose>
     </xsl:template>
 
-
+    <!-- Display code in view mode in same section -->
+<!-- 
+    <xsl:template mode="iso19139"
+                  match="gmd:code[name(..)='gmd:RS_Identifier']" priority="10.0">
+        <xsl:param name="schema" />
+        <xsl:param name="edit" />
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+            	<xsl:if test="name(.)='gmd:code'">
+	                <xsl:apply-templates mode="complexElement" select=".">
+	                    <xsl:with-param name="schema"  select="$schema"/>
+	                    <xsl:with-param name="edit"    select="$edit"/>
+	                    <xsl:with-param name="content">
+		                            <tr>
+		                                <td class="col">
+		                                    <table class="gn">
+		                                        <xsl:apply-templates mode="iso19139" select=".">
+		                                            <xsl:with-param name="schema"  select="$schema"/>
+		                                            <xsl:with-param name="edit"   select="$edit"/>
+		                                        </xsl:apply-templates>
+		                                    </table>
+		                                </td>
+		                                <td class="col">
+		                                    <table class="gn">
+		                                        <xsl:apply-templates mode="iso19139" select="../gmd:codeSpace">
+		                                            <xsl:with-param name="schema"  select="$schema"/>
+		                                            <xsl:with-param name="edit"   select="$edit"/>
+		                                        </xsl:apply-templates>
+		                                    </table>
+		                                </td>
+		                            </tr>
+	                	</xsl:with-param>
+			            <xsl:with-param name="title">
+					      <xsl:call-template name="getParentTitle">
+					        <xsl:with-param name="name" select="name(..)"/>
+					        <xsl:with-param name="schema" select="$schema"/>
+					      </xsl:call-template>
+						</xsl:with-param>
+	            	</xsl:apply-templates>
+            	</xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+		        <xsl:variable name="helper">
+	    			<xsl:call-template name="helperList">
+				        <xsl:with-param name="schema" select="$schema"/>
+	        			<xsl:with-param name="attribute" select="select=false()"/>
+				    </xsl:call-template>
+				</xsl:variable>
+ 		        <xsl:variable name="name" select="name(.)"/>
+                <xsl:apply-templates mode="simpleElement">
+                    <xsl:with-param name="schema"   select="$schema"/>
+                    <xsl:with-param name="edit"     select="$edit"/>
+                    <xsl:with-param name="helpLink">
+                        <xsl:call-template name="getHelpLink">
+                            <xsl:with-param name="name" select="$name"/>
+                            <xsl:with-param name="schema" select="$schema"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+                    <xsl:with-param name="title">
+                        <xsl:call-template name="getTitle">
+                            <xsl:with-param name="name" select="$name"/>
+                            <xsl:with-param name="schema" select="$schema"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+                    <xsl:with-param name="text">
+                    	<xsl:variable name="epsgCode" select="normalize-space(.)"/>
+                    	<xsl:if test="$epsgCode='31370'">
+		                    <xsl:value-of select="concat('Belge 1972 / Belgian Lambert 72 (',$epsgCode,')',$helper/option[@value=$epsgCode])"/>
+		                </xsl:if>
+                    	<xsl:if test="$epsgCode!='31370'">
+	                    	<xsl:value-of select="$epsgCode"/>
+		                </xsl:if>
+	            	</xsl:with-param>                    
+                </xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+    </xsl:template>
+-->
+    <!-- Display codespace in view mode in same section -->
+<!-- 
+    <xsl:template mode="iso19139"
+                  match="gmd:codeSpace[name(..)='gmd:RS_Identifier']" priority="10.0">
+        <xsl:param name="schema" />
+        <xsl:param name="edit" />
+        <xsl:if test="$edit=false()">
+			<xsl:call-template name="iso19139String">
+			    <xsl:with-param name="schema" select="$schema"/>
+			    <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+-->
     <!-- Display code and codespace in same section -->
     <xsl:template mode="iso19139"
                   match="gmd:RS_Identifier" priority="10.0">
@@ -431,11 +533,62 @@
             	</xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:call-template name="iso19139String">
+<!--
+				<xsl:variable name="epsgCode" select="normalize-space(gmd:code)"/>
+		        <xsl:variable name="helper">
+	    			<xsl:call-template name="helperList">
+				        <xsl:with-param name="schema" select="$schema"/>
+	        			<xsl:with-param name="attribute" select="select=false()"/>
+				    </xsl:call-template>
+				</xsl:variable>
+ 		        <xsl:variable name="name" select="name(.)"/>
+                <xsl:apply-templates mode="simpleElement">
+                    <xsl:with-param name="schema"   select="$schema"/>
+                    <xsl:with-param name="edit"     select="$edit"/>
+                    <xsl:with-param name="helpLink">
+                        <xsl:call-template name="getHelpLink">
+                            <xsl:with-param name="name" select="$name"/>
+                            <xsl:with-param name="schema" select="$schema"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+                    <xsl:with-param name="title">
+                        <xsl:call-template name="getTitle">
+                            <xsl:with-param name="name" select="$name"/>
+                            <xsl:with-param name="schema" select="$schema"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+                    <xsl:with-param name="text">
+	                    <xsl:value-of select="$helper/option[@value=$epsgCode]"/>qsdfqsf
+	            	</xsl:with-param>                    
+                </xsl:apply-templates>
+ -->
+ <!--
+        <xsl:apply-templates mode="complexElement" select=".">
+            <xsl:with-param name="schema"   select="$schema"/>
+            <xsl:with-param name="edit"     select="$edit"/>
+            <xsl:with-param name="content">
+                <xsl:apply-templates mode="simpleElement" select="gmd:code">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="$edit"/>
-                </xsl:call-template>
-            </xsl:otherwise>
+                </xsl:apply-templates>
+                <xsl:apply-templates mode="simpleElement" select="gmd:codeSpace">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                </xsl:apply-templates>
+            </xsl:with-param>
+            <xsl:with-param name="title">
+	            <xsl:call-template name="getTitle">
+			        <xsl:with-param name="name" select="name(.)"/>
+			        <xsl:with-param name="schema" select="$schema"/>
+		    	</xsl:call-template>
+			</xsl:with-param>
+        </xsl:apply-templates>
+-->
+				<xsl:call-template name="iso19139String">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:call-template>
+             </xsl:otherwise>
         </xsl:choose>
 
     </xsl:template>
@@ -2931,7 +3084,7 @@ can clutter up the rest of the metadata record! -->
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:variable>
-                        <a href="{$linkage}" title="{$title}" onclick="runFileDownload(this.href, this.title); return false;"><xsl:value-of select="$title"/></a>
+                        <a href="{$linkage}" title="{$title}" onclick="runFileDownload(this.href, this.title); return false;" target="_blank"><xsl:value-of select="$title"/></a>
                     </xsl:with-param>
                 </xsl:apply-templates>
             </xsl:when>
@@ -3765,7 +3918,7 @@ can clutter up the rest of the metadata record! -->
                                                 else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
 
                         <div class="md-view">
-                            <a rel="lightbox-viewset" href="{$url}">
+                            <a rel="lightbox-viewset" href="{$url}" target="thumbnail-view">
                                 <img class="logo" src="{$url}">
                                     <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
                                     <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
@@ -3797,6 +3950,7 @@ can clutter up the rest of the metadata record! -->
                 <desc><xsl:value-of select="$desc"/></desc>
                 <mimetype><xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString"/></mimetype>
                 <type><xsl:value-of select="if (geonet:contains-any-of($desc, ('thumbnail', 'large_thumbnail'))) then 'local' else ''"/></type>
+                <target>_blank</target>
             </thumbnail>
         </xsl:if>
     </xsl:template>

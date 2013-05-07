@@ -54,6 +54,8 @@ import jeeves.utils.Log;
 import jeeves.utils.SOAPUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 
@@ -62,6 +64,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -763,8 +766,12 @@ public class ServiceManager
                             timerContext.stop();
                         }
 						//--- then we set the content-type and output the result
-
-						req.beginStream(outPage.getContentType(), cache);
+                        if (context.getService().equals("xml_iso19139_save")) {
+                            String uuid = rootElem.getChild("request").getChildText("uuid");
+    						req.beginStream(outPage.getContentType(), -1, "attachment; filename=" + (StringUtils.isNotBlank(uuid) ? uuid : "metadata") + ".xml", cache);
+                        } else {
+    						req.beginStream(outPage.getContentType(), cache);                        	
+                        }
 						req.getOutputStream().write(baos.toByteArray());
 						req.endStream();
 					}

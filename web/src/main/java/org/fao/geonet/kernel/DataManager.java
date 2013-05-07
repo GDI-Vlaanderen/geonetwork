@@ -1298,6 +1298,26 @@ public class DataManager {
 		return uuid;
 	}
 
+    /**
+    *
+    * @param schema
+    * @param md
+    * @return
+    * @throws Exception
+    */
+	public String extractMetadataUUID(String schema, Element md) throws Exception {
+		String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_MD_UUID;
+		String mduuid       = Xml.transform(md, styleSheet).getText().trim();
+
+       if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+		Log.debug(Geonet.DATA_MANAGER, "Extracted MD UUID '"+ mduuid +"' for schema '"+ schema +"'");
+
+		//--- needed to detach md from the document
+		md.detach();
+
+		return mduuid;
+	}
+
 
     /**
      *
@@ -1359,6 +1379,22 @@ public class DataManager {
 		return dbms.select(query, harvestingSource).getChildren();
 	}
 
+    /**
+    *
+    * @param dbms
+    * @param uuid
+    * @return Element
+    * @throws Exception
+    */
+	@SuppressWarnings("unchecked")
+	public Element getMetadataByUuid(Dbms dbms, String uuid) throws Exception {
+		//FIXME : should use lucene
+		List list = dbms.select("SELECT id FROM Metadata WHERE uuid=?", uuid).getChildren();
+		if (list.size() == 1) {
+			return (Element) list.get(0);
+		}
+		return null;
+	}
     /**
      *
      * @param md

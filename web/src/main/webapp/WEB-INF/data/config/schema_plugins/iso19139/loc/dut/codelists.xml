@@ -2050,4 +2050,14 @@ serviceType definitie. Metadata voor data wordt niet geleverd in de service meta
             <label>Niet-conform</label>
         </entry>
     </codelist> 
+    <codelist name="gmd:includedWithDataset">
+        <entry>
+            <code>true</code>
+            <label>Ja</label>
+        </entry>
+        <entry>
+            <code>false</code>
+            <label>Nee</label>
+        </entry>
+    </codelist> 
 </codelists>

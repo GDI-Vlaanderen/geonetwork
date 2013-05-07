@@ -88,6 +88,11 @@
 			<address>
 				<CI_Address>
 					<xsl:apply-templates select="." mode="Address"/>
+					<xsl:for-each select="../ContactElectronicMailAddress|../wms:ContactElectronicMailAddress|../wcs:address/wcs:electronicMailAddress|../ows:ElectronicMailAddress|../ows11:ElectronicMailAddress">
+						<electronicMailAddress>
+							<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+						</electronicMailAddress>
+					</xsl:for-each>
 				</CI_Address>
 			</address>
 		</xsl:for-each>
@@ -149,14 +154,6 @@
 			<country>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
 			</country>
-		</xsl:for-each>
-
-		<!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="ContactElectronicMailAddress|wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
-			<electronicMailAddress>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</electronicMailAddress>
 		</xsl:for-each>
 
 	</xsl:template>

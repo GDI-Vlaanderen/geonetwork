@@ -51,7 +51,7 @@
   <!-- Configuration for map displayed in metadata sheet
   (view or edit mode). -->
   <metadata>
-   <width>100%</width>
+   <width>402px</width>
    <height>300px</height>
   </metadata>
   <proj>
