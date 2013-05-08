@@ -4,6 +4,7 @@
     xmlns:gmx="http://www.isotc211.org/2005/gmx" 
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:srv="http://www.isotc211.org/2005/srv"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:geonet="http://www.fao.org/geonetwork"
     xmlns:java="java:org.fao.geonet.util.XslUtil"
     version="2.0"
@@ -275,15 +276,23 @@
 
 					<!-- Datasets linked to a service
 					. -->
-          <xsl:if test="$isService and ($edit or $metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn)">
+					<xsl:if test="$isService and ($edit or $metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn)">
 						<h3><img src="{/root/gui/url}/images/dataset.gif"
 							align="absmiddle"/>
 							<xsl:value-of select="/root/gui/strings/linkedDatasetMetadata"/></h3>
 						<ul>
 							<xsl:for-each select="$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn[@uuidref!='']">
-								<li><a class="arrow" href="metadata.show?uuid={@uuidref}">
+								<xsl:variable name="mduuidValue" select="@uuidref"/>
+								<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
+		                    	<xsl:variable name="childUuid">
+		                    		<xsl:call-template name="getUuidRelatedMetadata">
+								       	<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
+										<xsl:with-param name="idParamValue" select="$idParamValue"/>
+									</xsl:call-template>
+		                   		</xsl:variable>                    	
+								<li><a class="arrow" href="metadata.show?uuid={$childUuid}">
 									<xsl:call-template name="getMetadataTitle">
-										<xsl:with-param name="uuid" select="@uuidref"/>
+										<xsl:with-param name="uuid" select="$childUuid"/>
 									</xsl:call-template>
 								</a>
 								<xsl:if test="$edit">
@@ -443,4 +452,13 @@
 		</xsl:choose>
 	</xsl:template>
 
+    <!--
+        Get the uuid of a related metadata
+    -->
+    <xsl:template name="getUuidRelatedMetadata">
+       	<xsl:param name="mduuidValue" />
+		<xsl:param name="idParamValue" />
+		<xsl:if test="contains($idParamValue,';')"><xsl:value-of select="substring-before($idParamValue,';')"/></xsl:if>
+		<xsl:if test="not(contains($idParamValue,';'))"><xsl:value-of select="$idParamValue"/></xsl:if>
+    </xsl:template>
 </xsl:stylesheet>

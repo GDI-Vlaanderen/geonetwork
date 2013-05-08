@@ -78,9 +78,11 @@
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/wxslang"/></td>
 				<td class="padded">
 					<select id="ogcwxs.lang">
-					<!--  TODO loop on languages -->
-						<option value="eng">eng</option>
-						<option value="fre">fre</option>
+						<xsl:for-each select="/root/gui/languages/record">
+							<option value="{id}">
+								<xsl:value-of select="name"/>
+							</option>
+						</xsl:for-each>
 					</select>
 				</td>
 			</tr>

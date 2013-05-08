@@ -386,9 +386,9 @@ GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate('');
 GeoNetwork.Templates.FULL = new Ext.XTemplate('');
 
 GeoNetwork.Templates.Relation = {
-        SHORT: ['<li class="{type}">',
+        SHORT: ['<div class="{type}">',
                    '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
-                 '</li>']
+                 '</div>']
 };
 
 

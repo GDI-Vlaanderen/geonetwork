@@ -915,8 +915,9 @@ class Harvester
 		{
 			String name = localGroups.getName( priv.getGroupId ());
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
+			}
 			else
 			{
 				for (String opId: priv.getOperations ()) {

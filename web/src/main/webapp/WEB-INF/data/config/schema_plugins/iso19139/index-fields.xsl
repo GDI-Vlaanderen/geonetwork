@@ -3,6 +3,7 @@
 										xmlns:gco="http://www.isotc211.org/2005/gco"
 										xmlns:gml="http://www.opengis.net/gml"
 										xmlns:srv="http://www.isotc211.org/2005/srv"
+									    xmlns:xlink="http://www.w3.org/1999/xlink"
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
@@ -289,8 +290,14 @@
 				<Field  name="operation" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 			
-			<xsl:for-each select="srv:operatesOn/@uuidref">
-                <Field  name="operatesOn" string="{string(.)}" store="false" index="true"/>
+			<xsl:for-each select="srv:operatesOn">
+				<xsl:variable name="mduuidValue" select="./@uuidref"/>
+				<xsl:variable name="idParamValue" select="substring-after(./@xlink:href,';id=')"/>
+				<xsl:variable name="uuid">
+					<xsl:if test="contains($idParamValue,';')"><xsl:value-of select="substring-before($idParamValue,';')"/></xsl:if>
+					<xsl:if test="not(contains($idParamValue,';'))"><xsl:value-of select="$idParamValue"/></xsl:if>
+				</xsl:variable>
+                <Field  name="operatesOn" string="{string($uuid)}" store="false" index="true"/>
             </xsl:for-each>
 			
 			<xsl:for-each select="srv:coupledResource">

@@ -181,7 +181,7 @@
 		<resourceConstraints>
 			<MD_Constraints>
 				<useLimitation>
-					<gco:CharacterString><xsl:value-of select="$s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees"/></gco:CharacterString>
+					<gco:CharacterString><xsl:value-of select="concat($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees,'. ',$s/wms:AccessConstraints)"/></gco:CharacterString>
 				</useLimitation>
 			</MD_Constraints>
 		</resourceConstraints>
@@ -192,7 +192,7 @@
 					<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
 				</accessConstraints>
 				<otherConstraints>
-					<gco:CharacterString><xsl:value-of select="$s/wms:AccessConstraints"/></gco:CharacterString>
+					<gco:CharacterString>Geen beperkingen</gco:CharacterString>
 				</otherConstraints>
 			</MD_LegalConstraints>
 		</resourceConstraints>
@@ -207,7 +207,6 @@
 		</srv:serviceTypeVersion>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!--	
 		<srv:accessProperties>
 			<MD_StandardOrderProcess>
 				<fees>
@@ -215,7 +214,7 @@
 				</fees>
 			</MD_StandardOrderProcess>
 		</srv:accessProperties>
--->
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		Extent in OGC spec are somehow differents !
 		

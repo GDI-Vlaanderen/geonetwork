@@ -22,7 +22,7 @@
         <ows:ProviderSite xlink:href="$PROTOCOL://$HOST$PORT$SERVLET"/>
         <ows:ServiceContact>
             <ows:IndividualName>$IND_NAME</ows:IndividualName>
-            <ows:PositionName>$POS_NAME</ows:PositionName>
+            <ows:PositionName>Product Owner</ows:PositionName>
             <ows:ContactInfo>
                 <ows:Phone>
                     <ows:Voice>$VOICE</ows:Voice>

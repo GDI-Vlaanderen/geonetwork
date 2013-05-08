@@ -30,6 +30,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+import jeeves.xlink.XLink;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -199,17 +202,35 @@ public class GetRelated implements Service {
         boolean first = true;
         while (i.hasNext()) {
             Element e = i.next();
-            if (first) {
-                uuids.append(e.getAttributeValue("uuidref"));
-                first = false;
-            } else {
-                uuids.append(" or " + e.getAttributeValue("uuidref"));
+            String uuid = getUuid(e.getAttributeValue("href",XLink.NAMESPACE_XLINK));
+            if (!StringUtils.isEmpty(uuid)) {
+                if (first) {
+                    uuids.append(uuid);
+                    first = false;
+                } else {
+                    uuids.append(" or " + uuid);
+                }
             }
         }
         return uuids;
     }
 
-    private Element search(String uuid, String type, ServiceContext context,
+    private String getUuid(String href) {
+    	String uuid = null;
+        if (!StringUtils.isEmpty(href)) {
+			int iPos = href.lastIndexOf(";id=");
+			if (iPos!=-1) {
+				uuid = href.substring(iPos + 4);
+				iPos = uuid.lastIndexOf("&");
+				if (iPos!=-1) {
+					uuid = uuid.substring(0,iPos);
+				}
+			}
+        }
+		return uuid;
+	}
+
+	private Element search(String uuid, String type, ServiceContext context,
             String from, String to, String fast) throws Exception {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);

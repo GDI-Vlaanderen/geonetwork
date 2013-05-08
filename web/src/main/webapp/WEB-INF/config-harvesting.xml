@@ -9,6 +9,7 @@
 		<service name="harvesting">
 			<output sheet="harvesting/harvesting.xsl">
 				<xml name="harvesting" file="xml/harvesting.xml" />
+                <call name="languages" class=".guiservices.languages.Get" />
                 <call name="schematrons"       class=".services.schema.GetSchematrons"/>
 			</output>
 		</service>

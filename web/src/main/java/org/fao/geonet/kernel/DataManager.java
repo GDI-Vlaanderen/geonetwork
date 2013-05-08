@@ -2697,7 +2697,7 @@ public class DataManager {
 
         //--- remove categories
         deleteAllMetadataCateg(dbms, id);
-
+//        dbms.execute("DELETE FROM Relations WHERE id=?", id);
         dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", id);
         dbms.execute("DELETE FROM Validation WHERE metadataId=?", id);
         dbms.execute("DELETE FROM Workspace WHERE id=?", id);

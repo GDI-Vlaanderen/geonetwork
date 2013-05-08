@@ -287,6 +287,14 @@
         <xsl:variable name="text">
 
 
+			<xsl:variable name="mduuidValue" select="./@uuidref"/>
+			<xsl:variable name="idParamValue" select="substring-after(./@xlink:href,';id=')"/>
+			<xsl:variable name="uuid">
+				<xsl:call-template name="getUuidRelatedMetadata">
+					<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
+					<xsl:with-param name="idParamValue" select="$idParamValue"/>
+				</xsl:call-template>
+			</xsl:variable>                    	
             <xsl:choose>
                 <xsl:when test="$edit=true()">
                     <xsl:variable name="ref" select="geonet:element/@ref"/>
@@ -299,10 +307,10 @@
                          onmouseover="this.style.cursor='pointer';"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <a href="#" onclick="javascript:catalogue.metadataShow('{@uuidref}');return false;">
-                        <xsl:call-template name="getMetadataTitle">
-                            <xsl:with-param name="uuid" select="@uuidref"/>
-                        </xsl:call-template>
+                    <a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
+						<xsl:call-template name="getMetadataTitle">
+						    <xsl:with-param name="uuid" select="$uuid"/>
+						</xsl:call-template>
                     </a>
                 </xsl:otherwise>
             </xsl:choose>
@@ -340,8 +348,8 @@
             <xsl:when test="$edit=true()">
                 <xsl:variable name="text">
                     <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
-                    <xsl:variable name="currentUuid" select="gco:CharacterString/text()"/>
-                    <input type="text" class="md" name="_{$ref}" id="_{$ref}" onchange="validateNonEmpty(this)" value="{$currentUuid}" size="30"/>
+                   	<xsl:variable name="currentMduuidValue" select="gco:CharacterString"/>
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}" onchange="validateNonEmpty(this)" value="{$currentMduuidValue}" size="30"/>
                     <xsl:choose>
                         <xsl:when test="count(//srv:operatesOn[@uuidref!=''])=0">
                             <xsl:value-of select="/root/gui/strings/noOperatesOn"/>
@@ -350,13 +358,16 @@
                             <select onchange="javascript:Ext.getDom('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
                                 <option></option>
                                 <xsl:for-each select="//srv:operatesOn[@xlink:href!='']">
-									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,'&amp;id=')"/>
-									<xsl:variable name="uuid">
-										<xsl:if test="contains(idParamValue,'&amp;')"><xsl:value-of select="substring-before($idParamValue,'&amp;')"/></xsl:if>
-										<xsl:if test="not(contains(idParamValue,'&amp;'))"><xsl:value-of select="$idParamValue"/></xsl:if>
-									</xsl:variable>
-                                    <option value="{$uuid}">
-                                        <xsl:if test="$uuid = $currentUuid">
+									<xsl:variable name="mduuidValue" select="@uuidref"/>
+									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
+			                    	<xsl:variable name="uuid">
+			                    		<xsl:call-template name="getUuidRelatedMetadata">
+									       	<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
+											<xsl:with-param name="idParamValue" select="$idParamValue"/>
+										</xsl:call-template>
+			                   		</xsl:variable>                    	
+                                    <option value="{$mduuidValue}">
+                                        <xsl:if test="$mduuidValue = $currentMduuidValue">
                                             <xsl:attribute name="selected">selected</xsl:attribute>
                                         </xsl:if>
                                         <xsl:call-template name="getMetadataTitle">
@@ -379,15 +390,16 @@
                 <xsl:apply-templates mode="simpleElement" select=".">
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="text">
-                    	<xsl:variable name="mduuidValue" select="gco:CharacterString"/>
-						<xsl:variable name="idParamValue" select="substring-after(//srv:operatesOn[@uuidref=$mduuidValue][1]/@xlink:href,';id=')"/>
-						<xsl:variable name="uuid">
-							<xsl:if test="contains($idParamValue,';')"><xsl:value-of select="substring-before($idParamValue,';')"/></xsl:if>
-							<xsl:if test="not(contains($idParamValue,';'))"><xsl:value-of select="$idParamValue"/></xsl:if>
-						</xsl:variable>
+						<xsl:variable name="mduuidValue" select="gco:CharacterString"/>
+                    	<xsl:variable name="uuid">
+                    		<xsl:call-template name="getUuidRelatedMetadata">
+						       	<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
+								<xsl:with-param name="idParamValue" select="substring-after(//srv:operatesOn[@uuidref=$mduuidValue][1]/@xlink:href,';id=')"/>
+							</xsl:call-template>
+                   		</xsl:variable>                    	
                         <a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
                             <xsl:call-template name="getMetadataTitle">
-                                <xsl:with-param name="uuid" select="$mduuidValue"/>
+                                <xsl:with-param name="uuid" select="$uuid"/>
                             </xsl:call-template>
                         </a>
                     </xsl:with-param>
