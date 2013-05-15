@@ -5,7 +5,7 @@
             xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" 
             version="2.4">
             
-    <display-name>geonetwork</display-name>
+    <display-name>zoekdienst</display-name>
     <!--<context-param>-->
         <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
         <!--<param-value>Joe</param-value>-->
@@ -66,7 +66,7 @@
           -->
         <init-param>
             <param-name>jeeves.configuration.overrides.file</param-name>
-            <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+            <param-value>${system.specific.overrides},${web.xml.main.config.overrides},${web.xml.widget.config.overrides}</param-value>
         </init-param>
     </filter>
 
@@ -157,7 +157,7 @@
           -->
 		<init-param>
 			<param-name>jeeves.configuration.overrides.file</param-name>
-			<param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+			<param-value>${system.specific.overrides},${web.xml.main.config.overrides},${web.xml.widget.config.overrides}</param-value>
 		</init-param>
         
                 <!--
@@ -166,6 +166,30 @@
             <param-name>geonetwork.dir</param-name>
             <param-value>/app/geonetwork_data_dir</param-value>
         </init-param>-->
+       <!-- Shared folder: common for all instances of the cluster 
+             The folder stores schema plugins, logos 
+        -->  
+        <init-param>
+            <param-name>zoekdienst.dir</param-name>
+            <param-value>z:</param-value>
+        </init-param>
+        <!-- Local folders for each node: 
+                * lucene, 
+                * svn and 
+                * cluster configuration 
+        -->
+        <init-param>
+            <param-name>zoekdienst.lucene.dir</param-name>
+            <param-value>C:\zoekdienst_data\lucene</param-value>
+        </init-param>
+        <init-param>
+            <param-name>zoekdienst.svn.dir</param-name>
+            <param-value>C:\zoekdienst_data\svn</param-value>
+        </init-param>
+        <init-param>
+            <param-name>zoekdienst.clusterconfig.dir</param-name>
+            <param-value>C:\zoekdienst_data\cluster</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

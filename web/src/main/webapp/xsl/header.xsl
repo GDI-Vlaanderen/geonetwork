@@ -7,8 +7,8 @@
 	main html header
 	-->
 	<xsl:template name="header">
-		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<!--	<meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
+<!--		<meta http-equiv="X-UA-Compatible" content="IE=9"/>-->
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
