@@ -314,6 +314,7 @@ table.gn > tbody > tr > th {
 table.gn > tbody > tr > th.complex,
 table.gn > tbody > tr > td.complex {
   border : none;
+  padding-left : 15px;
 }
 
 table.gn > tbody > tr > td.main,

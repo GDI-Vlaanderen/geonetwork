@@ -110,7 +110,7 @@ class LDAPContext
 
 			if (attr == null)
 			{
-				Log.warning(Geonet.LDAP, "Username not found :"+ username);
+				Log.warning(Geonet.LDAP, "Username not found :'"+ username + "'");
 				return null;
 			}
 			else
@@ -133,8 +133,8 @@ class LDAPContext
 				if (!profiles.contains(info.profile))
 				{
 					Log.warning(Geonet.LDAP, "Skipping user with unknown profile");
-					Log.warning(Geonet.LDAP, "  (C) Username :"+ info.username);
-					Log.warning(Geonet.LDAP, "  (C) Profile  :"+ info.profile);
+					Log.warning(Geonet.LDAP, "  (C) Username :'"+ info.username + "'");
+					Log.warning(Geonet.LDAP, "  (C) Profile  :'"+ info.profile + "'");
 					return null;
 				}
 

@@ -1369,103 +1369,98 @@ toegankelijk</label>
 	<codelist name="gmd:MD_ScopeCode">
 		<entry>
 			<code>attribute</code>
-			<label>attribute</label>
-			<description>information applies to the attribute class</description>
+			<label>Attribuut</label>
+			<description>Informatie heeft betrekking op de attribuut klasse.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>attributeType</code>
-			<label>attributeType</label>
-			<description>information applies to the characteristic of a feature</description>
+			<label>Attribuut type</label>
+			<description>Information heeft betrekking op een eigenschap van een object.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>collectionHardware</code>
-			<label>collectionHardware</label>
-			<description>information applies to the collection hardware class</description>
+			<label>Opname Hardware</label>
+			<description>Informatie heeft betrekking op de opname hardware klasse.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>collectionSession</code>
-			<label>collectionSession</label>
-			<description>information applies to the collection session</description>
+			<label>Opname Sessie</label>
+			<description>Informatie heeft betrekking op de opname sessie.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dataset</code>
-			<label>dataset</label>
-			<description>Informatie heeft betrekking op de
-dataset.</description>
+			<label>Dataset</label>
+			<description>Informatie heeft betrekking op de dataset.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>series</code>
-			<label>series</label>
-			<description>Informatie heeft betrekking op de serie.</description>
+			<label>Datasetserie</label>
+			<description>Informatie heeft betrekking op de datasetserie.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>nonGeographicDataset</code>
-			<label>nonGeographicDataset</label>
-			<description>information applies to non-geographic data</description>
+			<label>Niet-geographische dataset</label>
+			<description>Informatie heeft betrekking op niet-geografische data</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dimensionGroup</code>
-			<label>dimensionGroup</label>
-			<description>information applies to a dimension group</description>
+			<label>Dimensie groep</label>
+			<description>Informatie heeft betrekking op de dimensie groep.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>feature</code>
-			<label>feature</label>
-			<description>information applies to a feature</description>
+			<label>Object</label>
+			<description>Informatie heeft betrekking op een object.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>featureType</code>
-			<label>featureType</label>
-			<description>information applies to a feature type</description>
+			<label>Objecttype</label>
+			<description>Informatie heeft betrekking op een objecttype.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>propertyType</code>
-			<label>propertyType</label>
-			<description>information applies to a property type</description>
+			<label>Kenmerktype</label>
+			<description>Informatie heeft betrekking op een kenmerktype.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fieldSession</code>
-			<label>fieldSession</label>
-			<description>information applies to a field session</description>
+			<label>Veld opnamesessie</label>
+			<description>Informatie heeft betrekking op een veld opname sessie.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>software</code>
-			<label>software</label>
-			<description>information applies to a computer program or routine</description>
+			<label>Software</label>
+			<description>Informatie heeft betrekking op een computerprogramma of code.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>service</code>
-			<label>service</label>
-			<description>information applies to a capability which a service provider entity makes
-				available to a service user entity through a set of interfaces that define a behaviour,
-				such as a use case</description>
+			<label>Dienst</label>
+			<description>Informatie heeft betrekking op de mogelijkheden die een dienstenleverancier aanbiedt aan een dienstengebruiker door een set van interfaces die een bepaald gedrag defini&#239;ren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>model</code>
-			<label>model</label>
-			<description>information applies to a copy or imitation of an existing or hypothetical
-				object</description>
+			<label>Model</label>
+			<description>Informatie heeft betrekking op een imitatie van een bestaand of hypotetisch object.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>tile</code>
-			<label>tile</label>
-			<description>information applies to a tile, a spatial subset of geographic
-			data</description>
+			<label>Tegel</label>
+			<description>Informatie heeft betrekking op een tegel een ruimtelijke subset van geographische data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1557,8 +1552,7 @@ Vb: hoogtekaart, DEM, hellingen.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>natuur en
-milieu</label>
+			<label>milieu</label>
 			<description>Natuurlijke bronnen, bescherming en beheer.
 Vb: milieuverontreiniging, landschap,
 natuurlijke reserves, vuilopslag.</description>
@@ -1566,7 +1560,7 @@ natuurlijke reserves, vuilopslag.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Geo wetenschappelijke informatie</label>
+			<label>geowetenschappelijke informatie</label>
 			<description>Data die behoort tot een
 aardwetenschap. Vb: geologie, mineralen, structuur van
 de aarde, zwaartekrachtskaart,
@@ -1601,7 +1595,7 @@ transporten.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>binnenwater</label>
+			<label>binnenwateren</label>
 			<description>Binnenwater, drainagesystemen en hun
 karakteristieken.
 Vb: Rivieren en gletsjers, dijken,
@@ -1646,7 +1640,7 @@ onderwijs.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>structure</code>
-			<label>(civiele) structuren</label>
+			<label>structuur</label>
 			<description>Civiele werken (door mensen gemaakte
 structuren).
 Gebouwen, musea, kerken, winkels,
@@ -1664,8 +1658,7 @@ spoorwegen.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>nutsdiensten
-communicatie</label>
+			<label>nutsdiensten, communicatie</label>
 			<description>Energie, waterleidingen en riolering en
 communicatie infrastructuren en
 services.

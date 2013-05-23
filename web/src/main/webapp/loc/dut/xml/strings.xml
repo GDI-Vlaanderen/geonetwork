@@ -667,7 +667,7 @@
 	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>Metadata</metadata>
-    <metametadata>Meta-Metadata</metametadata>
+    <metametadata>Meta-metadata</metametadata>
     <metadataAdded>Metadata met ID: %1 is opgenomen in de database</metadataAdded>
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
