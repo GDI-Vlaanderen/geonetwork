@@ -115,7 +115,7 @@
             <xsl:with-param name="edit"   select="$edit"/>
         </xsl:apply-templates>
         <xsl:if test="name(.)='gmd:dataQualityInfo'">
-	        <xsl:if test="gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency[substring(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,1,11)='VERORDENING']">
+	        <xsl:if test="gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency[contains(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,'2007/2/E')]">
 		        <xsl:apply-templates mode="iso19139Report" select="gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency">
 		            <xsl:with-param name="schema" select="$schema"/>
 		            <xsl:with-param name="edit"   select="$edit"/>
@@ -1439,11 +1439,13 @@
                                     </xsl:choose>
 
               </xsl:for-each>
+<!--              
               <xsl:if test="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue!=''">
                 <xsl:text> (</xsl:text>
                 <xsl:value-of select="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
                 <xsl:text>)</xsl:text>
               </xsl:if>
+-->
               <xsl:text>.</xsl:text>
             </xsl:variable>
             <xsl:copy-of select="$value"/>
@@ -2748,7 +2750,7 @@ can clutter up the rest of the metadata record! -->
     <xsl:template mode="iso19139" match="gmd:DQ_CompletenessOmission|gmd:DQ_AbsoluteExternalPositionalAccuracy|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_DomainConsistency" priority="2">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-        <xsl:if test="not(name(.)='gmd:DQ_DomainConsistency'  and substring(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,1,11)='VERORDENING')">
+        <xsl:if test="not(name(.)='gmd:DQ_DomainConsistency' and (contains(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,'2007/2/E')))">
 	        <xsl:apply-templates mode="iso19139Report" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
@@ -2761,7 +2763,7 @@ can clutter up the rest of the metadata record! -->
     <!-- ============================================================================= -->
 
 <!--
-    <xsl:template mode="iso19139" match="gmd:DQ_DomainConsistency[substring(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,1,11)='VERORDENING']" priority="2">
+    <xsl:template mode="iso19139" match="gmd:DQ_DomainConsistency[contains(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,'2007/2/E')]" priority="2">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
         <xsl:apply-templates mode="iso19139Report" select=".">

@@ -72,7 +72,7 @@ function setEmpty()
 	$('ogcwxs.createThumbnails').checked = false;
 	$('ogcwxs.ogctype').value = 'WMS111';
 	$('ogcwxs.lang').value = 'eng';
-	$('ogcwxs.topic').value = '';	
+//	$('ogcwxs.topic').value = '';	
 	$('ogcwxs.capabUrl').value = '';
 	
 	var icons = $('ogcwxs.icon').options;
@@ -105,7 +105,7 @@ function setData(node)
 	hvutil.setOption(site, 'url', 				  'ogcwxs.capabUrl');
 	hvutil.setOption(site, 'ogctype',		      'ogcwxs.ogctype');
 	hvutil.setOption(site, 'icon',            	  'ogcwxs.icon');
-	hvutil.setOption(options, 'topic',	 		  'ogcwxs.topic');
+//	hvutil.setOption(options, 'topic',	 		  'ogcwxs.topic');
 	hvutil.setOption(options, 'createThumbnails', 'ogcwxs.createThumbnails');
 	hvutil.setOption(options, 'useLayer', 		  'ogcwxs.useLayer');
 	hvutil.setOption(options, 'useLayerMd',		  'ogcwxs.useLayerMd');
@@ -148,7 +148,7 @@ function getData()
 	data.ICON             = $F('ogcwxs.icon');
 	data.OGCTYPE          = $F('ogcwxs.ogctype');
 	data.LANG             = $F('ogcwxs.lang');
-	data.TOPIC            = $F('ogcwxs.topic');
+//	data.TOPIC            = $F('ogcwxs.topic');
 	data.DATASETCATEGORY  = ($F('ogcwxs.datasetCategory')==null?'':$F('ogcwxs.datasetCategory'));
 	data.OUTPUTSCHEMA     = $F('ogcwxs.outputSchema');
 	data.CREATETHUMBNAILS = $('ogcwxs.createThumbnails').checked;

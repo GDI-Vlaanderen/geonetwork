@@ -90,11 +90,14 @@ Mapping between :
 
 			<!-- parentIdentifier : service have no parent -->
 			<!-- mdHrLv -->
-            <hierarchyLevel>
+			<hierarchyLevel>
                 <MD_ScopeCode
                     codeList="./resources/codeList.xml#MD_ScopeCode"
                     codeListValue="service" />
             </hierarchyLevel>
+		    <hierarchyLevelName>
+		        <gco:CharacterString>Service</gco:CharacterString>
+		    </hierarchyLevelName>
             
 			<!-- mdHrLvName -->
 
@@ -249,10 +252,10 @@ Mapping between :
 							<measureIdentification>
 								<RS_Identifier>
 									<code>
-										<gco:CharacterString>Conformity_001</gco:CharacterString>
+										<gco:CharacterString/>
 									</code>
 									<codeSpace>
-										<gco:CharacterString>INSPIRE</gco:CharacterString>
+										<gco:CharacterString/>
 									</codeSpace>
 								</RS_Identifier>
 							</measureIdentification>
@@ -261,10 +264,7 @@ Mapping between :
 									<specification>
 										<CI_Citation>
 											<title>
-												<gco:CharacterString>Implementing
-													Directive 2007/2/EC of the European
-													Parliament and of the Council as regards
-													the Network Services</gco:CharacterString>
+												<gco:CharacterString>Implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services</gco:CharacterString>
 											</title>
 											<date>
 												<CI_Date>

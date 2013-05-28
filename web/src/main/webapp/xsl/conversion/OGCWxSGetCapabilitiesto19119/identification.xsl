@@ -148,7 +148,7 @@
 				<thesaurusName>
 					<CI_Citation>
 						<title>
-							<gco:CharacterString> D.4 van de verordening (EG) NR. 1205/2008 van de Commissie</gco:CharacterString>
+							<gco:CharacterString>D.4 van de verordening (EG) NR. 1205/2008 van de Commissie</gco:CharacterString>
 						</title>
 						<date>
 							<CI_Date>
@@ -739,11 +739,11 @@
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+<!-- 
 		<type>
 			<MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
 		</type>
-
+ -->
 	</xsl:template>
 
 </xsl:stylesheet>

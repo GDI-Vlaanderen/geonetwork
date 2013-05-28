@@ -306,7 +306,7 @@ class Harvester
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("lang", params.lang);
-		param.put("topic", params.topic);
+//		param.put("topic", params.topic);
 		param.put("uuid", uuid);
 		
 		Element md = Xml.transform (capa, styleSheet, param);
@@ -485,6 +485,7 @@ class Harvester
 
 				if (StringUtils.isNotEmpty(layer.uuid)) {
 					String hRefLink =  dataMan.getSiteURL() + "/csw?Service=CSW&amp;version=2.0.2&amp;Request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=" + layer.uuid;
+//					String hRefLink =  dataMan.getSiteURL() + "/csw?Service=CSW&version=2.0.2&Request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementSetName=full&id=" + layer.uuid;
 					op.setAttribute("href", hRefLink, xlink);
 				}
 
@@ -655,7 +656,7 @@ class Harvester
 				param.put("uuid", reg.uuid);
 				param.put("Name", reg.name);
 				param.put("lang", params.lang);
-				param.put("topic", params.topic);
+//				param.put("topic", params.topic);
 				
 				xml = Xml.transform (capa, styleSheet, param);
                 if(log.isDebugEnabled()) log.debug("  - Layer loaded using GetCapabilities document.");

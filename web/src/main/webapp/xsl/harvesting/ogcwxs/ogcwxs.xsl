@@ -86,11 +86,11 @@
 					</select>
 				</td>
 			</tr>
+<!-- 
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/strings/theme"/></td>
 				<td class="padded">
 					<select id="ogcwxs.topic">
-					<!--  TODO loop on topic -->
 						<option value=""></option>
 						<option value="farming">farming</option>
 						<option value="biota">biota</option>
@@ -114,7 +114,7 @@
 					</select>
 				</td>
 			</tr>
-
+ -->
 
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/wxsImp"/></td>
