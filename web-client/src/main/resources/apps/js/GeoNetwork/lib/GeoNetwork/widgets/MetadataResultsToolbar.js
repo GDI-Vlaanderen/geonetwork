@@ -363,19 +363,22 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         /* Export action
          */
+        if (GeoNetwork.Settings.nodeType!='agiv') {
+	        var mefExportAction = new Ext.Action({
+	            text: OpenLayers.i18n('exportZip'),
+	            iconCls: 'md-mn-zip',
+	            handler: function(){
+	                this.catalogue.mefExport();
+	            },
+	            scope: this
+	        });
+	        this.selectionActions.push(mefExportAction);
+        }
+        
         var csvExportAction = new Ext.Action({
             text: OpenLayers.i18n('exportCsv'),
             handler: function(){
                 this.catalogue.csvExport();
-            },
-            scope: this
-        });
-        
-        var mefExportAction = new Ext.Action({
-            text: OpenLayers.i18n('exportZip'),
-            iconCls: 'md-mn-zip',
-            handler: function(){
-                this.catalogue.mefExport();
             },
             scope: this
         });
@@ -389,12 +392,14 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 scope: this
             });
 
-        this.selectionActions.push(mefExportAction, csvExportAction, printAction);
+        this.selectionActions.push(csvExportAction, printAction);
 
         this.actionMenu.add(
-            '<b class="menu-title">' + OpenLayers.i18n('onSelection') + '</b>',
-            mefExportAction, 
-            csvExportAction, 
+            '<b class="menu-title">' + OpenLayers.i18n('onSelection') + '</b>');
+        if (GeoNetwork.Settings.nodeType!='agiv') {
+        	this.actionMenu.add(mefExportAction);
+        }
+        this.actionMenu.add(csvExportAction, 
             printAction // ,{
         // text : 'Display selection only'
         // }

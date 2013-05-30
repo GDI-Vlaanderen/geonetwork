@@ -2160,10 +2160,7 @@
 			            ) and $edit">
 			            <xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
 			          </xsl:if>
-			          <xsl:choose>
-			            <xsl:when test="not(text())">&#8203;</xsl:when>
-			            <xsl:otherwise><xsl:value-of select="string(text())"/></xsl:otherwise>
-			          </xsl:choose>
+				          <xsl:if test="text()"><xsl:value-of select="string(text())"/></xsl:if>
 			        </textarea>
       </xsl:when>
       <xsl:when test="$edit=false() and $class!=''">

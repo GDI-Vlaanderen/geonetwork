@@ -474,13 +474,17 @@ GeoNetwork.map.ExtentMap = function(){
     function zoomToFeatures(map, vectorLayer){
         var extent = vectorLayer.getDataExtent();
         if (extent && !isNaN(extent.left)) {
-            var width = extent.getWidth() / 2;
+        	var width = extent.getWidth() / 2;
             var height = extent.getHeight() / 2;
+        	var zoom = map.getZoomForExtent(extent);
+        	map.setCenter(new OpenLayers.LonLat(extent.left + width/2, extent.top + height/2), zoom);
+/*
             extent.left -= width;
             extent.right += width;
             extent.bottom -= height;
             extent.top += height;
             map.zoomToExtent(extent);
+*/
         } else {
             map.zoomToMaxExtent();
         }
@@ -543,9 +547,8 @@ GeoNetwork.map.ExtentMap = function(){
                 // Creates map component
                 var id;
                 id = Ext.id(viewer);
-                
+                viewer.hidden = true;
                 var map = createMap();
-                
                 // Create toolbar with:
                 // * polygon control
                 // * bbox control
@@ -754,7 +757,7 @@ GeoNetwork.map.ExtentMap = function(){
                 
                 var mapPanel = new GeoExt.MapPanel({
                     renderTo: id,
-                    height: 300, // TODO : make config file see with ELE.
+                    height: 200, // TODO : make config file see with ELE.
                     width: 400,
                     map: maps[eltRef],
                     tbar: (edit ? tbarItems : null)
@@ -785,6 +788,7 @@ GeoNetwork.map.ExtentMap = function(){
                     watchRadios(watchedBbox, eltRef);
                     watchBbox(vectorLayers[eltRef], watchedBbox, eltRef, maps[eltRef]);
                 }
+                viewer.hidden = false;
             }
         }
     };

@@ -264,7 +264,7 @@ Mapping between :
 									<specification>
 										<CI_Citation>
 											<title>
-												<gco:CharacterString>Implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services</gco:CharacterString>
+												<gco:CharacterString>Verordening (EG) nr. 976/2009 van de Commissie van 19 oktober 2009 tot uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad wat betreft de netwerkdiensten</gco:CharacterString>
 											</title>
 											<date>
 												<CI_Date>
@@ -279,7 +279,7 @@ Mapping between :
 										</CI_Citation>
 									</specification>
 									<explanation>
-										<gco:CharacterString>See the referenced specification</gco:CharacterString>
+										<gco:CharacterString>Zie de gerefereerde specificatie</gco:CharacterString>
 									</explanation>
 									<pass>
 										<gco:Boolean>true</gco:Boolean>

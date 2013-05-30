@@ -64,6 +64,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -646,7 +647,8 @@ public class ServiceManager
                         } finally {
                             timerContext.stop();
                         }
-						response = BinaryFile.encode(200, file, "document.pdf", true);
+                        String uuid = rootElem.getChild("request").getChildText("uuid");
+						response = BinaryFile.encode(200, file, (StringUtils.isNotBlank(uuid) ? uuid : ("export-summary-" + String.valueOf(Calendar.getInstance().getTimeInMillis()))) + ".pdf", true);
 					}
 					catch(Exception e)
 					{
@@ -766,7 +768,9 @@ public class ServiceManager
                             timerContext.stop();
                         }
 						//--- then we set the content-type and output the result
-                        if (context.getService().equals("xml_iso19139_save")) {
+                        if (context.getService().equals("csv.present")) {
+                        	req.beginStream(outPage.getContentType(), -1, "attachment; filename=" + "export-summary-" + String.valueOf(Calendar.getInstance().getTimeInMillis()) + ".csv", cache);
+                        } else if (context.getService().equals("xml_iso19139_save")) {
                             String uuid = rootElem.getChild("request").getChildText("uuid");
     						req.beginStream(outPage.getContentType(), -1, "attachment; filename=" + (StringUtils.isNotBlank(uuid) ? uuid : "metadata") + ".xml", cache);
                         } else {

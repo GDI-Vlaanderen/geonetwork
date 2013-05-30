@@ -52,7 +52,7 @@
   (view or edit mode). -->
   <metadata>
    <width>402px</width>
-   <height>300px</height>
+   <height>200px</height>
   </metadata>
   <proj>
    <!-- List all needed projections for view and editing maps.

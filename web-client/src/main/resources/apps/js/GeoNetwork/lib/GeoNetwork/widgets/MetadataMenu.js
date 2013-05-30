@@ -326,18 +326,18 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.add(this.printWorkspaceCopyAction);
 
-        this.getMEFAction = new Ext.Action({
-            text: OpenLayers.i18n('getMEF'),
-            iconCls: 'md-mn-zip',
-            handler: function(){
-                this.catalogue.metadataMEF(this.record.get('uuid'));
-            },
-            scope: this
-        });
-        this.add(this.getMEFAction);
-        
-        
-        
+        if (GeoNetwork.Settings.nodeType!='agiv') {
+            this.getMEFAction = new Ext.Action({
+                text: OpenLayers.i18n('getMEF'),
+                iconCls: 'md-mn-zip',
+                handler: function(){
+                    this.catalogue.metadataMEF(this.record.get('uuid'));
+                },
+                scope: this
+            });
+            this.add(this.getMEFAction);
+        }
+                      
         /* Rating menu */
         // AGIV hide rating
         if (Ext.ux.RatingItem && GeoNetwork.Settings.ratingEnabled) { // Check required widget are loaded before displaying context menu

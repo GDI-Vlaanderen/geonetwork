@@ -828,7 +828,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *	Export current selection in CSV format.
      */
     csvExport: function(){
-        window.open(this.services.csv, this.windowName, this.windowOption);
+        //window.open(this.services.csv, this.windowName, this.windowOption);
+    	location.replace(this.services.csv);
     },
     /**	api: method[mefExport]
      *
@@ -1048,7 +1049,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             } else {
                 Ext.MessageBox.alert(OpenLayers.i18n('error'), 
                         OpenLayers.i18n('error-login'), function(){
-                    window.location = "../tabsearch";
+//                    window.location = "../tabsearch";
+                    location.replace(window.location.pathname + "?hl=dut");
                 });
             }
         }

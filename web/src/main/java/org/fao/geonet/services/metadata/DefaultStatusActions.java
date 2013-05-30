@@ -504,7 +504,7 @@ public class DefaultStatusActions implements StatusActions {
 		*/
 	private String buildMetadataLink(String metadataId) {
 		// TODO: hack voor AGIV
-		return "http://dev.ace.geocat.net:7080/geonetworkn1/apps/tabsearch/?id="+metadataId;
+		return "http://metadata.agiv.be/zoekdienst/apps/tabsearch/index_login.html?id="+metadataId;
 	}
 
 
