@@ -504,7 +504,11 @@ public class DefaultStatusActions implements StatusActions {
 		*/
 	private String buildMetadataLink(String metadataId) {
 		// TODO: hack voor AGIV
-		return "http://metadata.agiv.be/zoekdienst/apps/tabsearch/index_login.html?id="+metadataId;
+		GeonetContext  gc = (GeonetContext) this.context.getHandlerContext(Geonet.CONTEXT_NAME);
+        String protocol = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
+		String host    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
+		String port    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+		return protocol + "://" + host + (port == "80" ? "" : ":" + port) + "/zoekdienst/apps/tabsearch/index_login.html?id="+metadataId;
 	}
 
 

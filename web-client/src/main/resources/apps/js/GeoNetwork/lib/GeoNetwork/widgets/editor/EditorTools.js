@@ -880,7 +880,8 @@ function toggleFieldset(btn, elem){
         b.addClass('tgRight');
     } else {
         b.removeClass('tgRight');
-        elem.style.display = 'block';
+//        elem.style.display = 'block';
+        elem.style.display = '';
         b.addClass('tgDown');
     }
 }

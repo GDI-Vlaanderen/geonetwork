@@ -147,7 +147,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<tpl for=".">',
             '<li class="md md-simple" title="{abstract}" style="{featurecolorCSS}">',
             '<table><tr>',  // FIXME
-            GeoNetwork.Settings.nodeType!='agiv' ? ('<td style="width:30px;">' + GeoNetwork.Templates.LOGO + '</td>') : '',
+            (!GeoNetwork.Settings || GeoNetwork.Settings.nodeType!='agiv') ? ('<td style="width:30px;">' + GeoNetwork.Templates.LOGO + '</td>') : '',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
             '<tpl if="subject">',
@@ -210,7 +210,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<tpl for=".">',
             '<li class="md md-full" style="{featurecolorCSS}">',
             '<table><tr>',
-            GeoNetwork.Settings.nodeType!='agiv' ? ('<td class="left">' + GeoNetwork.Templates.LOGO + '</td>') : '',
+            (!GeoNetwork.Settings || GeoNetwork.Settings.nodeType!='agiv') ? ('<td class="left">' + GeoNetwork.Templates.LOGO + '</td>') : '',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
             '<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>',    // FIXME : 250 as parameters

@@ -229,7 +229,8 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
                         allowBlank: false,
                         buttonText: '',
                         buttonCfg: {
-                            iconCls: 'thumbnailAddIcon'
+                            iconCls: 'thumbnailAddIcon'/*,
+                            tooltip: 'Blader naar bestand'*/
                         }
                     }/*, {
                         xtype: 'radio',

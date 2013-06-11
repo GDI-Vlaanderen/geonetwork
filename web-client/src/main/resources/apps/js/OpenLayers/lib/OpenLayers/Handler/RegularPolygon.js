@@ -165,6 +165,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      * {Boolean} The handler was successfully activated
      */
     activate: function() {
+//    	console.log("RegularPolygon activated");
         var activated = false;
         if(OpenLayers.Handler.prototype.activate.apply(this, arguments)) {
             // create temporary vector layer for rendering geometry sketch
@@ -191,6 +192,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      * {Boolean} The handler was successfully deactivated
      */
     deactivate: function() {
+//    	console.log("RegularPolygon deactivated");
         var deactivated = false;
         if(OpenLayers.Handler.Drag.prototype.deactivate.apply(this, arguments)) {
             // call the cancel callback if mid-drawing

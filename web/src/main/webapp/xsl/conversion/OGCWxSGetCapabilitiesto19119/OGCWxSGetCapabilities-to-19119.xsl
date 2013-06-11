@@ -208,6 +208,9 @@ Mapping between :
                                     <description>
                                         <gco:CharacterString>
                                             <xsl:choose>
+                                            	<xsl:when test="name(.)='WMS_Capabilities' and not(./wms:Service/wms:Title='')">
+                                                    <xsl:value-of select="./wms:Service/wms:Title"/>
+                                            	</xsl:when>
                                                 <xsl:when test="$ows='true'">
                                                     <xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href"/>
                                                 </xsl:when>

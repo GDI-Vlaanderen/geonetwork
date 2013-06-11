@@ -22,7 +22,7 @@
  <!-- Classic interface using the xslt layout-templates -->
  <!-- <client type="redirect" widget="false" url="main.home" parameters="" stateId="" createParameter=""/> -->
  <!-- Widget client with tabbed interface (metadata documents open in tab) -->
- <client type="redirect" widget="true" url="../../apps/tabsearch" parameters="hl=dut" createParameter="#create" stateId="s"/>
+ <client type="redirect" widget="true" url="../../apps/tabsearch/index.html" parameters="hl=dut" createParameter="#create" stateId="s"/>
  <!-- Widget client with sliding panel interface (metadata records open in a window) -->
  <!--<client type="redirect" widget="true" url="../../apps/search" parameters="" createParameter="#create" stateId="s"/>-->
  <!-- As above but with extra parameters set: custom extent in debug mode in french --> 

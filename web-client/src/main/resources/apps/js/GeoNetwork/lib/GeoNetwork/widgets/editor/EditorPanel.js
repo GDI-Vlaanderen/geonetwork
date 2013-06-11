@@ -523,8 +523,22 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 linkedmetadataselected: function(panel, metadata){
                     
                     if (single) {
+                    	var scope = this;
                         if (this.ref !== null) {
-                            Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = metadata[0].data.uuid;
+                        	panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
+                            	if (mduuid) {
+                                    Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
+                                    var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
+                                    if (xlinkHref) {
+                                    	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
+                                    	var id = parameters["id"];
+                                    	if (Ext.isEmpty(id)) {
+                                    		id = parameters["ID"];
+                                    	}
+                                    	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
+                                    };
+                            	}
+                        	});
                         } else {
                             // Create relation between current record and selected one
                             if (this.mode === 'iso19110') {

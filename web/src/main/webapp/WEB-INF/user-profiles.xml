@@ -447,6 +447,7 @@
 		<allow service="xml_dublin-coreTooai_dc"/>
 		<allow service="xml_fgdc-std"/>
 		<allow service="xml_fgdc-stdTooai_dc"/>
+		<allow service="xml_md_uuid"/>
 		<allow service="xml_iso19115to19139"/>
 		<allow service="xml_iso19115toarccatalog8"/>
 		<allow service="xml_iso19115Tooai_dc"/>

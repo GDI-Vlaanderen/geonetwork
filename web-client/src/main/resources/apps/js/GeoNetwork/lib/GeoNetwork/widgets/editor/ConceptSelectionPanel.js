@@ -98,7 +98,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          */
         thesaurusInfoTpl: new Ext.XTemplate(
                 '<tpl for=".">',
-                    '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
+                    '<div class="thesaurusInfo"><span class="title">{title}</span><!-- (<span class="theme">{theme}</span> <span class="filename">{filename}</span>)--></div>',
                 '</tpl>'
         ),
         /** api: config[keywordsTpl] 
@@ -284,9 +284,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      *  Create a multiple item selector.
      */
     getKeywordsItemSelector: function (withFilter) {
-        
         this.itemSelector = new Ext.ux.ItemSelector({
+//        	borderStyle: "padding:2px;border:1px solid grey",
             name: "itemselector",
+            border: true,
             fieldLabel: "ItemSelector",
             dataFields: ["value", "thesaurus"],
             //toData: [],
@@ -321,9 +322,24 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 scope: this
             }]
         });
-        
+//        var isStoreLoaded = false;
         // enable the validate button only if there are selected keywords
+        var scope = this;
         this.itemSelector.on({
+        	'afterrender' : function(component) {
+//        		console.log("Selector rendered whth id " + this.fromMultiselect.id);
+                scope.keywordStore.baseParams.pThesauri = scope.thesaurusIdentifier;
+                scope.keywordStore.baseParams.maxResults = scope.maxKeywords;
+                scope.keywordStore.baseParams.pKeyword = '*';
+//                scope.keywordStore.removeAll();
+/*
+                scope.keywordStore.on('load', function () {
+//            		console.log("Refreshing view whth id " + this.fromMultiselect.id);
+                	this.itemSelector.fromMultiselect.view.refresh();
+                });
+*/
+                scope.keywordStore.reload();
+        	},
             'change': function (component) {
                 //Ext.getCmp('keywordSearchValidateButton').setDisabled(component.toStore.getCount() < 1);
             }
@@ -387,6 +403,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                             '&multiple=' + (ids.length > 1 ? true : false) +
                             transfo;
         
+//    	console.log("XML generated for thesaurus " + this.thesaurusIdentifier);
         // Call transformation service
         Ext.Ajax.request({
             url: url,
@@ -507,6 +524,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             sortInfo: {
                 field: "thesaurus"
             },
+            autoLoad: false,
             listeners: {
                 exception: function (misc) {
                     // TODO : improve error
@@ -539,16 +557,22 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 scope: this
             }
         });
-        
-        
+        var bKeywordsFound = false;
         // Check if current keywords are available in the thesaurus
         // Search by name to get list of identifiers.
         Ext.each(this.initialKeyword, function (item) {
             // Search for that keyword and add it to the current selection if found
             if (item !== "") {
                 this.keywordSearch(this.thesaurusIdentifier, item);
+                bKeywordsFound = true;
             }
         }, this);
+
+        if (!bKeywordsFound) {
+//        	console.log("Geen keywords for " + this.thesaurusIdentifier)
+            this.generateXML();        	
+        };
+                
     },
     /** private: method[keywordSearch]
      *  

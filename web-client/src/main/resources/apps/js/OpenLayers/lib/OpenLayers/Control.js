@@ -305,6 +305,7 @@ OpenLayers.Control = OpenLayers.Class({
      *            false if the control was already active.
      */
     activate: function () {
+//    	console.log("Actived");
         if (this.active) {
             return false;
         }
@@ -332,6 +333,7 @@ OpenLayers.Control = OpenLayers.Class({
      *           if the control was already inactive.
      */
     deactivate: function () {
+//    	console.log("Deactived");
         if (this.active) {
             if (this.handler) {
                 this.handler.deactivate();

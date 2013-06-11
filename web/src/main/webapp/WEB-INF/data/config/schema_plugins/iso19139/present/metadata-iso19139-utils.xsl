@@ -458,7 +458,10 @@
     <xsl:template name="getUuidRelatedMetadata">
        	<xsl:param name="mduuidValue" />
 		<xsl:param name="idParamValue" />
-		<xsl:if test="contains($idParamValue,';')"><xsl:value-of select="substring-before($idParamValue,';')"/></xsl:if>
-		<xsl:if test="not(contains($idParamValue,';'))"><xsl:value-of select="$idParamValue"/></xsl:if>
+		<xsl:choose>
+			<xsl:when test="contains($idParamValue,';')"><xsl:value-of select="substring(substring-before($idParamValue,';'),1,string-length(substring-before($idParamValue,';'))-4)"/></xsl:when>
+			<xsl:when test="contains($idParamValue,'&amp;')"><xsl:value-of select="substring-before($idParamValue,'&amp;')"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="$idParamValue"/></xsl:otherwise>
+		</xsl:choose>
     </xsl:template>
 </xsl:stylesheet>

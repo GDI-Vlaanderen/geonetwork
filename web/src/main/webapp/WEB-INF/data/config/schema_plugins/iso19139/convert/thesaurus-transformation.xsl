@@ -40,7 +40,7 @@
 		<!-- Add thesaurus identifier using an Anchor which points to the download link. 
 		It's recommended to use it in order to have the thesaurus widget inline editor
 		which use the thesaurus identifier for initialization. -->
-		<xsl:param name="withThesaurusAnchor" select="true()"/>
+		<xsl:param name="withThesaurusAnchor" select="false()"/>
 
 		<gmd:MD_Keywords>
 			<xsl:choose>
@@ -56,6 +56,11 @@
 					<xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
 					
 					<!-- Loop on all keyword from the same thesaurus -->
+					<xsl:if test="count(//keyword[thesaurus])=0 and not($withAnchor)">
+						<gmd:keyword>
+							<gco:CharacterString />
+						</gmd:keyword>
+					</xsl:if>
 					<xsl:for-each select="//keyword[thesaurus]">
 						<gmd:keyword>
 							<xsl:choose>

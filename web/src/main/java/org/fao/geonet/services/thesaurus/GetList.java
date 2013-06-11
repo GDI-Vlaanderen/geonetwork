@@ -109,6 +109,10 @@ public class GetList implements Service {
 			String type = currentTh.getType();
 			elType.addContent(type);
 			
+			Element elDate = new Element("date");
+			String sDate = currentTh.getDate();
+			elDate.addContent(sDate);
+			
 			Element elActivated= new Element("activated");
 			String activated = "y";
                         // Thesaurus are activated by default
@@ -124,6 +128,7 @@ public class GetList implements Service {
 			elLoop.addContent(elFname);
 			elLoop.addContent(elTitle);
 			elLoop.addContent(elType);
+			elLoop.addContent(elDate);
 			elLoop.addContent(elActivated);
 			
 			elRoot.addContent(elLoop);
