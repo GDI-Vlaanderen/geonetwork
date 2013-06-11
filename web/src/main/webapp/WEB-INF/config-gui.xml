@@ -31,10 +31,13 @@
  <!-- Comment out languages to hide them
  from language selector. -->
  <languages>
+<!--
      <ara/>
      <cat/>
      <chi/>
+-->
      <dut/>
+<!--
      <eng/>
      <fin/>
      <fre/>
@@ -44,6 +47,7 @@
      <por/>
      <rus/>
      <spa/>
+-->
  </languages>
  
  

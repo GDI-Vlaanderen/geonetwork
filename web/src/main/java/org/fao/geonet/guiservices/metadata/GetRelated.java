@@ -219,6 +219,9 @@ public class GetRelated implements Service {
     	String uuid = null;
         if (!StringUtils.isEmpty(href)) {
 			int iPos = href.lastIndexOf(";id=");
+			if (iPos == -1) {
+				iPos = href.lastIndexOf("&id=");
+			}
 			if (iPos!=-1) {
 				uuid = href.substring(iPos + 4);
 				iPos = uuid.lastIndexOf("&");
