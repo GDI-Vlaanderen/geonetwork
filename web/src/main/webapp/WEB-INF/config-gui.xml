@@ -233,6 +233,11 @@
       <subtemplate type="gmd:DQ_FormatConsistency">
         <parent id="gmd:report"/>
       </subtemplate>
+<!--
+      <subtemplate type="gmd:DQ_FormatConsistency">
+        <parent id="gmd:report"/>
+      </subtemplate>
+-->      
     </mapping>
   </editor-subtemplate>
 

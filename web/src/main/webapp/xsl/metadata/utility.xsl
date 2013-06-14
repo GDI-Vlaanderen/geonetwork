@@ -32,19 +32,6 @@
   </xsl:template>
 
 
-  <xsl:template name="getXPath">
-    <xsl:for-each select="ancestor-or-self::*">
-      <xsl:if test="not(position() = 1)">
-        <xsl:value-of select="name()"/>
-      </xsl:if>
-      <xsl:if test="not(position() = 1) and not(position() = last())">
-        <xsl:text>/</xsl:text>
-      </xsl:if>
-    </xsl:for-each>
-    <!-- Check if is an attribute: http://www.dpawson.co.uk/xsl/sect2/nodetest.html#d7610e91 -->
-    <xsl:if test="count(. | ../@*) = count(../@*)">/@<xsl:value-of select="name()"/></xsl:if>
-  </xsl:template>
-
   <!--
     Returns the title of the parent of an element. 
     * with fullcontext
@@ -86,65 +73,6 @@
         <xsl:text>/</xsl:text>
       </xsl:if>
     </xsl:for-each>
-  </xsl:template>
-
-  <xsl:template name="getTitleColor">
-    <xsl:param name="name"/>
-    <xsl:param name="schema"/>
-
-    <xsl:variable name="fullContext">
-      <xsl:call-template name="getXPath"/>
-    </xsl:variable>
-
-    <xsl:variable name="context" select="name(parent::node())"/>
-    <xsl:variable name="contextIsoType" select="parent::node()/@gco:isoType"/>
-
-    <xsl:variable name="color">
-      <xsl:choose>
-        <xsl:when test="starts-with($schema,'iso19139')">
-
-          <!-- Name with context in current schema -->
-          <xsl:variable name="colorTitleWithContext"
-            select="string(/root/gui/schemas/*[name(.)=$schema]/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/label_color)"/>
-
-          <!-- Name with context in base schema -->
-          <xsl:variable name="colorTitleWithContextIso"
-            select="string(/root/gui/schemas/iso19139/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/label_color)"/>
-
-          <!-- Name in current schema -->
-          <xsl:variable name="colorTitle"
-            select="string(/root/gui/schemas/*[name(.)=$schema]/element[@name=$name and not(@context)]/label_color)"/>
-
-          <xsl:choose>
-
-            <xsl:when
-              test="normalize-space($colorTitle)='' and
-              normalize-space($colorTitleWithContext)='' and
-              normalize-space($colorTitleWithContextIso)=''">
-              <xsl:value-of
-                select="string(/root/gui/schemas/iso19139/element[@name=$name]/label_color)"/>
-            </xsl:when>
-            <xsl:when
-              test="normalize-space($colorTitleWithContext)='' and
-              normalize-space($colorTitleWithContextIso)=''">
-              <xsl:value-of select="$colorTitle"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$colorTitleWithContext"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-
-        <!-- otherwise just get the title out of the approriate schema help file -->
-
-        <xsl:otherwise>
-          <xsl:value-of
-            select="string(/root/gui/schemas/*[name(.)=$schema]/element[@name=$name]/label_color)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <xsl:value-of select="$color"/>
   </xsl:template>
 
   <!--
@@ -269,41 +197,6 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
-
-
-    <!--
-    	AGIV specific:
-    	
-        If the element has an additional tooltip (additional_info tag), then show it with
-        an icon.
-    -->
-    <xsl:template name="getAdditionalTooltip">
-        <xsl:param name="name"/>
-        <xsl:param name="schema"/>
-
-		<xsl:variable name="tooltip" select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/additional_info)"/>
-        <xsl:choose>
-            <xsl:when test="normalize-space($tooltip) != ''">
-			    <img src="../../apps/images/default/info.png" >
-			    	 <xsl:attribute name="class">
-			    		<xsl:call-template name="getMandatoryType">
-					    	<xsl:with-param name="name"><xsl:value-of select="$name"/></xsl:with-param>
-					    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
-			    		</xsl:call-template>
-			        </xsl:attribute>
-			    	<xsl:attribute name="alt">
-			    		<xsl:value-of select="$tooltip"/>
-			    	</xsl:attribute>
-			    	<xsl:attribute name="title">
-			    		<xsl:value-of select="$tooltip"/>
-			    	</xsl:attribute>
-			    </img>
-            </xsl:when>
-        </xsl:choose>
-    </xsl:template>
-
-
 
   <!-- build attribute name (in place of standard attribute name) as a 
     work-around to deal with qualified attribute names like gml:id

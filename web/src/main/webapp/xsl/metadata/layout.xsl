@@ -132,7 +132,6 @@
 			or contains($elementException, @name)
 			"/>
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
-    
     <xsl:if test="(not($flat) or $exception) and not($isXLinked)">
       <xsl:if test="(geonet:choose or name($prevBrother)!=$name)">
         
@@ -690,7 +689,6 @@
       select="if (name(.)='geonet:child') then concat(./@prefix,':',./@name) else $name"/>
     <xsl:variable name="subTemplateName"
       select="/root/gui/config/editor-subtemplate/mapping/subtemplate[parent/@id=$elementName]/@type"/>
-
     <xsl:variable name="function">
       <xsl:choose>
         <xsl:when test="$subtemplate">
@@ -853,7 +851,6 @@
         <xsl:with-param name="subtemplate" select="true()"/>
       </xsl:call-template>
     </xsl:variable>
-
 
     <xsl:variable name= "nodeName" select="name()" />
     <xsl:variable name="siblingsCount" select="count(preceding-sibling::*[name() = $nodeName]) + count(following-sibling::*[name() = $nodeName])" />
@@ -1445,7 +1442,7 @@
         <xsl:choose>
           <xsl:when test="$edit">
             <xsl:copy-of select="$text"/>
-          	<xsl:call-template name="getAdditionalTooltip">
+          	<xsl:call-template name="getMandatoryTooltip">
           		<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
           		<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
           	</xsl:call-template>
@@ -1947,8 +1944,8 @@
           </xsl:variable>
 
         <xsl:variable name="mandatory"
-          select="(geonet:element/@min='1' and
-          geonet:element/@max='1' and not(@gco:nilReason)) or $agivmandatory != ''"/>
+          select="geonet:element/@min='1' and
+          geonet:element/@max='1' and not(@gco:nilReason)"/>
 
         <!-- This code is mainly run under FGDC 
           but also for enumeration like topic category and 
@@ -1988,7 +1985,7 @@
           <xsl:if test="$isXLinked">
             <xsl:attribute name="disabled">disabled</xsl:attribute>
           </xsl:if>
-          <xsl:if test="$mandatory and $edit">
+          <xsl:if test="($mandatory or not($agivmandatory = '')) and $edit">
             <xsl:attribute name="onchange"> validateNonEmpty(this); </xsl:attribute>
           </xsl:if>
           <option name=""/>
@@ -2050,6 +2047,13 @@
           </xsl:when>
 
           <xsl:otherwise>
+			 <!-- Agiv specific -->
+	          <xsl:variable name="agivmandatory">
+	          	<xsl:call-template name="getMandatoryType">
+			    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
+			    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+				</xsl:call-template>
+	          </xsl:variable>
        		<div>
 	            <xsl:call-template name="helper">
 	              <xsl:with-param name="schema" select="$schema"/>
@@ -2057,6 +2061,10 @@
 	            </xsl:call-template>
             </div>
             <input class="md {$class}" type="{$input_type}" value="{text()}">
+	          <xsl:if test="not($agivmandatory = '')">
+	            <xsl:attribute name="onchange"> validateNonEmpty(this); </xsl:attribute>
+<!--                   <xsl:attribute name="onkeyup"> validateNonEmpty(this); </xsl:attribute>-->
+	          </xsl:if>
 	              <xsl:if test="$isXLinked">
 	                <xsl:attribute name="disabled">disabled</xsl:attribute>
 	              </xsl:if>
@@ -2095,8 +2103,7 @@
 	              <xsl:variable name="mandatory"
 	                select="(name(.)='gmd:LocalisedCharacterString'
 	                and ../../geonet:element/@min='1')
-	                or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))
-	                or $agivmandatory != ''"/>
+	                or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>
 	
 	              <xsl:choose>
 	                <!-- Numeric field -->
@@ -2106,16 +2113,16 @@
 	                  <xsl:choose>
 	                    <xsl:when test="name(.)='gco:Integer'">
 	                      <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of
-	                          select="not($mandatory)"/>, false);</xsl:attribute>
+	                          select="not($mandatory or not($agivmandatory=''))"/>, false);</xsl:attribute>
 	                    </xsl:when>
 	                    <xsl:otherwise>
 	                      <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of
-	                          select="not($mandatory)"/>, true);</xsl:attribute>
+	                          select="not($mandatory or not($agivmandatory = ''))"/>, true);</xsl:attribute>
 	                    </xsl:otherwise>
 	                  </xsl:choose>
 	                </xsl:when>
 	                <!-- Mandatory field (with extra validator) -->
-	                <xsl:when test="$mandatory
+	                <xsl:when test="($mandatory or not($agivmandatory = ''))
 	                  and $edit">
 	                  <xsl:attribute name="onkeyup"> validateNonEmpty(this); </xsl:attribute>
 	                </xsl:when>
@@ -2156,7 +2163,7 @@
 			            test="(
 			            (name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
 			            or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))
-			            or $agivmandatory != ''
+			            or not($agivmandatory = '')
 			            ) and $edit">
 			            <xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
 			          </xsl:if>
@@ -2330,4 +2337,71 @@
       </div>
     </div>
   </xsl:template>
+
+  <xsl:template mode="addReportElement" match="gmd:report">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit" select="true"/>
+    <xsl:param name="embedded"/>
+		    <xsl:variable name="name">gmd:report</xsl:variable>
+		    <xsl:variable name="qname">gmdCOLONreport</xsl:variable>
+		    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
+		    <xsl:variable name="max"
+		      select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
+		    <xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
+		    <xsl:variable name="isXLinked" select="false()"/>
+			<xsl:variable name="text">
+		        <xsl:variable name="options">
+		          <options>
+		              <option name="gmd:DQ_CompletenessOmission">
+		                <xsl:attribute name="selected">selected</xsl:attribute>
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gmd:DQ_CompletenessOmission</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
+		              <option name="gmd:DQ_AbsoluteExternalPositionalAccuracy">
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gmd:DQ_AbsoluteExternalPositionalAccuracy</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
+		              <option name="gmd:DQ_ThematicClassificationCorrectness">
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gmd:DQ_ThematicClassificationCorrectness</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
+		          </options>
+		        </xsl:variable>
+		        <select class="md" name="_{$parentName}_{$qname}_subtemplate" size="1">
+		          <xsl:for-each select="exslt:node-set($options)//option">
+		            <xsl:sort select="."/>
+		            <option value="{@name}"><xsl:value-of select="."/></option>
+		          </xsl:for-each>
+		        </select>
+		    </xsl:variable>
+		    <xsl:variable name="addLink">
+		    	<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
+		       <xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value);')"/>
+		    </xsl:variable>
+		    <xsl:variable name="helpLink">
+		      <xsl:call-template name="getHelpLink">
+		        <xsl:with-param name="name" select="$name"/>
+		        <xsl:with-param name="schema" select="$schema"/>
+		      </xsl:call-template>
+		    </xsl:variable>
+		    <xsl:call-template name="simpleElementGui">
+		      <xsl:with-param name="title">
+		        <xsl:call-template name="getTitle">
+		          <xsl:with-param name="name" select="$name"/>
+		          <xsl:with-param name="schema" select="$schema"/>
+		        </xsl:call-template>
+		      </xsl:with-param>
+		      <xsl:with-param name="text" select="$text"/>
+		      <xsl:with-param name="addLink" select="$addLink"/>
+		      <xsl:with-param name="helpLink" select="$helpLink"/>
+		      <xsl:with-param name="edit" select="$edit"/>
+			</xsl:call-template>
+  </xsl:template>
+
 </xsl:stylesheet>

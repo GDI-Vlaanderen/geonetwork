@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:gco="http://www.isotc211.org/2005/gco">
 
 	<xsl:variable name="apos">&#x27;</xsl:variable>
 
@@ -160,6 +160,88 @@
 		</xsl:if>
 	</xsl:template>
 
+  <xsl:template name="getXPath">
+    <xsl:for-each select="ancestor-or-self::*">
+      <xsl:if test="not(position() = 1)">
+        <xsl:value-of select="name()"/>
+      </xsl:if>
+      <xsl:if test="not(position() = 1) and not(position() = last())">
+        <xsl:text>/</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
+    <!-- Check if is an attribute: http://www.dpawson.co.uk/xsl/sect2/nodetest.html#d7610e91 -->
+    <xsl:if test="count(. | ../@*) = count(../@*)">/@<xsl:value-of select="name()"/></xsl:if>
+  </xsl:template>
+
+    <xsl:template name="getLabelElementValue">
+        <xsl:param name="name"/>
+        <xsl:param name="schema"/>
+        <xsl:param name="elementName"/>
+
+        <xsl:variable name="fullContext">
+        	<xsl:variable name="fullContextTemp">
+	            <xsl:call-template name="getXPath" />
+        	</xsl:variable>
+        	<xsl:choose>
+	        	<xsl:when test="substring-after($fullContextTemp,$name)=''"><xsl:value-of select="$fullContextTemp"/></xsl:when>
+	        	<xsl:otherwise><xsl:value-of select="concat(substring-before($fullContextTemp,$name),$name)"/></xsl:otherwise>
+        	</xsl:choose>
+        </xsl:variable>
+
+        <xsl:variable name="context" select="name(parent::node())"/>
+        <xsl:variable name="contextIsoType" select="parent::node()/@gco:isoType"/>
+
+        <xsl:variable name="elementValue">
+            <xsl:choose>
+                <xsl:when test="starts-with($schema,'iso19139')">
+
+                    <!-- Name with context in current schema -->
+                    <xsl:variable name="propertyValueWithContext"
+                                  select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/*[name(.)=$elementName])"/>
+
+                    <!-- Name with context in base schema -->
+                    <xsl:variable name="propertyValueWithContextIso"
+                                  select="string(/root/gui/schemas/iso19139/labels/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/*[name(.)=$elementName])"/>
+
+                    <!-- Name in current schema -->
+                    <xsl:variable name="propertyValueWithoutContext" select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/*[name(.)=$elementName])"/>
+
+                    <!-- <xsl:message>Names <xsl:value-of select="concat($schematitleWithContext,' | ',$schematitleWithContextIso,' | ',$schematitle)"/></xsl:message> -->
+                    <xsl:choose>
+
+                        <xsl:when test="normalize-space($propertyValueWithoutContext)='' and
+                                        normalize-space($propertyValueWithContext)='' and
+                                        normalize-space($propertyValueWithContextIso)=''">
+<!--                            <xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name=$name]/*[name(.)=$elementName])"/> -->
+                        </xsl:when>
+                        <xsl:when test="normalize-space($propertyValueWithContext)='' and
+                                        normalize-space($propertyValueWithContextIso)=''">
+                            <xsl:value-of select="$propertyValueWithoutContext"/>
+                        </xsl:when>
+                        <xsl:when test="normalize-space($propertyValueWithContext)='' and
+                                        normalize-space($propertyValueWithoutContext)=''">
+                            <xsl:value-of select="$propertyValueWithContextIso"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$propertyValueWithContext"/>
+                        </xsl:otherwise>
+
+                    </xsl:choose>
+                </xsl:when>
+
+                <!-- otherwise just get the title out of the approriate schema help file -->
+
+                <xsl:otherwise>
+                    <xsl:value-of select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/*[name(.)=$elementName])"/>
+                </xsl:otherwise>
+
+            </xsl:choose>
+        </xsl:variable>
+
+        <xsl:value-of select="normalize-space($elementValue)"/>
+    </xsl:template>
+
+
     <!--
     	AGIV specific:
     	
@@ -170,7 +252,52 @@
         <xsl:param name="name"/>
         <xsl:param name="schema"/>
         
-        <xsl:value-of select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/mandatory)"/>
+        <xsl:call-template name="getLabelElementValue">
+			<xsl:with-param name="name" select="$name"/>
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="elementName">mandatoryType</xsl:with-param>			
+        </xsl:call-template>
          
     </xsl:template>
+
+    <!--
+    	AGIV specific:
+    	
+        If the element has an additional tooltip (additional_info tag), then show it with
+        an icon.
+    -->
+    <xsl:template name="getMandatoryTooltip">
+        <xsl:param name="name"/>
+        <xsl:param name="schema"/>
+		<xsl:variable name="tooltip">
+	        <xsl:call-template name="getLabelElementValue">
+				<xsl:with-param name="name" select="$name"/>
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="elementName">mandatoryTooltip</xsl:with-param>			
+	        </xsl:call-template>
+        </xsl:variable>
+		<xsl:variable name="type">
+	        <xsl:call-template name="getLabelElementValue">
+				<xsl:with-param name="name" select="$name"/>
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="elementName">mandatoryType</xsl:with-param>			
+	        </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$type = 'iso' or $type = 'gdi' or $type = 'inspire' ">
+			    <img src="../../apps/images/default/{$type}.png" >
+					<xsl:attribute name="class"><xsl:value-of select="$type"/></xsl:attribute>
+			        <xsl:if test="$tooltip">
+				    	<xsl:attribute name="alt">
+				    		<xsl:value-of select="$tooltip"/>
+				    	</xsl:attribute>
+				    	<xsl:attribute name="title">
+				    		<xsl:value-of select="$tooltip"/>
+				    	</xsl:attribute>
+			    	</xsl:if>
+			    </img>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+
 </xsl:stylesheet>

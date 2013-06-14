@@ -434,7 +434,6 @@
         <label>Unieke code</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
-
         <helper rel="gmd:codeSpace">
             <option value="TAW" title="NGI">Tweede Algemene Waterpassing</option>
             <option value="LAT" title="IHO-S44">Lowest Astronomical Tide</option>
@@ -445,6 +444,8 @@
             <option value="23032" title="EPSG">ED50 / UTM zone 32N (EPSG:23032)</option>
             <option value="3812" title="EPSG">ETRS89/ Belgian Lambert 2008 (EPSG:3812)</option>
         </helper>
+		<mandatoryType>gdi</mandatoryType>
+		<mandatoryTooltip>Verplicht voor GDI</mandatoryTooltip>
     </element>
 
     <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code">
@@ -1648,6 +1649,8 @@
 		<label>Organisatie</label>
 		<description>Naam van de verantwoordelijke organisatie.</description>
 	<condition>conditional</condition>
+		<mandatoryType>gdi</mandatoryType>
+		<mandatoryTooltip>Verplicht voor GDI</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:orientationParameterAvailability">
@@ -1831,7 +1834,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:report">
-		<label>Rapport</label>
+		<label>Type meeting</label>
 		<description>Kwantitieve kwaliteitsbeschrijving van de data gespecifieerd door het toepassingsgebied.</description>
 	<condition>conditional</condition>
 	</element>
@@ -2032,7 +2035,7 @@
 	<element name="gmd:title">
 		<label>Titel</label>
 		<description>Titel of naam</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:toneGradation">

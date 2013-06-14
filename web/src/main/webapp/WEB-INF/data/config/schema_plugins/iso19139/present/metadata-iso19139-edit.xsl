@@ -161,6 +161,25 @@
    priority="20" />-->
 
 
+    <xsl:template mode="iso19139" match="gmd:report">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+	    <xsl:variable name="reportElementName" select="name(.)" />
+	    <xsl:variable name="previousReportSiblingsCount" select="count(preceding-sibling::*[name(.) = $reportElementName])" />
+       	<xsl:if test="$previousReportSiblingsCount=0 and $edit=true()">
+			<xsl:apply-templates mode="addReportElement" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+       	</xsl:if>
+       	<xsl:for-each select="*">
+	        <xsl:apply-templates mode="iso19139" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	        </xsl:apply-templates>
+       	</xsl:for-each>
+	</xsl:template>
+
     <!-- ===================================================================== -->
     <!-- these elements should be boxed -->
     <!-- ===================================================================== -->
@@ -2426,7 +2445,6 @@ can clutter up the rest of the metadata record! -->
         <xsl:param name="edit"/>
         <xsl:param name="flat"/>
 
-
         <!-- Display simple edit fields first for identificationInfo-->
         <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
             gmd:identificationInfo/srv:SV_ServiceIdentification|
@@ -2479,13 +2497,7 @@ can clutter up the rest of the metadata record! -->
             </xsl:call-template>
         </xsl:for-each>
 
-        <xsl:apply-templates mode="elementEP" select="gmd:distributionInfo|geonet:child[string(@name)='distributionInfo']">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="flat"   select="$flat"/>
-        </xsl:apply-templates>
-
-        <xsl:apply-templates mode="elementEP" select="gmd:spatialRepresentationInfo|geonet:child[string(@name)='spatialRepresentationInfo']">
+        <xsl:apply-templates mode="elementEP" select="gmd:applicationSchemaInfo|geonet:child[string(@name)='applicationSchemaInfo']">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
             <xsl:with-param name="flat"   select="$flat"/>
@@ -2497,7 +2509,7 @@ can clutter up the rest of the metadata record! -->
             <xsl:with-param name="flat"   select="$flat"/>
         </xsl:apply-templates>
 
-        <xsl:apply-templates mode="elementEP" select="gmd:applicationSchemaInfo|geonet:child[string(@name)='applicationSchemaInfo']">
+        <xsl:apply-templates mode="elementEP" select="gmd:spatialRepresentationInfo|geonet:child[string(@name)='spatialRepresentationInfo']">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
             <xsl:with-param name="flat"   select="$flat"/>
@@ -2510,6 +2522,12 @@ can clutter up the rest of the metadata record! -->
         </xsl:apply-templates>
 
         <xsl:apply-templates mode="elementEP" select="gmd:dataQualityInfo|geonet:child[string(@name)='dataQualityInfo']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="flat"   select="$flat"/>
+        </xsl:apply-templates>
+
+        <xsl:apply-templates mode="elementEP" select="gmd:distributionInfo|geonet:child[string(@name)='distributionInfo']">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
             <xsl:with-param name="flat"   select="$flat"/>
@@ -2774,6 +2792,16 @@ can clutter up the rest of the metadata record! -->
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
         <xsl:if test="not(name(.)='gmd:DQ_DomainConsistency' and (contains(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,'2007/2/E')))">
+<!--
+		    <xsl:variable name="reportElementName" select="name(..)" />
+		    <xsl:variable name="previousReportSiblingsCount" select="count(../preceding-sibling::*[name(.) = $reportElementName])" />
+        	<xsl:if test="$previousReportSiblingsCount=0">
+				<xsl:apply-templates mode="addReportElement" select="..">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+        	</xsl:if>
+-->
 	        <xsl:apply-templates mode="iso19139Report" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
