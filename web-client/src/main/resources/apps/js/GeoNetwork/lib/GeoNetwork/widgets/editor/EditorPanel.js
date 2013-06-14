@@ -104,6 +104,14 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }
     },
     catalogue: undefined,
+    namespaces: {
+        xlink: 'http://www.w3.org/1999/xlink',
+        gmd: 'http://www.isotc211.org/2005/gmd',
+        gmx: 'http://www.isotc211.org/2005/gmx',
+        gco: 'http://www.isotc211.org/2005/gco',
+        gts: 'http://www.isotc211.org/2005/gts',
+        gml: 'http://www.opengis.net/gml'
+    },
     toolbar: undefined,
     validationPanel: undefined,
     relationPanel: undefined,
@@ -1406,7 +1414,42 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
             this.initPanelLayout();
         }, this);
+    },
+    /**
+     * Method: retrieveSubTemplate
+     *
+     * Load subtemplate with 'elementName' as root, add the resulting xml to e new element 'name' and add this to the element with reference ref
+     */
+    retrieveSubTemplate: function(ref, name, elementName){
+        var self = this;
+        Ext.Ajax.request({
+            url: self.catalogue.services.subTemplate + "?root=" + elementName,
+            method: 'GET',
+            scope: this,
+            success: function(response){
+                var st = response.responseText;
+                var subtemplates = [];
+                subtemplates.push("<" + name + self.generateNamespaceDeclaration() + ">" + response.responseText + "</" + name + ">")
+                GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref:ref,name:name}, subtemplates, self);
+            },
+            failure: self.getError
+        });
+    },
+    /**
+     * Create namespace declaration
+     * 
+     * @param {Object} onlyThoseNamespaces  Restrict namespaces list
+     */
+    generateNamespaceDeclaration: function(onlyThoseNamespaces) {
+        var ns = '';
+        for (var n in this.namespaces) {
+            if ((onlyThoseNamespaces && onlyThoseNamespaces[n]) || !onlyThoseNamespaces) {
+                ns += ' xmlns:' + n + '="' + this.namespaces[n] + '"';
+            }
+        }
+        return ns;
     }
+    
 });
 
 /** api: xtype = gn_editor_editorpanel */
