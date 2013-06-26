@@ -27,6 +27,23 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.File;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.OperationNotAllowedEx;
@@ -39,6 +56,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -74,23 +92,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
-
-import java.io.File;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -277,6 +278,7 @@ public class DataManager {
         Map<String,String> docs = searchMan.getDocsChangeDate(workspace);
 
         System.out.println("initmmdd: db contents: " + Xml.getString(result) + "\nfromidx: " + docs.size());
+        System.out.println("Update uploaded thumbnails: ===================>");
 
         reindex(context, dbms, force, startup, result, docs, workspace);
     }
@@ -559,7 +561,7 @@ public class DataManager {
      * @throws Exception
      */
     public void indexMetadataWithoutSendingTopic(Dbms dbms, String id, boolean indexGroup, boolean workspace) throws Exception {
-        System.out.println("**** indexMetadataWithoutSendingTopic: workspace : " + workspace + " id: " + id);
+        Log.debug(Geonet.CLUSTER, "Executing indexMetadataWithoutSendingTopic on " + (workspace ? " workspace" : "metadata") + " with id " + id);
         Vector<Element> moreFields = new Vector<Element>();
 
         // get metadata, extracting and indexing any xlinks
@@ -576,10 +578,11 @@ public class DataManager {
         //
         if(md == null) {
             if(workspace) {
-                System.out.println("indexMetadata failed to retrieve md with id " + id + " from workspace");
+                Log.error(Geonet.CLUSTER, "indexMetadata failed to retrieve md with id " + id + " from workspace but try to delete index");
+                searchMan.delete(LuceneIndexField._ID, id, workspace);
             }
             else {
-                System.out.println("indexMetadata failed to retrieve md with id " + id + " from metadata");
+                Log.error(Geonet.CLUSTER, "indexMetadata failed to retrieve md with id " + id + " from metadata");
             }
             return;
         }
@@ -622,12 +625,12 @@ public class DataManager {
         if(rec == null) {
             String msg ;
             if(workspace) {
-                msg = "**** ERROR indexMetadataWithoutSendingTopic failed to retrieve md with id " + id + " from Workspace";
+                msg = "indexMetadataWithoutSendingTopic failed to retrieve md with id " + id + " from Workspace";
             }
             else {
-                msg = "**** ERROR indexMetadataWithoutSendingTopic failed to retrieve md with id " + id + " from Metadata";
+                msg = "indexMetadataWithoutSendingTopic failed to retrieve md with id " + id + " from Metadata";
             }
-            System.out.println(msg);
+            Log.error(Geonet.CLUSTER, msg);
             throw new Exception(msg);
         }
 
@@ -2757,6 +2760,7 @@ public class DataManager {
 
     public synchronized void deleteMetadataWithoutSendingTopic(ServiceContext context, Dbms dbms, String id, boolean workspace) throws Exception {
         //--- update search criteria
+        Log.debug(Geonet.CLUSTER, "ReIndexMessageHandler processing delete");
         searchMan.delete(LuceneIndexField._ID, id, workspace);
     }
 

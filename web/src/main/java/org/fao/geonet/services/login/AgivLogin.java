@@ -23,10 +23,16 @@
 
 package org.fao.geonet.services.login;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.UserLoginEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
@@ -39,16 +45,14 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
-import java.sql.SQLException;
-import java.util.List;
-
 //=============================================================================
 
-/** Try to login a user, checking the username and password
+/** Try to login a user, based on Fediz
   */
 
-public class Login implements Service
+public class AgivLogin implements Service
 {
+	private String defaultPassword = "agiv"; 
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -64,35 +68,31 @@ public class Login implements Service
 	//--------------------------------------------------------------------------
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String username = Util.getParam(params, Params.USERNAME);
-		String password = Util.getParam(params, Params.PASSWORD);
-	    String userinfo = Util.getParam(params, Params.INFO, "false");
+		UserSession userSession = context.getUserSession();
+		if (StringUtils.isBlank(userSession.getUsername())) {
+			throw new MissingParameterEx(Params.USERNAME);
+		}
+		String username = userSession.getUsername();
+	    String userinfo = "false";
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		LDAPContext lc = new LDAPContext(sm);
-
-		if (!isAdmin(dbms, username) && lc.isInUse())
+		if (!isAdmin(dbms, username))
 		{
-			LDAPInfo info = lc.lookUp(username, password);
-
-			if (info == null)
-				throw new UserLoginEx(username);
-
-			updateUser(context, dbms, info);
+			updateUser(context, dbms);
 		}
 
 		//--- attempt to load user from db
 
 		String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
 	
-		List list = dbms.select(query, username, Util.scramble(password)).getChildren();
+		List list = dbms.select(query, username, Util.scramble(defaultPassword)).getChildren();
 		if (list.size() == 0) {
 			// Check old password hash method
-			list = dbms.select(query, username, Util.oldScramble(password)).getChildren();
+			list = dbms.select(query, username, Util.oldScramble(defaultPassword)).getChildren();
 
 			if (list.size() == 0)
 				throw new UserLoginEx(username);
@@ -138,64 +138,48 @@ public class Login implements Service
      * @throws SQLException
      * @throws UserLoginEx 
      */
-	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info) throws SQLException, UserLoginEx {
-        boolean groupProvided = ((info.group != null) && (!(info.group.equals(""))));
-        String groupId = "-1";
+	@SuppressWarnings("unchecked")
+	private void updateUser(ServiceContext context, Dbms dbms) throws SQLException, UserLoginEx {
+		List<String> groups = (List<String>) context.getUserSession().getProperty("groups");
+        String id = "-1";
         String userId = "-1";
 
+        List<String> groupIds = new ArrayList<String>();
         //--- Create group retrieved from LDAP if it's new
-        if (groupProvided) {
-            String query = "SELECT id FROM Groups WHERE name=?";
-            List list  = dbms.select(query, info.group).getChildren();
+        if (groups != null) {
+        	for (String group : groups) {
+                String query = "SELECT id FROM Groups WHERE name=?";
+                List list  = dbms.select(query, group).getChildren();
 
-            if (list.isEmpty()) {
-                groupId = IDFactory.newID();
-			    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-                dbms.execute(query, groupId, info.group);
-                Lib.local.insert(dbms, "Groups", groupId, info.group);
-            } else {
-                groupId = ((Element) list.get(0)).getChildText("id");
-            }
+                if (list.isEmpty()) {
+                    id = IDFactory.newID();
+    			    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+                    dbms.execute(query, id, group);
+                    Lib.local.insert(dbms, "Groups", id, group);
+                } else {
+                    id = ((Element) list.get(0)).getChildText("id");
+                }
+                groupIds.add(id);
+        	}
         }
 
 		//--- update user information into the database
 
 		String query = "UPDATE Users SET password=?, name=?, profile=? WHERE username=?";
 
-		int res = dbms.execute(query, Util.scramble(info.password), info.name, info.profile, info.username);
+		int res = dbms.execute(query, Util.scramble(defaultPassword), context.getUserSession().getName(), context.getUserSession().getProfile(), context.getUserSession().getUsername());
 
 		//--- if the user was not found --> add it
-/*
+
 		if (res == 0)
 		{
 			userId = IDFactory.newID();
-			query = "INSERT INTO Users(id, username, password, surname, name, profile) VALUES(?,?,?,?,?,?)";
+			query = "INSERT INTO Users(id, username, password, surname, name, profile, email) VALUES(?,?,?,?,?,?,?)";
 
-			dbms.execute(query, userId, info.username, Util.scramble(info.password), "(LDAP)", info.name, info.profile);
-
-            if (groupProvided) {
-                String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";
-                List list  = dbms.select(query2, groupId, userId).getChildren();
-
-                String count = ((Element) list.get(0)).getChildText("numr");
-
-                if (count.equals("0")) {
-                    query = "INSERT INTO UserGroups(userId, groupId) VALUES(?,?)";
-
-                    dbms.execute(query, userId, groupId);
-                }
-            }
-		}
-*/
-		if (res == 0)
-		{
-			userId = IDFactory.newID();
-			query = "INSERT INTO Users(id, username, password, surname, name, profile) VALUES(?,?,?,?,?,?)";
-
-			dbms.execute(query, userId, info.username, Util.scramble(info.password), "(LDAP)", info.name, info.profile);
+			dbms.execute(query, userId, context.getUserSession().getUsername(), Util.scramble(defaultPassword), context.getUserSession().getSurname(), context.getUserSession().getName(), context.getUserSession().getProfile(), context.getUserSession().getEmailAddr());
 		} else {
 			query = "SELECT id FROM Users WHERE username=?";
-            List list  = dbms.select(query, info.username).getChildren();
+            List list  = dbms.select(query, context.getUserSession().getUsername()).getChildren();
             userId = ((Element) list.get(0)).getChildText("id");			
 		}
 
@@ -206,11 +190,12 @@ public class Login implements Service
 
 		dbms.execute(query, userId);
 
-        if (groupProvided) {
+        //--- Associate user and group retrieved from LDAP
+    	for (String groupId : groupIds) {
             query = "INSERT INTO UserGroups(userId, groupId) VALUES(?,?)";
             dbms.execute(query, userId, groupId);
-        }
+    	}
 
-        dbms.commit();
+		dbms.commit();
 	}
 }

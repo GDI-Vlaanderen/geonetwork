@@ -143,7 +143,7 @@
 	-->
   
 	<resources>
-	  <resource enabled="true">
+	  <resource enabled="false">
 	    <name>main-db</name>
 	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 	    <config>
@@ -278,12 +278,12 @@
 		<!-- postgresql -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<resource enabled="false">
+		<resource enabled="true">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
-				<user>postgres</user>
-				<password>postgres</password>
+				<user>geonetwork</user>
+				<password>geonetwork28</password>
 				<!-- we use org.postgis.DriverWrapper in place of
 				     org.postgresql.Driver to support both postgresql and postgis -->
 			  <driver>org.postgresql.Driver</driver>
@@ -949,6 +949,18 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!--                   Login services                              -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.agiv.login">
+			<class name=".services.login.AgivLogin" />
+
+			<output forward="home" />
+
+			<error id="user-login" sheet="error.xsl" statusCode="401">
+				<xml name="error" file="xml/login-error.xml" />
+			</error>
+		</service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.login">

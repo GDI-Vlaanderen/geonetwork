@@ -18,10 +18,10 @@
     <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
         <xsl:choose>
             <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Trefwoorden' thesaurus  -->
-            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Trefwoorden'">
+            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen trefwoorden'">
                 <xsl:choose>
                     <!-- contains a keyword matching  'Conform GDI-Vlaanderen Best Practices' -->
-                    <xsl:when test="gmd:MD_Keywords//gmd:keyword/gco:CharacterString = 'Conform GDI-Vlaanderen Best Practices'">
+                    <xsl:when test="gmd:MD_Keywords//gmd:keyword/gco:CharacterString = 'Metadata GDI-Vl-conform'">
                         <!-- if there are other keywords, put them out -->
                         <xsl:if test="count(gmd:MD_Keywords/gmd:keyword) > 1">
                             <gmd:descriptiveKeywords>
@@ -29,7 +29,7 @@
                                     <xsl:for-each select="gmd:MD_Keywords/gmd:keyword">
                                         <xsl:choose>
                                             <!-- do not put out -->
-                                            <xsl:when test="gco:CharacterString = 'Conform GDI-Vlaanderen Best Practices'"/>
+                                            <xsl:when test="gco:CharacterString = 'Metadata GDI-Vl-conform'"/>
                                             <xsl:otherwise>
                                                 <gmd:keyword>
                                                     <xsl:apply-templates select="@*|node()"/>
@@ -53,7 +53,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
-            <!-- descriptiveKeywords not using 'GDI-Vlaanderen Trefwoorden' thesaurus : just put out -->
+            <!-- descriptiveKeywords not using 'GDI-Vlaanderen trefwoorden' thesaurus : just put out -->
             <xsl:otherwise>
                 <gmd:descriptiveKeywords>
                     <xsl:apply-templates select="@*|node()"/>

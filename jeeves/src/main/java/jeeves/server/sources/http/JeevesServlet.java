@@ -25,6 +25,9 @@ package jeeves.server.sources.http;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,6 +42,8 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+
+import org.apache.cxf.fediz.core.FederationPrincipal;
 
 //=============================================================================
 
@@ -168,7 +173,7 @@ public class JeevesServlet extends HttpServlet
             if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session created for client : " + ip);
 		}
 
-		//------------------------------------------------------------------------
+    	//------------------------------------------------------------------------
 		//--- build service request
 
 		ServiceRequest srvReq = null;
@@ -201,6 +206,31 @@ public class JeevesServlet extends HttpServlet
 			sb.append(Util.getStackTrace(e));
 			Log.error(Log.REQUEST,sb.toString());
 			return;
+		}
+		
+		if ("user.agiv.login".equals(srvReq.getService())) {
+	        Principal p = req.getUserPrincipal();
+	        if (p != null && p instanceof FederationPrincipal/* && SecurityTokenThreadLocal.getToken()==null*/) {
+	            FederationPrincipal fp = (FederationPrincipal)p;
+            	/*
+                emailaddress: wim.vandebriel@gim.be
+                daliid: 141fcd6b-d13a-47a9-8d29-7e125a635f06
+                organisationpath: 1/2
+                name: wim.vandebriel
+                givenname: Wim
+                surname: Vanebriel
+                language: nl-BE
+                contactid: 1757
+                organisationpublicid: int:Citizens
+                organisationid: 2
+    */
+                session.authenticate(Util.getClaimValue(fp,"daliid"),Util.getClaimValue(fp,"name"), Util.getClaimValue(fp,"givenname"), Util.getClaimValue(fp,"surname"), "RegisteredUser", Util.getClaimValue(fp,"emailaddress"));
+                List<String> groups = new ArrayList<String>();
+                groups.add("AGIV");
+                session.setProperty("groups", groups);
+	        } else {
+	            System.out.println("Principal is not instance of FederationPrincipal");
+	        }
 		}
 
 		//--- execute request

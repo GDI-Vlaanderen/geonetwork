@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" 
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-            xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" 
-            version="2.4">
-            
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0" metadata-complete="true">
+
     <display-name>zoekdienst</display-name>
     <!--<context-param>-->
         <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
@@ -170,8 +170,12 @@
              The folder stores schema plugins, logos 
         -->  
         <init-param>
+            <param-name>zoekdienst.drivemapping</param-name>
+            <param-value>net use z: \\PCPB359\zoekdienst_data_shared</param-value>
+        </init-param>
+        <init-param>
             <param-name>zoekdienst.dir</param-name>
-            <param-value>z:</param-value>
+			<param-value>z:</param-value>
         </init-param>
         <!-- Local folders for each node: 
                 * lucene, 
@@ -324,12 +328,35 @@
         <url-pattern>/wmc/*</url-pattern>
     </servlet-mapping>
     
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
-
     <session-config>
         <!-- 3 hours -->
         <session-timeout>180</session-timeout>
     </session-config>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+	<security-role>
+		<role-name>Manager</role-name>
+		<role-name>User</role-name>
+		<role-name>Admin</role-name>
+		<role-name>Authenticated</role-name>
+	</security-role>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Protected Area</web-resource-name>
+			<url-pattern>/srv/dut/user.agiv.login</url-pattern>
+			<url-pattern>/srv/fre/user.agiv.login</url-pattern>
+			<url-pattern>/srv/eng/user.agiv.login</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>*</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<login-config>
+		<auth-method>WSFED</auth-method>
+		<realm-name>WSFED</realm-name>
+	</login-config>
+
 </web-app>

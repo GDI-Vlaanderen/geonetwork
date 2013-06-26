@@ -22,13 +22,17 @@
 //==============================================================================
 package org.fao.geonet.jms;
 
-import org.fao.geonet.jms.message.MessageHandler;
-
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
+
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.message.MessageHandler;
+import org.fao.geonet.jms.message.reindex.ReIndexMessage;
 
 /**
  * @author heikki doeleman
@@ -62,15 +66,15 @@ public class Consumer extends JMSActor {
                     try {
                         if (message instanceof TextMessage) {
                             TextMessage textMessage = (TextMessage) message;
-                            //Log.debug(Geonet.JMS, "Consumer received message '" + textMessage.getText() + "'");
+                            Log.debug(Geonet.JMS, "Consumer received message: " + textMessage.getText());
                             textMessage.acknowledge();
                             messageHandler.process(textMessage.getText());
                         }
                     } catch (JMSException x) {
-                        System.err.println("JMS error receiving message: " + x.getMessage());
+                        Log.error(Geonet.JMS, "JMS error receiving message: " + x.getMessage());
                         x.printStackTrace();
                     } catch (ClusterException x) {
-                        System.err.println("Cluster error receiving message: " + x.getMessage());
+                        Log.error(Geonet.JMS,"Cluster error receiving message: " + x.getMessage());
                         x.printStackTrace();
                     }
                 }
@@ -78,7 +82,7 @@ public class Consumer extends JMSActor {
             consumer.setMessageListener(messageListener);
         }
         catch (JMSException x) {
-            System.err.println("Error initializing Consumer for queue " + queueName +  ", destination " + destinationName + ": " + x.getMessage());
+            Log.error(Geonet.JMS, "Error initializing Consumer for queue " + queueName +  ", destination " + destinationName + ": " + x.getMessage());
             x.printStackTrace();
             throw new ClusterException(x.getMessage(), x);
         }

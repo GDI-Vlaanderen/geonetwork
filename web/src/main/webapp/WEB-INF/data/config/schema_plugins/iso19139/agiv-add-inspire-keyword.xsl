@@ -12,7 +12,7 @@
     <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
         <xsl:choose>
             <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Trefwoorden' thesaurus  -->
-            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Trefwoorden'">
+            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GEMET - INSPIRE thema's, versie 1.0'">
                 <gmd:descriptiveKeywords>
                     <gmd:MD_Keywords>
                         <!-- put out each keyword -->
@@ -20,10 +20,10 @@
                             <xsl:copy-of select="."></xsl:copy-of>
                         </xsl:for-each>
                         <!-- if the INSPIRE keyword marker isn't already here, put it out -->
-                        <xsl:if test="count(gmd:MD_Keywords/gmd:keyword[gco:CharacterString = 'Conform INSPIRE – Metadata Implementing Rules']) = 0">
+                        <xsl:if test="count(gmd:MD_Keywords/gmd:keyword[gco:CharacterString = 'Metadata INSPIRE-conform']) = 0">
                             <gmd:keyword>
                                 <gco:CharacterString>
-                                    <xsl:text>Conform INSPIRE – Metadata Implementing Rules</xsl:text>
+                                    <xsl:text>Metadata INSPIRE-conform</xsl:text>
                                 </gco:CharacterString>
                             </gmd:keyword>
                         </xsl:if>
@@ -41,10 +41,10 @@
         </xsl:choose>
     </xsl:template>
 
-    <!-- in case gmd:MD_DataIdentification does not have a gmd:descriptiveKeywords using  'GDI-Vlaanderen Trefwoorden' thesaurus, insert it at correct position -->
+    <!-- in case gmd:MD_DataIdentification does not have a gmd:descriptiveKeywords using  'GEMET - INSPIRE thema's, versie 1.0' thesaurus, insert it at correct position -->
     <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification">
         <xsl:choose>
-            <xsl:when test="count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[gco:CharacterString = 'GDI-Vlaanderen Trefwoorden']) = 0">
+            <xsl:when test="count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[gco:CharacterString = 'GEMET - INSPIRE thema's, versie 1.0']) = 0">
             <!-- all elements allowed to follow descriptiveKeywords in MD_DataIdentification -->
             <xsl:variable name="elements-after" select="gmd:resourceSpecificUsage|gmd:resourceConstraints|gmd:aggregationInfo|gmd:spatialRepresentationType|gmd:spatialResolution|gmd:language|gmd:characterSet|gmd:topicCategory|gmd:environmentDescription|gmd:extent|gmd:supplementalInformation"/>
             <xsl:copy>
@@ -53,18 +53,18 @@
                     <gmd:MD_Keywords>
                         <gmd:keyword>
                             <gco:CharacterString>
-                                <xsl:text>Conform INSPIRE – Metadata Implementing Rules</xsl:text>
+                                <xsl:text>Metadata INSPIRE-conform</xsl:text>
                             </gco:CharacterString>
                         </gmd:keyword>
                         <gmd:thesaurusName>
                             <gmd:CI_Citation>
                                 <gmd:title>
-                                    <gco:CharacterString>GDI-Vlaanderen Trefwoorden</gco:CharacterString>
+                                    <gco:CharacterString>GEMET - INSPIRE thema's, versie 1.0</gco:CharacterString>
                                 </gmd:title>
                                 <gmd:date>
                                     <gmd:CI_Date>
                                         <gmd:date>
-                                            <gco:Date>2012-07-10</gco:Date>
+                                            <gco:Date>2008-06-01</gco:Date>
                                         </gmd:date>
                                         <gmd:dateType>
                                             <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>

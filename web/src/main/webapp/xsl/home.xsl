@@ -10,8 +10,23 @@
   <xsl:template match="/">
     <html>
       <head>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"></script>
+        <script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"></script>
         <script language="Javascript1.5" type="text/javascript">
           // Redirect according to config-gui.xml client configuration
+          <xsl:if test="string(/root/gui/session/userId)!=''">
+				var GNCookie = new Ext.state.CookieProvider({
+				  	expires: new Date(new Date().getTime()+(1000*60*60*24*365))
+											//1 year from now
+								});
+				GNCookie.set('user', {
+					id: '<xsl:value-of select="string(/root/gui/session/userId)" />',					
+                    username: '<xsl:value-of select="string(/root/gui/session/username)" />',
+                    name: '<xsl:value-of select="string(/root/gui/session/name)" />',
+                    surname: '<xsl:value-of select="string(/root/gui/session/surname)" />',
+                    role: '<xsl:value-of select="string(/root/gui/session/role)" />'
+                }); 
+          </xsl:if>
           var search = window.location.search;
           var url = '<xsl:value-of select="/root/gui/config/client/@url"/>';
           if (url === '') {

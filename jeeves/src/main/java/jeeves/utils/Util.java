@@ -26,6 +26,10 @@ package jeeves.utils;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
+
+import org.apache.cxf.fediz.core.Claim;
+import org.apache.cxf.fediz.core.ClaimCollection;
+import org.apache.cxf.fediz.core.FederationPrincipal;
 import org.jdom.Element;
 
 import java.io.PrintWriter;
@@ -332,7 +336,15 @@ public final class Util
 		catch (NoSuchAlgorithmException e)     { return null; }
 	}
 
-	
+	public static String getClaimValue(FederationPrincipal fp, String claimType) {
+        ClaimCollection claims = fp.getClaims();
+        for (Claim c: claims) {
+            if (c.getClaimType().toString().equals(claimType)) {
+            	return (c.getValue()!=null ? c.getValue().toString() : "");            	
+            }
+        }
+		return "";
+	}
 }
 
 //=============================================================================

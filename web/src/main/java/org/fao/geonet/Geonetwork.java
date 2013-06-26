@@ -274,6 +274,7 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Schema manager...");
 
 		String schemaPluginsDir = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMAPLUGINS_DIR);
+//		String schemaCatalogueFile = handlerConfig.getMandatoryValue(Geonet.Config.CONFIG_DIR) + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG;
 		String schemaCatalogueFile = systemDataDir + "config" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG;
 		logger.info("			- Schema plugins directory: "+schemaPluginsDir);
 		logger.info("			- Schema Catalog File     : "+schemaCatalogueFile);

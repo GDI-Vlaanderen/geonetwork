@@ -53,14 +53,15 @@ public class ReIndexMessageHandler implements MessageHandler {
         }
         // message was sent by another GN instance
         else {
-            Log.debug(Geonet.CLUSTER, "ReIndexMessageHandler processing message '" + message + "'");
+//            Log.debug(Geonet.CLUSTER, "ReIndexMessageHandler processing message: " + message);
+            Log.debug(Geonet.CLUSTER, "ReIndexMessageHandler processing ...");
             Dbms dbms = null;
 
             try {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                Log.debug(Geonet.CLUSTER, "Getting context for: " + context.getAppPath());
                 DataManager dataManager = gc.getDataManager();
-                dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                
+                dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);                
                 if (!reIndexMessage.isDeleteMetadata()) {
                     dataManager.indexMetadataWithoutSendingTopic(dbms, reIndexMessage.getId(),
                             Boolean.parseBoolean(reIndexMessage.getIndexGroup()), reIndexMessage.isWorkspace());

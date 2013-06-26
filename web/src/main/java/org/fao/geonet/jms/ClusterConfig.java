@@ -134,7 +134,7 @@ public class ClusterConfig {
             if (connection != null) connection.close();
 
         } catch(JMSException x) {
-            System.err.println(x.getMessage());
+        	Log.error(Geonet.JMS, x.getMessage());
             x.printStackTrace();
             throw new ClusterException(x.getMessage(), x);
         }
@@ -410,6 +410,6 @@ public class ClusterConfig {
         if(producer == null) {
             throw new ClusterConfigurationException("ClusterConfig verification failed: could not retrieve " + Geonet.ClusterMessageTopic.UPDATETHESAURUS_ELEM);
         }
-        System.out.println("ClusterConfig verification successful");
+        Log.info(Geonet.JMS, "ClusterConfig verification successful");
     }
 }

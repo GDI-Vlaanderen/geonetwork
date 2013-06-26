@@ -4671,7 +4671,8 @@ to build the XML fragment in the editor. -->
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'GEMET') and contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'INSPIRE')">geonetwork.thesaurus.external.theme.inspire-theme</xsl:when>
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'GEMET')">geonetwork.thesaurus.external.theme.gemet</xsl:when>
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'D.4 van de verordening')">geonetwork.thesaurus.external.theme.inspire-service-taxonomy</xsl:when>
-  		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'Vlaamse regio')">geonetwork.thesaurus.external.place.flemishregions</xsl:when>
+  		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'Vlaamse regio')">geonetwork.thesaurus.external.place.GDI-Vlaanderenregios</xsl:when>
+  		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'GDI') and contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'Vlaanderen')">geonetwork.thesaurus.external.theme.GDI-Vlaanderen-trefwoorden</xsl:when>
   		<xsl:otherwise><xsl:value-of select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])"/></xsl:otherwise>
   	</xsl:choose>
   </xsl:template>

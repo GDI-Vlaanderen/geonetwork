@@ -22,10 +22,13 @@
 //==============================================================================
 package org.fao.geonet.jms;
 
-import org.fao.geonet.jms.message.Encodable;
-
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
+
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.message.Encodable;
 
 /**
  * JMS message producer.
@@ -70,7 +73,7 @@ public class Producer extends JMSActor {
             }
         }
         catch (JMSException x) {
-            System.err.println("Error initializing ReIndexTopicConsumer: " + x.getMessage());
+            Log.error(Geonet.JMS, "Error initializing ReIndexTopicConsumer: " + x.getMessage());
             x.printStackTrace();
             throw new ClusterException(x.getMessage(), x);
         }
@@ -83,13 +86,13 @@ public class Producer extends JMSActor {
      */
     public void produce(Encodable message) throws ClusterException {
         try {
-            //Log.debug(Geonet.JMS,"producing message from class: " +  message.getClass().getName());
-            //Log.debug(Geonet.JMS,"   --> message content: " +  message.encode());
+            Log.debug(Geonet.JMS,"Producing message from class: " +  message.getClass().getName());
+            Log.debug(Geonet.JMS,"Message content: " +  message.encode());
             TextMessage textMessage = session.createTextMessage(message.encode());
             producer.send(textMessage);
         }
         catch (JMSException x) {
-            System.err.println(x.getMessage());
+            Log.error(Geonet.JMS, x.getMessage());
             x.printStackTrace();
             throw new ClusterException(x.getMessage(), x);
         }

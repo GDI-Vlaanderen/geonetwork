@@ -365,6 +365,7 @@
 		<allow service="rating.popup"/>
 
 		<!-- Login and logout services -->
+		<allow service="user.agiv.login"/>
 		<allow service="user.login"/>
 		<allow service="user.logout"/>
 		<allow service="shib.user.login"/>
