@@ -76,6 +76,7 @@ public class Get implements Service {
             throws Exception {
     	String uuid = null;
     	String root = null;
+    	String child = null;
     	Element param = params.getChild(Params.UUID);
     	if (param!=null) {
             uuid = param.getTextTrim();
@@ -83,13 +84,21 @@ public class Get implements Service {
     	param = params.getChild(Params.ROOT);
     	if (param!=null) {
     		root = param.getTextTrim();
+        	param = params.getChild(Params.CHILD);
+        	if (param!=null) {
+        		child = param.getTextTrim();
+        	}
     	}
         
         // Retrieve template
         Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
         Element rec = null;
         if (StringUtils.isNotBlank(root)) {
-        	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND root = ?", root);
+            if (StringUtils.isNotBlank(child)) {
+            	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND root = ? AND data like ?", root, "%" + child + "%");
+            } else {
+            	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND root = ?", root);            	
+            }
         } else {
         	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND uuid = ?", uuid);
         }

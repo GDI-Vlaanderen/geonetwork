@@ -26,6 +26,7 @@ package org.fao.geonet.services.login;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.UserLoginEx;
@@ -72,6 +73,7 @@ public class AgivLogin implements Service
 		if (StringUtils.isBlank(userSession.getUsername())) {
 			throw new MissingParameterEx(Params.USERNAME);
 		}
+		defaultPassword = "!" + userSession.getUsername() + "!";
 		String username = userSession.getUsername();
 	    String userinfo = "false";
 
@@ -80,14 +82,15 @@ public class AgivLogin implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		if (!isAdmin(dbms, username))
-		{
+//		if (!isAdmin(dbms, username))
+//		{
 			updateUser(context, dbms);
-		}
+//		}
 
 		//--- attempt to load user from db
 
 		String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
+		
 	
 		List list = dbms.select(query, username, Util.scramble(defaultPassword)).getChildren();
 		if (list.size() == 0) {
@@ -140,22 +143,22 @@ public class AgivLogin implements Service
      */
 	@SuppressWarnings("unchecked")
 	private void updateUser(ServiceContext context, Dbms dbms) throws SQLException, UserLoginEx {
-		List<String> groups = (List<String>) context.getUserSession().getProperty("groups");
+		List<Map<String,String>> groups = (List<Map<String,String>>) context.getUserSession().getProperty("groups");
         String id = "-1";
         String userId = "-1";
 
         List<String> groupIds = new ArrayList<String>();
         //--- Create group retrieved from LDAP if it's new
         if (groups != null) {
-        	for (String group : groups) {
+        	for (Map<String,String> group : groups) {
                 String query = "SELECT id FROM Groups WHERE name=?";
-                List list  = dbms.select(query, group).getChildren();
+                List list  = dbms.select(query, group.get("name")).getChildren();
 
                 if (list.isEmpty()) {
                     id = IDFactory.newID();
-    			    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-                    dbms.execute(query, id, group);
-                    Lib.local.insert(dbms, "Groups", id, group);
+    			    query = "INSERT INTO GROUPS(id, name, description) VALUES(?,?,?)";
+                    dbms.execute(query, id, group.get("name"),group.get("description"));
+                    Lib.local.insert(dbms, "Groups", id, group.get("description"));
                 } else {
                     id = ((Element) list.get(0)).getChildText("id");
                 }

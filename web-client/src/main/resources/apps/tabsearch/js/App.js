@@ -485,6 +485,7 @@ GeoNetwork.app = function(){
                         	columnWidth: 0.15
                         },
                         {
+                        	frame: true,
                             title: OpenLayers.i18n('what'),
                             layout:'form',
                             autoHeight: true,
@@ -522,6 +523,7 @@ GeoNetwork.app = function(){
 */
                         // When panel
                         {
+                        	frame: true,
                             title:OpenLayers.i18n('when'),
                             defaultType: 'datefield',
                             layout:'form',
@@ -1080,7 +1082,11 @@ GeoNetwork.app = function(){
             if (urlParameters.uuid !== undefined) {
                 catalogue.metadataShow(urlParameters.uuid, true);
             } else if (urlParameters.id !== undefined) {
-                catalogue.metadataShowById(urlParameters.id, true);
+            	if (window.location.href.indexOf("index_login.html")>-1) {
+                	app.metadataShowByIdInTab(urlParameters.id, true);
+            	} else {
+                	catalogue.metadataShowById(urlParameters.id, true);
+            	}
             }
 
             // FIXME : should be in Search field configuration
@@ -1107,6 +1113,77 @@ GeoNetwork.app = function(){
                 });
             });
         },
+        
+        metadataShowByIdInTab: function(id){
+            //console.log(uuid);
+            var url = catalogue.services.mdView + '?id=' + id + '&fromWorkspace=true', record;
+            
+            var store = GeoNetwork.data.MetadataResultsFastStore();
+            catalogue.kvpSearch("fast=index&_id=" + id, null, null, null, true, store, null, false);
+            record = store.getAt(store.find('id', id));
+            if(record){
+            	var uuid = record.get('uuid');
+                var any = Ext.getDom('E_any');
+                if (any) {
+                	any.value = uuid;
+                }
+	            var tabPanel = Ext.getCmp("GNtabs");
+	            var tabs = tabPanel.find( 'id', uuid );
+                // Retrieve information in synchrone mode    todo: this doesn't work here
+                var RowTitle = uuid;
+                try{RowTitle=record.data.title;} catch (e) {}
+                var RowLabel =  RowTitle;
+                if (RowLabel.length > 18) RowLabel =  RowLabel.substr(0,17)+"...";
+                
+                var extra = "";
+                if(record.data.locked === "y" && record.data.edit === 'true'){
+                //Show always workspace version
+                    extra = "&fromWorkspace=true";
+                }
+
+                var aResTab = new GeoNetwork.view.ViewPanel({
+                        serviceUrl: catalogue.services.mdView + '?uuid=' + uuid + extra,
+                        lang: catalogue.lang,
+                    resultsView: app.getMetadataResultsView(),
+                    layout:'fit',
+                    currTab: GeoNetwork.defaultViewMode || 'simple',
+                    printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+                    catalogue: catalogue,
+                    //maximized: true,
+                    metadataUuid: uuid,
+                    record: record
+                });
+
+                // Override zoomToAction (maye better way?). TODO: Check as seem calling old handler code
+                aResTab.actionMenu.zoomToAction.setHandler(function(){
+                        var uuid = this.record.get('uuid');
+                        this.resultsView.zoomTo(uuid);
+
+                        // Custom code to display Map tab
+                        /*tabPanel.setActiveTab( tabPanel.items.itemAt(2) );*/
+                    },
+                    aResTab.actionMenu);
+               
+                aResTab.actionMenu.viewAction.hide();
+
+                tabPanel.add({
+                    title: RowLabel,
+                	layout:'fit',
+                    tabTip:RowTitle,
+                    iconCls: 'tabs',
+                    id:uuid,
+                    closable:true,
+                    items: aResTab
+                }).show();
+            } else {
+                Ext.MessageBox.alert(OpenLayers.i18n('error'), 
+                        OpenLayers.i18n('error-login'), function(){
+//                        window.location = "../tabsearch";
+//                        location.replace(window.location.pathname + "?hl=dut");
+                });
+            }
+        },
+
         getIMap: function(){
 //        	Ext.Msg.alert("Deze funktie zal later beschikbaar gesteld worden");
             // init map if not yet initialized
@@ -1244,8 +1321,11 @@ Ext.onReady(function () {
 		} else {
             // Retrieve information in synchrone mode    todo: this doesn't work here
             var store = GeoNetwork.data.MetadataResultsFastStore();
-            catalogue.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
             var record = store.getAt(store.find('uuid', uuid));
+            if (record==null) {
+                catalogue.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                record = store.getAt(store.find('uuid', uuid));
+            }
 
             var RowTitle = uuid;
 

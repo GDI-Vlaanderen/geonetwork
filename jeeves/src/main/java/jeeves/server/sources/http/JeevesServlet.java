@@ -27,7 +27,10 @@ import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,6 +46,7 @@ import jeeves.server.sources.ServiceRequestFactory;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
+import org.apache.cxf.fediz.core.Claim;
 import org.apache.cxf.fediz.core.FederationPrincipal;
 
 //=============================================================================
@@ -224,9 +228,45 @@ public class JeevesServlet extends HttpServlet
                 organisationpublicid: int:Citizens
                 organisationid: 2
     */
-                session.authenticate(Util.getClaimValue(fp,"daliid"),Util.getClaimValue(fp,"name"), Util.getClaimValue(fp,"givenname"), Util.getClaimValue(fp,"surname"), "RegisteredUser", Util.getClaimValue(fp,"emailaddress"));
-                List<String> groups = new ArrayList<String>();
-                groups.add("AGIV");
+	            for (Claim c: fp.getClaims()) {
+	                System.out.println(c.getClaimType().toString() + ":" + (c.getValue()!=null ? c.getValue().toString() : ""));            	
+	            }
+                Map<String,String> roleProfileMapping = new HashMap<String,String>();
+                String profile = null;
+/*
+                These profiles are configured in strings.xml for each language:
+                
+            	<profileChoice value="Administrator">Beheerder</profileChoice>
+            	<profileChoice value="Editor">Editor</profileChoice>
+            	<profileChoice value="RegisteredUser">Geregistreerde gebruiker</profileChoice>
+            	<profileChoice value="Reviewer">Content reviewer</profileChoice>
+            	<profileChoice value="UserAdmin">Gebruikers beheerder</profileChoice>
+            	<profileChoice value="Monitor">System Monitor</profileChoice>
+*/
+                roleProfileMapping.put("Authenticated","RegisteredUser");
+                roleProfileMapping.put("GIM Metadata Admin", "Administrator");
+                roleProfileMapping.put("GIM Metadata Editor", "Editor");
+                roleProfileMapping.put("GIM Metadata Hoofdeditor", "Reviewer");
+                roleProfileMapping.put("GDI Metadata Admin", "Administrator");
+                roleProfileMapping.put("GDI Metadata Editor", "Editor");
+                roleProfileMapping.put("GDI Metadata Hoofdeditor", "Reviewer");
+                roleProfileMapping.put("AGIV Metadata Admin", "Administrator");
+                roleProfileMapping.put("AGIV Metadata Editor", "Editor");
+                roleProfileMapping.put("AGIV Metadata Hoofdeditor", "Reviewer");
+                List<String> roleListToCheck = Arrays.asList("Authenticated","GIM Metadata Editor","GIM Metadata Admin", "GIM Metadata Hoofdeditor","GDI Metadata Editor","GDI Metadata Admin", "GDI Metadata Hoofdeditor", "AGIV Metadata Editor","AGIV Metadata Admin","AGIV Metadata Hoofdeditor");
+                for (String item: roleListToCheck) {
+                	if (req.isUserInRole(item)) {
+                		profile = roleProfileMapping.get(item);
+                		break;
+                	}
+                }
+                String contactid = Util.getClaimValue(fp,"contactid"); 
+                session.authenticate(contactid,contactid + "_" + Util.getClaimValue(fp,"name"), Util.getClaimValue(fp,"givenname"), Util.getClaimValue(fp,"surname"), profile!=null ? profile : "RegisteredUser", Util.getClaimValue(fp,"emailaddress"));
+                List<Map<String,String>> groups = new ArrayList<Map<String,String>>();
+                Map<String,String> group = new HashMap<String,String>();
+                group.put("name", Util.getClaimValue(fp,"organisationid") + "_" + Util.getClaimValue(fp,"organisationpublicid"));
+                group.put("description", Util.getClaimValue(fp,"organisationdisplayname"));
+                groups.add(group);                		
                 session.setProperty("groups", groups);
 	        } else {
 	            System.out.println("Principal is not instance of FederationPrincipal");

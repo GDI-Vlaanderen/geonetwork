@@ -503,7 +503,7 @@ public class EditLib {
 			}
 		}
 		}
-		else if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
+		else if (type.getElementList().contains("gco:CharacterString") && (!useSuggestion || md.getQualifiedName().equals("gmd:keyword"))) {
 			// Here we could probably expand element having one and only one suggestion for 
 			// an or element - then we force to expand that only one suggestion ? 
             if(Log.isDebugEnabled(Geonet.EDITOR))

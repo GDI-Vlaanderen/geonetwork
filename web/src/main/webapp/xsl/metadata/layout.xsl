@@ -2404,4 +2404,64 @@
 			</xsl:call-template>
   </xsl:template>
 
+  <xsl:template mode="addSpatialResolutionElement" match="gmd:spatialResolution">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit" select="true"/>
+    <xsl:param name="embedded"/>
+		    <xsl:variable name="name">gmd:spatialResolution</xsl:variable>
+		    <xsl:variable name="qname">gmdCOLONspatialResolution</xsl:variable>
+		    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
+		    <xsl:variable name="max"
+		      select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
+		    <xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
+		    <xsl:variable name="isXLinked" select="false()"/>
+			<xsl:variable name="text">
+		        <xsl:variable name="options">
+		          <options>
+		              <option name="gmd:MD_Resolution|gmd:equivalentScale">
+		                <xsl:attribute name="selected">selected</xsl:attribute>
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gmd:equivalentScale</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
+		              <option name="gmd:MD_Resolution|gmd:distance">
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gmd:distance</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
+		          </options>
+		        </xsl:variable>
+		        <select class="md" name="_{$parentName}_{$qname}_subtemplate" size="1">
+		          <xsl:for-each select="exslt:node-set($options)//option">
+		            <xsl:sort select="."/>
+		            <option value="{@name}"><xsl:value-of select="."/></option>
+		          </xsl:for-each>
+		        </select>
+		    </xsl:variable>
+		    <xsl:variable name="addLink">
+		    	<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
+		       <xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value);')"/>
+		    </xsl:variable>
+		    <xsl:variable name="helpLink">
+		      <xsl:call-template name="getHelpLink">
+		        <xsl:with-param name="name" select="$name"/>
+		        <xsl:with-param name="schema" select="$schema"/>
+		      </xsl:call-template>
+		    </xsl:variable>
+		    <xsl:call-template name="simpleElementGui">
+		      <xsl:with-param name="title">
+		        <xsl:call-template name="getTitle">
+		          <xsl:with-param name="name" select="$name"/>
+		          <xsl:with-param name="schema" select="$schema"/>
+		        </xsl:call-template>
+		      </xsl:with-param>
+		      <xsl:with-param name="text" select="$text"/>
+		      <xsl:with-param name="addLink" select="$addLink"/>
+		      <xsl:with-param name="helpLink" select="$helpLink"/>
+		      <xsl:with-param name="edit" select="$edit"/>
+			</xsl:call-template>
+  </xsl:template>
+
 </xsl:stylesheet>

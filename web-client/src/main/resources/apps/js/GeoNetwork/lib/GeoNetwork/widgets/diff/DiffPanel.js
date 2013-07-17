@@ -108,15 +108,12 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
             Ext.Ajax.request({
                 method:"POST",
                 form:Ext.get('editForm'),
-                success:function(){alert('Metadata Saved')},
+                success:function(){alert('Metadata Saved');Ext.getCmp('searchBt').fireEvent('click');},
                 failure:function(){alert('Metadata save failed')
             }});
 
         }}];
         else return [this.createSwitchMenu()];
-    },
-    closeWin: function(){
-//        console.log(this);
     },
     createSwitchMenu: function(){
         this.switchButton =  new Ext.Button({
@@ -147,13 +144,12 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         Ext.applyIf(this, this.defaultConfig);
 
         GeoNetwork.view.DiffPanel.superclass.initComponent.call(this);
+        var scope = this;
 
         var panel = new Ext.Panel({
             autoLoad: {
                 url: this.serviceUrl,
-                scripts:true,
-                scope: this,
-                scripts: true
+                callback: scope.afterDiffLoad
             },
             layout: 'fit',
             border: false,
@@ -163,10 +159,11 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         });
         
         panel.afterDiffLoad = this.afterDiffLoad;
-        
+/*        
         panel.on('afterrender', function() {
                     this.getUpdater().on('update', this.afterDiffLoad);
                 }, panel);
+*/
         this.add(panel);
     }
 });

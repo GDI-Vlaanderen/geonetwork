@@ -1781,7 +1781,6 @@
                         <xsl:with-param name="schema"  select="$schema"/>
                         <xsl:with-param name="edit"   select="$edit"/>
                         <xsl:with-param name="text">
-                        Ja
                             <xsl:variable name="ref" select="geonet:element/@ref"/>
                             <!--
                               TODO : Add the capability to edit those elements as:
@@ -4724,4 +4723,65 @@ to build the XML fragment in the editor. -->
     <!-- Don't display frame attribute -->
 	<xsl:template mode="simpleAttribute" match="@*[name(.)='frame']" priority="99" />
 
+    <xsl:template mode="iso19139" match="gmd:spatialResolution">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+	    <xsl:variable name="spatialResolutionElementName" select="name(.)" />
+	    <xsl:variable name="previousReportSiblingsCount" select="count(preceding-sibling::*[name(.) = $spatialResolutionElementName])" />
+       	<xsl:if test="$previousReportSiblingsCount=0 and $edit=true()">
+			<xsl:apply-templates mode="addSpatialResolutionElement" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+       	</xsl:if>
+        <xsl:apply-templates mode="complexElement" select=".">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+	</xsl:template>
+
+    <!-- ============================================================================= -->
+    <!-- pass -->
+    <!-- ============================================================================= -->
+
+    <xsl:template mode="iso19139" match="gmd:pass" priority="99">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+            	<xsl:variable name="value" select="gco:Boolean/string(.)"/>
+			    <xsl:variable name="parentRef" select="./geonet:element/@ref"/>
+            	<xsl:variable name="ref" select="gco:Boolean/geonet:element/@ref"/>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                    <xsl:with-param name="text">
+                    <input type="hidden" name="_X{$parentRef}" id="_X{$parentRef}"/>
+ 					<select onchange="javascript:Ext.getCmp('editorPanel').updatePassElement('_X{$parentRef}',this.options[this.selectedIndex].value);" size="1" class="md">
+<!--
+                        <select id="_{$ref}" name="_{$ref}" size="1" class="md">                        
+-->
+                            <xsl:for-each select="/root/gui/strings/passChoice[@value]">
+                                <option>
+                                    <xsl:if test="string(@value)=$value">
+                                        <xsl:attribute name="selected"/>
+                                    </xsl:if>
+                                    <xsl:attribute name="value"><xsl:value-of select="string(@value)"/></xsl:attribute>
+                                    <xsl:value-of select="string(.)"/>
+                                </option>
+                            </xsl:for-each>
+                        </select>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="element" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="false()"/>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
 </xsl:stylesheet>

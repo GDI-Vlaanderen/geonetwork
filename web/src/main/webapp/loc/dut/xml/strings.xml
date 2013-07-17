@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿﻿<?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <ara>عربي</ara> <!-- Do not translate! -->
     <cat>Català</cat> <!-- Do not translate! -->
@@ -1435,4 +1435,7 @@
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<passChoice show="y" value="">Niet geëvalueerd</passChoice>
+	<passChoice show="y" value="true">Conform</passChoice>
+	<passChoice show="y" value="false">Niet conform</passChoice>
 </strings>

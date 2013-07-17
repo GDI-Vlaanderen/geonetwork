@@ -72,6 +72,8 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     userInfo: undefined,
     username: undefined,
     password: undefined,
+    loginFields: [],
+    
     /** private: property[toggledFields]
      * List of fields to hide on login.
      */
@@ -132,6 +134,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     		id: 'username',
     		name: 'username',
             width: 70,
+            hidden: GeoNetwork.Settings.useSTS,
             hideLabel: false,
             allowBlank: false,
             fieldLabel: OpenLayers.i18n('username'),
@@ -140,6 +143,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
         this.password = new Ext.form.TextField({
             name: 'password',
             width: 70,
+            hidden: GeoNetwork.Settings.useSTS,
             hideLabel: false,
             allowBlank: false,
             fieldLabel: OpenLayers.i18n('password'),
@@ -152,30 +156,40 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             cls: 'loginInfo'
         });
     	
-    	
-    	
     	if (this.hideLoginLabels) {
-    		this.toggledFields.push( 
+    		this.loginFields.push( 
             		this.username,
                     this.password,
                     loginBt);
+    		if (!GeoNetwork.Settings.useSTS) {
+	    		this.toggledFields.push( 
+	            		this.username,
+	                    this.password);
+    		}
+    		this.toggledFields.push(loginBt);
     	} else {
     		// hbox layout does not display TextField labels, create a label then
-        	var usernameLb = new Ext.form.Label({html: OpenLayers.i18n('username')}),
-    			passwordLb = new Ext.form.Label({html: OpenLayers.i18n('password')});
-        
-        	this.toggledFields.push(usernameLb, 
+        	var usernameLb = new Ext.form.Label({hidde:GeoNetwork.Settings.useSTS,html: OpenLayers.i18n('username')}),
+    			passwordLb = new Ext.form.Label({hidde:GeoNetwork.Settings.useSTS,html: OpenLayers.i18n('password')});
+    		this.loginFields.push(usernameLb, 
             		this.username,
                     passwordLb,
                     this.password,
                     loginBt);
+    		if (!GeoNetwork.Settings.useSTS) {
+	        	this.toggledFields.push(usernameLb, 
+	            		this.username,
+	                    passwordLb,
+	                    this.password);
+    		}
+        	this.toggledFields.push(loginBt);
     	}
     	this.toggledFieldsOff.push(this.userInfo, 
                 logoutBt);
         if (this.catalogue.adminAppUrl !== '') {
         	this.toggledFieldsOff.push(adminBt);
         }
-        this.items = [this.toggledFields, this.toggledFieldsOff];
+        this.items = [this.loginFields, this.toggledFieldsOff];
         GeoNetwork.LoginForm.superclass.initComponent.call(this);
         
         // check user on startup with a kind of ping service

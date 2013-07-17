@@ -508,7 +508,7 @@ public class DefaultStatusActions implements StatusActions {
         String protocol = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
 		String host    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
 		String port    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
-		return protocol + "://" + host + (port == "80" ? "" : ":" + port) + "/zoekdienst/apps/tabsearch/index_login.html?id="+metadataId;
+		return protocol + "://" + host + (port == "80" ? "" : ":" + port) + this.context.getBaseUrl() + "/apps/tabsearch/index_login.html?id="+metadataId;
 	}
 
 

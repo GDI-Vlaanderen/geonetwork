@@ -299,7 +299,7 @@
 					
 				-->
 			  <url>jdbc:postgresql://localhost:5432/geonetwork</url>
-				<poolSize>10</poolSize>
+				<poolSize>50</poolSize>
         <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
@@ -983,6 +983,14 @@
 			<error id="user-login" sheet="error.xsl" statusCode="401">
 				<xml name="error" file="xml/login-error.xml" />
 			</error>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.agiv.logout">
+			<class name=".services.login.AgivLogout" />
+
+			<output forward="home" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

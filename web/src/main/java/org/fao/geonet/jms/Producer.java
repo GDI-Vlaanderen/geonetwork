@@ -27,6 +27,7 @@ import javax.jms.TextMessage;
 
 import jeeves.utils.Log;
 
+import org.apache.activemq.ScheduledMessage;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.jms.message.Encodable;
 
@@ -89,6 +90,8 @@ public class Producer extends JMSActor {
             Log.debug(Geonet.JMS,"Producing message from class: " +  message.getClass().getName());
             Log.debug(Geonet.JMS,"Message content: " +  message.encode());
             TextMessage textMessage = session.createTextMessage(message.encode());
+            long time = 3*1000;
+            textMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, time);
             producer.send(textMessage);
         }
         catch (JMSException x) {

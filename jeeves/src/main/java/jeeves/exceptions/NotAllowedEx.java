@@ -40,6 +40,10 @@ public abstract class NotAllowedEx extends JeevesClientEx
 
 		id = "not-allowed";
 	}
+
+	public String toString() {
+		return "U heeft geen rechten om deze actie uit te voeren of uw sessie is vervallen en moet opnieuw aanloggen";
+	}
 }
 
 //=============================================================================

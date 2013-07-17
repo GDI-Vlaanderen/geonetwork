@@ -337,9 +337,15 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 	<security-role>
-		<role-name>Manager</role-name>
-		<role-name>User</role-name>
-		<role-name>Admin</role-name>
+		<role-name>GIM Metadata Editor</role-name>
+		<role-name>GIM Metadata Admin</role-name>
+		<role-name>GIM Metadata Hoofdeditor</role-name>
+		<role-name>GDI Metadata Editor</role-name>
+		<role-name>GDI Metadata Admin</role-name>
+		<role-name>GDI Metadata Hoofdeditor</role-name>
+		<role-name>AGIV Metadata Editor</role-name>
+		<role-name>AGIV Metadata Admin</role-name>
+		<role-name>AGIV Metadata Hoofdeditor</role-name>
 		<role-name>Authenticated</role-name>
 	</security-role>
 	<security-constraint>

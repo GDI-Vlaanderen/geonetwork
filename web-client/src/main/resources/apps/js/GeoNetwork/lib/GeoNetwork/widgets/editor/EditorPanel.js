@@ -1136,19 +1136,28 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     // In the GeoNetwork GUI this means that no Datetime control is shown.
                     if (cal.className.contains("dynamicDate")) {
                         dtCal.on('change', function() {
-                            GeoNetwork.Util.updateDateValue(this.id.substring(1), true);
+                            GeoNetwork.Util.updateDateValue(this.id.substring(1), true, "");
                         });
 
                     }
 
                 } else {
-                    var dCal = new Ext.form.DateField({
+/*
+                	var timeValue = null;
+
+                    if (value.length==19) {
+                    	timeValue = "T12:00:00";
+                    	value = value.substring(0,10);
+                    }
+*/
+                	var dCal = new Ext.form.DateField({
                         renderTo: cal,
                         name: id,
                         id: id,
                         width: 160,
                         value: value,
-                        format: 'Y-m-d'
+//                        timeValue: timeValue,
+                        format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
                     });
 
                     //Small hack to put date button on its place
@@ -1165,8 +1174,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         dCal.on('change', function() {
                             GeoNetwork.Util.updateDateValue(this.id.substring(1), false);
                         });
-
-                    }
+                    }/* else {
+                        dCal.on('change', function() {
+                        	if (!Ext.isEmpty(this.timeValue)) {
+                            	this.setValue(this.value + this.timeValue);
+                        	}
+                        });
+                    }*/
                 }
                 
             }
@@ -1422,8 +1436,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      */
     retrieveSubTemplate: function(ref, name, elementName){
         var self = this;
+        var elementNameArray = elementName.split("|");
         Ext.Ajax.request({
-            url: self.catalogue.services.subTemplate + "?root=" + elementName,
+            url: self.catalogue.services.subTemplate + "?root=" + elementNameArray[0] + (elementNameArray.length==2 ? "&child=" + elementNameArray[1] : ""),
             method: 'GET',
             scope: this,
             success: function(response){
@@ -1448,8 +1463,25 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
         }
         return ns;
+    },
+/*
+    updatePassElement: function(id, value) {
+    	var self = this;
+        if (Ext.isEmpty(value)) {
+        	Ext.getDom(id).value = "";
+        } else {
+        	Ext.getDom(id).value = "<gco:Boolean xmlns:gco=\"" + self.namespaces["gco"] + "\">" + value + "</gco:Boolean>";
+        }
     }
-    
+*/
+    updateChoicePass: function(id, value) {
+    	var self = this;
+        if (Ext.isEmpty(value)) {
+        	Ext.getDom(id).value = "<gmd:pass xmlns:gco=\"" + self.namespaces["gmd"] + " xmlns:gco=\"" + self.namespaces["gco"] + " gco:nilReason=\"missing\"/>";
+        } else {
+        	Ext.getDom(id).value = "<gmd:pass xmlns:gco=\"" + self.namespaces["gmd"] + " xmlns:gco=\"" + self.namespaces["gco"] + "><gco:Boolean>" + value + "</gco:Boolean></gmd:pass>";
+        }
+    }
 });
 
 /** api: xtype = gn_editor_editorpanel */

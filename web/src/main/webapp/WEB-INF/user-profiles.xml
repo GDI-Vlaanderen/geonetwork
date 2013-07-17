@@ -367,6 +367,7 @@
 		<!-- Login and logout services -->
 		<allow service="user.agiv.login"/>
 		<allow service="user.login"/>
+		<allow service="user.agiv.logout"/>
 		<allow service="user.logout"/>
 		<allow service="shib.user.login"/>
 

@@ -111,7 +111,8 @@ public class UpdateStatus implements Service {
 		//--- reindex metadata
         boolean workspace = false;
         dataMan.indexMetadata(dbms, id, false, workspace, true);
-        // TODO index workspace ????
+        workspace = true;
+        dataMan.indexMetadata(dbms, id, false, workspace, true);
 
         if(unchanged.size() > 0){
             return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Jeeves.Elem.ERROR).setText("statusChangeFailed"));

@@ -24,7 +24,7 @@
                     username: '<xsl:value-of select="string(/root/gui/session/username)" />',
                     name: '<xsl:value-of select="string(/root/gui/session/name)" />',
                     surname: '<xsl:value-of select="string(/root/gui/session/surname)" />',
-                    role: '<xsl:value-of select="string(/root/gui/session/role)" />'
+                    role: '<xsl:value-of select="string(/root/gui/session/profile)" />'
                 }); 
           </xsl:if>
           var search = window.location.search;

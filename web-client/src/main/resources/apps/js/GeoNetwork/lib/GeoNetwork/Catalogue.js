@@ -307,7 +307,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             fileDownload: serviceUrl + 'file.download',
             geopublisher: serviceUrl + 'geoserver.publisher',
             login: serviceUrl + 'xml.user.login',
+            agivLogin: serviceUrl + 'user.agiv.login',
             logout: serviceUrl + 'xml.user.logout',
+//            agivLogout: 'https://auth.beta.agiv.be/sts/?wa=wsignout1.0&wreply=' + serviceUrl + 'user.logout',
+            agivLogout: serviceUrl + 'user.agiv.logout',
             mef: serviceUrl + 'mef.export?format=full&version=2',
             csv: serviceUrl + 'csv.search',
             pdf: serviceUrl + 'pdf.selection.search',
@@ -1051,7 +1054,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 Ext.MessageBox.alert(OpenLayers.i18n('error'), 
                         OpenLayers.i18n('error-login'), function(){
 //                    window.location = "../tabsearch";
-                    location.replace(window.location.pathname + "?hl=dut");
+//                    location.replace(window.location.pathname + "?hl=dut");
                 });
             }
         }
@@ -1296,32 +1299,35 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     login: function(username, password){
         var app = this, user;
-
-        OpenLayers.Request.GET({
-            url: this.services.login,
-            params: {
-                username: username,
-                password: password,
-                info: 'true'
-            },
-            success: function(response){
-                user = response.responseXML.getElementsByTagName('record')[0];
-                
-                app.identifiedUser = {
-                    id: user ? user.getElementsByTagName('id')[0].firstChild.nodeValue : '-',
-                    username: user ? user.getElementsByTagName('username')[0].firstChild.nodeValue : '-',
-                    name: user ? user.getElementsByTagName('name')[0].firstChild.nodeValue : '-',
-                    surname: user ? user.getElementsByTagName('surname')[0].firstChild.nodeValue : '-',
-                    role: user ? user.getElementsByTagName('profile')[0].firstChild.nodeValue : 'guest'
-                };
-                app.onAfterLogin();
-            },
-            failure: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterBadLogin();
-                // TODO : Get Exception from GeoNetwork
-            }
-        });
+        if (GeoNetwork.Settings.useSTS) {
+            location.replace(this.services.agivLogin);
+        } else {
+            OpenLayers.Request.GET({
+                url: this.services.login,
+                params: {
+                    username: username,
+                    password: password,
+                    info: 'true'
+                },
+                success: function(response){
+                    user = response.responseXML.getElementsByTagName('record')[0];
+                    
+                    app.identifiedUser = {
+                        id: user ? user.getElementsByTagName('id')[0].firstChild.nodeValue : '-',
+                        username: user ? user.getElementsByTagName('username')[0].firstChild.nodeValue : '-',
+                        name: user ? user.getElementsByTagName('name')[0].firstChild.nodeValue : '-',
+                        surname: user ? user.getElementsByTagName('surname')[0].firstChild.nodeValue : '-',
+                        role: user ? user.getElementsByTagName('profile')[0].firstChild.nodeValue : 'guest'
+                    };
+                    app.onAfterLogin();
+                },
+                failure: function(response){
+                    app.identifiedUser = undefined;
+                    app.onAfterBadLogin();
+                    // TODO : Get Exception from GeoNetwork
+                }
+            });
+        }
     },
     /**	api: method[logout]
      *	Log out from the catalogue.
@@ -1329,18 +1335,22 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Fires the afterLogout or afterBadLogout events
      */
     logout: function(){
-        var app = this;
-        OpenLayers.Request.GET({
-            url: this.services.logout,
-            success: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterLogout();
-            },
-            failure: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterBadLogout();
-            }
-        });
+        if (GeoNetwork.Settings.useSTS) {
+            location.replace(this.services.agivLogout);
+        } else {
+	        var app = this;
+	        OpenLayers.Request.GET({
+	            url: this.services.logout,
+	            success: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterLogout();
+	            },
+	            failure: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterBadLogout();
+	            }
+	        });
+        }
     },
     /** api: method[checkError]
      *  Check if catalogue started correctly
