@@ -299,7 +299,7 @@
 					
 				-->
 			  <url>jdbc:postgresql://localhost:5432/geonetwork</url>
-				<poolSize>50</poolSize>
+				<poolSize>20</poolSize>
         <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>

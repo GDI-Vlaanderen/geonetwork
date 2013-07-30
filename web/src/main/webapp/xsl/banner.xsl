@@ -133,6 +133,7 @@
 				<xsl:choose>
 					<xsl:when test="string(/root/gui/session/userId)!=''">
 						<td align="right" class="banner-login">
+					<!-- 
 							<form name="logout" action="{/root/gui/locService}/user.logout" method="post">
 								<xsl:value-of select="/root/gui/strings/user"/>
 								<xsl:text>: </xsl:text>
@@ -142,10 +143,12 @@
 								<xsl:text> </xsl:text>
 								<button class="banner" onclick="doLogout()"><xsl:value-of select="/root/gui/strings/logout"/></button>
 							</form>
+					-->
 						</td>
 					</xsl:when>
 					<xsl:otherwise>
 						<td align="right" class="banner-login">
+					<!-- 
 							<form name="login" action="{/root/gui/locService}/user.login" method="post">
 								<xsl:if test="string(/root/gui/env/shib/use)='true'">
 									<a class="banner" href="{/root/gui/env/shib/path}">
@@ -160,6 +163,7 @@
 								<input class="banner" type="password" id="password" name="password" size="10" onkeypress="return entSub('login')"/>
 								<button class="banner" onclick="goSubmit('login')"><xsl:value-of select="/root/gui/strings/login"/></button>
 							</form>
+					-->
 						</td>
 					</xsl:otherwise>
 				</xsl:choose>

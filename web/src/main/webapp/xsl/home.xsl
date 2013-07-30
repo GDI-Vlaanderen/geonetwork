@@ -27,6 +27,21 @@
                     role: '<xsl:value-of select="string(/root/gui/session/profile)" />'
                 }); 
           </xsl:if>
+          <xsl:if test="not(string(/root/gui/session/userId)!='')">
+		        var cookies = {},
+		            c = document.cookie + ";",
+		            re = /\s?(.*?)=(.*?);/g,
+		    	    matches,
+		            name,
+		            value;
+		    	while((matches = re.exec(c)) != null){
+		            name = matches[1];
+		            value = matches[2];
+		            if(name &amp;&amp; name.substring(0,3) == "ys-"){
+		                cookies[name.substr(3)] = null;
+		            }
+		        }
+          </xsl:if>
           var search = window.location.search;
           var url = '<xsl:value-of select="/root/gui/config/client/@url"/>';
           if (url === '') {

@@ -2338,7 +2338,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template mode="addReportElement" match="gmd:report">
+  <xsl:template mode="addReportElement" match="*">
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="true"/>
     <xsl:param name="embedded"/>
@@ -2347,11 +2347,13 @@
 		    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
 		    <xsl:variable name="max"
 		      select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
-		    <xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
+<!-- 		    <xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/> -->
 		    <xsl:variable name="isXLinked" select="false()"/>
 			<xsl:variable name="text">
+	        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
 		        <xsl:variable name="options">
 		          <options>
+		          	<xsl:if test="$service=false()">
 		              <option name="gmd:DQ_CompletenessOmission">
 		                <xsl:attribute name="selected">selected</xsl:attribute>
 		                <xsl:call-template name="getTitle">
@@ -2371,12 +2373,26 @@
 		                  <xsl:with-param name="schema" select="$schema"/>
 		                </xsl:call-template>
 		              </option>
+		          	</xsl:if>
+		              <option name="gmd:DQ_DomainConsistency">
+			          	<xsl:if test="$service=true()">
+			                <xsl:attribute name="selected">selected</xsl:attribute>
+		                </xsl:if>
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gmd:DQ_DomainConsistency</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
 		          </options>
 		        </xsl:variable>
 		        <select class="md" name="_{$parentName}_{$qname}_subtemplate" size="1">
 		          <xsl:for-each select="exslt:node-set($options)//option">
 		            <xsl:sort select="."/>
-		            <option value="{@name}"><xsl:value-of select="."/></option>
+		            <option value="{@name}">
+		            	<xsl:if test="@selected='selected'">
+                    		<xsl:attribute name="selected">selected</xsl:attribute>
+                    	</xsl:if>
+		            	<xsl:value-of select="."/></option>
 		          </xsl:for-each>
 		        </select>
 		    </xsl:variable>

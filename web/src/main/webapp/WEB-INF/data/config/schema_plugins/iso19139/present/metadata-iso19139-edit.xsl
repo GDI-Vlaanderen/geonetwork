@@ -111,6 +111,54 @@
     </xsl:template>
 
     <!-- =================================================================== -->
+    <!-- serviceType and serviceTypeVersion in the same box -->
+    <!-- =================================================================== -->
+    <xsl:template mode="iso19139" match="srv:serviceType" priority="99">
+	    <xsl:param name="schema"/>
+	    <xsl:param name="edit"/>
+        <xsl:apply-templates mode="complexElement" select=".">
+            <xsl:with-param name="schema"  select="$schema"/>
+            <xsl:with-param name="edit"    select="$edit"/>
+            <xsl:with-param name="content">
+	            <tr>
+	                <td class="col" style="border:none" >
+	                    <table class="gn">
+	                        <tbody>
+	                        <xsl:apply-templates mode="simpleElement" select="./gco:LocalName">
+	                            <xsl:with-param name="schema"  select="$schema"/>
+	                            <xsl:with-param name="edit"   select="$edit"/>
+	                            <xsl:with-param name="title">
+	                            	<xsl:call-template name="getTitle">
+					                    <xsl:with-param name="name" select="name(.)"/>
+					                    <xsl:with-param name="schema" select="$schema"/>
+	                            	</xsl:call-template>
+                            	</xsl:with-param>
+	                        </xsl:apply-templates>
+	                        </tbody>
+	                    </table>
+	                </td>
+	                <td class="col" style="border:none" >
+	                    <table class="gn">
+	                        <tbody>
+	                        <xsl:apply-templates mode="simpleElement" select="../srv:serviceTypeVersion/gco:CharacterString">
+	                            <xsl:with-param name="schema"  select="$schema"/>
+	                            <xsl:with-param name="edit"   select="$edit"/>
+	                            <xsl:with-param name="title">
+	                            	<xsl:call-template name="getTitle">
+					                    <xsl:with-param name="name" select="'srv:serviceTypeVersion'"/>
+					                    <xsl:with-param name="schema" select="$schema"/>
+	                            	</xsl:call-template>
+                            	</xsl:with-param>
+	                        </xsl:apply-templates>
+	                        </tbody>
+	                    </table>
+	                </td>
+	            </tr>
+	        </xsl:with-param>
+		</xsl:apply-templates>
+    </xsl:template>
+
+    <!-- =================================================================== -->
     <!-- default: in simple mode just a flat list -->
     <!-- =================================================================== -->
 
@@ -161,9 +209,10 @@
    priority="20" />-->
 
 
-    <xsl:template mode="iso19139" match="gmd:report">
+	<xsl:template mode="iso19139" match="gmd:report">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
+<!-- 
 	    <xsl:variable name="reportElementName" select="name(.)" />
 	    <xsl:variable name="previousReportSiblingsCount" select="count(preceding-sibling::*[name(.) = $reportElementName])" />
        	<xsl:if test="$previousReportSiblingsCount=0 and $edit=true()">
@@ -172,7 +221,8 @@
 	            <xsl:with-param name="edit"   select="$edit"/>
 			</xsl:apply-templates>
        	</xsl:if>
-       	<xsl:for-each select="*">
+ -->
+ 	<xsl:for-each select="*">
 	        <xsl:apply-templates mode="iso19139" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
@@ -180,18 +230,33 @@
        	</xsl:for-each>
 	</xsl:template>
 
+	<xsl:template mode="iso19139" match="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+        <xsl:apply-templates mode="iso19139" select="./gmd:DQ_Scope">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:if test="not($currTab='dataQuality')">
+			<xsl:apply-templates mode="addReportElement" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+		</xsl:if>
+	</xsl:template>
+
     <!-- ===================================================================== -->
     <!-- these elements should be boxed -->
     <!-- ===================================================================== -->
 
     <xsl:template mode="iso19139" match="gmd:DQ_DataQuality|gmd:identificationInfo|gmd:distributionInfo|gmd:thesaurusName|
-              *[name(..)='gmd:resourceConstraints']|gmd:spatialRepresentationInfo|gmd:pointOfContact|
+              gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
-              gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
+              gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
-              srv:containsOperations|srv:SV_CoupledResource|
+              srv:serviceType|srv:containsOperations|srv:SV_CoupledResource|
               gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
-              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gml:VerticalCRS">
+              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -340,18 +405,28 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:apply-templates mode="simpleElement" select=".">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="text"   select="$text"/>
-            <xsl:with-param name="editAttributes" select="false()"/>
-        </xsl:apply-templates>
-        <xsl:if test="name(.)='srv:operatesOn'">
-            <xsl:apply-templates mode="simpleAttribute" select="@xlink:href">
-              <xsl:with-param name="schema" select="$schema"/>
-              <xsl:with-param name="edit" select="$edit"/>
-            </xsl:apply-templates>
-		</xsl:if>
+            <xsl:call-template name="complexElementGuiWrapper">
+                <xsl:with-param name="title">
+					<xsl:call-template name="getTitle">
+						<xsl:with-param name="name" select="name(.)"/>
+						<xsl:with-param name="schema" select="$schema"/>
+					</xsl:call-template>
+                </xsl:with-param>
+                <xsl:with-param name="content">
+			        <xsl:apply-templates mode="simpleElement" select=".">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+			            <xsl:with-param name="text"   select="$text"/>
+			            <xsl:with-param name="editAttributes" select="false()"/>
+			        </xsl:apply-templates>
+			        <xsl:if test="name(.)='srv:operatesOn'">
+			            <xsl:apply-templates mode="simpleAttribute" select="@xlink:href">
+			              <xsl:with-param name="schema" select="$schema"/>
+			              <xsl:with-param name="edit" select="$edit"/>
+			            </xsl:apply-templates>
+					</xsl:if>
+				</xsl:with-param>
+			</xsl:call-template>
         <!--<xsl:apply-templates mode="iso19139" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="edit"   select="$edit"/>
@@ -465,30 +540,28 @@
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="edit"    select="$edit"/>
                     <xsl:with-param name="content">
-<!--                <tr><td colspan="2">
-                    <table class="gn">
-                        <tbody>-->
 	                            <tr>
-	                                <td class="col">
+	                                <td class="col" style="border:none">
 	                                    <table class="gn">
+				                        <tbody>
 	                                        <xsl:apply-templates mode="iso19139" select="gmd:code">
 	                                            <xsl:with-param name="schema"  select="$schema"/>
 	                                            <xsl:with-param name="edit"   select="$edit"/>
 	                                        </xsl:apply-templates>
+	        	                        </tbody>
 	                                    </table>
 	                                </td>
-	                                <td class="col">
+	                                <td class="col" style="border:none">
 	                                    <table class="gn">
+				                        <tbody>
 	                                        <xsl:apply-templates mode="iso19139" select="gmd:codeSpace">
 	                                            <xsl:with-param name="schema"  select="$schema"/>
 	                                            <xsl:with-param name="edit"   select="$edit"/>
 	                                        </xsl:apply-templates>
+	        	                        </tbody>
 	                                    </table>
 	                                </td>
 	                            </tr>
-                        <!--</tbody>
-                    </table>
-                	</td></tr>-->
                 	</xsl:with-param>
 		            <xsl:with-param name="title">
 				      <xsl:call-template name="getParentTitle">
@@ -795,7 +868,17 @@
         <xsl:apply-templates mode="simpleElement" select=".">
             <xsl:with-param name="schema"   select="$schema"/>
             <xsl:with-param name="edit"     select="$edit"/>
-            <xsl:with-param name="title"    select="'Name'"/>
+            <xsl:with-param name="title">
+            	<xsl:if test="name(..)='srv:SV_CoupledResource'">
+            		<xsl:call-template name="getTitle">
+	            	    <xsl:with-param name="name" select="name(.)"/>
+	                	<xsl:with-param name="schema" select="$schema"/>
+	        		</xsl:call-template>
+            	</xsl:if>            	
+            	<xsl:if test="name(..)!='srv:SV_CoupledResource'">
+            		<xsl:value-of select="'Name'"/>
+	      		</xsl:if>            	
+            </xsl:with-param>
             <xsl:with-param name="text"     select="$text"/>
         </xsl:apply-templates>
     </xsl:template>
@@ -1674,12 +1757,10 @@
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="edit"    select="$edit"/>
                     <xsl:with-param name="content">
-<!--                <tr><td colspan="2">
-                    <table class="gn">
-                        <tbody>-->
                             <tr>
-                                <td class="col">
+                                <td class="col" style="border:none">
                                     <table class="gn">
+			                        <tbody>
                                         <xsl:apply-templates mode="simpleElement" select="gmd:date">
                                             <xsl:with-param name="schema"  select="$schema"/>
                                             <xsl:with-param name="edit"   select="$edit"/>
@@ -1703,14 +1784,17 @@
 
                                             </xsl:with-param>
                                         </xsl:apply-templates>
+			                        </tbody>
                                     </table>
                                 </td>
-                                <td class="col">
+                                <td class="col" style="border:none">
                                     <table class="gn">
+			                        <tbody>
                                         <xsl:apply-templates mode="iso19139" select="gmd:dateType">
                                             <xsl:with-param name="schema"  select="$schema"/>
                                             <xsl:with-param name="edit"   select="$edit"/>
                                         </xsl:apply-templates>
+			                        </tbody>
                                     </table>
                                 </td>
                             </tr>
@@ -1825,6 +1909,54 @@
     </xsl:template>
 
     <!-- =================================================================== -->
+    <!-- serviceType and serviceTypeVersion in the same box -->
+    <!-- =================================================================== -->
+    <xsl:template mode="iso19139" match="srv:serviceType" priority="99">
+	    <xsl:param name="schema"/>
+	    <xsl:param name="edit"/>
+        <xsl:apply-templates mode="complexElement" select=".">
+            <xsl:with-param name="schema"  select="$schema"/>
+            <xsl:with-param name="edit"    select="$edit"/>
+            <xsl:with-param name="content">
+	            <tr>
+	                <td class="col" style="border:none" >
+	                    <table class="gn">
+	                        <tbody>
+	                        <xsl:apply-templates mode="simpleElement" select="./gco:LocalName">
+	                            <xsl:with-param name="schema"  select="$schema"/>
+	                            <xsl:with-param name="edit"   select="$edit"/>
+	                            <xsl:with-param name="title">
+	                            	<xsl:call-template name="getTitle">
+					                    <xsl:with-param name="name" select="name(.)"/>
+					                    <xsl:with-param name="schema" select="$schema"/>
+	                            	</xsl:call-template>
+                            	</xsl:with-param>
+	                        </xsl:apply-templates>
+	                        </tbody>
+	                    </table>
+	                </td>
+	                <td class="col" style="border:none" >
+	                    <table class="gn">
+	                        <tbody>
+	                        <xsl:apply-templates mode="simpleElement" select="../srv:serviceTypeVersion/gco:CharacterString">
+	                            <xsl:with-param name="schema"  select="$schema"/>
+	                            <xsl:with-param name="edit"   select="$edit"/>
+	                            <xsl:with-param name="title">
+	                            	<xsl:call-template name="getTitle">
+					                    <xsl:with-param name="name" select="'srv:serviceTypeVersion'"/>
+					                    <xsl:with-param name="schema" select="$schema"/>
+	                            	</xsl:call-template>
+                            	</xsl:with-param>
+	                        </xsl:apply-templates>
+	                        </tbody>
+	                    </table>
+	                </td>
+	            </tr>
+	        </xsl:with-param>
+		</xsl:apply-templates>
+    </xsl:template>
+
+    <!-- =================================================================== -->
     <!-- subtemplates -->
     <!-- =================================================================== -->
 
@@ -1852,6 +1984,7 @@
         <xsl:param name="embedded"/>
 
         <xsl:variable name="dataset" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' or normalize-space(gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)=''"/>
+        <xsl:variable name="service" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
 
 
         <xsl:choose>
@@ -1966,6 +2099,7 @@
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="$edit"/>
                     <xsl:with-param name="dataset" select="$dataset"/>
+                    <xsl:with-param name="service" select="$service"/>
                     <xsl:with-param name="core" select="false()"/>
                 </xsl:call-template>
             </xsl:when>
@@ -1976,6 +2110,7 @@
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="$edit"/>
                     <xsl:with-param name="dataset" select="$dataset"/>
+                    <xsl:with-param name="service" select="$service"/>
                     <xsl:with-param name="core" select="true()"/>
                 </xsl:call-template>
             </xsl:when>
@@ -2015,6 +2150,7 @@
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
         <xsl:param name="dataset"/>
+        <xsl:param name="service"/>
         <xsl:param name="core"/>
 
         <!-- dataset or resource info in its own box -->
@@ -2067,8 +2203,13 @@
                     </xsl:apply-templates>
 
 
-                    <xsl:if test="$dataset">
-                        <xsl:for-each select="gmd:extent/gmd:EX_Extent">
+					<xsl:if test="$service">
+	                    <xsl:apply-templates mode="elementEP" select="srv:serviceTypeVersion[gco:CharacterString] |
+	                    	srv:serviceType[gco:LocalName]">
+	                        <xsl:with-param name="schema" select="$schema"/>
+	                        <xsl:with-param name="edit"   select="$edit"/>
+	                    </xsl:apply-templates>
+                        <xsl:for-each select="srv:extent/gmd:EX_Extent">
                             <xsl:call-template name="complexElementGuiWrapper">
                                 <xsl:with-param name="title" select="/root/gui/schemas/iso19139/labels/element[@name='gmd:EX_Extent']/label"/>
                                 <xsl:with-param name="content">
@@ -2083,6 +2224,23 @@
                             </xsl:call-template>
                         </xsl:for-each>
                     </xsl:if>
+
+					<xsl:if test="$dataset">
+                        <xsl:for-each select="gmd:extent/gmd:EX_Extent">
+                            <xsl:call-template name="complexElementGuiWrapper">
+                                <xsl:with-param name="title" select="/root/gui/schemas/iso19139/labels/element[@name='gmd:EX_Extent']/label"/>
+                                <xsl:with-param name="content">
+                                    <xsl:apply-templates mode="elementEP" select="*">
+                                        <xsl:with-param name="schema" select="$schema"/>
+                                        <xsl:with-param name="edit"   select="$edit"/>
+                                    </xsl:apply-templates>
+                                </xsl:with-param>
+                                <xsl:with-param name="schema" select="$schema"/>
+                                <xsl:with-param name="edit"   select="$edit"/>
+                                <xsl:with-param name="realname"   select="'gmd:EX_Extent'"/>
+                            </xsl:call-template>
+                        </xsl:for-each>
+					</xsl:if>
 
                 </xsl:with-param>
                 <xsl:with-param name="schema" select="$schema"/>
@@ -2198,6 +2356,21 @@
                     <xsl:with-param name="edit"   select="$edit"/>
                 </xsl:apply-templates>
 
+                <!-- more metadata elements -->
+
+                <xsl:apply-templates mode="elementEP" select="gmd:dateStamp|geonet:child[string(@name)='dateStamp']">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                </xsl:apply-templates>
+
+                <xsl:if test="$core and $dataset">
+                    <xsl:apply-templates mode="elementEP" select="gmd:metadataStandardName|geonet:child[string(@name)='metadataStandardName']
+          |gmd:metadataStandardVersion|geonet:child[string(@name)='metadataStandardVersion']">
+                        <xsl:with-param name="schema" select="$schema"/>
+                        <xsl:with-param name="edit"   select="$edit"/>
+                    </xsl:apply-templates>
+                </xsl:if>
+
                 <!-- metadata contact info in its own box -->
 
                 <xsl:for-each select="gmd:contact">
@@ -2222,21 +2395,6 @@
                     </xsl:call-template>
 
                 </xsl:for-each>
-
-                <!-- more metadata elements -->
-
-                <xsl:apply-templates mode="elementEP" select="gmd:dateStamp|geonet:child[string(@name)='dateStamp']">
-                    <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="edit"   select="$edit"/>
-                </xsl:apply-templates>
-
-                <xsl:if test="$core and $dataset">
-                    <xsl:apply-templates mode="elementEP" select="gmd:metadataStandardName|geonet:child[string(@name)='metadataStandardName']
-          |gmd:metadataStandardVersion|geonet:child[string(@name)='metadataStandardVersion']">
-                        <xsl:with-param name="schema" select="$schema"/>
-                        <xsl:with-param name="edit"   select="$edit"/>
-                    </xsl:apply-templates>
-                </xsl:if>
 
             </xsl:with-param>
             <xsl:with-param name="schema" select="$schema"/>
@@ -2307,7 +2465,6 @@
           |gmd:dateStamp|geonet:child[string(@name)='dateStamp']
           |gmd:metadataStandardName|geonet:child[string(@name)='metadataStandardName']
           |gmd:metadataStandardVersion|geonet:child[string(@name)='metadataStandardVersion']
-          |gmd:contact|geonet:child[string(@name)='contact']
           |gmd:dataSetURI|geonet:child[string(@name)='dataSetURI']
           |gmd:locale|geonet:child[string(@name)='locale']
           |gmd:series|geonet:child[string(@name)='series']
@@ -2320,6 +2477,10 @@
                     <xsl:with-param name="edit"   select="$edit"/>
                 </xsl:apply-templates>
 
+                <xsl:apply-templates mode="elementEP" select="gmd:contact|geonet:child[string(@name)='contact']">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                </xsl:apply-templates>
             </xsl:with-param>
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="group" select="/root/gui/strings/metadataTab"/>
@@ -2376,7 +2537,6 @@ can clutter up the rest of the metadata record! -->
             |gmd:dateStamp|geonet:child[string(@name)='dateStamp']
             |gmd:metadataStandardName|geonet:child[string(@name)='metadataStandardName']
             |gmd:metadataStandardVersion|geonet:child[string(@name)='metadataStandardVersion']
-            |gmd:contact|geonet:child[string(@name)='contact']
             |gmd:dataSetURI|geonet:child[string(@name)='dataSetURI']
             |gmd:locale|geonet:child[string(@name)='locale']
             |gmd:series|geonet:child[string(@name)='series']
@@ -2385,6 +2545,11 @@ can clutter up the rest of the metadata record! -->
             |gmd:featureType|geonet:child[string(@name)='featureType']
             |gmd:featureAttribute|geonet:child[string(@name)='featureAttribute']
             ">
+                            <xsl:with-param name="schema" select="$schema"/>
+                            <xsl:with-param name="edit"   select="$edit"/>
+                            <xsl:with-param name="flat"   select="$flat"/>
+                        </xsl:apply-templates>
+                        <xsl:apply-templates mode="elementEP" select="gmd:contact|geonet:child[string(@name)='contact']">
                             <xsl:with-param name="schema" select="$schema"/>
                             <xsl:with-param name="edit"   select="$edit"/>
                             <xsl:with-param name="flat"   select="$flat"/>
@@ -2476,16 +2641,15 @@ can clutter up the rest of the metadata record! -->
                         <xsl:with-param name="flat"   select="$flat"/>
                     </xsl:apply-templates>
 
-
                     <xsl:apply-templates mode="elementEP" select="
           gmd:pointOfContact|geonet:child[string(@name)='pointOfContact']
           |gmd:resourceFormat|geonet:child[string(@name)='resourceFormat']
           |gmd:resourceSpecificUsage|geonet:child[string(@name)='resourceSpecificUsage']
           |gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']
           |gmd:aggregationInfo|geonet:child[string(@name)='aggregationInfo']
-          |gmd:graphicOverview|geonet:child[string(@name)='graphicOverview']
+          |gmd:graphicOverview[not(name(..)='srv:SV_ServiceIdentification')]|geonet:child[string(@name)='graphicOverview' and not(name(..)='srv:SV_ServiceIdentification')]
           |gmd:descriptiveKeywords|geonet:child[string(@name)='descriptiveKeywords']
-          |gmd:extent|geonet:child[string(@name)='extent']
+          |srv:serviceType|srv:*[*/@codeList]|srv:containsOperations|srv:operatesOn|srv:coupledResource|srv:extent|gmd:extent|geonet:child[string(@name)='extent']
           ">
                         <xsl:with-param name="schema" select="$schema"/>
                         <xsl:with-param name="edit"   select="$edit"/>
@@ -2720,20 +2884,24 @@ can clutter up the rest of the metadata record! -->
             <xsl:with-param name="edit"   select="$edit"/>
             <xsl:with-param name="content">
 				<tr>
-				    <td class="col">
+				    <td class="col" style="border:none">
 				        <table class="gn">
+	                        <tbody>
 				            <xsl:apply-templates mode="iso19139" select="gmd:MD_Format/gmd:name">
 				                <xsl:with-param name="schema"  select="$schema"/>
 				                <xsl:with-param name="edit"   select="$edit"/>
 				            </xsl:apply-templates>
+	                        </tbody>
 				        </table>
 				    </td>
-				    <td class="col">
+				    <td class="col" style="border:none">
 				        <table class="gn">
+	                        <tbody>
 				            <xsl:apply-templates mode="iso19139" select="gmd:MD_Format/gmd:version">
 				                <xsl:with-param name="schema"  select="$schema"/>
 				                <xsl:with-param name="edit"   select="$edit"/>
 				            </xsl:apply-templates>
+	                        </tbody>
 				        </table>
 				    </td>
 				</tr>
@@ -2791,16 +2959,6 @@ can clutter up the rest of the metadata record! -->
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
         <xsl:if test="not(name(.)='gmd:DQ_DomainConsistency' and (contains(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,'2007/2/E')))">
-<!--
-		    <xsl:variable name="reportElementName" select="name(..)" />
-		    <xsl:variable name="previousReportSiblingsCount" select="count(../preceding-sibling::*[name(.) = $reportElementName])" />
-        	<xsl:if test="$previousReportSiblingsCount=0">
-				<xsl:apply-templates mode="addReportElement" select="..">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
-        	</xsl:if>
--->
 	        <xsl:apply-templates mode="iso19139Report" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
@@ -3660,7 +3818,7 @@ can clutter up the rest of the metadata record! -->
             </keyword>
         </xsl:for-each>
 
-        <xsl:for-each select="gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+        <xsl:for-each select="gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox|srv:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
             <geoBox>
                 <westBL><xsl:value-of select="gmd:westBoundLongitude"/></westBL>
                 <eastBL><xsl:value-of select="gmd:eastBoundLongitude"/></eastBL>
@@ -3681,18 +3839,6 @@ can clutter up the rest of the metadata record! -->
             </Constraints>
         </xsl:for-each>
 
-        <xsl:for-each select="*/gmd:MD_SecurityConstraints/*">
-            <SecurityConstraints preformatted="true">
-                <xsl:apply-templates mode="iso19139" select=".">
-                    <xsl:with-param name="schema" select="$info/schema"/>
-                    <xsl:with-param name="edit" select="false()"/>
-                </xsl:apply-templates>
-            </SecurityConstraints>
-            <SecurityConstraints preformatted="false">
-                <xsl:copy-of select="."/>
-            </SecurityConstraints>
-        </xsl:for-each>
-
         <xsl:for-each select="*/gmd:MD_LegalConstraints/*">
             <LegalConstraints preformatted="true">
                 <xsl:apply-templates mode="iso19139" select=".">
@@ -3705,7 +3851,19 @@ can clutter up the rest of the metadata record! -->
             </LegalConstraints>
         </xsl:for-each>
 
-        <xsl:for-each select="gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod">
+        <xsl:for-each select="*/gmd:MD_SecurityConstraints/*">
+            <SecurityConstraints preformatted="true">
+                <xsl:apply-templates mode="iso19139" select=".">
+                    <xsl:with-param name="schema" select="$info/schema"/>
+                    <xsl:with-param name="edit" select="false()"/>
+                </xsl:apply-templates>
+            </SecurityConstraints>
+            <SecurityConstraints preformatted="false">
+                <xsl:copy-of select="."/>
+            </SecurityConstraints>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod|srv:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod">
             <temporalExtent>
                 <begin><xsl:apply-templates mode="brieftime" select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition"/></begin>
                 <end><xsl:apply-templates mode="brieftime" select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/></end>
@@ -3875,6 +4033,7 @@ can clutter up the rest of the metadata record! -->
 
 
         <xsl:if test="/root/gui/config/metadata-tab/advanced">
+	        <xsl:variable name="service" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
             <xsl:call-template name="mainTab">
                 <xsl:with-param name="title" select="/root/gui/strings/byPackage"/>
                 <xsl:with-param name="default">identification</xsl:with-param>
@@ -3884,10 +4043,14 @@ can clutter up the rest of the metadata record! -->
                     <item label="maintenanceTab">maintenance</item>
                     <item label="constraintsTab">constraints</item>
                     <item label="spatialTab">spatial</item>
-                    <item label="refSysTab">refSys</item>
+                    <xsl:if test="$service=false()">
+	                    <item label="refSysTab">refSys</item>
+					</xsl:if>
                     <item label="distributionTab">distribution</item>
                     <item label="dataQualityTab">dataQuality</item>
-                    <item label="appSchInfoTab">appSchInfo</item>
+                    <xsl:if test="$service=false()">
+	                    <item label="appSchInfoTab">appSchInfo</item>
+	                </xsl:if>
                     <item label="porCatInfoTab">porCatInfo</item>
                     <item label="contentInfoTab">contentInfo</item>
                     <item label="extensionInfoTab">extensionInfo</item>
@@ -4031,12 +4194,14 @@ can clutter up the rest of the metadata record! -->
                     <table class="gn">
                         <tbody>
                             <tr>
-                                <td class="col">
+                                <td class="col" style="border:none">
                                     <table class="gn">
+			                        <tbody>
                                         <xsl:apply-templates mode="element" select=".">
                                             <xsl:with-param name="schema" select="$schema" />
                                             <xsl:with-param name="edit" select="true()" />
                                         </xsl:apply-templates>
+        	                        </tbody>
                                     </table>
                                 </td>
                             </tr>
@@ -4187,8 +4352,6 @@ can clutter up the rest of the metadata record! -->
         </xsl:choose>
 
     </xsl:template>
-
-
 
     <!--
       =====================================================================
@@ -4341,7 +4504,6 @@ This parameter define the class of the textarea (see CSS). -->
                                 select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
             </xsl:call-template>
         </xsl:variable>
-
         <xsl:variable name="widget">
             <xsl:if test="$edit=true()">
                 <xsl:variable name="tmpFreeText">
@@ -4688,20 +4850,24 @@ to build the XML fragment in the editor. -->
                     <xsl:with-param name="edit"    select="$edit"/>
                     <xsl:with-param name="content">
 						<tr>
-						    <td class="col">
+						    <td class="col" style="border:none">
 						        <table class="gn">
+		                        <tbody>
 						            <xsl:apply-templates mode="iso19139" select="gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency">
 						                <xsl:with-param name="schema"  select="$schema"/>
 						                <xsl:with-param name="edit"   select="$edit"/>
 						            </xsl:apply-templates>
+		                        </tbody>
 						        </table>
 						    </td>
-						    <td class="col">
+						    <td class="col" style="border:none">
 						        <table class="gn">
+		                        <tbody>
 						            <xsl:apply-templates mode="iso19139" select="gmd:MD_MaintenanceInformation/gmd:dateOfNextUpdate">
 						                <xsl:with-param name="schema"  select="$schema"/>
 						                <xsl:with-param name="edit"   select="$edit"/>
 						            </xsl:apply-templates>
+		                        </tbody>
 						        </table>
 						    </td>
 						</tr>
@@ -4727,8 +4893,8 @@ to build the XML fragment in the editor. -->
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 	    <xsl:variable name="spatialResolutionElementName" select="name(.)" />
-	    <xsl:variable name="previousReportSiblingsCount" select="count(preceding-sibling::*[name(.) = $spatialResolutionElementName])" />
-       	<xsl:if test="$previousReportSiblingsCount=0 and $edit=true()">
+	    <xsl:variable name="previousResolutionSiblingsCount" select="count(preceding-sibling::*[name(.) = $spatialResolutionElementName])" />
+       	<xsl:if test="$previousResolutionSiblingsCount=0 and $edit=true()">
 			<xsl:apply-templates mode="addSpatialResolutionElement" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
@@ -4738,6 +4904,44 @@ to build the XML fragment in the editor. -->
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
         </xsl:apply-templates>
+	</xsl:template>
+
+    <!-- ============================================================================= -->
+    <!-- Group resource constraints in a box -->
+    <!-- ============================================================================= -->
+    <xsl:template mode="iso19139" match="gmd:resourceConstraints">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+	    <xsl:variable name="resourceConstraintsElementName" select="name(.)" />
+	    <xsl:variable name="previousResourceConstraintsSiblingsCount" select="count(preceding-sibling::*[name(.) = $resourceConstraintsElementName])" />
+       	<xsl:if test="$previousResourceConstraintsSiblingsCount=0">
+	        <xsl:call-template name="complexElementGuiWrapper">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="content">
+			        <xsl:for-each select="../gmd:resourceConstraints">
+				        <xsl:if test="count(./child::*[name() = 'gmd:MD_Constraints'])>0">
+			                <xsl:apply-templates mode="simpleElement" select="*">
+			                    <xsl:with-param name="schema" select="$schema"/>
+			                    <xsl:with-param name="edit"   select="$edit"/>
+			                </xsl:apply-templates>
+						</xsl:if>
+				        <xsl:if test="count(./child::*[name() = 'gmd:MD_Constraints'])=0">
+					        <xsl:apply-templates mode="complexElement" select="*">
+					            <xsl:with-param name="schema" select="$schema"/>
+					            <xsl:with-param name="edit"   select="$edit"/>
+					        </xsl:apply-templates>
+				        </xsl:if>
+					</xsl:for-each>
+				</xsl:with-param>
+	            <xsl:with-param name="title">
+			      <xsl:call-template name="getTitle">
+			        <xsl:with-param name="name" select="'gmd:MD_Constraints'"/>
+			        <xsl:with-param name="schema" select="$schema"/>
+			      </xsl:call-template>
+				</xsl:with-param>
+	        </xsl:call-template>
+       	</xsl:if>
 	</xsl:template>
 
     <!-- ============================================================================= -->

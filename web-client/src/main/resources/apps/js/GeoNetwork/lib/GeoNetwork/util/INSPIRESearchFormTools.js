@@ -198,8 +198,8 @@ GeoNetwork.util.INSPIRESearchFormTools = {
             };
         if (multi) {
             Ext.apply(config, {
-                valueDelimiter: ' or ',
-                stackItems: true
+                valueDelimiter: ' or '/*,
+                stackItems: true*/
                 });
             return new Ext.ux.form.SuperBoxSelect(config);
         } else {
@@ -266,8 +266,8 @@ GeoNetwork.util.INSPIRESearchFormTools = {
         };
         if (multi) {
             Ext.apply(config, {
-                valueDelimiter: ' or ',
-                stackItems: true
+                valueDelimiter: ' or '/*,
+                stackItems: true*/
             });
             return new Ext.ux.form.SuperBoxSelect(config);
         } else {

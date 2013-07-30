@@ -60,4 +60,4 @@ Ext.BLANK_IMAGE_URL = '../js/ext/resources/images/default/s.gif';
 
 GeoNetwork.Settings.ratingEnabled = false;
 GeoNetwork.Settings.nodeType = "agiv";
-GeoNetwork.Settings.useSTS = true;
+GeoNetwork.Settings.useSTS = false;

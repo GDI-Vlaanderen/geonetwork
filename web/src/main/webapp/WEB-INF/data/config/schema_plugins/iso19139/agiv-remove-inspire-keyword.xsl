@@ -17,8 +17,8 @@
     <!-- match descriptiveKeywords elements -->
     <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
         <xsl:choose>
-            <!-- this descriptiveKeywords uses 'GDI-Vlaanderen trefwoorden' thesaurus  -->
-            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen trefwoorden'">
+            <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Best Practices - thesaurus'  -->
+            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Best Practices - thesaurus'">
                 <xsl:choose>
                     <!-- contains a keyword matching  'Metadata INSPIRE-conform' -->
                     <xsl:when test="gmd:MD_Keywords//gmd:keyword/gco:CharacterString = 'Metadata INSPIRE-conform'">
@@ -53,7 +53,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
-            <!-- descriptiveKeywords not using 'GDI-Vlaanderen trefwoorden' thesaurus : just put out -->
+            <!-- descriptiveKeywords not using 'GDI-Vlaanderen Best Practices - thesaurus' : just put out -->
             <xsl:otherwise>
                 <gmd:descriptiveKeywords>
                     <xsl:apply-templates select="@*|node()"/>

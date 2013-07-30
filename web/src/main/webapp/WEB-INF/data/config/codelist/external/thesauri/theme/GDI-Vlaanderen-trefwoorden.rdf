@@ -2,8 +2,8 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:fn="http://www.w3.org/2005/02/xpath-functions" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:gml="http://www.opengis.net/gml#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <!-- Scheme -->
   <skos:ConceptScheme rdf:about="http://www.geopunt.be/trefwoorden">
-    <dc:title>GDI-Vlaanderen trefwoorden</dc:title>
-    <dc:description>GDI-Vlaanderen trefwoorden</dc:description>
+    <dc:title>GDI-Vlaanderen Best Practices - thesaurus</dc:title>
+    <dc:description>GDI-Vlaanderen Best Practices - thesaurus</dc:description>
     <dc:creator>
       <foaf:Organization>
         <foaf:name>AGIV</foaf:name>

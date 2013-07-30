@@ -145,6 +145,13 @@
 		<description>heeft</description>
 	</element>
 	<!-- ==================================================== -->
+  <element name="gco:ScopedName">
+    	<label>Naam van de laag in de service</label>
+    	<description/>
+	    <help/>
+    	<condition/>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:initiativeType">
 		<label>Initiatief type</label>
 		<description>Type van het initiatief</description>
@@ -231,7 +238,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:URL">
-		<label>URL</label>
+		<label>Connectiepunt URL</label>
 		<description>Locatie voor online toegang bij gebruik van een Uniform Resource Locator adres of een vergelijkbaar schema.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -449,6 +456,10 @@
     </element>
 
     <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code">
+        <label>Identificator geografische begrenzing</label>
+        <description>Beschrijving van het geografisch gebied</description>
+    </element>
+    <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code">
         <label>Identificator geografische begrenzing</label>
         <description>Beschrijving van het geografisch gebied</description>
     </element>
@@ -870,6 +881,11 @@
 		<description>Datum van de versie of editie (YYYY-MM-DD).</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:edition" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:edition">
+		<label>Versie service</label>
+		<description>Versie of editie.</description>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:electronicMailAddress">
 		<label>Email</label>
 		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
@@ -955,7 +971,7 @@
 	<element name="gmd:extent">
 		<label>Begrenzing</label>
 		<description>Informatie over de ruimtelijke, verticale en temporele begrenzing van de dataset.</description>
-	<condition>conditional</condition>
+		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extentTypeCode">
@@ -2331,12 +2347,12 @@
 		<description>ISO 19119-2005 Identificatie van de dienst</description>
 	</element>
 	<element name="srv:serviceType">
-		<label>Type Dienst</label>
-		<description>Het type van de dienst. Bijvoorbeeld View of download.</description>
+		<label>Type service</label>
+		<description>Het type van de service. Bijvoorbeeld View of download.</description>
 	</element>
 	<element name="srv:serviceTypeVersion">
-		<label>Service Type Versie</label>
-		<description>De versie die hier gehanteerd dient te worden is de versie van de specificatie van de dienst. Niet een implementatie versie van de software die de diesnt implementeert. Als scheidingsteken tussen de cijfers dient een punt gebruikt te worden.</description>
+		<label>Versie type service</label>
+		<description>De versie die hier gehanteerd dient te worden is de versie van de specificatie van de service. Niet een implementatie versie van de software die de service implementeert. Als scheidingsteken tussen de cijfers dient een punt gebruikt te worden.</description>
 	</element>
 	<element name="srv:accessProperties">
 		<label>Toegang</label>
@@ -2347,16 +2363,16 @@
 		<description>Legale en veiligheidsbeperkingen betreffende de toegang tot de diesnt en het verdelen van data gegenereerd door de dienst.</description>
 	</element>
     <element name="srv:containsOperations">
-		<label>Bevat operaties</label>
+		<label>Service operaties</label>
 		<description>De operaties die door een dienst worden aangeboden.</description>
 	</element>    
     <element name="srv:operatesOn">
-		<label>Opereerd op</label>
+		<label>operatesOn (informatie over de datasets waarop de service werkt)</label>
 		<description>Dit element is conditioneel in INSPIRE. Het is verplicht als er links naar de (metadata) van datasets waarop de dienst opereert
 beschikbaar zijn. Voor diensten zoals WMS en WFS is het dus verplicht. Dit element geeft informatie (metadata) over de data die via de dienst beschikbaar wordt gesteld.</description>
 	</element>   
     <element name="srv:operationName">
-		<label>Operatie naam</label>
+		<label>Naam van de operatie</label>
 		<description>De naam van de operatie.</description>
 	</element>
 	<element name="srv:SV_OperationMetadata">
@@ -2364,7 +2380,7 @@ beschikbaar zijn. Voor diensten zoals WMS en WFS is het dus verplicht. Dit eleme
 		<description>Operatie Metadata</description>
 	</element>
     <element name="srv:DCP">
-		<label>DCP</label>
+		<label>DCP (verdeelde computerplatformen waarop de operatie geïmplementeerd is)</label>
 		<description>Distributed Computing Platform waarop de operatie is geimplementeerd.</description>
 	</element>        
 	<element name="srv:DCPList">
@@ -2421,11 +2437,11 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<description>Een bron of dataset die gekoppeld is aan deze dienst.</description>
 	</element>  
  	<element name="srv:SV_CoupledResource">
-		<label>Coupled Resource</label>
+		<label>Gekoppelde bron</label>
 		<description>Details van de bronnen (datasets) gekoppeld met deze dienst.</description>
 	</element>
 	<element name="srv:identifier">
-		<label>Identifier</label>
+		<label>Identificator van de gekoppelde bron</label>
 		<description>Unieke code</description>
 	</element>
 	<element name="srv:couplingType">
@@ -2433,11 +2449,11 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<description>Type van de koppeling tussen de service en de dataset.</description>
 	</element>
 	<element name="srv:SV_CouplingType">
-		<label>Coupling Type</label>
+		<label>Type koppeling</label>
 		<description>Type van de koppeling</description>
 	</element>
 	<element name="srv:extent">
-		<label>Extent</label>
+		<label>Begrenzing</label>
 		<description>Geographische en/of temporele begrenzing van de dienst</description>
 	</element>
 	<element name="srv:keywords">
@@ -2726,6 +2742,15 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Alternatieve titel dataset(serie)</label>
 		<description>Korte titel, afkorting of titel in een andere taal.</description>
 	</element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
+		<label>Titel service</label>
+		<description>Titel of naam</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
+		<label>Alternatieve titel service</label>
+		<description>Korte titel, afkorting of titel in een andere taal.</description>
+	</element>
 <!--
 	<element name="gmd:dateType" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType">
 		<label>Versiedatum type</label>
@@ -2742,6 +2767,12 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Versiedatum dataset(serie)</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
 	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date">
+		<label>Versiedatum service</label>
+		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+	</element>
+	<!-- ==================================================== -->
 	  <element name="gmd:identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier">
 		<label>Dataset(serie) identificator</label>
 		<description>Unieke code gebruikt voor referentiesystemen.</description>
@@ -2873,6 +2904,11 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
 	</element>
 	<element name="gmd:description" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:description">
+		<label>Omschrijving geografische begrenzing</label>
+		<description>Beschrijving</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:description" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:description">
 		<label>Omschrijving geografische begrenzing</label>
 		<description>Beschrijving</description>
 		<condition>mandatory</condition>

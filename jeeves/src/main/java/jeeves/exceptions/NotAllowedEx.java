@@ -36,14 +36,11 @@ public abstract class NotAllowedEx extends JeevesClientEx
 
 	public NotAllowedEx(String message, Object object)
 	{
-		super(message, object);
+		super("Ofwel is de sessie vervallen en moet je opnieuw inloggen. Ofwel heb je nog niet de rechten om deze actie uit te voeren."/*message*/, object);
 
 		id = "not-allowed";
 	}
 
-	public String toString() {
-		return "U heeft geen rechten om deze actie uit te voeren of uw sessie is vervallen en moet opnieuw aanloggen";
-	}
 }
 
 //=============================================================================

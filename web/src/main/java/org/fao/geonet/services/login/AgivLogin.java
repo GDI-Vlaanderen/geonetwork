@@ -69,6 +69,9 @@ public class AgivLogin implements Service
 	//--------------------------------------------------------------------------
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		if (params.getChild("wa")!=null) {
+		    return new Element("nok");
+		}
 		UserSession userSession = context.getUserSession();
 		if (StringUtils.isBlank(userSession.getUsername())) {
 			throw new MissingParameterEx(Params.USERNAME);
@@ -82,27 +85,31 @@ public class AgivLogin implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-//		if (!isAdmin(dbms, username))
-//		{
+		Element user = null;
+		List list = null;
+		if ("Administrator".equals(userSession.getProfile()))
+		{
+			list = dbms.select("SELECT * FROM Users WHERE id = '1'").getChildren();
+			user = (Element) list.get(0);
+		}
+		else
+		{
 			updateUser(context, dbms);
-//		}
+			String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
+			list = dbms.select(query, username, Util.scramble(defaultPassword)).getChildren();
+			if (list.size() == 0) {
+				// Check old password hash method
+				list = dbms.select(query, username, Util.oldScramble(defaultPassword)).getChildren();
+
+				if (list.size() == 0)
+					throw new UserLoginEx(username);
+				else
+					context.info("User '" + username + "' logged in using an old scrambled password.");
+			}
+			user = (Element) list.get(0);
+		}
 
 		//--- attempt to load user from db
-
-		String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
-		
-	
-		List list = dbms.select(query, username, Util.scramble(defaultPassword)).getChildren();
-		if (list.size() == 0) {
-			// Check old password hash method
-			list = dbms.select(query, username, Util.oldScramble(defaultPassword)).getChildren();
-
-			if (list.size() == 0)
-				throw new UserLoginEx(username);
-			else
-				context.info("User '" + username + "' logged in using an old scrambled password.");
-		}
-		Element user = (Element) list.get(0);
 
 		String sId        = user.getChildText(Geonet.Elem.ID);
 		String sName      = user.getChildText(Geonet.Elem.NAME);

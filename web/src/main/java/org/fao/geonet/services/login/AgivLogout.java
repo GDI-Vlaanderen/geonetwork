@@ -23,22 +23,11 @@
 
 package org.fao.geonet.services.login;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpSession;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.jdom.Element;
@@ -60,7 +49,15 @@ public class AgivLogout implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		URL url = new URL("https://auth.beta.agiv.be/sts/?wa=wsignout1.0");
+		/*
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        String protocol = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
+		String host    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
+		String port    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+		String url = protocol + "://" + host + (port == "80" ? "" : ":" + port) + this.context.getBaseUrl() + "/apps/tabsearch/images/???.png;
+*/
+/*		
+		URL url = new URL("https://auth.beta.agiv.be/sts/?wa=wsignout1.0&wreply=");
 		HttpURLConnection connection = null;
 		connection = (HttpsURLConnection)url.openConnection();
 		connection.setRequestMethod("GET");
@@ -79,9 +76,35 @@ public class AgivLogout implements Service
 			System.out.println(inputLine);
 		}
 		buffer.close();
-		context.getUserSession().clear();
+		if (returnCode==200) {
+			UserSession userSession = context.getUserSession();
+			HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
+			if (httpSession!=null) {
+				httpSession.invalidate();
+			}
+			context.getUserSession().clear();
+		} else {
+			UserSession userSession = context.getUserSession();
+			HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
+			if (httpSession!=null) {
+				httpSession.invalidate();
+			}
+			context.getUserSession().clear();
+		}
+*/
+		boolean bOk = false;
+		String wa = params.getAttributeValue("wa");
+		if ("wsignoutcleanup1.0".equals(wa)) {
+			bOk = true;
+		}
 
-		return new Element("ok");
+		UserSession userSession = context.getUserSession();
+		HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
+		if (httpSession!=null) {
+			httpSession.invalidate();
+		}
+		context.getUserSession().clear();
+		return new Element(bOk ? "ok" : "nok");
 	}
 }
 
