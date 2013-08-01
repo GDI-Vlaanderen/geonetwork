@@ -130,7 +130,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         // FIXME : tooltip for actions does not work
         this.adminAction = new Ext.Action({
             text: OpenLayers.i18n('privileges'),
-            tooltip: OpenLayers.i18n('privilegesTT'),
+//            tooltip: OpenLayers.i18n('privilegesTT'),
             iconCls : 'privIcon',
             handler: function(){
                 var id = this.record.get('id');
@@ -140,7 +140,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.cancelEditSessionAction = new Ext.Action({
             text: OpenLayers.i18n('cancelEditSession'),
-            tooltip: OpenLayers.i18n('cancelEditSessionTT'),
+//            tooltip: OpenLayers.i18n('cancelEditSessionTT'),
             iconCls : 'unlockIcon',
             handler: function(){
                 var id = this.record.get('id');
@@ -150,7 +150,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.changeEditSessionOwnerAction = new Ext.Action({
             text: OpenLayers.i18n('changeEditSessionOwner'),
-            tooltip: OpenLayers.i18n('changeEditSessionOwnerTT'),
+//            tooltip: OpenLayers.i18n('changeEditSessionOwnerTT'),
             iconCls : '',
             handler: function(){
                 var id = this.record.get('id');
@@ -162,7 +162,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
 
         this.statusAction = new Ext.Action({
             text: OpenLayers.i18n('status'),
-            tooltip: OpenLayers.i18n('statusTT'),
+//            tooltip: OpenLayers.i18n('statusTT'),
             iconCls : 'statusIcon',
             handler: function(){
                 var id = this.record.get('id');
@@ -174,7 +174,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         // Disabled in AGIV
         /*this.versioningAction = new Ext.Action({
             text: OpenLayers.i18n('versioning'),
-            tooltip: OpenLayers.i18n('versioningTT'),
+//            tooltip: OpenLayers.i18n('versioningTT'),
             iconCls : 'versioningIcon',
             handler: function(){
                 var id = this.record.get('id');
@@ -220,7 +220,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
 
         this.viewWorkspaceCopyAction = new Ext.Action({
             text: OpenLayers.i18n('viewWorkspaceCopy'),
-            tooltip: OpenLayers.i18n('viewWorkspaceCopyTT'),
+//            tooltip: OpenLayers.i18n('viewWorkspaceCopyTT'),
             iconCls : 'md-mn-view',
             handler: function(){
                 var id = this.record.get('uuid');
@@ -232,8 +232,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
 
         this.diffWorkspaceCopyAction = new Ext.Action({
-            text: OpenLayers.i18n('diffWorkspaceCopy'),
-            tooltip: OpenLayers.i18n('diffWorkspaceCopyTT'),
+            text: this.record!=null && this.record.get('workspace')=="true" ? OpenLayers.i18n('diffOriginalCopy') : OpenLayers.i18n('diffWorkspaceCopy'),
+//            tooltip: OpenLayers.i18n('diffWorkspaceCopyTT'),
             iconCls : 'md-mn-view',
             handler: function(){
                 var id = this.record.get('id');
@@ -245,7 +245,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
 
         this.viewOriginalCopyAction = new Ext.Action({
             text: OpenLayers.i18n('viewOriginalCopy'),
-            tooltip: OpenLayers.i18n('viewOriginalCopyTT'),
+//            tooltip: OpenLayers.i18n('viewOriginalCopyTT'),
             iconCls : 'md-mn-view',
             handler: function(){
                 var id = this.record.get('uuid');
@@ -256,8 +256,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.add(this.viewOriginalCopyAction);
 
         this.diffOriginalCopyAction = new Ext.Action({
-            text: OpenLayers.i18n('diffOriginalCopy'),
-            tooltip: OpenLayers.i18n('diffOriginalCopyTT'),
+            text: this.record!=null && this.record.get('workspace')=="true" ? OpenLayers.i18n('diffOriginalCopy') : OpenLayers.i18n('diffWorkspaceCopy'),
+//            tooltip: OpenLayers.i18n('diffOriginalCopyTT'),
             iconCls : 'md-mn-view',
             handler: function(){
                 var id = this.record.get('id');
@@ -269,8 +269,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.add(this.diffOriginalCopyAction);
 
         this.diffOriginalCopyEditModeAction = new Ext.Action({
-            text: OpenLayers.i18n('diffOriginalCopyEditMode'),
-            tooltip: OpenLayers.i18n('diffOriginalCopyEditModeTT'),
+            text: this.record!=null && this.record.get('workspace')=="true" ? OpenLayers.i18n('diffOriginalCopyEditMode') : OpenLayers.i18n('diffWorkspaceCopyEditMode'),
+//            tooltip: OpenLayers.i18n('diffOriginalCopyEditModeTT'),
             iconCls : 'md-mn-view',
             handler: function(){
                 var id = this.record.get('id');

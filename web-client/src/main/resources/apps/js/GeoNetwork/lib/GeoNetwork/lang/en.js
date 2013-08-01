@@ -521,6 +521,7 @@ GeoNetwork.lang.en = {
     'diffOriginalCopyEditMode': 'Compare in edit mode with original',
     'allowedToUnlockMetadata': 'You are allowed to unlock this metadata',
     'allowedToEditMetadata': 'You are allowed to edit this metadata',
+    'original': 'Original document',
     'workspaceCopy': 'Workspace copy',
     'diffMetadata': 'Compare metadata',
     'switchViewTT': 'Switch left and right',

@@ -1151,7 +1151,8 @@ GeoNetwork.app = function(){
                     catalogue: catalogue,
                     //maximized: true,
                     metadataUuid: uuid,
-                    record: record
+                    record: record,
+                    workspaceCopy: record.get('workspace') == "true" ? true : false
                 });
 
                 // Override zoomToAction (maye better way?). TODO: Check as seem calling old handler code
@@ -1349,7 +1350,8 @@ Ext.onReady(function () {
                 catalogue: catalogue,
                 //maximized: true,
                 metadataUuid: uuid,
-                record: record
+                record: record,
+                workspaceCopy: record.get('workspace') == "true" ? true : false
             });
 
             // Override zoomToAction (maye better way?). TODO: Check as seem calling old handler code

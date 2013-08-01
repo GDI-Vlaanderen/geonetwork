@@ -111,7 +111,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             this.setTitle(OpenLayers.i18n('workspaceCopy').toUpperCase() + ' - ' + (this.record ? this.record.get('title') : ''));
 
         } else {
-            this.setTitle(this.record ? this.record.get('title') : '');
+            this.setTitle(OpenLayers.i18n('original').toUpperCase() + ' - ' + (this.record ? this.record.get('title') : ''));
 
         }
 

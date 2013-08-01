@@ -367,7 +367,7 @@
 	<all>alle</all>
 	<any>- Alles -</any>
 	<anytime>Willekeurig tijdstip</anytime>
-	<appSchInfoTab>App. schema</appSchInfoTab>
+	<appSchInfoTab>Applicatieschema</appSchInfoTab>
 	<arcgislayer>ArcGIS laag</arcgislayer>
 	<assigned>Toegewezen</assigned>
 	<attrlabl>Attribuut Label</attrlabl>
@@ -431,10 +431,10 @@
 	<confirmBatchDelete>Weet u zeker dat u alle $1 geselecteerde metadata wilt verwijderen uit de database?</confirmBatchDelete>
 	<confirmNewPassword>Bevestig nieuw wachtwoord</confirmNewPassword>
 	<confirmPassword>Bevestig wachtwoord</confirmPassword>
-	<constraintsTab>Beperkingen</constraintsTab>
+	<constraintsTab>Gebruiksrecht</constraintsTab>
 	<contactUs>Contact</contactUs>
 	<contains>Bevat</contains>
-	<contentInfoTab>Informatie over de inhoud</contentInfoTab>
+	<contentInfoTab>Inhoud</contentInfoTab>
 	<convert>Converteer</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2><p>Alle rechten voorbehouden.<br/> Uw algemene copyright melding </p></copyright2>
@@ -449,7 +449,7 @@
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test omgeving voor de CSW ISO Profile catalog interface</cswTestDesc>
-	<dataQualityTab>Datakwaliteit</dataQualityTab>
+	<dataQualityTab>Kwaliteit</dataQualityTab>
 	<datasetIssued>Temporal Extent</datasetIssued>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Veranderde datum</dateModified>
@@ -732,7 +732,7 @@
   <indexConfiguration>Index instellingen</indexConfiguration>
   <io>Import, export &amp; harvesting</io>
   <placeKeyword>Geef sleutelwoorden</placeKeyword>
-	<porCatInfoTab>Catalogus</porCatInfoTab>
+	<porCatInfoTab>Objectencatalogus</porCatInfoTab>
 	<poweredBy>Gemaakt met </poweredBy>
 	<previous>Vorige</previous>
 	<privileges>Toegangsrechten</privileges>
@@ -809,7 +809,7 @@
 	<rawMetadata>Invoer ruwe metadata</rawMetadata>
 	<rebuild>Vernieuw</rebuild>
 	<recentAdditions>Recente wijzigingen</recentAdditions>
-	<refSysTab>Ref. systeem</refSysTab>
+	<refSysTab>Referentiesysteem</refSysTab>
 	<region>Regio</region>
 	<register>Registreren</register>
 	<registerChoose>Ik wil </registerChoose>
@@ -883,7 +883,7 @@
 	<southbc>Zuidelijke coördinaat</southbc>
 	<spacesNot js="true">Spaties zijn niet toegestaan in dit veld</spacesNot>
 	<spatial2Tab>Ruimt. Repr.</spatial2Tab>
-	<spatialTab>Ruimt. Info</spatialTab>
+	<spatialTab>Begrenzing</spatialTab>
 	<startsWith>Begint met</startsWith>
 	<state>Provincie/Staat</state>
 	<styleSheet>StyleSheet</styleSheet>

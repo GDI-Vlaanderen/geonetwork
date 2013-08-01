@@ -141,6 +141,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
 
         } else {
             this.actionMenu.viewWorkspaceCopyAction.show();
+            this.actionMenu.diffWorkspaceCopyAction.setText(OpenLayers.i18n('diffWorkspaceCopy'));
             this.actionMenu.diffWorkspaceCopyAction.show();
             this.actionMenu.diffOriginalCopyEditModeAction.setText(OpenLayers.i18n('diffWorkspaceCopyEditMode'));
             this.actionMenu.diffOriginalCopyEditModeAction.show();

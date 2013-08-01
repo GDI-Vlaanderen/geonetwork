@@ -881,7 +881,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 maximized: maximized || false,
                 metadataUuid: uuid,
                 record: record,
-                resultsView: this.resultsView
+                resultsView: this.resultsView,
+                workspaceCopy: record.get('workspace') == "true" ? true : false
                 });
             win.show(this.resultsView);
             win.alignTo(bd, 'tr-tr');
@@ -1009,7 +1010,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             var win = new GeoNetwork.view.DiffWindow({
                 edit:edit,
                 serviceUrl: url,
-                title: OpenLayers.i18n('diffWorkspaceCopy'),
+                title: OpenLayers.i18n(edit ? 'diffOriginalCopyEditMode' : 'diffWorkspaceCopy'),
                 lang: this.lang,
                 currTab: GeoNetwork.defaultViewMode || 'simple',
                 printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
@@ -1046,7 +1047,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     maximized: maximized || false,
                     record: record,
                     metadataUuid: record ? record.get('uuid') : undefined,
-                    resultsView: this.resultsView
+                    resultsView: this.resultsView,
+                    workspaceCopy: record.get('workspace') == "true" ? true : false
                     });
                 win.show(this.resultsView);
                 win.alignTo(Ext.getBody(), 'r-r');
