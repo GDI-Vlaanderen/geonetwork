@@ -160,6 +160,9 @@ public class Diff implements Service {
             }
 
             Element response = new Element("response");
+            Element id = new Element("id");
+            id.addContent(id1);
+            response.addContent(id);
             Element source = new Element("source");
             source.addContent(annotatedMd1);
             response.addContent(source);

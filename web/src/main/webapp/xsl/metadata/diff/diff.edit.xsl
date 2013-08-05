@@ -12,7 +12,7 @@
 
     <xsl:include href="../common.xsl"/>
 
-    <xsl:variable name="mode">view-simple</xsl:variable>
+	<xsl:variable name="mode" select="/root/request/currTab"/>
 
     <!--
      show metadata form
@@ -25,7 +25,8 @@
                 <xsl:call-template name="content"/>
             </body>
         </html> -->
-        
+<html>
+            <body>        
         <div style="float: left; height: inherit; width: 50%">
             <xsl:for-each select="/root/response/source/*">
 
@@ -103,7 +104,7 @@
                                     <!-- showvalidationerrors is only set to true when 'Check' is
                                pressed - default is false -->
                                     <input class="md" type="hidden" name="showvalidationerrors" value="{/root/request/showvalidationerrors}"/>
-                                    <input class="md" type="hidden" name="currTab" value="{/root/gui/currTab}"/>
+									<input class="md" type="hidden" id="currTab" name="currTab" value="{/root/gui/currTab}"/>
 
                                     <!-- Hidden div to contains extra elements like when posting multiple keywords. -->
                                     <div id="hiddenFormElements" style=""></div>
@@ -141,6 +142,8 @@
                 </div>
             </xsl:for-each>
         </div>
+        </body>
+      </html>
     </xsl:template>
 
 

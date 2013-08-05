@@ -12,19 +12,22 @@
 
     <xsl:include href="../common.xsl"/>
 
-    <xsl:variable name="mode">view-simple</xsl:variable>
+	<xsl:variable name="mode" select="/root/request/currTab"/>
 
     <!--
      show metadata form
      -->
 
     <xsl:template match="/">
-
-        <!--<html>
+<!-- 
+        <html>
             <body>
                 <xsl:call-template name="content"/>
             </body>
-        </html> -->
+        </html>
+-->
+        <html>
+            <body>
         <div style="float: left; height: inherit; width: 50%">
             <xsl:for-each select="/root/response/source/*">
 
@@ -46,7 +49,6 @@
 
                     <div id="source-container" style="position:relative;overflow:auto;height:inherit;">
                         <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
-
                         <saxon:call-template name="{$schemaTemplate}">
                             <xsl:with-param name="tabs">
                                 <xsl:apply-templates mode="elementEP" select=".">
@@ -76,11 +78,8 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </div>
-
-
                     <div id="target-container" style="position:relative;overflow:auto;height:inherit;border-left:2px solid #ccc">
                         <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
-
                         <saxon:call-template name="{$schemaTemplate}">
                             <xsl:with-param name="tabs">
                                 <xsl:apply-templates mode="elementEP" select=".">
@@ -92,7 +91,8 @@
                 </div>
             </xsl:for-each>
         </div>
-
+            </body>
+        </html>
     </xsl:template>
 
 </xsl:stylesheet>

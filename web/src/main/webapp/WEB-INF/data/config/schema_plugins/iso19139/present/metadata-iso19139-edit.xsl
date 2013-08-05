@@ -238,10 +238,12 @@
             <xsl:with-param name="edit"   select="$edit"/>
         </xsl:apply-templates>
 <!-- 		<xsl:if test="not($currTab='dataQuality')"> -->
+			<xsl:if test="$edit=true()">
 			<xsl:apply-templates mode="addReportElement" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
 			</xsl:apply-templates>
+			</xsl:if>
 <!-- 	</xsl:if> -->
 	</xsl:template>
 
@@ -457,11 +459,11 @@
                    	<xsl:variable name="currentMduuidValue" select="gco:CharacterString"/>
                     <input type="text" class="md" name="_{$ref}" id="_{$ref}" onchange="validateNonEmpty(this)" value="{$currentMduuidValue}" size="30"/>
                     <xsl:choose>
-                        <xsl:when test="count(//srv:operatesOn[@uuidref!=''])=0">
+                        <xsl:when test="count(../../../srv:operatesOn[@uuidref!=''])=0">
                             <xsl:value-of select="/root/gui/strings/noOperatesOn"/>
                         </xsl:when>
                         <xsl:otherwise>
-                                <xsl:for-each select="//srv:operatesOn[@xlink:href!='' and @uuidref=$currentMduuidValue]">
+                                <xsl:for-each select="../../../srv:operatesOn[@xlink:href!='' and @uuidref=$currentMduuidValue]">
 									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
 			                    	<xsl:variable name="uuid">
 			                    		<xsl:call-template name="getUuidRelatedMetadata">
@@ -477,7 +479,7 @@
 <!--
                             <select onchange="javascript:Ext.getDom('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
                                 <option></option>
-                                <xsl:for-each select="//srv:operatesOn[@xlink:href!='']">
+                                <xsl:for-each select="../../../srv:operatesOn[@xlink:href!='']">
 									<xsl:variable name="mduuidValue" select="@uuidref"/>
 									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
 			                    	<xsl:variable name="uuid">
@@ -515,7 +517,7 @@
                     	<xsl:variable name="uuid">
                     		<xsl:call-template name="getUuidRelatedMetadata">
 						       	<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
-								<xsl:with-param name="idParamValue" select="substring-after(//srv:operatesOn[@uuidref=$mduuidValue][1]/@xlink:href,';id=')"/>
+								<xsl:with-param name="idParamValue" select="substring-after(../../../srv:operatesOn[@uuidref=$mduuidValue][1]/@xlink:href,';id=')"/>
 							</xsl:call-template>
                    		</xsl:variable>                    	
                         <a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
@@ -2743,6 +2745,7 @@
             <xsl:with-param name="flat"   select="$flat"/>
         </xsl:apply-templates>
 
+        	<tr><td style="red">sqfdqf</td></tr>
         <xsl:apply-templates mode="elementEP" select="gmd:dataQualityInfo|geonet:child[string(@name)='dataQualityInfo']">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
@@ -4466,7 +4469,6 @@ This parameter define the class of the textarea (see CSS). -->
           or name(.)='gmd:userNote'
           or name(.)='gmd:checkPointDescription'
           or name(.)='gmd:evaluationMethodDescription'
-          or name(.)='gmd:measureDescription'
           ">small</xsl:when>
                 <xsl:otherwise></xsl:otherwise>
             </xsl:choose>
@@ -5034,13 +5036,12 @@ to build the XML fragment in the editor. -->
     <xsl:template mode="iso19139" match="gmd:pass" priority="99">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-
         <xsl:choose>
             <xsl:when test="$edit=true()">
             	<xsl:variable name="value" select="gco:Boolean/string(.)"/>
 			    <xsl:variable name="parentRef" select="./geonet:element/@ref"/>
             	<xsl:variable name="ref" select="gco:Boolean/geonet:element/@ref"/>
-                <xsl:apply-templates mode="simpleElement" select=".">
+                <xsl:apply-templates mode="simpleElement" select="gco:Boolean">
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="edit"   select="$edit"/>
                     <xsl:with-param name="text">
@@ -5063,9 +5064,15 @@ to build the XML fragment in the editor. -->
                 </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates mode="element" select=".">
+                <xsl:apply-templates mode="simpleElement" select="gco:Boolean">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="false()"/>
+	                <xsl:with-param name="title">
+	                   	<xsl:call-template name="getTitle">
+	        		       <xsl:with-param name="name" select="name(.)"/>
+			               <xsl:with-param name="schema" select="$schema"/>
+	                   	</xsl:call-template>
+	               	</xsl:with-param>
                 </xsl:apply-templates>
             </xsl:otherwise>
         </xsl:choose>

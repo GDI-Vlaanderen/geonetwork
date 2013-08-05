@@ -1721,7 +1721,13 @@
 	<element name="gmd:pass">
 		<label>Conform verklaard</label>
 		<description>Indicatie van de conformiteit met de specificatie </description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gco:Boolean" context="gmd:pass">
+		<label>Conform verklaard</label>
+		<description>Indicatie van de conformiteit met de specificatie </description>
+		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:peakResponse">

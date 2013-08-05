@@ -22,7 +22,6 @@
               select="concat(/root/gui/locService,'/metadata.update.new')"/>
             <xsl:with-param name="schema" select="geonet:info/schema"/>
           </xsl:call-template>
-
           <xsl:choose>
             <xsl:when test="starts-with($currTab, 'view')">
               <xsl:variable name="schemaTemplate" select="concat('metadata-',$schema, $currTab)"/>
@@ -66,7 +65,5 @@
         </div>
       </div>
     </xsl:for-each>
-    <!--  </body>
-    </html>-->
   </xsl:template>
 </xsl:stylesheet>

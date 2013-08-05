@@ -81,7 +81,7 @@ GeoNetwork.view.DiffWindow = Ext.extend(Ext.Window, {
         GeoNetwork.view.DiffWindow.superclass.initComponent.call(this);
         this.setTitle(this.title);
         this.add(new GeoNetwork.view.DiffPanel({
-            serviceUrl: this.serviceUrl,
+            serviceUrl: this.serviceUrl + "&currTab=" + this.currTab,
             edit: this.edit,
             lang: this.lang,
             currTab: GeoNetwork.defaultViewMode || 'simple',

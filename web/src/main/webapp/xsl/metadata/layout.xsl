@@ -2138,37 +2138,24 @@
         </xsl:choose>
       </xsl:when>
       <xsl:when test="$edit=true()">
+			<xsl:variable name="agivmandatory">
+				<xsl:call-template name="getMandatoryType">
+					<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
+					<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+				</xsl:call-template>
+ 			</xsl:variable>
       		<div>
 			        <xsl:call-template name="helper">
 			          <xsl:with-param name="schema" select="$schema"/>
 			          <xsl:with-param name="attribute" select="false()"/>
 			        </xsl:call-template>
 			</div>
-		          <textarea class="md {$class}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
-			          <xsl:if test="$isXLinked">
-			            <xsl:attribute name="disabled">disabled</xsl:attribute>
-			          </xsl:if>
-			          <xsl:if test="$visible = false()">
-			            <xsl:attribute name="style">display:none;</xsl:attribute>
-			          </xsl:if>
-			          
-					 <!-- Agiv specific -->
-			          <xsl:variable name="agivmandatory">
-			          	<xsl:call-template name="getMandatoryType">
-					    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
-					    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
-						</xsl:call-template>
-			          </xsl:variable>
-			          <xsl:if
-			            test="(
-			            (name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
-			            or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))
-			            or not($agivmandatory = '')
-			            ) and $edit">
-			            <xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
-			          </xsl:if>
-				          <xsl:if test="text()"><xsl:value-of select="string(text())"/></xsl:if>
-			        </textarea>
+			<textarea class="md {$class}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
+				<xsl:if test="$isXLinked"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+				<xsl:if test="$visible = false()"><xsl:attribute name="style">display:none;</xsl:attribute></xsl:if>
+				<xsl:if test="((name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1') or (../geonet:element/@min='1' and not(../@gco:nilReason='missing')) or not($agivmandatory = '')) and $edit"><xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute></xsl:if>
+				<xsl:if test="text()"><xsl:value-of select="string(text())"/></xsl:if>
+			</textarea>
       </xsl:when>
       <xsl:when test="$edit=false() and $class!=''">
         <!-- CHECKME -->

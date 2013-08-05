@@ -796,7 +796,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  
      */
     validate: function(){
-        this.loadUrl('metadata.update.new', 'validate', this.loadCallback);
+        this.loadUrl('metadata.update.new', 'validate', this.validatorLoadCallback);
         this.validationPanel.expand(true);
     },
     /** api: method[reset]
@@ -909,6 +909,21 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (success) {
             this.metadataLoaded();
         } else {
+            this.getError(response);
+        }
+    },
+    /**
+     * After metadata load, use this callback to check for error and display
+     * alert on failure.
+     *  
+     */
+    validatorLoadCallback: function(el, success, response, options){
+        if (success) {
+            this.loadUrl(this.editUrl + '?id=' + this.metadataId + '&currTab=' + (document.mainForm ? document.mainForm.currTab.value : this.defaultViewMode), undefined, this.loadCallback);
+        } else {
+            if (!this.managerInitialized) {
+                this.initManager();
+            }
             this.getError(response);
         }
     },
@@ -1464,7 +1479,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }
         return ns;
     },
-/*
     updatePassElement: function(id, value) {
     	var self = this;
         if (Ext.isEmpty(value)) {
@@ -1473,7 +1487,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         	Ext.getDom(id).value = "<gco:Boolean xmlns:gco=\"" + self.namespaces["gco"] + "\">" + value + "</gco:Boolean>";
         }
     }
-*/
+    /*
     updateChoicePass: function(id, value) {
     	var self = this;
         if (Ext.isEmpty(value)) {
@@ -1482,6 +1496,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         	Ext.getDom(id).value = "<gmd:pass xmlns:gco=\"" + self.namespaces["gmd"] + " xmlns:gco=\"" + self.namespaces["gco"] + "><gco:Boolean>" + value + "</gco:Boolean></gmd:pass>";
         }
     }
+*/
 });
 
 /** api: xtype = gn_editor_editorpanel */

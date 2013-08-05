@@ -163,7 +163,7 @@ public class EditLib {
 		List listAtts = md.getAttributes();
 		for (int i=0; i<listAtts.size(); i++) {
 			Attribute attr = (Attribute) listAtts.get(i);
-			if (Edit.NS_PREFIX.equals(attr.getNamespacePrefix())) {
+			if (Edit.NS_PREFIX.equals(attr.getNamespacePrefix()) || attr.getQualifiedName().equals("class")) {
 				attr.detach();
 				i--;
 			}
