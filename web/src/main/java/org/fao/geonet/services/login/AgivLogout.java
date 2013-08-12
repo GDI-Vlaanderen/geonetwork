@@ -23,12 +23,15 @@
 
 package org.fao.geonet.services.login;
 
+import java.io.File;
+
 import javax.servlet.http.HttpSession;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
 
 import org.jdom.Element;
 
@@ -92,19 +95,14 @@ public class AgivLogout implements Service
 			context.getUserSession().clear();
 		}
 */
-		boolean bOk = false;
-		String wa = params.getAttributeValue("wa");
-		if ("wsignoutcleanup1.0".equals(wa)) {
-			bOk = true;
-		}
-
 		UserSession userSession = context.getUserSession();
 		HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
 		if (httpSession!=null) {
 			httpSession.invalidate();
 		}
 		context.getUserSession().clear();
-		return new Element(bOk ? "ok" : "nok");
+		return BinaryFile.encode(200, context.getAppPath() + "/images/logout.png", "logout.png", false);
+//		return new Element("ok");
 	}
 }
 

@@ -551,7 +551,7 @@
 	                  </xsl:apply-templates>
 	                </xsl:variable>
 	                <li>
-	                  <a href="{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}">
+	                  <a href="{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}" target="_blank">
 	                        <!-- Name contains layer, feature type, coverage ... -->
 	                        <xsl:choose>
 	                          <xsl:when test="normalize-space($desc)!=''">

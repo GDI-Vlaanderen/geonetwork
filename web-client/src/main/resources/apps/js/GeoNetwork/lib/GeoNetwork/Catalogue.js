@@ -309,7 +309,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             login: serviceUrl + 'xml.user.login',
             agivLogin: serviceUrl + 'user.agiv.login',
             logout: serviceUrl + 'xml.user.logout',
-            agivLogout: 'https://auth.beta.agiv.be/sts/?wa=wsignout1.0&wreply=' + serviceUrl + 'user.agiv.logout',
+            agivLogout: 'https://auth.beta.agiv.be/sts/?wa=wsignout1.0&wreply=' + serviceUrl + /*'user.agiv.logout'*/ 'home',
 //            agivLogout: serviceUrl + 'user.agiv.logout',
             mef: serviceUrl + 'mef.export?format=full&version=2',
             csv: serviceUrl + 'csv.search',

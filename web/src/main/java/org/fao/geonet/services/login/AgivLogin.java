@@ -69,9 +69,6 @@ public class AgivLogin implements Service
 	//--------------------------------------------------------------------------
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		if (params.getChild("wa")!=null) {
-		    return new Element("nok");
-		}
 		UserSession userSession = context.getUserSession();
 		if (StringUtils.isBlank(userSession.getUsername())) {
 			throw new MissingParameterEx(Params.USERNAME);

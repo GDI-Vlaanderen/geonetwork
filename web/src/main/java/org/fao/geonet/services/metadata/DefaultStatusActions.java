@@ -151,7 +151,7 @@ public class DefaultStatusActions implements StatusActions {
         if (dm.getCurrentStatus(dbms, id).equals(Params.Status.DRAFT)) {
 
             //String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") canceled edit session for metadata record "+id;
-            String changeMessage = "GeoNetwork gebruiker "+session.getUserId()+" ("+session.getUsername()+") heeft de editeer sessie van metadata record met id "+id + " geannuleerd.";
+            String changeMessage = "GeoNetwork gebruiker "+session.getUserId()+" ("+session.getUsername()+") heeft de editeersessie van metadata record met id "+id + " geannuleerd.";
             //unsetAllOperations(id);
             String revertToThisStatus = dm.getLastBeforeCurrentStatus(dbms, id);
             if(StringUtils.isEmpty(revertToThisStatus)) {

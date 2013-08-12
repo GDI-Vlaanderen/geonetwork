@@ -1,7 +1,9 @@
 <Context>
+<!-- 
 	<Valve className="org.apache.cxf.fediz.tomcat.FederationAuthenticator" configFile="C:/apache/apache-tomcat-7.0.6/conf/fediz_config.xml"/>
-	<Environment name="fediz.keylocation" value="C:/apache/apache-tomcat-7.0.6/conf/gimgdi-rp.jks" type="java.lang.String" override="true" />
-	<Environment name="fediz.keypw" value="gimpass" type="java.lang.String" override="true" />
-	<Environment name="fediz.keyalias" value="gimgdikey" type="java.lang.String" override="true" />
+ 	<Environment name="fediz.keylocation" value="C:/apache/apache-tomcat-7.0.6/conf/zoekdienst-agiv-rp.jks" type="java.lang.String" override="true" />
+	<Environment name="fediz.keypw" value="{6AA37DE2-A37B-46EC-B90B-C7561C8AD88B}" type="java.lang.String" override="true" />
+	<Environment name="fediz.keyalias" value="zoekdienstagivrpkey" type="java.lang.String" override="true" />
 	<Environment name="fediz.response.idattribute" value="AssertionID" type="java.lang.String" override="true" />
+-->	
 </Context>

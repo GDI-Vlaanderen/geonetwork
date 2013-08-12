@@ -1249,7 +1249,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:maximumValue">
 		<label>Maximumwaarde (in m)</label>
-		<description>Hoogste verticale waarde die de dataset bevat</description>
+		<description>Hoogste verticale waarde die de dataset (formaat 999,999) bevat</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1589,7 +1589,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:minimumValue">
 		<label>Minimumwaarde (in m)</label>
-		<description>Laagste verticale waarde die de dataset bevat.</description>
+		<description>Laagste verticale waarde (formaat 999,999) die de dataset bevat.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->

@@ -2745,7 +2745,6 @@
             <xsl:with-param name="flat"   select="$flat"/>
         </xsl:apply-templates>
 
-        	<tr><td style="red">sqfdqf</td></tr>
         <xsl:apply-templates mode="elementEP" select="gmd:dataQualityInfo|geonet:child[string(@name)='dataQualityInfo']">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
