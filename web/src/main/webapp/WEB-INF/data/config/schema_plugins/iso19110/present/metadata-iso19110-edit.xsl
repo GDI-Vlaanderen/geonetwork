@@ -440,84 +440,90 @@
     <xsl:template mode="iso19110" match="gfc:carrierOfCharacteristics/gfc:FC_FeatureAttribute">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-
         <xsl:variable name="content">
-            <td class="padded-content" width="100%" colspan="2">
-                <table width="100%">
-                    <tr>
-                        <td width="50%" valign="top">
-                            <table width="100%">
-                                
-                                <xsl:apply-templates mode="elementEP" select="gfc:memberName|geonet:child[string(@name)='memberName']">
-                                    <xsl:with-param name="schema" select="$schema"/>
-                                    <xsl:with-param name="edit"   select="$edit"/>
-                                </xsl:apply-templates>
-                                
-                                <xsl:apply-templates mode="elementEP" select="gfc:definition|geonet:child[string(@name)='definition']">
-                                    <xsl:with-param name="schema" select="$schema"/>
-                                    <xsl:with-param name="edit"   select="$edit"/>
-                                </xsl:apply-templates>
-                                
-                                <xsl:apply-templates mode="elementEP" select="gfc:cardinality|geonet:child[string(@name)='cardinality']">
-                                    <xsl:with-param name="schema" select="$schema"/>
-                                    <xsl:with-param name="edit"   select="$edit"/>
-                                </xsl:apply-templates>
-                                
-                                <xsl:apply-templates mode="elementEP" select="gfc:featureType|geonet:child[string(@name)='featureType']">
-                                    <xsl:with-param name="schema" select="$schema"/>
-                                    <xsl:with-param name="edit"   select="$edit"/>
-                                </xsl:apply-templates>
-                                
-                                <xsl:apply-templates mode="elementEP" select="gfc:valueType|geonet:child[string(@name)='valueType']">
-                                    <xsl:with-param name="schema" select="$schema"/>
-                                    <xsl:with-param name="edit"   select="$edit"/>
-                                </xsl:apply-templates>
-                                
-                            </table>
-                        </td>
-                        <td valign="top">
-                            <table width="100%">
-                                <xsl:choose>
-                                    <xsl:when test="$edit=true() or $currTab!='simple'">
-                                        <xsl:apply-templates mode="elementEP" select="gfc:listedValue|geonet:child[string(@name)='listedValue']">
-                                            <xsl:with-param name="schema" select="$schema"/>
-                                            <xsl:with-param name="edit" select="$edit"/>
-                                        </xsl:apply-templates>        
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:if test="gfc:listedValue">
-                                            <xsl:call-template name="complexElementGui">
-                                                <xsl:with-param name="title">
-                                                    <xsl:value-of select="/root/gui/iso19110/element[@name='gfc:listedValue']/label"/>
-                                                    <xsl:text> </xsl:text>
-                                                    (<xsl:value-of select="/root/gui/iso19110/element[@name='gfc:label']/label"/>
-                                                    [<xsl:value-of select="/root/gui/iso19110/element[@name='gfc:code']/label"/>] :
-                                                    <xsl:value-of select="/root/gui/iso19110/element[@name='gfc:definition']/label"/>)
-                                                </xsl:with-param>
-                                                <xsl:with-param name="content">
-                                                
-                                                <ul class="md">
-                                                    <xsl:for-each select="gfc:listedValue/gfc:FC_ListedValue">
-                                                        <li>
-                                                            <b><xsl:value-of select="gfc:label/gco:CharacterString"/></b> 
-                                                            [<xsl:value-of select="gfc:code/gco:CharacterString"/>] :
-                                                            <xsl:value-of select="gfc:definition/gco:CharacterString"/>
-                                                        </li>
-                                                    </xsl:for-each>
-                                                </ul>
-                                                </xsl:with-param>
-                                            </xsl:call-template>
-                                        </xsl:if>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                                
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
+		            <td class="padded-content" width="100%" colspan="2">
+		                <table width="100%">
+		                    <tr>
+		                        <td width="50%" valign="top">
+		                            <table width="100%">
+		                                
+		                                <xsl:apply-templates mode="elementEP" select="gfc:memberName|geonet:child[string(@name)='memberName']">
+		                                    <xsl:with-param name="schema" select="$schema"/>
+		                                    <xsl:with-param name="edit"   select="$edit"/>
+		                                </xsl:apply-templates>
+		                                
+		                                <xsl:apply-templates mode="elementEP" select="gfc:definition|geonet:child[string(@name)='definition']">
+		                                    <xsl:with-param name="schema" select="$schema"/>
+		                                    <xsl:with-param name="edit"   select="$edit"/>
+		                                </xsl:apply-templates>
+		                                
+		                                <xsl:apply-templates mode="elementEP" select="gfc:cardinality|geonet:child[string(@name)='cardinality']">
+		                                    <xsl:with-param name="schema" select="$schema"/>
+		                                    <xsl:with-param name="edit"   select="$edit"/>
+		                                </xsl:apply-templates>
+		                                
+		                                <xsl:apply-templates mode="elementEP" select="gfc:featureType|geonet:child[string(@name)='featureType']">
+		                                    <xsl:with-param name="schema" select="$schema"/>
+		                                    <xsl:with-param name="edit"   select="$edit"/>
+		                                </xsl:apply-templates>
+		                                
+		                                <xsl:apply-templates mode="elementEP" select="gfc:valueType|geonet:child[string(@name)='valueType']">
+		                                    <xsl:with-param name="schema" select="$schema"/>
+		                                    <xsl:with-param name="edit"   select="$edit"/>
+		                                </xsl:apply-templates>
+		                                
+		                            </table>
+		                        </td>
+		                        <td valign="top">
+		                            <table width="100%">
+		                                <xsl:choose>
+		                                    <xsl:when test="$edit=true() or $currTab!='simple'">
+		                                        <xsl:apply-templates mode="elementEP" select="gfc:listedValue|geonet:child[string(@name)='listedValue']">
+		                                            <xsl:with-param name="schema" select="$schema"/>
+		                                            <xsl:with-param name="edit" select="$edit"/>
+		                                        </xsl:apply-templates>        
+		                                    </xsl:when>
+		                                    <xsl:otherwise>
+		                                        <xsl:if test="gfc:listedValue">
+		                                            <xsl:call-template name="complexElementGui">
+		                                                <xsl:with-param name="title">
+		                                                    <xsl:value-of select="/root/gui/iso19110/element[@name='gfc:listedValue']/label"/>
+		                                                    <xsl:text> </xsl:text>
+		                                                    (<xsl:value-of select="/root/gui/iso19110/element[@name='gfc:label']/label"/>
+		                                                    [<xsl:value-of select="/root/gui/iso19110/element[@name='gfc:code']/label"/>] :
+		                                                    <xsl:value-of select="/root/gui/iso19110/element[@name='gfc:definition']/label"/>)
+		                                                </xsl:with-param>
+		                                                <xsl:with-param name="content">
+		                                                
+		                                                <ul class="md">
+		                                                    <xsl:for-each select="gfc:listedValue/gfc:FC_ListedValue">
+		                                                        <li>
+		                                                            <b><xsl:value-of select="gfc:label/gco:CharacterString"/></b> 
+		                                                            [<xsl:value-of select="gfc:code/gco:CharacterString"/>] :
+		                                                            <xsl:value-of select="gfc:definition/gco:CharacterString"/>
+		                                                        </li>
+		                                                    </xsl:for-each>
+		                                                </ul>
+		                                                </xsl:with-param>
+		                                            </xsl:call-template>
+		                                        </xsl:if>
+		                                    </xsl:otherwise>
+		                                </xsl:choose>
+		                                
+		                            </table>
+		                        </td>
+		                    </tr>
+		                </table>
+		            </td>
         </xsl:variable>
-
+	    <xsl:variable name="featureAttributeElementName" select="name(.)" />
+	    <xsl:variable name="previousFeatureAttributeSiblingsCount" select="count(preceding-sibling::*[name(.) = $featureAttributeElementName])" />
+       	<xsl:if test="$previousFeatureAttributeSiblingsCount=0 and $edit=true()">
+			<xsl:apply-templates mode="addFeatureAttributeElement" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+       	</xsl:if>
         <xsl:apply-templates mode="complexElement" select=".">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit" select="$edit"/>

@@ -632,7 +632,7 @@ public class SchemaManager {
 					schema = defaultSchemaOrDependencySchema;
 				}
 			}
-
+			
 			// -- if the default schema failed then throw an exception
 			if (schema == null) {
 				throw new NoSchemaMatchesException("Autodetecting schema failed for metadata record with root element "+md.getName()+" in namespace "+md.getNamespace()+".");

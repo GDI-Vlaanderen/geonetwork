@@ -208,9 +208,9 @@
                 <xsl:when test="$edit=true()">
                     <xsl:variable name="ref" select="geonet:element/@ref"/>
                     <input type="text" name="_{$ref}_uuidref" id="_{$ref}_uuidref" value="{./@uuidref}" size="20"
-                           onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', 'uuidref');"/>
+                           onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', 'uuidref', 'uuidref', false);"/>
                     <img src="../../images/find.png" alt="{/root/gui/strings/search}" title="{/root/gui/strings/search}"
-                         onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', 'uuidref');" onmouseover="this.style.cursor='pointer';"/>
+                         onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', 'uuidref', 'uuidref', false);" onmouseover="this.style.cursor='pointer';"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <a href="metadata.show?uuid={@uuidref}">
@@ -3750,10 +3750,10 @@
                 <xsl:variable name="text">
                     <xsl:variable name="ref"
                                   select="gco:CharacterString/geonet:element/@ref" />
-                    <input onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"
+                    <input onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', '', '', true);"
                            class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
                     <img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" title="{/root/gui/strings/parentSearch}"
-                         onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"/>
+                         onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', '', '', true);"/>
                 </xsl:variable>
 
                 <xsl:apply-templates mode="simpleElement"

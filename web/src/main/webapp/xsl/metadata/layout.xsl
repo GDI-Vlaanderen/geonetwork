@@ -473,13 +473,13 @@
 	prevent drawing of geonet:* elements
 	-->
   <xsl:template mode="element"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@geonet:updatedText|@gco:nilReason"/>
   <xsl:template mode="simpleElement"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@geonet:updatedText|@gco:nilReason"/>
   <xsl:template mode="complexElement"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@geonet:updatedText|@gco:nilReason"/>
   
-    <xsl:template mode="simpleAttribute" match="@geonet:xsderror|@geonet:inserted|@geonet:deleted|@geonet:class|@class" priority="2"/>
+    <xsl:template mode="simpleAttribute" match="@geonet:xsderror|@geonet:inserted|@geonet:deleted|@geonet:class|@class|@geonet:updatedText|@gco:nilReason" priority="2"/>
 
   <!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
@@ -2325,6 +2325,118 @@
     </div>
   </xsl:template>
 
+  <xsl:template mode="addFeatureAttributeElement" match="*">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit" select="true"/>
+    <xsl:param name="embedded"/>
+		    <xsl:variable name="name">gfc:FC_FeatureAttribute</xsl:variable>
+		    <xsl:variable name="qname">gfcCOLONFC_FeatureAttribute</xsl:variable>
+		    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
+		    <xsl:variable name="max"
+		      select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
+		    <xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
+		    <xsl:variable name="isXLinked" select="false()"/>
+			<xsl:variable name="text">
+		        <xsl:variable name="options">
+		          <options>
+		              <option name="gfc:FC_FeatureAttribute">
+		                <xsl:attribute name="selected">selected</xsl:attribute>
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gfc:FC_FeatureAttribute</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
+		          </options>
+		        </xsl:variable>
+		        <select class="md" name="_{$parentName}_{$qname}_subtemplate" size="1">
+		          <xsl:for-each select="exslt:node-set($options)//option">
+		            <xsl:sort select="."/>
+		            <option value="{@name}"><xsl:value-of select="."/></option>
+		          </xsl:for-each>
+		        </select>
+		    </xsl:variable>
+		    <xsl:variable name="addLink">
+		    	<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
+		       <xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value,true);')"/>
+		    </xsl:variable>
+		    <xsl:variable name="helpLink">
+		      <xsl:call-template name="getHelpLink">
+		        <xsl:with-param name="name" select="$name"/>
+		        <xsl:with-param name="schema" select="$schema"/>
+		      </xsl:call-template>
+		    </xsl:variable>
+		    <xsl:call-template name="simpleElementGui">
+		      <xsl:with-param name="title">
+		        <xsl:call-template name="getTitle">
+		          <xsl:with-param name="name" select="$name"/>
+		          <xsl:with-param name="schema" select="$schema"/>
+		        </xsl:call-template>
+		      </xsl:with-param>
+		      <xsl:with-param name="text" select="$text"/>
+		      <xsl:with-param name="addLink" select="$addLink"/>
+		      <xsl:with-param name="helpLink" select="$helpLink"/>
+		      <xsl:with-param name="edit" select="$edit"/>
+			</xsl:call-template>
+  </xsl:template>
+<!--  
+    <xsl:template mode="addFeatureAttributeElement" match="*">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit" select="true"/>
+    <xsl:param name="embedded"/>
+		    <xsl:variable name="name">gfc:carrierOfCharacteristics</xsl:variable>
+		    <xsl:variable name="qname">gfcCOLONcarrierOfCharacteristics</xsl:variable>
+		    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
+		    <xsl:variable name="max"
+		      select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
+		    <xsl:variable name="isXLinked" select="false()"/>
+			<xsl:variable name="text">
+	        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
+		        <xsl:variable name="options">
+		          <options>
+		              <option name="gfc:FC_FeatureAttribute">
+		                <xsl:attribute name="selected">selected</xsl:attribute>
+		                <xsl:call-template name="getTitle">
+		                  <xsl:with-param name="name">gfc:FC_FeatureAttribute</xsl:with-param>
+		                  <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		              </option>
+		          </options>
+		        </xsl:variable>
+		        <select class="md" name="_{$parentName}_{$qname}_subtemplate" size="1">
+		          <xsl:for-each select="exslt:node-set($options)//option">
+		            <xsl:sort select="."/>
+		            <option value="{@name}">
+		            	<xsl:if test="@selected='selected'">
+                    		<xsl:attribute name="selected">selected</xsl:attribute>
+                    	</xsl:if>
+		            	<xsl:value-of select="."/></option>
+		          </xsl:for-each>
+		        </select>
+		    </xsl:variable>
+		    <xsl:variable name="addLink">
+		    	<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
+		       <xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value);')"/>
+		    </xsl:variable>
+		    <xsl:variable name="helpLink">
+		      <xsl:call-template name="getHelpLink">
+		        <xsl:with-param name="name" select="$name"/>
+		        <xsl:with-param name="schema" select="$schema"/>
+		      </xsl:call-template>
+		    </xsl:variable>
+		    <xsl:call-template name="simpleElementGui">
+		      <xsl:with-param name="title">
+		        <xsl:call-template name="getTitle">
+		          <xsl:with-param name="name" select="$name"/>
+		          <xsl:with-param name="schema" select="$schema"/>
+		        </xsl:call-template>
+		      </xsl:with-param>
+		      <xsl:with-param name="text" select="$text"/>
+		      <xsl:with-param name="addLink" select="$addLink"/>
+		      <xsl:with-param name="helpLink" select="$helpLink"/>
+		      <xsl:with-param name="edit" select="$edit"/>
+			</xsl:call-template>
+  </xsl:template>
+-->
   <xsl:template mode="addReportElement" match="*">
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="true"/>
@@ -2466,5 +2578,4 @@
 		      <xsl:with-param name="edit" select="$edit"/>
 			</xsl:call-template>
   </xsl:template>
-
 </xsl:stylesheet>

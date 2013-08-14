@@ -220,33 +220,11 @@ public class JeevesServlet extends HttpServlet
 		        Principal p = req.getUserPrincipal();
 		        if (p != null && p instanceof FederationPrincipal/* && SecurityTokenThreadLocal.getToken()==null*/) {
 		            FederationPrincipal fp = (FederationPrincipal)p;
-	            	/*
-	                emailaddress: wim.vandebriel@gim.be
-	                daliid: 141fcd6b-d13a-47a9-8d29-7e125a635f06
-	                organisationpath: 1/2
-	                name: wim.vandebriel
-	                givenname: Wim
-	                surname: Vanebriel
-	                language: nl-BE
-	                contactid: 1757
-	                organisationpublicid: int:Citizens
-	                organisationid: 2
-	    */
 		            for (Claim c: fp.getClaims()) {
 		                System.out.println(c.getClaimType().toString() + ":" + (c.getValue()!=null ? c.getValue().toString() : ""));            	
 		            }
 	                Map<String,String> roleProfileMapping = new HashMap<String,String>();
 	                String profile = null;
-	/*
-	                These profiles are configured in strings.xml for each language:
-	                
-	            	<profileChoice value="Administrator">Beheerder</profileChoice>
-	            	<profileChoice value="Editor">Editor</profileChoice>
-	            	<profileChoice value="RegisteredUser">Geregistreerde gebruiker</profileChoice>
-	            	<profileChoice value="Reviewer">Content reviewer</profileChoice>
-	            	<profileChoice value="UserAdmin">Gebruikers beheerder</profileChoice>
-	            	<profileChoice value="Monitor">System Monitor</profileChoice>
-	*/
 	                roleProfileMapping.put("Authenticated","RegisteredUser");
 	                roleProfileMapping.put("GIM Metadata Admin", "Administrator");
 	                roleProfileMapping.put("GIM Metadata Editor", "Editor");

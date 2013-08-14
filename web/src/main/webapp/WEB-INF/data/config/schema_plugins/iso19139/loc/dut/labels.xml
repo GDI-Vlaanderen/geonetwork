@@ -2451,7 +2451,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<description>Unieke code</description>
 	</element>
 	<element name="srv:couplingType">
-		<label>Coupling type</label>
+		<label>Type koppeling</label>
 		<description>Type van de koppeling tussen de service en de dataset.</description>
 	</element>
 	<element name="srv:SV_CouplingType">
@@ -2526,9 +2526,24 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Type naam</label>
 	</element>
 
+    <element name="gco:LocalName">
+        <label>Naam attribuut</label>
+        <description></description>
+    </element>
+
+    <element name="uuidref" context="srv:operatesOn">
+		<label>Metadata identificator</label>
+		<description>Metadata identifier gebruikt in de operatesOn associatie </description>
+	</element>      
+
+    <element name="uuidref" context="gmd:featureCatalogueCitation">
+		<label>Objectencatalogus identificator</label>
+		<description>Objectencatalogus identifier gebruikt in de associatie </description>
+	</element>      
+
     <element name="uuidref">
-		<label>UUID voor operatesOn</label>
-		<description>Datasetidentifier gebruikt in de operatesOn associatie </description>
+		<label>UUID</label>
+		<description>Identifier gebruikt in de associatie </description>
 	</element>      
 
 	<!-- ==================================================== -->
@@ -2700,7 +2715,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 				<description>Ondertsteunt hyper-linking mogelijkheden en verzekert een web-like implementatie van tekenreeksen (Characterstrings)</description>
 		</element>
 		<element name="xlink:href">
-			<label>Link href</label>
+			<label>Link (href)</label>
 			<description>Geeft de informatie die een XLink applicatie toelaat om de bron of bronfragment te vinden [W3C XLINK]</description>
 		</element>
 

@@ -146,9 +146,9 @@
 		<xsl:choose>
 			<!-- http links -->
 			<xsl:when test="substring($word-to-use, 0, 8) = 'http://'">
-				<a>
+				<a target="_blank">
 					<xsl:attribute name="href">
-						<xsl:value-of select="$word-to-use"/>
+						<xsl:value-of select="replace($word-to-use,'amp;','')"/>
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>
@@ -160,7 +160,7 @@
 			<xsl:when test="substring($word-to-use, 0, 9) = 'https://'">
 				<a>
 					<xsl:attribute name="href">
-						<xsl:value-of select="$word-to-use"/>
+						<xsl:value-of select="replace($word-to-use,'amp;','')"/>
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>
@@ -172,7 +172,7 @@
 			<xsl:when test="substring($word-to-use, 0, 7) = 'ftp://'">
 				<a>
 					<xsl:attribute name="href">
-						<xsl:value-of select="$word-to-use"/>
+						<xsl:value-of select="replace($word-to-use,'amp;','')"/>
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>

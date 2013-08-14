@@ -110,6 +110,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         gmx: 'http://www.isotc211.org/2005/gmx',
         gco: 'http://www.isotc211.org/2005/gco',
         gts: 'http://www.isotc211.org/2005/gts',
+        gfc: 'http://www.isotc211.org/2005/gfc',
         gml: 'http://www.opengis.net/gml'
     },
     toolbar: undefined,
@@ -517,7 +518,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  The window in which we can select linked metadata
      *
      */
-    showLinkedMetadataSelectionPanel: function(ref, name, mode){
+    showLinkedMetadataSelectionPanel: function(ref, name, mode, useUuid){
         // Add extra parameters according to selection panel
         var mode = mode || name;
         var single = ((mode === 'uuidref' || mode === 'iso19110' || mode === '') ? true : false);
@@ -533,20 +534,24 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     if (single) {
                     	var scope = this;
                         if (this.ref !== null) {
-                        	panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
-                            	if (mduuid) {
-                                    Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
-                                    var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
-                                    if (xlinkHref) {
-                                    	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
-                                    	var id = parameters["id"];
-                                    	if (Ext.isEmpty(id)) {
-                                    		id = parameters["ID"];
-                                    	}
-                                    	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
-                                    };
-                            	}
-                        	});
+                        	if (useUuid || this.mode=='iso19110') {
+                        		Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = metadata[0].data.uuid;
+                        	} else {
+                            	panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
+                                	if (mduuid) {
+                                        Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
+                                        var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
+                                        if (xlinkHref) {
+                                        	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
+                                        	var id = parameters["id"];
+                                        	if (Ext.isEmpty(id)) {
+                                        		id = parameters["ID"];
+                                        	}
+                                        	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
+                                        };
+                                	}
+                            	});
+                        	}
                         } else {
                             // Create relation between current record and selected one
                             if (this.mode === 'iso19110') {
@@ -1449,7 +1454,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *
      * Load subtemplate with 'elementName' as root, add the resulting xml to e new element 'name' and add this to the element with reference ref
      */
-    retrieveSubTemplate: function(ref, name, elementName){
+    retrieveSubTemplate: function(ref, name, elementName, ommitNameTag){
         var self = this;
         var elementNameArray = elementName.split("|");
         Ext.Ajax.request({
@@ -1459,7 +1464,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             success: function(response){
                 var st = response.responseText;
                 var subtemplates = [];
-                subtemplates.push("<" + name + self.generateNamespaceDeclaration() + ">" + response.responseText + "</" + name + ">")
+                subtemplates.push((ommitNameTag ? "" : ("<" + name + self.generateNamespaceDeclaration() + ">"))  + response.responseText + (ommitNameTag ? "" : "</" + name + ">"))
                 GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref:ref,name:name}, subtemplates, self);
             },
             failure: self.getError

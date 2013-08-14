@@ -138,7 +138,9 @@ GeoNetwork.util.SearchTools = {
                         }
 
 
-                    }
+                    } else {
+        	            Ext.Msg.alert("", 'Er werden geen metadatasets gevonden.');
+                    }                    
                     
                     if (isCatalogueSStore) {
 	                    var summary = currentRecords.summary;

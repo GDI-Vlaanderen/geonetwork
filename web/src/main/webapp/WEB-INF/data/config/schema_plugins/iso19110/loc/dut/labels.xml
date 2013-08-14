@@ -49,7 +49,7 @@
         <description></description>
     </element>
     <element name="gfc:carrierOfCharacteristics">
-        <label>Elements</label>
+        <label>Attribuut</label>
         <description>Association, attribute, operation, ...</description>
     </element>
     <element name="gfc:definition">
@@ -75,6 +75,10 @@
     <element name="gco:upper">
         <label>Hoogste cardinaliteit</label>
         <description>Hoogste cardinaliteit</description>
+    </element>
+    <element name="gco:LocalName">
+        <label>Naam attribuut</label>
+        <description></description>
     </element>
     <element name="gfc:cardinality">
         <label>Cardinaliteit attribuut</label>
