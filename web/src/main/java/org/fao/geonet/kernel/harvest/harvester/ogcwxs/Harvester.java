@@ -590,7 +590,19 @@ class Harvester
                 onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
             }
 
-			if (onLineSrc != null) {
+            if (onLineSrc == null) {
+            	mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='TC211' and " + dummyNsPrefix + "Format='application/xml']/" + dummyNsPrefix + "OnlineResource");
+                if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
+                onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
+            }
+
+            if (onLineSrc == null) {
+                mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='ISO19115:2005' or @type='ISO19115:2003') and " + dummyNsPrefix + "Format='application/xml']/" + dummyNsPrefix + "OnlineResource");
+                if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
+                onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
+            }
+
+            if (onLineSrc != null) {
 				org.jdom.Attribute href = onLineSrc.getAttribute ("href", xlink);
 
 				if (href != null) {	// No metadataUrl attribute for that layer
