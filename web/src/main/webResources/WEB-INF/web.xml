@@ -155,6 +155,10 @@
         	(servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file 
         	system parameter is not specified.
           -->
+        <init-param>
+		    <param-name>NODE_TYPE</param-name>
+            <param-value>AGIV</param-value>
+        </init-param>
 		<init-param>
 			<param-name>jeeves.configuration.overrides.file</param-name>
 			<param-value>${system.specific.overrides},${web.xml.main.config.overrides},${web.xml.widget.config.overrides}</param-value>
@@ -338,9 +342,6 @@
     </welcome-file-list>
 <!-- 	
 	<security-role>
-		<role-name>GIM Metadata Editor</role-name>
-		<role-name>GIM Metadata Admin</role-name>
-		<role-name>GIM Metadata Hoofdeditor</role-name>
 		<role-name>GDI Metadata Editor</role-name>
 		<role-name>GDI Metadata Admin</role-name>
 		<role-name>GDI Metadata Hoofdeditor</role-name>

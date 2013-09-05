@@ -119,7 +119,8 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 	                scope: this
 	            }
 	        }),
-	        logoutBt = new Ext.Button({
+	        //new Ext.menu.Menu()
+    		logoutBt = new Ext.Button({
 	            width: 80,
 	            text: OpenLayers.i18n('logout'),
 	            iconCls: 'md-mn mn-logout',
@@ -187,16 +188,24 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     	this.toggledFieldsOff.push(this.userInfo, 
                 logoutBt);
         if (this.catalogue.adminAppUrl !== '') {
-        	this.toggledFieldsOff.push(adminBt);
+//        	this.toggledFieldsOff.push(adminBt);
         }
-        this.items = [this.loginFields, this.toggledFieldsOff];
+        this.items = [this.loginFields, this.toggledFieldsOff, new Ext.Button({
+            text: OpenLayers.i18n('actions'),
+            menu: new GeoNetwork.IdentifiedUserActionsMenu({
+                catalogue: this.catalogue
+            }),
+            hidden: !this.catalogue.isIdentified()
+        })];
         GeoNetwork.LoginForm.superclass.initComponent.call(this);
         
         // check user on startup with a kind of ping service
+/*
         var loggedIn = this.catalogue.isLoggedIn();
         this.login(this.catalogue, loggedIn); // FIXME : login expect a user not a boolean
         this.catalogue.on('afterLogin', this.login, this);
         this.catalogue.on('afterLogout', this.login, this);
+*/
     },
     
     /** private: method[login]
@@ -209,7 +218,11 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
         	item.setVisible(!status);
         });
         Ext.each(this.toggledFieldsOff, function(item) {
-        	item.setVisible(status);
+        	if (item.text==OpenLayers.i18n('administration')) {
+               	item.setVisible(status && cat.identifiedUser.role=='Administrator');
+        	} else {
+            	item.setVisible(status);
+        	}
         });
         if (cat.identifiedUser && cat.identifiedUser.username) {
             this.userInfo.setText(cat.identifiedUser.name +

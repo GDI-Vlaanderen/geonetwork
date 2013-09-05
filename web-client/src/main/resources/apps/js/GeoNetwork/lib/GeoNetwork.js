@@ -120,6 +120,7 @@
             "GeoNetwork/widgets/LoginForm.js",
             "GeoNetwork/widgets/Templates.js",
             "GeoNetwork/widgets/MetadataMenu.js",
+            "GeoNetwork/widgets/menu/IdentifiedUserActionsMenu.js",
             "GeoNetwork/widgets/MetadataResultsView.js",
             "GeoNetwork/widgets/MetadataResultsToolbar.js",
             "GeoNetwork/widgets/TagCloudView.js",

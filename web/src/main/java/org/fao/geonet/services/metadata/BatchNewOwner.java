@@ -105,6 +105,8 @@ public class BatchNewOwner implements Service
 				//if (sourceGrp.equals("")) {
 				//	context.info("Source Group for user "+sourceUsr+" was null, setting default privileges");
 				dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp);
+	            dm.setOperation(context, dbms, id, targetGrp, AccessManager.OPER_DOWNLOAD);
+	            dm.setOperation(context, dbms, id, targetGrp, AccessManager.OPER_DYNAMIC);
 				//} else {
 				//	Vector<String> sourcePriv = retrievePrivileges(dbms, id, sourceUsr, sourceGrp);
                                 //

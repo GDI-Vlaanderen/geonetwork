@@ -23,12 +23,18 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
@@ -36,12 +42,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.jdom.Element;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 //=============================================================================
 
@@ -118,11 +118,8 @@ public class BatchUpdatePrivileges implements Service
 					String name  = el.getName();
 
 					if (name.startsWith("_")) {
-						StringTokenizer st = new StringTokenizer(name, "_");
-
-						String groupId = st.nextToken();
-						String operId  = st.nextToken();
-
+						String groupId = name.substring(1, name.lastIndexOf('_'));
+						String operId  = name.substring(name.lastIndexOf('_') + 1);
 						dm.setOperation(context, dbms, id, groupId, operId);
 					}
 				}

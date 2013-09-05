@@ -323,8 +323,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 this.catalogue.admin();
             },
             scope: this,
-            hidden: hide
-            });
+            hidden: hide || this.catalogue.identifiedUser.role!='Administrator'
+        });
         this.actionMenu.addItem(this.adminAction);
 
     },
@@ -546,7 +546,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         //    this.updatePrivilegesAction, this.createMetadataAction, this.mdImportAction,
         //    this.mdImportAction, this.adminAction, this.otherItem];
         Ext.each(actions, function(){
-            this.setVisible(user);
+        	if (this.text==OpenLayers.i18n('administration')) {
+                this.setVisible(user && catalogue.identifiedUser.role=='Administrator');
+        	} else {
+                this.setVisible(user);
+        	}
         });
 
         if (catalogue.isIdentified()) {

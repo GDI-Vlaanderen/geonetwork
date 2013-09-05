@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,8 @@ import org.apache.cxf.fediz.core.Claim;
 import org.apache.cxf.fediz.core.FederationPrincipal;
 import org.jdom.Element;
 
+import com.yammer.metrics.core.HealthCheckRegistry;
+
 //=============================================================================
 
 /** This is the main class. It handles http connections and inits the system
@@ -58,8 +61,10 @@ import org.jdom.Element;
 @SuppressWarnings("serial")
 public class JeevesServlet extends HttpServlet
 {
+    public static final String NODE_TYPE = "NODE_TYPE";
 	private JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
+	private String nodeType = "AGIV";
 
 	//---------------------------------------------------------------------------
 	//---
@@ -69,22 +74,26 @@ public class JeevesServlet extends HttpServlet
 
 	public void init() throws ServletException
 	{
+        String nodeType = getServletConfig().getInitParameter(NODE_TYPE);
+        if(nodeType != null) {
+        	this.nodeType = nodeType;
+        }
 		String appPath = getServletContext().getRealPath("/");
 
 		String baseUrl    = "";
 		
-    try {
-			// 2.5 servlet spec or later (eg. tomcat 6 and later)
-      baseUrl = getServletContext().getContextPath();
-    } catch (java.lang.NoSuchMethodError ex) {
-			// 2.4 or earlier servlet spec (eg. tomcat 5.5)
-			try { 
-				String resource = getServletContext().getResource("/").getPath(); 
-				baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1); 
-			} catch (java.net.MalformedURLException e) { // unlikely
-				baseUrl = getServletContext().getServletContextName(); 
-			}
-    }
+	    try {
+				// 2.5 servlet spec or later (eg. tomcat 6 and later)
+	      baseUrl = getServletContext().getContextPath();
+	    } catch (java.lang.NoSuchMethodError ex) {
+				// 2.4 or earlier servlet spec (eg. tomcat 5.5)
+				try { 
+					String resource = getServletContext().getResource("/").getPath(); 
+					baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1); 
+				} catch (java.net.MalformedURLException e) { // unlikely
+					baseUrl = getServletContext().getServletContextName(); 
+				}
+	    }
 		
 		if (!appPath.endsWith(File.separator))
 			appPath += File.separator;
@@ -220,22 +229,18 @@ public class JeevesServlet extends HttpServlet
 		        Principal p = req.getUserPrincipal();
 		        if (p != null && p instanceof FederationPrincipal/* && SecurityTokenThreadLocal.getToken()==null*/) {
 		            FederationPrincipal fp = (FederationPrincipal)p;
+/*
 		            for (Claim c: fp.getClaims()) {
 		                System.out.println(c.getClaimType().toString() + ":" + (c.getValue()!=null ? c.getValue().toString() : ""));            	
 		            }
-	                Map<String,String> roleProfileMapping = new HashMap<String,String>();
+*/
+		            Map<String,String> roleProfileMapping = new HashMap<String,String>();
 	                String profile = null;
 	                roleProfileMapping.put("Authenticated","RegisteredUser");
-	                roleProfileMapping.put("GIM Metadata Admin", "Administrator");
-	                roleProfileMapping.put("GIM Metadata Editor", "Editor");
-	                roleProfileMapping.put("GIM Metadata Hoofdeditor", "Reviewer");
-	                roleProfileMapping.put("GDI Metadata Admin", "Administrator");
-	                roleProfileMapping.put("GDI Metadata Editor", "Editor");
-	                roleProfileMapping.put("GDI Metadata Hoofdeditor", "Reviewer");
-	                roleProfileMapping.put("AGIV Metadata Admin", "Administrator");
-	                roleProfileMapping.put("AGIV Metadata Editor", "Editor");
-	                roleProfileMapping.put("AGIV Metadata Hoofdeditor", "Reviewer");
-	                List<String> roleListToCheck = Arrays.asList("Authenticated","GIM Metadata Editor","GIM Metadata Admin", "GIM Metadata Hoofdeditor","GDI Metadata Editor","GDI Metadata Admin", "GDI Metadata Hoofdeditor", "AGIV Metadata Editor","AGIV Metadata Admin","AGIV Metadata Hoofdeditor");
+	                roleProfileMapping.put(nodeType + " Metadata Admin", "Administrator");
+	                roleProfileMapping.put(nodeType + " Metadata Editor", "Editor");
+	                roleProfileMapping.put(nodeType + " Metadata Hoofdeditor", "Reviewer");
+	                List<String> roleListToCheck = Arrays.asList(nodeType + " Metadata Admin", nodeType + " Metadata Hoofdeditor", nodeType + " Metadata Editor", "Authenticated");
 	                for (String item: roleListToCheck) {
 	                	if (req.isUserInRole(item)) {
 	                		profile = roleProfileMapping.get(item);

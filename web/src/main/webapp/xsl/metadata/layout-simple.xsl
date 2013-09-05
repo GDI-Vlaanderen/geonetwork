@@ -23,16 +23,16 @@
           </span>
         </td>
       </tr>
+<!--
       <tr>
         <td>
           <xsl:copy-of select="$abstract"/>
         </td>
-<!-- 
         <td class="right">
           <xsl:copy-of select="$logo"/>
         </td>
--->
       </tr>
+-->
       <tr>
         <td>
           <xsl:copy-of select="$relatedResources"/>

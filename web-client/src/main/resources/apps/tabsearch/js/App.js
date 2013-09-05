@@ -105,6 +105,10 @@ GeoNetwork.app = function(){
      * @return
      */
     function createLoginForm(){
+        var user = Ext.state.Manager.getProvider().get('user');
+        if (user) {
+            catalogue.identifiedUser = user;
+        }
         var loginForm = new GeoNetwork.LoginForm({
             renderTo: 'login-form',
             catalogue: catalogue,
@@ -126,12 +130,10 @@ GeoNetwork.app = function(){
             cookie.set('user', undefined);
         });
 
-        // Refresh login form if needed
-        var cookie = Ext.state.Manager.getProvider();
-        var user = cookie.get('user');
         if (user) {
-            catalogue.identifiedUser = user;
             loginForm.login(catalogue, true);
+        } else {
+            loginForm.login(catalogue, false);        	
         }
     }
 
@@ -180,6 +182,7 @@ GeoNetwork.app = function(){
     function createSearchForm(){
         // Add advanced mode criteria to simple form - start
         var advancedCriteria = [];
+        var advancedCriteriaExtra = [];
         var services = catalogue.services;
 //        var orgNameField = new GeoNetwork.form.OpenSearchSuggestionTextField({
 //            hideLabel: false,
@@ -267,6 +270,7 @@ GeoNetwork.app = function(){
             name: 'E__owner',
             hidden: true
         });
+        var statusField = GeoNetwork.util.SearchFormTools.getStatusField(services.getStatus, true);
         var isHarvestedField = new Ext.form.TextField({
             name: 'E__isHarvested',
             hidden: true
@@ -296,10 +300,10 @@ GeoNetwork.app = function(){
         if (GeoNetwork.Settings.nodeType != "agiv") {
         	advancedCriteria.push(catalogueField);	
         } 
-        advancedCriteria.push(groupField,
+        advancedCriteriaExtra.push(groupField,
             metadataTypeField, validField,
             validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField,
-            ownerField, isHarvestedField, isLockedField);
+            statusField,ownerField, isHarvestedField, isLockedField);
 /*        
         var adv = {
             xtype: 'fieldset',
@@ -324,7 +328,7 @@ GeoNetwork.app = function(){
 */
 
         // Hide or show extra fields after login event
-        var adminFields = [groupField, metadataTypeField, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField];
+        var adminFields = [groupField, metadataTypeField, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField, statusField];
         Ext.each(adminFields, function(item){
             item.setVisible(false);
         });
@@ -497,7 +501,8 @@ GeoNetwork.app = function(){
                                 advancedCriteria,GeoNetwork.util.SearchFormTools.getTypesField(GeoNetwork.searchDefault.activeMapControlExtent, true),
                                 GeoNetwork.util.INSPIRESearchFormTools.getAnnexField(true),
                                 GeoNetwork.util.INSPIRESearchFormTools.getThemesField(catalogue.services, true),
-                                GeoNetwork.util.INSPIRESearchFormTools.getServiceTypeField(true)
+                                GeoNetwork.util.INSPIRESearchFormTools.getServiceTypeField(true),
+                                advancedCriteriaExtra
                             ]
                         },
 /*
