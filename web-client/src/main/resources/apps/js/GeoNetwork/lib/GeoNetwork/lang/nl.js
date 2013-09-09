@@ -226,6 +226,7 @@ GeoNetwork.Lang.nl = {
     'privileges': "Rechten",
     'categories': "Categorieën",
     'otherActions': "Andere acties",
+    'Actions': "Acties",
     'view': "Bekijk",
     'zoomTo': "Zoom naar",
     'saveXml': "Exporteer (XML)",

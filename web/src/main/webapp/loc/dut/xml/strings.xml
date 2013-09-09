@@ -749,6 +749,7 @@
 	<progressChoice value="planned">gepland</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
+	<protocolChoice show="y" value="other">Other service</protocolChoice> 
 	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuratie Bestand (*.AXL)</protocolChoice>
 	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
 	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
@@ -774,10 +775,11 @@
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+    <protocolChoice show="y" value="OGC:WFS-1.1.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.1.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice show="-" value="WMS">OGC-WMS Web Map Service</protocolChoice>
+<!--    <protocolChoice show="-" value="WMS">OGC-WMS Web Map Service</protocolChoice>-->
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
@@ -785,7 +787,7 @@
     <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Bestand ter download dmv FTP</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Bestand ter download</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Bestand ter download dmv HTTP</protocolChoice>
 	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Webadres (URL)</protocolChoice>
@@ -796,7 +798,6 @@
 	<protocolChoice show="y" value="invoke">Invoke service</protocolChoice>
 	<protocolChoice show="y" value="discovery">Discovery service</protocolChoice>
 	<protocolChoice show="y" value="download">Download service</protocolChoice>
-	<protocolChoice show="y" value="other">Other service</protocolChoice> 
 	<protocolChoice show="y" value="transformation">Transformation service</protocolChoice>
 	<protocolChoice show="y" value="view">View service</protocolChoice>
     <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>

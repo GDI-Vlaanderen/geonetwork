@@ -43,8 +43,8 @@
     <skos:prefLabel xml:lang="nl">Vlaams-Brabant</skos:prefLabel>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
-        <gml:lowerCorner>3.8894057000000002 50.687428500000003</gml:lowerCorner>
-        <gml:upperCorner>5.188078 51.049929200000001</gml:upperCorner>
+        <gml:lowerCorner>2.53000 50.67000</gml:lowerCorner>
+        <gml:upperCorner>5.92000 51.51000</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.geopunt.be/adminregios#Vlaanderen" />

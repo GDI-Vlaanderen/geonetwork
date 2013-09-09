@@ -307,6 +307,7 @@ class Harvester
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("lang", params.lang);
 //		param.put("topic", params.topic);
+		param.put("ogctype", params.ogctype);
 		param.put("uuid", uuid);
 		
 		Element md = Xml.transform (capa, styleSheet, param);

@@ -119,8 +119,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 	                scope: this
 	            }
 	        }),
-	        //new Ext.menu.Menu()
-    		logoutBt = new Ext.Button({
+	        logoutBt = new Ext.Button({
 	            width: 80,
 	            text: OpenLayers.i18n('logout'),
 	            iconCls: 'md-mn mn-logout',
@@ -203,9 +202,9 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 /*
         var loggedIn = this.catalogue.isLoggedIn();
         this.login(this.catalogue, loggedIn); // FIXME : login expect a user not a boolean
+*/
         this.catalogue.on('afterLogin', this.login, this);
         this.catalogue.on('afterLogout', this.login, this);
-*/
     },
     
     /** private: method[login]

@@ -406,7 +406,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         );
         
         this.createMassiveActionMenu(!this.catalogue.isIdentified());
-        this.createAdminMenu(!this.catalogue.isIdentified());
+//        this.createAdminMenu(!this.catalogue.isIdentified());
         
         this.actionOnSelectionMenu = new Ext.Button({
             text: OpenLayers.i18n('otherActions'),
@@ -540,8 +540,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         // TODO : this.ownerAction visible to userAdmin only #781
         // AGIV: hide options
         var actions = [this.deleteAction, this.ownerAction, this.updatePrivilegesAction, this.diffAction,
-                        this.updateStatusAction, this.createMetadataAction, this.mdImportAction,
-                        this.mdImportAction, this.adminAction, this.otherItem];
+                        this.updateStatusAction/*, this.createMetadataAction, this.mdImportAction,
+                        this.mdImportAction, this.adminAction, this.otherItem*/];
         //var actions = [this.deleteAction, this.ownerAction, this.updateCategoriesAction,
         //    this.updatePrivilegesAction, this.createMetadataAction, this.mdImportAction,
         //    this.mdImportAction, this.adminAction, this.otherItem];

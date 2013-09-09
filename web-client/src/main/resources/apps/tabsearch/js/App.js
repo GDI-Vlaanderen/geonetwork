@@ -104,11 +104,7 @@ GeoNetwork.app = function(){
      *
      * @return
      */
-    function createLoginForm(){
-        var user = Ext.state.Manager.getProvider().get('user');
-        if (user) {
-            catalogue.identifiedUser = user;
-        }
+    function createLoginForm(user){
         var loginForm = new GeoNetwork.LoginForm({
             renderTo: 'login-form',
             catalogue: catalogue,
@@ -130,7 +126,7 @@ GeoNetwork.app = function(){
             cookie.set('user', undefined);
         });
 
-        if (user) {
+        if (user && !Ext.isEmpty(user.role)) {
             loginForm.login(catalogue, true);
         } else {
             loginForm.login(catalogue, false);        	
@@ -179,7 +175,7 @@ GeoNetwork.app = function(){
      *
      * @return
      */
-    function createSearchForm(){
+    function createSearchForm(user){
         // Add advanced mode criteria to simple form - start
         var advancedCriteria = [];
         var advancedCriteriaExtra = [];
@@ -301,9 +297,9 @@ GeoNetwork.app = function(){
         	advancedCriteria.push(catalogueField);	
         } 
         advancedCriteriaExtra.push(groupField,
-            metadataTypeField, validField,
-            validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField,
-            statusField,ownerField, isHarvestedField, isLockedField);
+            metadataTypeField,
+//            validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField,
+            statusField, ownerField, isHarvestedField, isLockedField);
 /*        
         var adv = {
             xtype: 'fieldset',
@@ -328,19 +324,30 @@ GeoNetwork.app = function(){
 */
 
         // Hide or show extra fields after login event
-        var adminFields = [groupField, metadataTypeField, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField, statusField];
+        var loggedInFields = [statusField];
+        Ext.each(loggedInFields, function(item){
+        	item.setVisible(user && !Ext.isEmpty(user.role));
+        });
+
+        var adminFields = [groupField, metadataTypeField/*, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField*/];
         Ext.each(adminFields, function(item){
-            item.setVisible(false);
+            item.setVisible(user && user.role=='Administrator');
         });
 
         catalogue.on('afterLogin', function(){
+            Ext.each(loggedInFields, function(item){
+            	item.setVisible(user && !Ext.isEmpty(user.role));
+            });
             Ext.each(adminFields, function(item){
-                item.setVisible(true);
+                item.setVisible(user && user.role=='Administrator');
             });
             GeoNetwork.util.SearchFormTools.reload(this);
             Ext.getCmp('searchForm').doLayout();
         });
         catalogue.on('afterLogout', function(){
+            Ext.each(loggedInFields, function(item){
+                item.setVisible(false);
+            });
             Ext.each(adminFields, function(item){
                 item.setVisible(false);
             });
@@ -879,8 +886,13 @@ GeoNetwork.app = function(){
 
             createHeader();
 
+            var user = Ext.state.Manager.getProvider().get('user');
+            if (user) {
+                catalogue.identifiedUser = user;
+            }
+
             // Search form
-            searchForm = createSearchForm();
+            searchForm = createSearchForm(user);
 
 
 
@@ -888,7 +900,7 @@ GeoNetwork.app = function(){
             //createModeSwitcher();
             //createLanguageSwitcher(lang);
             if (Ext.get("login-form")) {
-                createLoginForm();
+                createLoginForm(user);
             }
             edit();
 

@@ -9,6 +9,9 @@
 			    srv:extent aangepast (description toegevoegd, VerticalCRS toegevoegd
 			    volgorde gmd:geographicElement elementen aangepast
 			    gmd:name toegevoegd achter gmd:protocol in gmd:CI_OnlineResource onder srv:connectPoint-->
+<!-- Revisie 06: 05/09/2013 gmd:function in commentaar gezet achter gmd:description in gmd:CI_OnlineResource onder srv:connectPoint
+			    gmd:name en gmd:description toegevoegd achter gmd:protocol in gmd:CI_OnlineResource onder gmd:MD_DigitalTransferOptions
+			    gmd:metadataStandardName en gmd:metadataStandardVersion ingevuld-->
 <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:wms="http://www.opengis.net/wms" xmlns:srv="http://www.isotc211.org/2005/srv" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd">
 	<gmd:fileIdentifier>
 		<gco:CharacterString/>
@@ -80,10 +83,10 @@
 	</gmd:contact>
 	<gmd:dateStamp gco:nilReason="missing"/>
 	<gmd:metadataStandardName>
-		<gco:CharacterString/>
+		<gco:CharacterString>ISO 19119:2005/Amd 1:2008</gco:CharacterString>
 	</gmd:metadataStandardName>
 	<gmd:metadataStandardVersion>
-		<gco:CharacterString/>
+		<gco:CharacterString>GDI-Vlaanderen Best Practices – versie 1.0</gco:CharacterString>
 	</gmd:metadataStandardVersion>
 	<gmd:identificationInfo>
 		<srv:SV_ServiceIdentification>
@@ -369,9 +372,11 @@
 							<gmd:description>
 								<gco:CharacterString/>
 							</gmd:description>
+<!--
 							<gmd:function>
 								<gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
 							</gmd:function>
+-->							
 						</gmd:CI_OnlineResource>
 					</srv:connectPoint>
 				</srv:SV_OperationMetadata>
@@ -401,6 +406,12 @@
 							<gmd:protocol>
 								<gco:CharacterString/>
 							</gmd:protocol>
+							<gmd:name>
+								<gco:CharacterString/>
+							</gmd:name>
+							<gmd:description>
+								<gco:CharacterString/>
+							</gmd:description>
 						</gmd:CI_OnlineResource>
 					</gmd:onLine>
 				</gmd:MD_DigitalTransferOptions>

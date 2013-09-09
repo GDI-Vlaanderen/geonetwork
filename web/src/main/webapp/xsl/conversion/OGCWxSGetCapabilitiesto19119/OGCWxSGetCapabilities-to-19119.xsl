@@ -34,6 +34,7 @@ Mapping between :
     <xsl:param name="uuid">uuid</xsl:param>
 	<xsl:param name="lang">eng</xsl:param>
 	<xsl:param name="topic"></xsl:param>
+	<xsl:param name="ogctype"></xsl:param>
 	<!-- ============================================================================= -->
 	
 	<xsl:include href="resp-party.xsl"/>
@@ -152,6 +153,7 @@ Mapping between :
 				<srv:SV_ServiceIdentification>
 					<xsl:apply-templates select="." mode="SrvDataIdentification">
 						<xsl:with-param name="topic"><xsl:value-of select="$topic"/></xsl:with-param>
+						<xsl:with-param name="ogctype"><xsl:value-of select="$ogctype"/></xsl:with-param>
 						<xsl:with-param name="ows"><xsl:value-of select="$ows"/></xsl:with-param>
 					</xsl:apply-templates>
 				</srv:SV_ServiceIdentification>
@@ -200,11 +202,27 @@ Mapping between :
                                     <protocol>
                                         <gco:CharacterString>
                                         	<xsl:choose>
-                                        		<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">application/vnd.ogc.wms_xml</xsl:when>
+                                        		<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">
+		                                        	<xsl:choose>
+		                                        		<xsl:when test="$ogctype='WMS1.1.1'">OGC:WMS-1.1.1-http-get-capabilities</xsl:when>
+		                                        		<xsl:when test="$ogctype='WMS1.3.0'">OGC:WMS-1.3.0-http-get-capabilities</xsl:when>
+		                                        		<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
+		                                        	</xsl:choose>
+                                        		</xsl:when>
+                                        		<xsl:when test="name(.)='WFS_Capabilities'">
+		                                        	<xsl:choose>
+		                                        		<xsl:when test="$ogctype='WFS1.0.0'">OGC:WFS-1.0.0-http-get-capabilities</xsl:when>
+		                                        		<xsl:when test="$ogctype='WFS1.1.0'">OGC:WFS-1.1.0-http-get-capabilities</xsl:when>
+		                                        		<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
+		                                        	</xsl:choose>
+                                        		</xsl:when>
                                         		<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
                                         	</xsl:choose>
                                         </gco:CharacterString>
                                     </protocol>
+                                    <name>
+                                    	<gco:CharacterString/>
+                                    </name>
                                     <description>
                                         <gco:CharacterString>
                                             <xsl:choose>

@@ -9,7 +9,7 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-				<title><xsl:apply-templates select="/" mode="title"/></title>
+				<title><xsl:value-of select="/root/gui/strings/title"/></title>
 				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
 			</head>
 			<body>

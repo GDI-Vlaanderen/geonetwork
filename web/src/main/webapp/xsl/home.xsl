@@ -28,19 +28,10 @@
                 }); 
           </xsl:if>
           <xsl:if test="not(string(/root/gui/session/userId)!='')">
-		        var cookies = {},
-		            c = document.cookie + ";",
-		            re = /\s?(.*?)=(.*?);/g,
-		    	    matches,
-		            name,
-		            value;
-		    	while((matches = re.exec(c)) != null){
-		            name = matches[1];
-		            value = matches[2];
-		            if(name &amp;&amp; name.substring(0,3) == "ys-"){
-		                cookies[name.substr(3)] = null;
-		            }
-		        }
+	            var cookie = Ext.state.Manager.getProvider();
+	            if (cookie) {
+	                cookie.set('user', undefined);
+	            }
           </xsl:if>
           var search = window.location.search;
           var url = '<xsl:value-of select="/root/gui/config/client/@url"/>';

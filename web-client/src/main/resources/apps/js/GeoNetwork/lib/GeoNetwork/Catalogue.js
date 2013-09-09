@@ -1338,6 +1338,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     logout: function(){
         if (GeoNetwork.Settings.useSTS) {
+            var cookie = Ext.state.Manager.getProvider();
+            cookie.set('user', undefined);
             location.replace(this.services.agivLogout);
         } else {
 	        var app = this;

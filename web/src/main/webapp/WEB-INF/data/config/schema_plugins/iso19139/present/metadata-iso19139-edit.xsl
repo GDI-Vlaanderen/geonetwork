@@ -3185,7 +3185,7 @@
     <!-- online resources -->
     <!-- ============================================================================= -->
 
-    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource" priority="2">
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource" priority="3">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -4541,6 +4541,7 @@ This parameter define the class of the textarea (see CSS). -->
     gmd:MD_ScopeDescription/gmd:other[gco:CharacterString]|
     gmd:hoursOfService[gco:CharacterString]|
     gmd:applicationProfile[gco:CharacterString]|
+    gmd:CI_Series/gmd:name[gco:CharacterString]|
     gmd:CI_Series/gmd:page[gco:CharacterString]|
     gmd:MD_BrowseGraphic/gmd:fileName[gco:CharacterString]|
     gmd:MD_BrowseGraphic/gmd:fileType[gco:CharacterString]|
