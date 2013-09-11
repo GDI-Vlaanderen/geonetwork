@@ -16,6 +16,7 @@ attached it to the metadata for data.
 	<!-- ============================================================================= -->
 	
 	<xsl:param name="uuidref"></xsl:param>
+	<xsl:param name="mduuidref"></xsl:param>
 	<xsl:param name="scopedName"></xsl:param>
 	<xsl:param name="siteUrl"></xsl:param>
 
@@ -95,7 +96,7 @@ attached it to the metadata for data.
 										<gco:CharacterString>GetCapabilities</gco:CharacterString> 
 									</srv:operationName> 
 									<srv:identifier>
-										<gco:CharacterString><xsl:value-of select="$uuidref"/></gco:CharacterString> 
+										<gco:CharacterString><xsl:value-of select="$mduuidref"/></gco:CharacterString> 
 									</srv:identifier> 
 									<gco:ScopedName>
 										<xsl:value-of select="$scopedName" />
@@ -111,7 +112,7 @@ attached it to the metadata for data.
 									gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:coupledResource">
 									<!-- Avoid duplicate SV_CoupledResource elements -->
 									<xsl:choose>
-										<xsl:when test="srv:SV_CoupledResource/srv:identifier/gco:CharacterString!=$uuidref">
+										<xsl:when test="srv:SV_CoupledResource/srv:identifier/gco:CharacterString!=$mduuidref">
 											<xsl:copy-of select="."/>
 										</xsl:when>
 									</xsl:choose>
@@ -121,7 +122,7 @@ attached it to the metadata for data.
 								</xsl:for-each>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:if test="$uuidref and $uuidref != ''">
+								<xsl:if test="$mduuidref and $mduuidref != ''">
 									<xsl:copy-of select="$coupledResource"/>
 								</xsl:if>
 							</xsl:otherwise>
@@ -133,11 +134,11 @@ attached it to the metadata for data.
 							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:couplingType|
 							gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations|
 							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:containsOperations|
-							gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn[@uuidref!=$uuidref]|
-							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:operatesOn[@uuidref!=$uuidref]"/>
+							gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn[@uuidref!=$mduuidref]|
+							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:operatesOn[@uuidref!=$mduuidref]"/>
 						
 						<!-- Handle operatesOn -->
-                        <srv:operatesOn uuidref="{$uuidref}" xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
+                        <srv:operatesOn uuidref="{$mduuidref}" xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
 
 			    	</srv:SV_ServiceIdentification>
 				</gmd:identificationInfo>

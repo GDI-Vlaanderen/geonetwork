@@ -1288,7 +1288,7 @@
 		<description>Naam van de gebruiksbeperkingen op de dataset</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:MD_Constraints">
+	<element name="gmd:useLimitation" context="gmd:MD_Constraints">
 		<label>Beperkingen</label>
 		<description>Beperkingen die van toepassing zijn op de wijze van toegang of het gebruik van een databron of metadata</description>
 	</element>

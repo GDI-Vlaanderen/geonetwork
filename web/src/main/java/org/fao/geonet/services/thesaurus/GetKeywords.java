@@ -57,6 +57,8 @@ public class GetKeywords implements Service {
 
 		KeywordsSearcher searcher = null;
 		
+		int maxResults = Util.getParam(params, "maxResults", 100000);
+		params.removeChild("maxResults");
 		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
 		if (newSearch) {			
 			// perform the search and save search result into session
@@ -77,7 +79,7 @@ public class GetKeywords implements Service {
 		}
 
 		// get the results
-		response.addContent(searcher.getResults());
+		response.addContent(searcher.getResults(searcher.getNbResults()<=maxResults?searcher.getNbResults():maxResults));
 
 		
 		

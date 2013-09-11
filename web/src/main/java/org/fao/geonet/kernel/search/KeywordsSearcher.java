@@ -23,8 +23,18 @@
 
 package org.fao.geonet.kernel.search;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -35,15 +45,6 @@ import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  *
@@ -466,11 +467,20 @@ public class KeywordsSearcher {
      */
     public Element getResults() throws Exception {
 
-        Element elDescKeys = new Element("descKeys");
-
         int nbResults = (this.getNbResults()<=_maxResults?this.getNbResults():_maxResults);
+        return getResults(nbResults);
+    }
 
-        //for (int i = from; i <= to; i++) {
+    /**
+     * TODO javadoc.
+     *
+     * @param nbResults max number of results
+     * @return element
+     * @throws Exception hmm
+     */
+    public Element getResults(int nbResults) throws Exception {
+
+        Element elDescKeys = new Element("descKeys");
         for (int i = 0; i <= nbResults - 1; i++) {
             KeywordBean kb = _results.get(i);
             toRawElement(elDescKeys, kb);

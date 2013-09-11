@@ -69,9 +69,9 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
          *  Set to '' to display all.
          */
         relationTypes: 'service|children|related|parent|dataset|fcat',
-        maximizable: true,
-        maximized: false,
-        collapsible: true,
+        maximizable: false,
+        maximized: true,
+        collapsible: false,
         collapsed: false
     },
     workspaceCopy: false,
@@ -94,7 +94,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
      */
     initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
-        
+        /*
         this.tools = [{
             id: 'newwindow',
             qtip: OpenLayers.i18n('newWindow'),
@@ -104,7 +104,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             },
             scope: this
         }];
-        
+        */
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
 
         if (this.workspaceCopy) {

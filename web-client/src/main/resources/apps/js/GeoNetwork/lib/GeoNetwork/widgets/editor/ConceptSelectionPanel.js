@@ -327,6 +327,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         var scope = this;
         this.itemSelector.on({
         	'afterrender' : function(component) {
+        		this.toMultiselect.view.on('dblclick',scope.doNothing,this.toMultiselect);
+        		this.fromMultiselect.view.on('dblclick',scope.doNothing,this.fromMultiselect);
 //        		console.log("Selector rendered whth id " + this.fromMultiselect.id);
                 scope.keywordStore.baseParams.pThesauri = scope.thesaurusIdentifier;
                 scope.keywordStore.baseParams.maxResults = scope.maxKeywords;
@@ -382,6 +384,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
 //            console.log('No transformation defined. Using default transformation');
         }
     },
+    doNothing: function() {
+    	return false;
+    },
+    
     /** private: method[generateXML]
      *  
      *  Build XML fragment according to configuration and popuplate the hidden
@@ -524,7 +530,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             sortInfo: {
                 field: "thesaurus"
             },
-            autoLoad: false,
+            autoLoad: true,
             listeners: {
                 exception: function (misc) {
                     // TODO : improve error
@@ -535,6 +541,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         this.keywordStore.baseParams.maxResults = this.nbResultsField.getValue();
                     }
                 },
+/*
+                'load': function (store, options) {
+                	alert(this.catalogue.services.searchKeyword);
+                },
+*/                
                 scope: this
             }
         });

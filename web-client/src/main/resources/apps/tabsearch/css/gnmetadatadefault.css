@@ -157,11 +157,15 @@ label + span {
   margin : 0px;
 }
 
+.metadata * fieldset > table.gn {
+  margin-left : 10px !important;
+}
+
 .metadata * legend {
   font-size : 110%;
   font-weight : bold;
   color : #016599;
-  padding : 5px 0px 4px 0px;
+  padding : 0px 0px 4px 0px;
 }
 
 
@@ -250,7 +254,7 @@ label + span {
 /* Table - start */
 
 .metadata * table.gn {
-  border-collapse : collapse;
+/*  border-collapse : collapse;*/
   background-color : #fff;
   clear : both;
   padding : 0px;
@@ -307,7 +311,7 @@ table.gn {
 }
 table.gn > tbody > tr > td,
 table.gn > tbody > tr > th {
-  border-bottom : 1px solid #B3D4E6;
+  border-bottom : 0px solid #B3D4E6;
   color : #069;
 }
 
@@ -354,7 +358,7 @@ span.buttons a {
 }
 span.buttons a.small span {
   margin : 1px;
-  padding : 0px 4px;
+  padding : 0px 8px;
   width : 6px !important;
   height : 5px !important;
   background-repeat : no-repeat;

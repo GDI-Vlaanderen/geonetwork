@@ -209,7 +209,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
                                 }
                             });
                         }
-                    },
+                    }/*,
                     {
                         text: OpenLayers.i18n('editAttributes'),
                         checked: this.editAttributes,
@@ -218,7 +218,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
                             this.editAttributesVisibility();
                         },
                         scope: this
-                    }
+                    }*/
                 ]
             }
         };

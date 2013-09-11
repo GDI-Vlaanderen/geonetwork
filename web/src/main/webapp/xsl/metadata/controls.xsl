@@ -194,7 +194,12 @@
     <table width="100%">
       <tr>
         <td>
-          <div class="cal {$class}" id="_{$ref}"/>
+          <xsl:if test="$class">
+            <div class="cal {$class}" id="_{$ref}"/>
+          </xsl:if>
+          <xsl:if test="not($class)">
+            <div class="cal" id="_{$ref}"/>
+          </xsl:if>
           <input type="hidden" id="_{$ref}_format" value="{$format}"/>
           <input type="hidden" id="_{$ref}_cal" value="{$date}"/>
         </td>

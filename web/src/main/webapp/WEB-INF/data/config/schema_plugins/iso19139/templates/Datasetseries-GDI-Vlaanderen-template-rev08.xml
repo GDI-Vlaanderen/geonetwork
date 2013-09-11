@@ -133,7 +133,7 @@
 			<gmd:citation>
 				<gmd:CI_Citation>
 					<gmd:title>
-						<gco:CharacterString>Metadata-sjabloon voor datasetseries conform GDI-Vlaanderen Best Practices v0.7</gco:CharacterString>
+						<gco:CharacterString>Metadata-sjabloon voor &lt;b&gt; datasetseries &lt;/b&gt; v1.0, conform GDI-Vlaanderen Best Practices v1.0</gco:CharacterString>
 					</gmd:title>
 					<gmd:alternateTitle>
 						<gco:CharacterString/>

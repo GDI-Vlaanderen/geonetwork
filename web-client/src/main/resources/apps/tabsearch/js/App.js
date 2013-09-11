@@ -803,7 +803,8 @@ GeoNetwork.app = function(){
             });
 
             this.editorWindow = new Ext.Window({
-                tools: [{
+/*
+            	tools: [{
                     id: 'newwindow',
                     qtip: OpenLayers.i18n('newWindow'),
                     handler: function(e, toolEl, panel, tc){
@@ -812,15 +813,16 @@ GeoNetwork.app = function(){
                     },
                     scope: this
                 }],
-                title: OpenLayers.i18n('mdEditor'),
+*/
+            	title: OpenLayers.i18n('mdEditor'),
                 id : 'editorWindow',
                 layout: 'fit',
                 modal: false,
                 items: this.editorPanel,
                 closeAction: 'close',
-                collapsible: true,
+                collapsible: false,
                 collapsed: false,
-                maximizable: true,
+                maximizable: false,
                 maximized: true,
                 resizable: true,
 //                constrain: true,

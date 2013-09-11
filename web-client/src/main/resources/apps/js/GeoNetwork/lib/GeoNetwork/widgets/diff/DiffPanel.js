@@ -95,11 +95,14 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
             this.switchButton.setVisible(true);
         }
 
+        GeoNetwork.Util.initCalendar(this);
+        GeoNetwork.Util.initMultipleSelect();
+        GeoNetwork.Util.validateMetadataFields(this);
+
         // Create map panel for extent visualization
         if(this.catalogue && this.catalogue.extentMap) {
             this.catalogue.extentMap.initMapDiv();
         }
-
 
         GeoNetwork.editor.ConceptSelectionPanel.init();
     },

@@ -190,7 +190,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 //        	this.toggledFieldsOff.push(adminBt);
         }
         this.items = [this.loginFields, this.toggledFieldsOff, new Ext.Button({
-            text: OpenLayers.i18n('actions'),
+            text: OpenLayers.i18n('Actions'),
             menu: new GeoNetwork.IdentifiedUserActionsMenu({
                 catalogue: this.catalogue
             }),

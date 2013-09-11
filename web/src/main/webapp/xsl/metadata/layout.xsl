@@ -1470,7 +1470,11 @@
             and count(*/geonet:attribute[@name='codeList'])=0 
             ">
             <!-- Display attributes if used and not only contains a gco:nilReason = missing. -->
+            <xsl:variable name="countGeonetAttributes" select="count(@geonet:xsderror|@geonet:inserted|@geonet:deleted|@geonet:class|@class|@geonet:updatedText)"/>
+            <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and name(.)!='frame' and  normalize-space()!='missing']) - $countGeonetAttributes > 0"/>
+<!--
             <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and  normalize-space()!='missing']) > 0"/>
+-->
              <div class="attr">
               <div title="{/root/gui/strings/editAttributes}" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));" style="display: none;">
                 <xsl:attribute name="class">

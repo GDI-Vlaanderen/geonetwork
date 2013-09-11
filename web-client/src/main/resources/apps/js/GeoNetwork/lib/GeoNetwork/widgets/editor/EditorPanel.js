@@ -542,12 +542,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                         Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
                                         var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
                                         if (xlinkHref) {
-                                        	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
-                                        	var id = parameters["id"];
-                                        	if (Ext.isEmpty(id)) {
-                                        		id = parameters["ID"];
+                                        	if (Ext.isEmpty(xlinkHref.dom.value)) {
+                                        		xlinkHref.dom.value = panel.catalogue.URL.replace("apps/tabsearch/../../","") + '/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + metadata[0].data.uuid;
+                                        	} else {
+                                            	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
+                                            	var id = parameters["id"];
+                                            	if (Ext.isEmpty(id)) {
+                                            		id = parameters["ID"];
+                                            	}
+                                            	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
                                         	}
-                                        	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
                                         };
                                 	}
                             	});

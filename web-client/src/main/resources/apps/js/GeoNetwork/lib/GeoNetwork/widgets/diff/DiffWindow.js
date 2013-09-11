@@ -61,7 +61,7 @@ GeoNetwork.view.DiffWindow = Ext.extend(Ext.Window, {
         relationTypes: 'service|children|related|parent|dataset|fcat',
         maximizable: false,
         maximized: false,
-        collapsible: true,
+        collapsible: false,
         collapsed: false
     },
     serviceUrl: undefined,

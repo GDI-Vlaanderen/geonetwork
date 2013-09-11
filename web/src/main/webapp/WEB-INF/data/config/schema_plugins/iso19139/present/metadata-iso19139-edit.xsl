@@ -409,85 +409,85 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-            <xsl:call-template name="complexElementGuiWrapper">
-                <xsl:with-param name="title">
-					<xsl:call-template name="getTitle">
-						<xsl:with-param name="name" select="name(.)"/>
-						<xsl:with-param name="schema" select="$schema"/>
-					</xsl:call-template>
-                </xsl:with-param>
-                <xsl:with-param name="content">
-			        <xsl:if test="name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation'">
-                        <tr>
-					        <xsl:if test="name(.)='srv:operatesOn'">
-								<th class="main srvoperatesOn"><label class="" for="_">Datasetnaam waarop de service opereert</label></th>
+           <xsl:call-template name="complexElementGuiWrapper">
+               <xsl:with-param name="title">
+				<xsl:call-template name="getTitle">
+					<xsl:with-param name="name" select="name(.)"/>
+					<xsl:with-param name="schema" select="$schema"/>
+				</xsl:call-template>
+               </xsl:with-param>
+               <xsl:with-param name="content">
+		        <xsl:if test="name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation'">
+                       <tr>
+				        <xsl:if test="name(.)='srv:operatesOn'">
+							<th class="main srvoperatesOn"><label class="" for="_">Datasetnaam waarop de service opereert</label></th>
+						</xsl:if>
+				        <xsl:if test="name(.)='gmd:featureCatalogueCitation'">
+							<th class="main featureCatalogueCitation"><label class="" for="_">Naam van de catalogus</label></th>
+						</xsl:if>
+						<td>
+							<xsl:if test="$edit=true()">
+								<xsl:call-template name="getMetadataTitle">
+								    <xsl:with-param name="uuid" select="$uuid"/>
+								</xsl:call-template>
 							</xsl:if>
-					        <xsl:if test="name(.)='gmd:featureCatalogueCitation'">
-								<th class="main featureCatalogueCitation"><label class="" for="_">Naam van de catalogus</label></th>
-							</xsl:if>
-							<td>
-								<xsl:if test="$edit=true()">
+							<xsl:if test="$edit=false()">
+		                        <a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
 									<xsl:call-template name="getMetadataTitle">
 									    <xsl:with-param name="uuid" select="$uuid"/>
 									</xsl:call-template>
-								</xsl:if>
-								<xsl:if test="$edit=false()">
-			                        <a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
-										<xsl:call-template name="getMetadataTitle">
-										    <xsl:with-param name="uuid" select="$uuid"/>
-										</xsl:call-template>
-			                        </a>
-								</xsl:if>
-							</td>
-					    </tr>
-				    </xsl:if>
-			        <xsl:if test="not(name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation') or $edit">
-				        <xsl:apply-templates mode="simpleElement" select=".">
-				            <xsl:with-param name="schema" select="$schema"/>
-				            <xsl:with-param name="edit"   select="$edit"/>
-				            <xsl:with-param name="text"   select="$text"/>
-				            <xsl:with-param name="editAttributes" select="false()"/>
-		                    <xsl:with-param name="title">
-					            <xsl:if test="name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation'">
-			                        <xsl:call-template name="getTitle">
-			                            <xsl:with-param name="name" select="name(@uuidref)"/>
-			                            <xsl:with-param name="schema" select="$schema"/>
-			                        </xsl:call-template>
-				                </xsl:if>
-					            <xsl:if test="not(name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation')">
-			                        <xsl:call-template name="getTitle">
-			                            <xsl:with-param name="name" select="name(.)"/>
-			                            <xsl:with-param name="schema" select="$schema"/>
-			                        </xsl:call-template>
-					            </xsl:if>
-		                    </xsl:with-param>
-				        </xsl:apply-templates>
-			        </xsl:if>
-			        <xsl:if test="(name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation') and not($edit)">
-			            <xsl:apply-templates mode="simpleAttribute" select="@uuidref">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit" select="$edit"/>
+		                        </a>
+							</xsl:if>
+						</td>
+				    </tr>
+			    </xsl:if>
+		        <xsl:if test="not(name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation') or $edit">
+			        <xsl:apply-templates mode="simpleElement" select=".">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+			            <xsl:with-param name="text"   select="$text"/>
+			            <xsl:with-param name="editAttributes" select="false()"/>
+	                    <xsl:with-param name="title">
+				            <xsl:if test="name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation'">
+		                        <xsl:call-template name="getTitle">
+		                            <xsl:with-param name="name" select="name(@uuidref)"/>
+		                            <xsl:with-param name="schema" select="$schema"/>
+		                        </xsl:call-template>
+			                </xsl:if>
+				            <xsl:if test="not(name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation')">
+		                        <xsl:call-template name="getTitle">
+		                            <xsl:with-param name="name" select="name(.)"/>
+		                            <xsl:with-param name="schema" select="$schema"/>
+		                        </xsl:call-template>
+				            </xsl:if>
+	                    </xsl:with-param>
+			        </xsl:apply-templates>
+		        </xsl:if>
+		        <xsl:if test="(name(.)='srv:operatesOn' or name(.)='gmd:featureCatalogueCitation') and not($edit)">
+		            <xsl:apply-templates mode="simpleAttribute" select="@uuidref">
+						<xsl:with-param name="schema" select="$schema"/>
+						<xsl:with-param name="edit" select="$edit"/>
 <!--
-		                    <xsl:with-param name="title">
-					            <xsl:if test="name(.)='srv:operatesOn'">Metadata identificator</xsl:if>
-					            <xsl:if test="not(name(.)='srv:operatesOn')">
-			                        <xsl:call-template name="getTitle">
-			                            <xsl:with-param name="name" select="'uuidref'"/>
-			                            <xsl:with-param name="schema" select="$schema"/>
-			                        </xsl:call-template>
-					            </xsl:if>
-		                    </xsl:with-param>
+	                    <xsl:with-param name="title">
+				            <xsl:if test="name(.)='srv:operatesOn'">Metadata identificator</xsl:if>
+				            <xsl:if test="not(name(.)='srv:operatesOn')">
+		                        <xsl:call-template name="getTitle">
+		                            <xsl:with-param name="name" select="'uuidref'"/>
+		                            <xsl:with-param name="schema" select="$schema"/>
+		                        </xsl:call-template>
+				            </xsl:if>
+	                    </xsl:with-param>
 -->
-			            </xsl:apply-templates>
-				        <xsl:if test="name(.)='srv:operatesOn'">
-				            <xsl:apply-templates mode="simpleAttribute" select="@xlink:href">
-				              <xsl:with-param name="schema" select="$schema"/>
-				              <xsl:with-param name="edit" select="$edit"/>
-				            </xsl:apply-templates>
-			            </xsl:if>
-					</xsl:if>
-				</xsl:with-param>
-			</xsl:call-template>
+		            </xsl:apply-templates>
+				</xsl:if>
+		        <xsl:if test="name(.)='srv:operatesOn'">
+		            <xsl:apply-templates mode="simpleAttribute" select="@xlink:href">
+						<xsl:with-param name="schema" select="$schema"/>
+						<xsl:with-param name="edit" select="$edit"/>
+		            </xsl:apply-templates>
+				</xsl:if>
+			</xsl:with-param>
+		</xsl:call-template>
         <!--<xsl:apply-templates mode="iso19139" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="edit"   select="$edit"/>
@@ -522,23 +522,24 @@
                             <xsl:value-of select="/root/gui/strings/noOperatesOn"/>
                         </xsl:when>
                         <xsl:otherwise>
+<!--
                                 <xsl:for-each select="../../../srv:operatesOn[@xlink:href!='' and @uuidref=$currentMduuidValue]">
 									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
 			                    	<xsl:variable name="uuid">
-			                    		<xsl:call-template name="getUuidRelatedMetadata">
+			                    		xsl:call-template name="getUuidRelatedMetadata">
 									       	<xsl:with-param name="mduuidValue" select="$currentMduuidValue"/>
 											<xsl:with-param name="idParamValue" select="$idParamValue"/>
 										</xsl:call-template>
 			                   		</xsl:variable>
-			                   		<xsl:text> </xsl:text>                    	
+			                   		<xsl:text> </xsl:text><xsl:value-of select="$uuid"/>                    	
                                     <xsl:call-template name="getMetadataTitle">
                                         <xsl:with-param name="uuid" select="$uuid"/>
                                     </xsl:call-template>
                                 </xsl:for-each>
-<!--
+-->
                             <select onchange="javascript:Ext.getDom('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
                                 <option></option>
-                                <xsl:for-each select="../../../srv:operatesOn[@xlink:href!='']">
+                                <xsl:for-each select="../../../srv:operatesOn[@xlink:href!='' and @uuidref!='']">
 									<xsl:variable name="mduuidValue" select="@uuidref"/>
 									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
 			                    	<xsl:variable name="uuid">
@@ -557,7 +558,6 @@
                                     </option>
                                 </xsl:for-each>
                             </select>
--->
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:variable>
@@ -572,18 +572,17 @@
                 <xsl:apply-templates mode="simpleElement" select=".">
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="text">
-						<xsl:variable name="mduuidValue" select="gco:CharacterString"/>
                     	<xsl:variable name="uuid">
-                    		<xsl:call-template name="getUuidRelatedMetadata">
-						       	<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
-								<xsl:with-param name="idParamValue" select="substring-after(../../../srv:operatesOn[@uuidref=$mduuidValue][1]/@xlink:href,';id=')"/>
-							</xsl:call-template>
+	                    	<xsl:call-template name="getIdFromCorrespondingOperatesOn">
+						       	<xsl:with-param name="mduuidValue" select="gco:CharacterString"/>
+	                    	</xsl:call-template>
                    		</xsl:variable>                    	
-                        <a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
+		            	<xsl:value-of select="gco:CharacterString"/>
+                        <xsl:text> (</xsl:text><a href="#" onclick="javascript:catalogue.metadataShow('{$uuid}');return false;">
                             <xsl:call-template name="getMetadataTitle">
                                 <xsl:with-param name="uuid" select="$uuid"/>
                             </xsl:call-template>
-                        </a>
+                        </a><xsl:text>)</xsl:text>
                     </xsl:with-param>
                 </xsl:apply-templates>
             </xsl:otherwise>
@@ -5039,7 +5038,7 @@ to build the XML fragment in the editor. -->
 					<xsl:with-param name="content">
 				        <xsl:for-each select="../gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
 					        <xsl:if test="count(./child::*[name() = 'gmd:MD_Constraints'])>0">
-				                <xsl:apply-templates mode="simpleElement" select="*">
+						        <xsl:apply-templates mode="iso19139" select="./gmd:MD_Constraints/gmd:useLimitation">
 				                    <xsl:with-param name="schema" select="$schema"/>
 				                    <xsl:with-param name="edit"   select="$edit"/>
 				                </xsl:apply-templates>
