@@ -335,6 +335,7 @@ GeoNetwork.lang.en = {
     'selectedKeywords': "Selected keywords",
     'foundKeywords': "Available keywords",
     'clear': "Clear",
+    'clearAll': "Clear all",
     'publish': "Publish",
     'publishTooltip': "Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.",
     'publishSuccess': "Successful publication.",

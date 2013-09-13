@@ -697,7 +697,7 @@ class Harvester
 	            dataMan.insertMetadata(context, dbms, schema, xml, reg.id, reg.uuid, userid, group, params.uuid,
 	                         isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 				
-				xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms);
+				xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms, false);
 				
 				if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 				if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");

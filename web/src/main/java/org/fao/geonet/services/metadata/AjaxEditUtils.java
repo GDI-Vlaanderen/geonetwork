@@ -573,7 +573,7 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.removeEditingInfo(md);
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms,false);
 
         boolean workspace = true;
 		//--- do the validation on the metadata
@@ -621,7 +621,7 @@ public class AjaxEditUtils extends EditUtils {
 
         editLib.contractElements(md);
         String parentUuid = null;
-		md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+		md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms,false);
         String changeDate = null;
         xmlSerializer.update(dbms, id, md, changeDate, false, context);
 
@@ -672,7 +672,7 @@ public class AjaxEditUtils extends EditUtils {
 
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, false);
 
         String changeDate = null;
         xmlSerializer.update(dbms, id, md, changeDate, false, context);

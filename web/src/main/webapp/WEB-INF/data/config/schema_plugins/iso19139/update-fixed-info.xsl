@@ -350,6 +350,39 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
+	<!-- Initialize dataset RS_Identifier if created from template -->
+	<!-- ================================================================= -->
+	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier">
+		<xsl:if test="/root/env/createdFromTemplate='y'">
+            <xsl:copy>
+				<gmd:code gco:nilReason="missing">
+					<gco:CharacterString><xsl:value-of select="/root/env/mduuid"/></gco:CharacterString>
+				</gmd:code>
+				<gmd:codeSpace gco:nilReason="missing">
+					<gco:CharacterString/>
+				</gmd:codeSpace>
+			</xsl:copy>
+		</xsl:if>
+		<xsl:if test="/root/env/createdFromTemplate='n'">
+			<xsl:copy-of select="."/>
+		</xsl:if>
+	</xsl:template>
+
+	<!-- ================================================================= -->
+	<!-- Emptying title if created from template -->
+	<!-- ================================================================= -->
+	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
+		<xsl:if test="/root/env/createdFromTemplate='y'">
+            <xsl:copy>
+				<gco:CharacterString/>
+			</xsl:copy>
+		</xsl:if>
+		<xsl:if test="/root/env/createdFromTemplate='n'">
+			<xsl:copy-of select="."/>
+		</xsl:if>
+	</xsl:template>
+
+	<!-- ================================================================= -->
 	<!-- copy everything else as is -->
 	
 	<xsl:template match="@*|node()">

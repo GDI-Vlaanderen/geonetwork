@@ -1540,15 +1540,17 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 	        },
 	        success: function(response){
 	            var mduuidNode = response.responseXML.childNodes[0];
-	            if (mduuidNode) {
+	            if (mduuidNode && mduuidNode.childNodes[0]) {
 	            	mduuid = mduuidNode.childNodes[0].nodeValue
-	            }
-                if (successCb) {
-                    successCb(mduuid);
-                }
+	                if (successCb) {
+	                    successCb(mduuid);
+	                }
+	            } else {
+		            Ext.Msg.alert('Fout','Geen metadata identificatoruuid voor record met uuid ', uuid);
+	            } 
 	        },
 	        failure: function(response){
-	            Ext.Msg.alert('Geen metadata record gevonden met uuid ', uuid);
+	            Ext.Msg.alert('Fout','Geen metadata record gevonden met uuid ', uuid);
 	        }
 	    });
     }

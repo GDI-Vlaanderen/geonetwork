@@ -207,4 +207,19 @@
     </table>
   </xsl:template>
 
+  <!-- Template to display a calendar with a clear button -->
+  <xsl:template name="combobox">
+    <xsl:param name="ref"/>
+    <xsl:param name="value"/>
+    <xsl:param name="options"/>
+
+    <table width="100%">
+      <tr>
+        <td>
+		  <div class="combobox" id="_{$ref}"/>
+          <input type="hidden" id="_{$ref}_combobox" value="{$value}"/>
+        </td>
+      </tr>
+    </table>
+  </xsl:template>
 </xsl:stylesheet>

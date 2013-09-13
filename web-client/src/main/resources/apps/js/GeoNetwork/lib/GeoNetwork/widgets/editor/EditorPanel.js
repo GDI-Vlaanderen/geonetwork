@@ -540,22 +540,22 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                             	panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
                                 	if (mduuid) {
                                         Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
-                                        var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
-                                        if (xlinkHref) {
-                                        	if (Ext.isEmpty(xlinkHref.dom.value)) {
-                                        		xlinkHref.dom.value = panel.catalogue.URL.replace("apps/tabsearch/../../","") + '/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + metadata[0].data.uuid;
-                                        	} else {
-                                            	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
-                                            	var id = parameters["id"];
-                                            	if (Ext.isEmpty(id)) {
-                                            		id = parameters["ID"];
-                                            	}
-                                            	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
-                                        	}
-                                        };
                                 	}
                             	});
                         	}
+                            var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
+                            if (xlinkHref) {
+                            	if (Ext.isEmpty(xlinkHref.dom.value)) {
+                            		xlinkHref.dom.value = panel.catalogue.URL.replace("apps/tabsearch/../../","") + '/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + metadata[0].data.uuid;
+                            	} else {
+                                	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
+                                	var id = parameters["id"];
+                                	if (Ext.isEmpty(id)) {
+                                		id = parameters["ID"];
+                                	}
+                                	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
+                            	}
+                            }
                         } else {
                             // Create relation between current record and selected one
                             if (this.mode === 'iso19110') {
@@ -673,50 +673,53 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     if (name === 'attachService') {
                         // Current dataset is a dataset metadata record.
                         // 1. Update service (if current user has privileges), using XHR request
-                        var serviceUpdateUrl = editorPanel.catalogue.services.mdProcessingXml + 
-                                                    "?uuid=" + metadata[0].data.uuid + 
-                                                    "&process=update-srv-attachDataset" + 
-                                                    "&uuidref=" + document.mainForm.uuid.value +
-                                                    "&scopedName=" + layerName;
-                        
-                        Ext.Ajax.request({
-                            url: serviceUpdateUrl,
-                            method: 'GET',
-                            success: function(result, request){
-                                var response = result.responseText;
-                                
-                                // Check error
-                                if (response.indexOf('Not owner') !== -1) {
-                                    Ext.MessageBox.alert(OpenLayers.i18n("NotOwnerError"));
-                                } else if (response.indexOf('error') !== -1) {
-                                    Ext.MessageBox.alert(OpenLayers.i18n("error") + response);
-                                }
-                                // 2. Update current metadata record, in current window
-                                var datasetUpdateUrl = editorPanel.catalogue.services.mdProcessing + 
-                                                            "?id=" + editorPanel.metadataId + 
-                                                            "&process=update-onlineSrc" + 
-                                                            "&desc=" + layerName + 
-                                                            "&url=" + escape(metadata[0].data.uri) + 
-                                                            "&scopedName=" + layerName;
-                                
-                                Ext.Ajax.request({
-                                    url: datasetUpdateUrl,
-                                    method: 'GET',
-                                    success: function(result, request){
-                                        editorPanel.updateEditor(result);
-                                    },
-                                    failure: function(result, request){
-                                        Ext.MessageBox.alert(OpenLayers.i18n("datasetUpdateError"));
-                                        setBunload(true);
-                                    }
-                                });
-                            },
-                            failure: function(result, request){
-                                Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateError"));
-                                setBunload(true);
-                            }
-                        });
-                        
+                    	panel.catalogue.getMdUuid(document.mainForm.uuid.value, function(mduuid){
+                        	if (mduuid) {
+		                        var serviceUpdateUrl = editorPanel.catalogue.services.mdProcessingXml + 
+		                                                    "?uuid=" + metadata[0].data.uuid + 
+		                                                    "&process=update-srv-attachDataset&uuidref=" +
+		                                                    document.mainForm.uuid.value + "&mduuidref=" + mduuid +
+		                                                    "&scopedName=" + layerName;
+		                        
+		                        Ext.Ajax.request({
+		                            url: serviceUpdateUrl,
+		                            method: 'GET',
+		                            success: function(result, request){
+		                                var response = result.responseText;
+		                                
+		                                // Check error
+		                                if (response.indexOf('Not owner') !== -1) {
+		                                    Ext.MessageBox.alert(OpenLayers.i18n("NotOwnerError"));
+		                                } else if (response.indexOf('error') !== -1) {
+		                                    Ext.MessageBox.alert(OpenLayers.i18n("error") + response);
+		                                }
+		                                // 2. Update current metadata record, in current window
+		                                var datasetUpdateUrl = editorPanel.catalogue.services.mdProcessing + 
+		                                                            "?id=" + editorPanel.metadataId + 
+		                                                            "&process=update-onlineSrc" + 
+		                                                            "&desc=" + layerName + 
+		                                                            "&url=" + escape(metadata[0].data.uri) + 
+		                                                            "&scopedName=" + layerName;
+		                                
+		                                Ext.Ajax.request({
+		                                    url: datasetUpdateUrl,
+		                                    method: 'GET',
+		                                    success: function(result, request){
+		                                        editorPanel.updateEditor(result);
+		                                    },
+		                                    failure: function(result, request){
+		                                        Ext.MessageBox.alert(OpenLayers.i18n("datasetUpdateError"));
+		                                        setBunload(true);
+		                                    }
+		                                });
+		                            },
+		                            failure: function(result, request){
+		                                Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateError"));
+		                                setBunload(true);
+		                            }
+		                        });
+                        	}
+                    	});
                         
                     } else {
                         // Current dataset is a service metadata record.
@@ -741,11 +744,15 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                 }
                                 
                                 // 2. Update current metadata record, in current window FIXME
-                                editorPanel.process(editorPanel.catalogue.services.mdProcessing + 
-                                                            "?uuid=" + document.mainForm.uuid.value +
-                                                            "&process=update-srv-attachDataset" + 
-                                                            "&uuidref=" + metadata[0].data.uuid + 
-                                                            "&scopedName=" + layerName);
+                                panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
+                                	if (mduuid) {
+                                        editorPanel.process(editorPanel.catalogue.services.mdProcessing + 
+                                                "?uuid=" + document.mainForm.uuid.value +
+                                                "&process=update-srv-attachDataset&uuidref=" + metadata[0].data.uuid + 
+        		                                "&mduuidref=" + mduuid +
+                                                "&scopedName=" + layerName);
+                                	}
+                            	});
                             },
                             failure: function(result, request){
                                 Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateError"));
@@ -1003,6 +1010,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         //console.log("metadata schema: " + this.metadataSchema.value + " type:" + this.metadataType.value + " tab:" + this.metadataCurrTab.value);
         
         this.initCalendar();
+//        GeoNetwork.Util.initComboBox(this.editorMainPanel);
         this.initMultipleSelect();
         this.validateMetadataFields();
         this.catalogue.extentMap.initMapDiv();
@@ -1037,41 +1045,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.updateViewMenu();
     },
-    /** private: method[validateMetadataField]
-     * 
-     * Trigger validating event of an element.
-     *
-     */
-    validateMetadataField: function(input){
-        // Process only onchange and onkeyup event having validate in event
-        // name.
-        
-        var ch = input.getAttribute("onchange");
-        var ku = input.getAttribute("onkeyup");
-        // When retrieving a style attribute, IE returns a style object,
-        // rather than an attribute value; retrieving an event-handling
-        // attribute such as onclick, it returns the contents of the
-        // event handler wrapped in an anonymous function;
-        if (typeof ch  === 'function') {
-            ch = ch.toString();
-        }
-        if (typeof ku === 'function') {
-            ku = ku.toString();
-        }
-        
-        if (!input || 
-                (ch !== null && ch.indexOf("validate") === -1) || 
-                (ku !== null && ku.indexOf("validate") === -1)) {
-            return;
-        }
-        
-        if (input.onkeyup) {
-            input.onkeyup();
-        }
-        if (input.onchange) {
-            input.onchange();
-        }
-    },
     /** private: method[validateMetadataFields]
      * 
      *  Retrieve all page's input and textarea element and check the onkeyup and
@@ -1081,29 +1054,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *
      */
     validateMetadataFields: function(){
-        // --- display lang selector when appropriate
-        var items = Ext.DomQuery.select('select.lang_selector');
-        Ext.each(items, function(input){
-            // --- language selector has a code attribute to be used to be
-            // matched with GUI language in order to edit by default
-            // element
-            // in GUI language. If none, default language is selected.
-            for (i = 0; i < input.options.length; i ++) {
-                if (input.options[i].getAttribute("code").toLowerCase() === this.lang) {
-                    input.options[i].selected = true;
-                    i = input.options.length;
-                }
-            }
-            // FIXME this.enableLocalInput(input, false);
-        }, this);
-        
-        // --- display validator events when needed.
-        items = Ext.DomQuery.select('input,textarea,select');
-        Ext.each(items, function(input){
-            this.validateMetadataField(input);
-        }, this);
-        
-    },
+    	GeoNetwork.Util.validateMetadataFields(this);
+	},
     /** private: method[initCalendar]
      * 
      *  Initialize all calendar divs identified by class "cal".
@@ -1116,99 +1068,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  TODO : Add vtype control for extent (start < end)
      */
     initCalendar: function(){
-    
-        var calendars = Ext.DomQuery.select('div.cal'), i;
-        
-        for (i = 0; i < calendars.length; i++) {
-            var cal = calendars[i];
-            var id = cal.id; // Give render div id to calendar input and change
-            // its id.
-            cal.id = id + 'Id'; // In order to get the input if a get by id is made
-            // later (eg. gn_search.js).
-            
-            if (cal.firstChild === null || cal.childNodes.length === 0) { // Check if
-                // already
-                // initialized
-                // or not
-                var format = 'Y-m-d';
-                var formatEl = Ext.getDom(id + '_format', this.editorMainPanel.dom);
-                if (formatEl) {
-                    format = formatEl.value;
-                }
-                
-                var valueEl = Ext.getDom(id + '_cal', this.editorMainPanel.dom);
-                var value = (valueEl ? valueEl.value : '');
-                var showTime = format.indexOf('T') === -1 ? false : true;
-                
-                if (showTime) {
-                    var dtCal = new Ext.ux.form.DateTime({
-                        renderTo: cal.id,
-                        name: id,
-                        id: id,
-                        value: value,
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i',
-                        hiddenFormat: 'Y-m-d\\TH:i:s',
-                        dtSeparator: 'T'
-                    });
-
-                    // See issue AGIV  #2783:
-                    // For DateTimes you can give the gmd:dateTime the attribute nilreason ,
-                    // then you do not need to include the gco:dateTime.
-                    // The isnil attribute does however not exist on the gco:DateTime element.
-                    // As a consequence the template contains empy gmd:dateTime elements.
-                    // In the GeoNetwork GUI this means that no Datetime control is shown.
-                    if (cal.className.contains("dynamicDate")) {
-                        dtCal.on('change', function() {
-                            GeoNetwork.Util.updateDateValue(this.id.substring(1), true, "");
-                        });
-
-                    }
-
-                } else {
-/*
-                	var timeValue = null;
-
-                    if (value.length==19) {
-                    	timeValue = "T12:00:00";
-                    	value = value.substring(0,10);
-                    }
-*/
-                	var dCal = new Ext.form.DateField({
-                        renderTo: cal,
-                        name: id,
-                        id: id,
-                        width: 160,
-                        value: value,
-//                        timeValue: timeValue,
-                        format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
-                    });
-
-                    //Small hack to put date button on its place
-                    if (Ext.isChrome){
-                        dCal.getEl().parent().setHeight("18");
-                    }
-                    // See issue AGIV  #2783:
-                    // For DateTimes you can give the gmd:dateTime the attribute nilreason ,
-                    // then you do not need to include the gco:dateTime.
-                    // The isnil attribute does however not exist on the gco:DateTime element.
-                    // As a consequence the template contains empy gmd:dateTime elements.
-                    // In the GeoNetwork GUI this means that no Datetime control is shown.
-                    if (cal.className.contains("dynamicDate")) {
-                        dCal.on('change', function() {
-                            GeoNetwork.Util.updateDateValue(this.id.substring(1), false);
-                        });
-                    }/* else {
-                        dCal.on('change', function() {
-                        	if (!Ext.isEmpty(this.timeValue)) {
-                            	this.setValue(this.value + this.timeValue);
-                        	}
-                        });
-                    }*/
-                }
-                
-            }
-        }
+        GeoNetwork.Util.initCalendar(this.editorMainPanel);
     },
     /** private: method[initMultipleSelect]
      * 
@@ -1221,23 +1081,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  values.
      */
     initMultipleSelect: function(){
-        var selects = Ext.DomQuery.select('select.codelist_multiple'), i;
-        Ext.each(selects, function(select){
-            var input = Ext.get('X' + select.id);
-            var tpl = input.dom.innerHTML;
-            onchangeEvent = function(){
-                input.dom.innerHTML = '';
-                Ext.each(this.options, function(option){
-                    if(option.selected){
-                        input.dom.innerHTML += (input.dom.innerHTML === '' ? '' : '&&&') 
-                                                   + tpl.replace(new RegExp('codeListValue=".*"'), 
-                                                   'codeListValue="' + option.value + '"');
-                    }
-                });
-            };
-            
-            select.onchange = onchangeEvent;
-        });
+        GeoNetwork.Util.initMultipleSelect();
     },
     /** private: method[updateViewMenu]
      * 

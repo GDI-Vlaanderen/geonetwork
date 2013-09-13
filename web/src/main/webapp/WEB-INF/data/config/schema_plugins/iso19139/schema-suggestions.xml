@@ -184,8 +184,25 @@
 		<suggest name="uuidref"/>
 	</field>
 
+	<field name="srv:containsOperations">
+		<suggest name="srv:SV_OperationMetadata"/>
+	</field>
+
+	<field name="srv:SV_OperationMetadata">
+		<suggest name="srv:operationName"/>
+	</field>
+
+	<field name="srv:connectPoint">
+		<suggest name="gmd:CI_OnlineResource"/>
+	</field>
+
 	<field name="srv:operatesOn">
 		<suggest name="uuidref"/>
+		<suggest name="xlink:href"/>
+	</field>
+
+	<field name="srv:DCP">
+		<suggest name="srv:DCPList"/>
 	</field>
 
 	<field name="gmd:source">

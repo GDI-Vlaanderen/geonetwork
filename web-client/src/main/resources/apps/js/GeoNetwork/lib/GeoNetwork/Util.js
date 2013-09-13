@@ -288,6 +288,246 @@ GeoNetwork.Util = {
         } else {
             Ext.get(id).dom.value =  "<gco:Date xmlns:gco='http://www.isotc211.org/2005/gco'>" + Ext.get("_" + id).dom.value + "</gco:Date>";
         }
+    },
+
+    /** 
+     *  Initialize all div with class cal.
+     *  
+     *  Those divs will be replaced by an Ext DateTime or DateField.
+     *
+     */
+    initCalendar: function(editorPanel){
+        var calendars = Ext.DomQuery.select('div.cal'), i;
+        
+        for (i = 0; i < calendars.length; i++) {
+            var cal = calendars[i];
+            var id = cal.id; // Give render div id to calendar input and change
+            // its id.
+            cal.id = id + 'Id'; // In order to get the input if a get by id is made
+            // later (eg. gn_search.js).
+            
+            if (cal.firstChild === null || cal.childNodes.length === 0) { // Check if
+                // already
+                // initialized
+                // or not
+                var format = 'Y-m-d';
+                var formatEl = Ext.getDom(id + '_format', editorPanel.dom);
+                if (formatEl) {
+                    format = formatEl.value;
+                }
+                
+                var valueEl = Ext.getDom(id + '_cal', editorPanel.dom);
+                var value = (valueEl ? valueEl.value : '');
+                var showTime = format.indexOf('T') === -1 ? false : true;
+                
+                if (showTime) {
+                    var dtCal = new Ext.ux.form.DateTime({
+                        renderTo: cal.id,
+                        name: id,
+                        id: id,
+                        value: value,
+                        dateFormat: 'Y-m-d',
+                        timeFormat: 'H:i',
+                        hiddenFormat: 'Y-m-d\\TH:i:s',
+                        dtSeparator: 'T'
+                    });
+
+                    // See issue AGIV  #2783:
+                    // For DateTimes you can give the gmd:dateTime the attribute nilreason ,
+                    // then you do not need to include the gco:dateTime.
+                    // The isnil attribute does however not exist on the gco:DateTime element.
+                    // As a consequence the template contains empy gmd:dateTime elements.
+                    // In the GeoNetwork GUI this means that no Datetime control is shown.
+                    if (cal.className.contains("dynamicDate")) {
+                        dtCal.on('change', function() {
+                            GeoNetwork.Util.updateDateValue(this.id.substring(1), true, "");
+                        });
+
+                    }
+
+                } else {
+/*
+                	var timeValue = null;
+
+                    if (value.length==19) {
+                    	timeValue = "T12:00:00";
+                    	value = value.substring(0,10);
+                    }
+*/
+                	var dCal = new Ext.form.DateField({
+                        renderTo: cal,
+                        name: id,
+                        id: id,
+                        width: 160,
+                        value: value,
+//                        timeValue: timeValue,
+                        format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
+                    });
+
+                    //Small hack to put date button on its place
+                    if (Ext.isChrome){
+                        dCal.getEl().parent().setHeight("18");
+                    }
+                    // See issue AGIV  #2783:
+                    // For DateTimes you can give the gmd:dateTime the attribute nilreason ,
+                    // then you do not need to include the gco:dateTime.
+                    // The isnil attribute does however not exist on the gco:DateTime element.
+                    // As a consequence the template contains empy gmd:dateTime elements.
+                    // In the GeoNetwork GUI this means that no Datetime control is shown.
+                    if (cal.className.contains("dynamicDate")) {
+                        dCal.on('change', function() {
+                            GeoNetwork.Util.updateDateValue(this.id.substring(1), false);
+                        });
+                    }/* else {
+                        dCal.on('change', function() {
+                        	if (!Ext.isEmpty(this.timeValue)) {
+                            	this.setValue(this.value + this.timeValue);
+                        	}
+                        });
+                    }*/
+                }
+                
+            }
+        }
+    },
+    /** 
+     *  Initialize all div with class cal.
+     *  
+     *  Those divs will be replaced by an Ext DateTime or DateField.
+     *
+     */
+    initComboBox: function(editorPanel){
+        var combos = Ext.DomQuery.select('div.combobox'), i;
+        
+        for (i = 0; i < combos.length; i++) {
+            var combo = combos[i];
+            var id = combo.id; // Give render div id to calendar input and change
+            // its id.
+            combo.id = id + 'Id'; // In order to get the input if a get by id is made
+            // later (eg. gn_search.js).
+            
+            if (combo.firstChild === null || combo.childNodes.length === 0) { // Check if
+                // already
+                // initialized
+                // or not
+                
+            	var dCombo = new Ext.form.DateField({
+                    renderTo: combo,
+                    name: id,
+                    id: id,
+                    width: 160,
+                    value: value,
+//                        timeValue: timeValue,
+                    format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
+                });
+
+                //Small hack to put date button on its place
+                if (Ext.isChrome){
+                    dCombo.getEl().parent().setHeight("18");
+                }
+                dCombo.on('change', function() {
+                    Ext.get(id).dom.value =  Ext.get("_" + id).dom.value;
+                });
+                
+            }
+        }
+    },
+    /** 
+     *  Initialize all select with class codelist_multiple.
+     *  
+     *  Those select field on change will create an XML
+     *  codelist fragment to be inserted into the record.
+     *  It will allows when cardinality is greater than 1 to 
+     *  not to have to deal with (+) control to add multiple
+     *  values.
+     */
+    initMultipleSelect: function(){
+        var selects = Ext.DomQuery.select('select.codelist_multiple'), i;
+        Ext.each(selects, function(select){
+            var input = Ext.get('X' + select.id);
+            var tpl = input.dom.innerHTML;
+            onchangeEvent = function(){
+                input.dom.innerHTML = '';
+                Ext.each(this.options, function(option){
+                    if(option.selected){
+                        input.dom.innerHTML += (input.dom.innerHTML === '' ? '' : '&&&') 
+                                                   + tpl.replace(new RegExp('codeListValue=".*"'), 
+                                                   'codeListValue="' + option.value + '"');
+                    }
+                });
+            };
+            
+            select.onchange = onchangeEvent;
+        });
+    },
+
+    /**
+     * 
+     * Trigger validating event of an element.
+     *
+     */
+    validateMetadataField: function(input){
+        // Process only onchange and onkeyup event having validate in event
+        // name.
+        
+        var ch = input.getAttribute("onchange");
+        var ku = input.getAttribute("onkeyup");
+        // When retrieving a style attribute, IE returns a style object,
+        // rather than an attribute value; retrieving an event-handling
+        // attribute such as onclick, it returns the contents of the
+        // event handler wrapped in an anonymous function;
+        if (typeof ch  === 'function') {
+            ch = ch.toString();
+        }
+        if (typeof ku === 'function') {
+            ku = ku.toString();
+        }
+        
+        if (!input || 
+                (ch !== null && ch.indexOf("validate") === -1) || 
+                (ku !== null && ku.indexOf("validate") === -1)) {
+            return;
+        }
+        
+        if (input.onkeyup) {
+            input.onkeyup();
+        }
+        if (input.onchange) {
+            input.onchange();
+        }
+    },
+    /**
+     * 
+     *  Retrieve all page's input and textarea element and check the onkeyup and
+     *  onchange event (Usually used to check user entry.
+     *
+     *  @see validateNonEmpty and validateNumber).
+     *
+     */
+    validateMetadataFields: function(scope){
+        // --- display lang selector when appropriate
+        var items = Ext.DomQuery.select('select.lang_selector');
+        Ext.each(items, function(input){
+            // --- language selector has a code attribute to be used to be
+            // matched with GUI language in order to edit by default
+            // element
+            // in GUI language. If none, default language is selected.
+            for (i = 0; i < input.options.length; i ++) {
+                if (input.options[i].getAttribute("code").toLowerCase() === scope.lang) {
+                    input.options[i].selected = true;
+                    i = input.options.length;
+                }
+            }
+            // FIXME this.enableLocalInput(input, false);
+        }, scope);
+        
+        // --- display validator events when needed.
+        items = Ext.DomQuery.select('input,textarea,select');
+        Ext.each(items, function(input){
+        	GeoNetwork.Util.validateMetadataField(input);
+        }, scope);
+        
     }
+
 
 };

@@ -1352,7 +1352,7 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
                 if (name=='attachService') {
                     // Current dataset is a dataset metadata record.
                     // 1. Update service (if current user has privileges), using XHR request
-                	getMdUuid(metadata[0].data.uuid, function(mduuid){
+                	getMdUuid(uuid, function(mduuid){
                     	if (mduuid) {
                             var serviceUpdateUrl = "xml.metadata.processing?uuid=" + metadata[0].data.uuid +
                             "&process=update-srv-attachDataset&uuidref=" +
@@ -1764,7 +1764,7 @@ function computeExtentFromKeywords(mode) {
 }
 
 function getMdUuid(uuid,successCb) {
-	var mduuid
+	var mduuid;
 	OpenLayers.Request.GET({
         url: "xml_md_uuid",
         params: {
@@ -1772,15 +1772,17 @@ function getMdUuid(uuid,successCb) {
         },
         success: function(response){
             var mduuidNode = response.responseXML.childNodes[0];
-            if (mduuidNode) {
+            if (mduuidNode && mduuidNode.childNodes[0]) {
             	mduuid = mduuidNode.childNodes[0].nodeValue
-            }
-            if (successCb) {
-                successCb(mduuid);
-            }
+                if (successCb) {
+                    successCb(mduuid);
+                }
+            } else {
+	            Ext.Msg.alert('Fout','Geen metadata identificatoruuid voor record met uuid ', uuid);
+            } 
         },
         failure: function(response){
-            Ext.Msg.alert('Geen metadata record gevonden met uuid ', uuid);
+            Ext.Msg.alert('Fout','Geen metadata record gevonden met uuid ', uuid);
         }
     });
 }

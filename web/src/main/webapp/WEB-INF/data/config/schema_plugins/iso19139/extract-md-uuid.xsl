@@ -5,7 +5,7 @@
 						xmlns:gmd="http://www.isotc211.org/2005/gmd">
 
 	<xsl:template match="gmd:MD_Metadata">
-		 <mduuid><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/></mduuid>
+		 <mduuid><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/></mduuid>
 	</xsl:template>
 
 </xsl:stylesheet>

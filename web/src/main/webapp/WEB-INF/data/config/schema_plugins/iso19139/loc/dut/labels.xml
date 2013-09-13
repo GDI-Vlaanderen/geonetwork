@@ -669,7 +669,12 @@
 	<element name="gmd:description">
 		<label>Beschrijving bewerking</label>
 		<description>Beschrijving</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:description" context="gmd:CI_OnlineResource">
+		<label>Beschrijving</label>
+		<description>Gedetailleerde beschrijving van de on-line informatie.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:descriptiveKeywords">
@@ -1228,7 +1233,13 @@
 	<element name="gmd:linkage">
 		<label>URL</label>
 		<description>Locatie voor online toegang bij gebruik van een Uniform Resource Locator adres of een vergelijkbaar schema.</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:linkage" context="gmd:CI_OnlineResource">
+		<label>URL</label>
+		<description>Locatie (adres) voor de on-line toegang, gebruik makend van een Uniform Resource Locator address (URL) of gelijkaardige adresschema's zoals http://www.statkart.na/isotc211.</description>
+		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maintenanceAndUpdateFrequency">
@@ -1616,7 +1627,13 @@
 	<element name="gmd:name">
 		<label>Naam</label>
 		<description>Naam</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:name" context="gmd:CI_OnlineResource">
+		<label>Naam</label>
+		<description>Naam van de on-line informatie.</description>
+		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:nameOfMeasure">
@@ -1752,6 +1769,11 @@
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:pointOfContact" context="srv:SV_ServiceIdentification">
+		<label>Contactgegevens service</label>
+		<description>Gegevens van de voor de dataset verantwoordelijke organisatie.</description>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:pointOfContact">
 		<label>Contactgegevens dataset(serie)</label>
 		<description>Gegevens van de voor de dataset verantwoordelijke organisatie.</description>
@@ -1821,7 +1843,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:protocol">
 		<label>Protocol</label>
-		<description>Protocol waarover de webkoppeling benaderbaar is.</description>
+		<description>Het protocol dat gebruikt wordt in de URL.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:PT_FreeText">

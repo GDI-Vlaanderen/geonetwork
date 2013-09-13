@@ -330,6 +330,7 @@ GeoNetwork.Lang.nl = {
     'selectedKeywords': "Geselecteerde trefwoorden",
     'foundKeywords': "Gevonden trefwoorden",
     'clear': "Wis",
+    'clearAll': "Wis alles",
     'publish': "Publiceer",
     'publishTooltip': "Publiceer de huidige dataset naar een externe node. Indien de dataset reeds bestaat in de node, wordt deze bijgewerkt.",
     'publishSuccess': "Publicatie geslaagd.",

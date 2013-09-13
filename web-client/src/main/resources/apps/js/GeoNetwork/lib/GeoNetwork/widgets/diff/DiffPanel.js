@@ -96,6 +96,7 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         }
 
         GeoNetwork.Util.initCalendar(this);
+        GeoNetwork.Util.initComboBox(this);
         GeoNetwork.Util.initMultipleSelect();
         GeoNetwork.Util.validateMetadataFields(this);
 
