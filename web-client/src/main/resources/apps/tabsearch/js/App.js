@@ -297,7 +297,7 @@ GeoNetwork.app = function(){
         	advancedCriteria.push(catalogueField);	
         } 
         advancedCriteriaExtra.push(groupField,
-            metadataTypeField,
+//            metadataTypeField,
 //            validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField,
             statusField, ownerField, isHarvestedField, isLockedField);
 /*        
@@ -504,8 +504,10 @@ GeoNetwork.app = function(){
                             boxMinWidth: 400,
                             boxMaxidth: 1100,
                         	columnWidth: 0.7,
+                        	labelWidth:130,
                             items:[
                                 advancedCriteria,GeoNetwork.util.SearchFormTools.getTypesField(GeoNetwork.searchDefault.activeMapControlExtent, true),
+                                metadataTypeField,
                                 GeoNetwork.util.INSPIRESearchFormTools.getAnnexField(true),
                                 GeoNetwork.util.INSPIRESearchFormTools.getThemesField(catalogue.services, true),
                                 GeoNetwork.util.INSPIRESearchFormTools.getServiceTypeField(true),

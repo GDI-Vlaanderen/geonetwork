@@ -111,11 +111,12 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
         
         this.thumbnailUploadWindow.show();
     },
-    removeThumbnail: function(){
+    removeThumbnail: function(description){
+    	var type = this.thumbnail ? this.thumbnail : description;
         var panel = this,
             url = this.unsetThumbnail + '?id=' + this.metadataId + 
                                             '&version=' + this.versionId + 
-                                            '&type=' + (this.thumbnail === 'thumbnail'?'small':'large');
+                                            '&type=' + (type === 'thumbnail' ? 'small' : 'large');
         
         OpenLayers.Request.GET({
             url: url,
@@ -127,23 +128,38 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
         });
     },
     selectionChangeEvent: function(dv, selections){
-        var records = selections ? dv.getRecords(selections) : [],
-            allInternal = this.dataView.getStore().query('desc', /thumbnail|large_thumbnail/).length == 2;
+    	var store = this.dataView.getStore();
+    	var uploadedTumbnailExists = false;
+    	if (store.getCount()>0) {
+            store.each(function(record){
+                var desc = record.get('desc');
+                if (desc === 'thumbnail' || desc === 'large_thumbnail') {
+                	uploadedTumbnailExists = true;
+            		return false;
+                }
+            });
+    	}
 
+    	var records = selections ? dv.getRecords(selections) : [];/*,
+            allInternal = this.dataView.getStore().query('desc', /thumbnail|large_thumbnail/).length == 2;
+*/
         if (records[0]) {
             this.thumbnail = records[0].get('desc');
             // Only manage GeoNetwork internal thumbnails. Other thumbnail set using URL MUST be removed from the editor
             if (this.thumbnail === 'thumbnail' || this.thumbnail === 'large_thumbnail') {
+                this.addButton.setDisabled(false);
                 this.delButton.setDisabled(false);
             } else {
+                this.addButton.setDisabled(uploadedTumbnailExists && true);
                 this.delButton.setDisabled(true);
             }
         } else {
+            this.addButton.setDisabled(uploadedTumbnailExists && true);
             this.delButton.setDisabled(true);
             this.thumbnail = undefined;
         }
         
-        this.addButton.setDisabled(allInternal);
+//        this.addButton.setDisabled(allInternal);
     },
     /** private: method[initComponent] 
      *  Initializes the thumbnail panel.
@@ -172,6 +188,7 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
         this.addButton = new Ext.Button({
                 text: OpenLayers.i18n('addThumbnail'),
                 iconCls: 'thumbnailAddIcon',
+                disabled: true,
                 handler: this.uploadThumbnail,
                 scope: this
             });
@@ -188,7 +205,24 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
 
        // alert('thumbnailpanel init: workspace? ' + this.workspace);
         this.store = new GeoNetwork.data.MetadataThumbnailStore(this.getThumbnail, {id: this.metadataId, fromWorkspace:this.workspace});
-        this.store.on('load', function(){
+        this.store.on('load', function(comp, records){
+        	var uploadedTumbnailExists = false;
+        	if (records.length>0) {
+                Ext.each(records, function(record){
+                    var desc = record.get('desc');
+                    if (desc === 'thumbnail' || desc === 'large_thumbnail') {
+                		uploadedTumbnailExists = true;
+                		return false;
+                    }
+                });
+        	}
+        	if (uploadedTumbnailExists) {
+        		this.addButton.setText(OpenLayers.i18n('replaceThumbnail'));
+                this.addButton.setDisabled(true);
+        	} else {
+        		this.addButton.setText(OpenLayers.i18n('addThumbnail'));
+                this.addButton.setDisabled(false);
+        	} 
             this.dataView.fireEvent('selectionchange', this);
             Ext.ux.Lightbox.register('a[rel^=lightbox-set]', true);
             }, this);
@@ -221,18 +255,19 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
                         name: 'smallScalingDir',
                         value: 'width',
                         hidden: true
-                    }, {
-                        xtype: 'fileuploadfield',
-                        emptyText: OpenLayers.i18n('selectImage'),
-                        fieldLabel: OpenLayers.i18n('image'),
-                        name: 'fname',
-                        allowBlank: false,
-                        buttonText: '',
-                        buttonCfg: {
-                            iconCls: 'thumbnailAddIcon'/*,
-                            tooltip: 'Blader naar bestand'*/
-                        }
-                    }/*, {
+                    }, new Ext.form.FileUploadField({
+//	                        xtype: 'fileuploadfield',
+	                        emptyText: OpenLayers.i18n('selectImage'),
+	                        fieldLabel: OpenLayers.i18n('image'),
+	                        name: 'fname',
+	                        allowBlank: false,
+	                        buttonText: '',
+	                        buttonCfg: {
+	                            iconCls: 'thumbnailAddIcon',
+                                tooltip: 'Blader naar bestand'
+	                        }
+                    	})
+                    /*, {
                         xtype: 'radio',
                         checked: true,
                         fieldLabel: 'Type',

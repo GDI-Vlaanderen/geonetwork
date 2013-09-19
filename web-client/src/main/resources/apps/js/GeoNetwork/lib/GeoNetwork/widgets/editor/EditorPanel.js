@@ -74,9 +74,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             /** api: config[utilityPanelConfig.thumbnailPanel] 
              *  Collapsed thumbnail panel on startup. Default is false.
              */
-            thumbnailPanel: {
+/*
+        	thumbnailPanel: {
                 collapsed: false
             },
+*/
             /** api: config[utilityPanelConfig.relationPanel] 
              *  Collapsed relation panel on startup. Default is true.
              */
@@ -1248,6 +1250,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             serviceUrl: this.catalogue.services.mdRelation
         }, this.utilityPanelConfig.relationPanel));
         
+/*
         this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
             metadataId: this.metadataId,
             workspace: true,
@@ -1256,7 +1259,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             setThumbnail: this.catalogue.services.mdSetThumbnail,
             unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
         }, this.utilityPanelConfig.thumbnailPanel));
-        
+*/        
         this.suggestionPanel = new GeoNetwork.editor.SuggestionsPanel(Ext.applyIf({
             metadataId : this.metadataId,
             editor: this,
@@ -1275,7 +1278,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             minWidth: 280,
             width: 380,
             items: [
-                this.thumbnailPanel, 
+/*                this.thumbnailPanel,*/ 
                 this.relationPanel, 
                 this.suggestionPanel,
                 this.validationPanel, 

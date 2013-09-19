@@ -1211,7 +1211,7 @@ GeoNetwork.util.SearchFormTools = {
                 mode: 'local',
                 autoSelect: false,
                 triggerAction: 'all',
-                fieldLabel: OpenLayers.i18n('status'),
+                fieldLabel: OpenLayers.i18n('metadataStatus'),
                 store: store,
                 valueField: 'id',
                 displayField: 'label',

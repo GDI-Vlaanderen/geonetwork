@@ -87,28 +87,27 @@
 			<xsl:when test="string(.)">
 				<gco:Date><xsl:value-of select="." /></gco:Date>
 			</xsl:when>
-
 			<xsl:otherwise>
 				<gco:Date xsi:nil="true"></gco:Date>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-	 
+	<!-- ================================================================= -->	 
 
 	<xsl:template match="gmd:dateStamp">
-    <xsl:choose>
-        <xsl:when test="/root/env/changeDate">
-            <xsl:copy>
-                    <gco:DateTime>
-                        <xsl:value-of select="/root/env/changeDate"/>
-                    </gco:DateTime>
-            </xsl:copy>
-        </xsl:when>
-        <xsl:otherwise>
-            <xsl:copy-of select="."/>
-        </xsl:otherwise>
-    </xsl:choose>
+	    <xsl:choose>
+	        <xsl:when test="/root/env/changeDate">
+	            <xsl:copy>
+	                    <gco:DateTime>
+	                        <xsl:value-of select="/root/env/changeDate"/>
+	                    </gco:DateTime>
+	            </xsl:copy>
+	        </xsl:when>
+	        <xsl:otherwise>
+	            <xsl:copy-of select="."/>
+	        </xsl:otherwise>
+	    </xsl:choose>
 	</xsl:template>
 
 	<!-- ================================================================= -->
@@ -116,14 +115,20 @@
 	<!-- Only set metadataStandardName and metadataStandardVersion
 	if not set. -->
 	<xsl:template match="gmd:metadataStandardName[@gco:nilReason='missing' or gco:CharacterString='']" priority="10">
+        <xsl:variable name="service" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
 		<xsl:copy>
-			<gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
+			<xsl:if test="$service">
+				<gco:CharacterString>ISO 19119:2005/Amd 1:2008</gco:CharacterString>
+			</xsl:if>
+			<xsl:if test="not($service)">
+				<gco:CharacterString>ISO 19115/2003/Cor.1:2006</gco:CharacterString>
+			</xsl:if>
 		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template match="gmd:metadataStandardVersion[@gco:nilReason='missing' or gco:CharacterString='']" priority="10">
 		<xsl:copy>
-			<gco:CharacterString>1.0</gco:CharacterString>
+			<gco:CharacterString>GDI-Vlaanderen Best Practices - versie 1.0</gco:CharacterString>
 		</xsl:copy>
 	</xsl:template>
 
@@ -176,6 +181,10 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="*[gco:CharacterString]">
+		<xsl:call-template name="updateElementWithCharacterStringChild"/>
+	</xsl:template>
+
+	<xsl:template name="updateElementWithCharacterStringChild">
 		<xsl:copy>
 			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
 			<xsl:choose>
@@ -191,8 +200,7 @@
 					<xsl:copy-of select="@gco:nilReason"/>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:apply-templates select="gco:CharacterString"/>
-			<xsl:copy-of select="*[name(.)!='gco:CharacterString']"/>
+			<xsl:apply-templates select="*"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -353,19 +361,20 @@
 	<!-- Initialize dataset RS_Identifier if created from template -->
 	<!-- ================================================================= -->
 	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier">
-		<xsl:if test="/root/env/createdFromTemplate='y'">
-            <xsl:copy>
-				<gmd:code gco:nilReason="missing">
+		<xsl:copy>
+			<xsl:copy-of select="@*" />
+			<xsl:if test="/root/env/createdFromTemplate='y'">
+				<gmd:code>
 					<gco:CharacterString><xsl:value-of select="/root/env/mduuid"/></gco:CharacterString>
 				</gmd:code>
 				<gmd:codeSpace gco:nilReason="missing">
 					<gco:CharacterString/>
 				</gmd:codeSpace>
-			</xsl:copy>
-		</xsl:if>
-		<xsl:if test="/root/env/createdFromTemplate='n'">
-			<xsl:copy-of select="."/>
-		</xsl:if>
+			</xsl:if>
+			<xsl:if test="/root/env/createdFromTemplate='n'">
+				<xsl:apply-templates select="*"/>
+			</xsl:if>
+		</xsl:copy>
 	</xsl:template>
 
 	<!-- ================================================================= -->
@@ -373,12 +382,12 @@
 	<!-- ================================================================= -->
 	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
 		<xsl:if test="/root/env/createdFromTemplate='y'">
-            <xsl:copy>
+			<gmd:title gco:nilReason="missing">
 				<gco:CharacterString/>
-			</xsl:copy>
+			</gmd:title>
 		</xsl:if>
 		<xsl:if test="/root/env/createdFromTemplate='n'">
-			<xsl:copy-of select="."/>
+			<xsl:call-template name="updateElementWithCharacterStringChild"/>
 		</xsl:if>
 	</xsl:template>
 
@@ -389,6 +398,46 @@
 	    <xsl:copy>
 	        <xsl:apply-templates select="@*|node()"/>
       </xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="srv:serviceType">
+	    <xsl:copy>
+			<xsl:if test="normalize-space(gco:localName)=''">
+				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+			</xsl:if>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:apply-templates select="*"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="gmd:topicCategory">
+	    <xsl:copy>
+			<xsl:if test="normalize-space(gmd:MD_TopicCategoryCode)=''">
+				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+			</xsl:if>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:apply-templates select="*"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="gmd:linkage">
+	    <xsl:copy>
+			<xsl:if test="normalize-space(gmd:URL)=''">
+				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+			</xsl:if>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:apply-templates select="*"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="*[*[@codeListValue]]">
+		<xsl:copy>
+			<xsl:if test="count(*[normalize-space(@codeListValue)=''])>0">
+				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+			</xsl:if>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:apply-templates select="*"/>
+		</xsl:copy>
 	</xsl:template>
 
 </xsl:stylesheet>

@@ -26,13 +26,13 @@
 		<entry>
 			<code>download</code>
 			<label>Download</label>
-			<description>online instructies voor de data over te brengen van een dataopslagsysteem naar een ander.</description>
+			<description>Online instructies voor de data over te brengen van een dataopslagsysteem naar een ander.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>information</code>
 			<label>Informatie</label>
-			<description>online beschikbare informatie betreffende de bron.</description>
+			<description>Online beschikbare informatie betreffende de bron.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -44,13 +44,13 @@
 		<entry>
 			<code>order</code>
 			<label>Bestelling</label>
-			<description>online bestelproces om de bron te verkrijgen</description>
+			<description>Online bestelproces om de bron te verkrijgen</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>search</code>
 			<label>Zoek</label>
-			<description>online interface voor het zoeken van informatie betreffende de bron.</description>
+			<description>Online interface voor het zoeken van informatie betreffende de bron.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -71,14 +71,13 @@
 		<entry>
 			<code>documentHardcopy</code>
 			<label>documentHardcopy</label>
-			<description>voorstelling van een hoofdzakelijk tekstueel gegeven (kan ook afbeeldingen bevatten) op papier, fotografisch materiaal of andere media.</description>
+			<description>Voorstelling van een hoofdzakelijk tekstueel gegeven (kan ook afbeeldingen bevatten) op papier, fotografisch materiaal of andere media.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageHardcopy</code>
 			<label>imageHardcopy</label>
-			<description>lAfbeelding van natuurlijke of door de mens gemaakte objecten en activiteiten opgenomen door het meten van het visueel of alk ander segment van het electromagnetisch spectrum door sensoren, zoals bijvoorbeeld themische infrarood en hoge resolutie cameras en gereprodueerd op papier,
-				photografisch materiaal, of elk ander medium voor direct gebruik door een menselijke gebruiker.</description>
+			<description>Afbeelding van natuurlijke of door de mens gemaakte objecten en activiteiten opgenomen door het meten van het visueel of alk ander segment van het electromagnetisch spectrum door sensoren, zoals bijvoorbeeld themische infrarood en hoge resolutie cameras en gereprodueerd op papier, fotografisch materiaal, of elk ander medium voor direct gebruik door een menselijke gebruiker.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -96,8 +95,7 @@
 		<entry>
 			<code>modelDigital</code>
 			<label>modelDigital</label>
-			<description>Multi-dimensionale digitale voorstelling van een object of proces,
-			etc.</description>
+			<description>Multi-dimensionale digitale voorstelling van een object of proces, ...</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -217,7 +215,7 @@
 		<entry>
 			<code>directInternal</code>
 			<label>directInternal</label>
-			<description>Datasetkwaliteit evaluatiemethode gebaseerd op de inspectie van elementen binnen de dataset waarbij al de data die nodig is tot de dataset die geevalueerd wordt behoort. </description>
+			<description>Datasetkwaliteit evaluatiemethode gebaseerd op de inspectie van elementen binnen de dataset waarbij al de data die nodig is tot de dataset die geevalueerd wordt, behoort. </description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -244,7 +242,7 @@
 		<entry>
 			<code>largerWorkCitation</code>
 			<label>Verwijzing naar een groter geheel</label>
-			<description>Verwijzing naar de master dataset waarvan deze dataset deel uit maakt</description>
+			<description>Verwijzing naar de master dataset waarvan deze dataset deel uit maakt.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -295,7 +293,7 @@
 		<entry>
 			<code>investigation</code>
 			<label>Onderzoek</label>
-			<description>Systematisch onderzoek</description>
+			<description>Systematisch onderzoek.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -313,7 +311,7 @@
 		<entry>
 			<code>operation</code>
 			<label>Operatie</label>
-			<description>Actie die onderdeel uitmaakt van een serie van acties</description>
+			<description>Actie die onderdeel uitmaakt van een serie van acties.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -331,7 +329,7 @@
 		<entry>
 			<code>program</code>
 			<label>Programma</label>
-			<description>Specifieke geplande activiteit</description>
+			<description>Specifieke geplande activiteit.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -343,19 +341,19 @@
 		<entry>
 			<code>study</code>
 			<label>Studie</label>
-			<description>Onderzoek</description>
+			<description>Onderzoek.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>task</code>
 			<label>Taak</label>
-			<description>Werk dat je moet doen.</description>
+			<description>Werk dat je moet uitvoeren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>trial</code>
 			<label>Proef</label>
-			<description>Proces van het testen om iets te ontdekken of demonstreten</description>
+			<description>Proces van het testen om iets te ontdekken of demonstreren</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -379,187 +377,169 @@
 		<entry>
 			<code>ucs2</code>
 			<label>ucs2</label>
-			<description>16-bit fixed size Universal Character Set, based on ISO/IEC
-			10646</description>
+			<description>16-bit vaste grootte universele karakterset, gebaseerd op ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>ucs4</code>
 			<label>ucs4</label>
-			<description>32-bit fixed size Universal Character Set, based on ISO/IEC
-			10646</description>
+			<description>32-bit vaste grootte universele karakterset, gebaseerd op ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utf7</code>
 			<label>utf7</label>
-			<description>7-bit variable size UCS Transfer Format, based on ISO/IEC 10646</description>
+			<description>7-bit variabele grootte universele karakterset, gebaseerd op ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utf8</code>
 			<label>utf8</label>
-			<description>8-bit variable size UCS Transfer Format, based on ISO/IEC 10646</description>
+			<description>8-bit variabele grootte universele karakterset, gebaseerd op ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utf16</code>
 			<label>utf16</label>
-			<description>16-bit variable size UCS Transfer Format, based on ISO/IEC 10646</description>
+			<description>16-bit variabele grootte universele karakterset, gebaseerd op ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part1</code>
 			<label>8859part1</label>
-			<description>ISO/IEC 8859-1, Information technology - 8-bit single byte coded graphic
-				character sets - Part 1 : Latin alphabet No.1</description>
+			<description>ISO/IEC 8859-1, 8-bit single byte karakterset - Deel 1 : Latin-1</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part2</code>
 			<label>8859part2</label>
-			<description>ISO/IEC 8859-2, Information technology - 8-bit single byte coded graphic
-				character sets - Part 2 : Latin alphabet No.2</description>
+			<description>ISO/IEC 8859-2,  8-bit single byte karakterset - Deel 2 : Latin-2</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part3</code>
 			<label>8859part3</label>
-			<description>ISO/IEC 8859-3, Information technology - 8-bit single byte coded graphic
-				character sets - Part 3 : Latin alphabet No.3</description>
+			<description>ISO/IEC 8859-3,  8-bit single byte karakterset - Deel 3 : Latin-3</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part4</code>
 			<label>8859part4</label>
-			<description>ISO/IEC 8859-4, Information technology - 8-bit single byte coded graphic
-				character sets - Part 4 : Latin alphabet No.4</description>
+			<description>ISO/IEC 8859-4, 8-bit single byte karakterset - Deel 4 : Latin-4</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part5</code>
 			<label>8859part5</label>
-			<description>ISO/IEC 8859-5, Information technology - 8-bit single byte coded graphic
-				character sets - Part 5 : Latin/Cyrillic alphabet</description>
+			<description>ISO/IEC 8859-5,  8-bit single byte karakterset - Deel 5 : Latijns/Cyrillisch alfabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part6</code>
 			<label>8859part6</label>
-			<description>ISO/IEC 8859-6, Information technology - 8-bit single byte coded graphic
-				character sets - Part 6 : Latin/Arabic alphabet</description>
+			<description>ISO/IEC 8859-6, 8-bit single byte karakterset - Deel 6: Latijns/Arabisch alfabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part7</code>
 			<label>8859part7</label>
-			<description>ISO/IEC 8859-7, Information technology - 8-bit single byte coded graphic
-				character sets - Part 7 : Latin/Greek alphabet</description>
+			<description>ISO/IEC 8859-7, 8-bit single byte karakterset - Deel 7 : Latijns/Grieks alfabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part8</code>
 			<label>8859part8</label>
-			<description>ISO/IEC 8859-8, Information technology - 8-bit single byte coded graphic
-				character sets - Part 8 : Latin/Hebrew alphabet</description>
+			<description>ISO/IEC 8859-8, 8-bit single byte karakterset - Deel 8 : Latijns/Hebreeuws alphabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part9</code>
 			<label>8859part9</label>
-			<description>ISO/IEC 8859-9, Information technology - 8-bit single byte coded graphic
-				character sets - Part 9 : Latin alphabet No.5</description>
+			<description>ISO/IEC 8859-9, 8-bit single byte karakterset - Deel 9 : Latijns alfabet nr. 5</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part10</code>
 			<label>8859part10</label>
-			<description>ISO/IEC 8859-10, Information technology - 8-bit single byte coded graphic
-				character sets - Part 10 : Latin alphabet No.6</description>
+			<description>ISO/IEC 8859-10, 8-bit single byte karakterset - Deel 10 : Latijns alfabet nr. 6</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part11</code>
 			<label>8859part11</label>
-			<description>ISO/IEC 8859-11, Information technology - 8-bit single byte coded graphic
-				character sets - Part 11 : Latin/Thai alphabet</description>
+			<description>ISO/IEC 8859-11, 8-bit single byte karakterset - Deel 11 : Latin/Thais alfabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part13</code>
 			<label>8859part13</label>
-			<description>ISO/IEC 8859-13, Information technology - 8-bit single byte coded graphic
-				character sets - Part 13 : Latin alphabet No.7</description>
+			<description>ISO/IEC 8859-13, 8-bit single byte karakterset - Deel 13 : Latijns alfabet nr.7</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part14</code>
 			<label>8859part14</label>
-			<description>ISO/IEC 8859-14, Information technology - 8-bit single byte coded graphic
-				character sets - Part 14 : Latin alphabet No.8 (Celtic)</description>
+			<description>ISO/IEC 8859-14, 8-bit single byte karakterset - Deel 14 : Latijns alfabet nr. 8 (Keltisch)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part15</code>
 			<label>8859part15</label>
-			<description>ISO/IEC 8859-15, Information technology - 8-bit single byte coded graphic
-				character sets - Part 15 : Latin alphabet No.9</description>
+			<description>ISO/IEC 8859-15, 8-bit single byte karakterset - Deel 15 : Latijns alfabet nr. 9</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part16</code>
 			<label>8859part16</label>
-			<description>ISO/IEC 8859-16, Information technology - 8-bit single byte coded graphic
-				character sets - Part 16 : Latin alphabet No.10</description>
+			<description>ISO/IEC 8859-16, 8-bit single byte karakterset - Deel 16 : Latijns alfabet nr. 10</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>jis</code>
 			<label>jis</label>
-			<description>japanese code set used for electronic transmission</description>
+			<description>Japanse karakterset voor elektronische transmissie</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>shiftJIS</code>
 			<label>shiftJIS</label>
-			<description>japanese code set used on MS-DOS machines</description>
+			<description>Japanse karakterset voor MS-DOS</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>eucJP</code>
 			<label>eucJP</label>
-			<description>japanese code set used on UNIX based machines</description>
+			<description>Japanse karakterset voor UNIX</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>usAscii</code>
 			<label>usAscii</label>
-			<description>United States ASCII code set (ISO 646 US)</description>
+			<description>ASCII karakterset Verenigde staten (ISO 646 US)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>ebcdic</code>
 			<label>ebcdic</label>
-			<description>IBM mainframe code set</description>
+			<description>IBM mainframe karakterset</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>eucKR</code>
 			<label>eucKR</label>
-			<description>Korean code set</description>
+			<description>Koreaanse karakterset</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>big5</code>
 			<label>big5</label>
-			<description>traditional Chinese code set used in Taiwan, Hong Kong of China and other
-				areas</description>
+			<description>Traditionele Chinese karakterset gebruikt in Taiwan, Hong Kong of China en andere gebieden</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>GB2312</code>
 			<label>GB2312</label>
-			<description>simplified Chinese code set</description>
+			<description>Vereenvoudigde Chinese karakterset</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -580,7 +560,7 @@
 		<entry>
 			<code>confidential</code>
 			<label>vertrouwelijk</label>
-			<description>Beschikbaar voor personen die vertrouwd kan omgaan met de informatie.</description>
+			<description>Beschikbaar voor personen die vertrouwd kunnen omgaan met de informatie.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -601,7 +581,7 @@
 		<entry>
 			<code>image</code>
 			<label>Afbeelding</label>
-			<description>Betekenisvolle numerische voorstelling van een fysische parameter die niet de eigenlijke fysische parameter betreft</description>
+			<description>Betekenisvolle numerische voorstelling van een fysische parameter die niet de eigenlijke fysische parameter betreft.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -622,14 +602,13 @@
 		<entry>
 			<code>class</code>
 			<label>Klasse</label>
-			<description>Beschrijving van een set van objecten objects die dezelfde attributen, operaties,
-				methodes, relaties en gedrag delen.</description>
+			<description>Beschrijving van een set van objecten die dezelfde attributen, operaties, methodes, relaties en gedrag delen.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>codelist</code>
 			<label>Codelijst</label>
-			<description>Codelijst - lijst van mogelijke waarden</description>
+			<description>Codelijst - lijst van mogelijke waarden.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -671,7 +650,7 @@
 		<entry>
 			<code>interfaceClass</code>
 			<label>Interface klasse</label>
-			<description>Bnoemde set van operaties die het gedrag van een element karakteriseren.</description>
+			<description>Benoemde set van operaties die het gedrag van een element karakteriseren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -683,7 +662,7 @@
 		<entry>
 			<code>metaClass</code>
 			<label>Meta Klasse</label>
-			<description>Klasse waarvan de instaies klassen zijn.</description>
+			<description>Klasse waarvan de instanties klassen zijn.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -695,13 +674,13 @@
 		<entry>
 			<code>characterString</code>
 			<label>Tekenreeks</label>
-			<description>Vrij tekst veld (Characterstring)</description>
+			<description>Vrij tekst veld (Characterstring).</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>integer</code>
 			<label>Integer</label>
-			<description>Gehele numerische waarde</description>
+			<description>Gehele numerische waarde.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -716,37 +695,37 @@
 		<entry>
 			<code>row</code>
 			<label>Rij</label>
-			<description>Ordinaat (y) as</description>
+			<description>Ordinaat (y) as.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>column</code>
 			<label>Kolom</label>
-			<description>Abscis (x) as</description>
+			<description>Abscis (x) as.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>vertical</code>
 			<label>Verticaal</label>
-			<description>Verticale (z) as</description>
+			<description>Verticale (z) as.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>track</code>
 			<label>track</label>
-			<description>Volgens de bewegingsrichting</description>
+			<description>Volgens de bewegingsrichting.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>crossTrack</code>
 			<label>Cross track</label>
-			<description>Loodrecht op de bewegingsrichting</description>
+			<description>Loodrecht op de bewegingsrichting.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>line</code>
 			<label>Lijn</label>
-			<description>Scan lijn van een sensor</description>
+			<description>Scan lijn van een sensor.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -773,7 +752,7 @@
 		<entry>
 			<code>composite</code>
 			<label>Composiet</label>
-			<description>Verbonden sets van curves, volumes of oppervlaktes</description>
+			<description>Verbonden sets van curves, volumes of oppervlaktes.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -805,73 +784,69 @@
 	<codelist name="gmd:MD_ImagingConditionCode">
 		<entry>
 			<code>blurredImage</code>
-			<label>blurredImage</label>
-			<description>portion of the image is blurred</description>
+			<label>Vervaagd beeld</label>
+			<description>Gedeelte van het beeld is vervaagd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>cloud</code>
-			<label>cloud</label>
-			<description>portion of the image is partially obscured by cloud cover</description>
+			<label>Wolken</label>
+			<description>Gedeelte van het beeld is gedeeltelijk bedekt door wolken.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>degradingObliquity</code>
 			<label>degradingObliquity</label>
-			<description>acute angle between the plane of the ecliptic (the plane of the Earth s orbit)
-				and the plane of the celestial equator</description>
+			<description>Sherpe hoek tussen het vlak van de baan van de aarde en van de evenaar.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fog</code>
-			<label>fog</label>
-			<description>portion of the image is partially obscured by fog</description>
+			<label>mist</label>
+			<description>Gedeelte van het beeld is bedekt met mist.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>heavySmokeOrDust</code>
-			<label>heavySmokeOrDust</label>
-			<description>portion of the image is partially obscured by heavy smoke or
-			dust</description>
+			<label>Hevige rook of stof</label>
+			<description>Gedeelte van het beeld is gedeeltelijk bedekt door hevige rook of stof.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>night</code>
-			<label>night</label>
-			<description>image was taken at night</description>
+			<label>Nacht</label>
+			<description>Beeld werd opgenomen tijdens de nacht.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>rain</code>
-			<label>rain</label>
-			<description>image was taken during rainfall</description>
+			<label>Regen</label>
+			<description>Beeld werd opgenomen tijdens de regen.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>semiDarkness</code>
-			<label>semiDarkness</label>
-			<description>image was taken during semi-dark conditions -- twilight
+			<label>Schemering</label>
+			<description>Beeld werd opgenomen tijdens half-duisternis /schemering.
 			conditions</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>shadow</code>
-			<label>shadow</label>
-			<description>portion of the image is obscured by shadow</description>
+			<label>Shaduw</label>
+			<description>Gedeelte van het beeld is bedekt door schaduw.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>snow</code>
-			<label>snow</label>
-			<description>portion of the image is obscured by snow</description>
+			<label>Sneeuw</label>
+			<description>Gedeelte van het beeld is bedekt door sneeuw.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>terrainMasking</code>
-			<label>terrainMasking</label>
-			<description>the absence of collection data of a given point or area caused by the relative
-				location of topographic features which obstruct the collection path between the
-				collector(s) and the subject(s) of interest</description>
+			<label>Maskering door het terrein</label>
+			<description>De afwezigheid van data op een gegeven positie door de relatieve positie van objecten.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -886,25 +861,25 @@
 		<entry>
 			<code>place</code>
 			<label>Plaats</label>
-			<description>Trefwoord dat een plaats identificeert</description>
+			<description>Trefwoord dat een plaats identificeert.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stratum</code>
 			<label>Stratum</label>
-			<description>Trefwoord dat de geologische laag of lagen identificeert</description>
+			<description>Trefwoord dat de geologische laag of lagen identificeert.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>temporal</code>
 			<label>Temporeel</label>
-			<description>Trefwoord dat een tijdperiode gerelateerd aan de dataset identificeert</description>
+			<description>Trefwoord dat een tijdperiode gerelateerd aan de dataset identificeert.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>theme</code>
 			<label>Thema</label>
-			<description>Trefwoord dat een welbepaald onderwerp identificeert</description>
+			<description>Trefwoord dat een welbepaald onderwerp identificeert.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -943,7 +918,7 @@
 		<entry>
 			<code>quarterly</code>
 			<label>1 x per kwartaal</label>
-			<description>Data wordt elke kwartaal geactualiseerd.</description>
+			<description>Data wordt elk kwartaal geactualiseerd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1027,7 +1002,7 @@
 		<entry>
 			<code>irregular</code>
 			<label>Onregelmatig</label>
-			<description>Data wordt geactualiseerd in intervallen die niet even lang duren.</description>
+			<description>Data wordt geactualiseerd met onregelmatige intervallen.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1048,25 +1023,25 @@
 		<entry>
 			<code>cpio</code>
 			<label>cpio</label>
-			<description>CoPy In / Out (UNIX file format and command)</description>
+			<description>CoPy In / Out (UNIX bestandsformaat en commando)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>tar</code>
 			<label>tar</label>
-			<description>Tape ARchive</description>
+			<description>Tape ARchive - gecomprimeerd formaat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>highSierra</code>
 			<label>highSierra</label>
-			<description>high sierra file system</description>
+			<description>HSFS- High Sierra bestandssysteem voor CDROM </description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>iso9660</code>
 			<label>iso9660</label>
-			<description>information processing volume and file structure of CD-ROM</description>
+			<description> ISO standaard met betrekking tot een bestandssysteem voor cd-rom</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1078,7 +1053,7 @@
 		<entry>
 			<code>iso9660AppleHFS</code>
 			<label>iso9660AppleHFS</label>
-			<description>hierarchical file system (Macintosh)</description>
+			<description>hierarchisch bestandssysteem (Macintosh)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1086,110 +1061,110 @@
 	<codelist name="gmd:MD_MediumNameCode">
 		<entry>
 			<code>cdRom</code>
-			<label>cdRom</label>
-			<description>read-only optical disk</description>
+			<label>CD-ROM</label>
+			<description>cd-rom</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dvd</code>
-			<label>dvd</label>
-			<description>digital versatile disk</description>
+			<label>DVD</label>
+			<description>DVD</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dvdRom</code>
-			<label>dvdRom</label>
-			<description>digital versatile disk, read only</description>
+			<label>DVD-ROM</label>
+			<description>DVD-ROM</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>3halfInchFloppy</code>
-			<label>3halfInchFloppy</label>
-			<description>3,5 inch magnetic disk</description>
+			<label>3 en half inch schijf</label>
+			<description>3,5 inch magnetische schijf</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>5quarterInchFloppy</code>
-			<label>5quarterInchFloppy</label>
-			<description>5,25 inch magnetic disk</description>
+			<label>5 en een vierde magnetische schijf</label>
+			<description>5,25 inch magnetische schijf</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>7trackTape</code>
-			<label>7trackTape</label>
-			<description>7 track magnetic tape</description>
+			<label>7-track Tape</label>
+			<description>7 track magnetische tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>9trackType</code>
-			<label>9trackType</label>
-			<description>9 track magnetic tape</description>
+			<label>9-track Tape</label>
+			<description>9 track magnetische tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>3480Cartridge</code>
-			<label>3480Cartridge</label>
+			<label>3480 Cartridge</label>
 			<description>3480 cartridge tape drive</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>3490Cartridge</code>
-			<label>3490Cartridge</label>
+			<label>3490 Cartridge</label>
 			<description>3490 cartridge tape drive</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>3580Cartridge</code>
-			<label>3580Cartridge</label>
+			<label>3580 Cartridge</label>
 			<description>3580 cartridge tape drive</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>4mmCartridgeTape</code>
-			<label>4mmCartridgeTape</label>
-			<description>4 millimetre magnetic tape</description>
+			<label>4mm Cartridge Tape</label>
+			<description>4 millimeter magnetische tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8mmCartridgeTape</code>
-			<label>8mmCartridgeTape</label>
-			<description>8 millimetre magnetic tape</description>
+			<label>8mm Cartridge Tape</label>
+			<description>8 millimeter magnetische tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>1quarterInchCartridgeTape</code>
-			<label>1quarterInchCartridgeTape</label>
-			<description>0,25 inch magnetic tape</description>
+			<label>1 quarterInch Cartridge Tape</label>
+			<description>0,25 inch magnetische tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>digitalLinearTap</code>
-			<label>digitalLinearTap</label>
+			<label>Digital Linear Tap</label>
 			<description>half inch cartridge streaming tape drive</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>onLine</code>
-			<label>onLine</label>
-			<description>direct computer linkage</description>
+			<label>Online</label>
+			<description>online</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>satellite</code>
-			<label>satellite</label>
-			<description>linkage through a satellite communication system</description>
+			<label>Satelliet</label>
+			<description>Satelliet communicatie systeem</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>telephoneLink</code>
-			<label>telephoneLink</label>
-			<description>communication through a telephone network</description>
+			<label>Telefoon link</label>
+			<description>Communicatie via telefoon</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>hardcopy</code>
-			<label>hardcopy</label>
-			<description>pamphlet or leaflet giving descriptive information</description>
+			<label>Hardcopy</label>
+			<description>Afdruk</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1197,20 +1172,20 @@
 	<codelist name="gmd:MD_ObligationCode">
 		<entry>
 			<code>mandatory</code>
-			<label>mandatory</label>
-			<description>element is always required</description>
+			<label>Verplicht</label>
+			<description>Dit element is verplicht.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>optional</code>
-			<label>optional</label>
-			<description>element is not required</description>
+			<label>Optioneel</label>
+			<description>Element is niet verplicht.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>conditional</code>
-			<label>conditional</label>
-			<description>element is required when a specific condition is met</description>
+			<label>Conditioneel</label>
+			<description>Element is verplicht wanneer een specifieke confitie vervuld is.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1218,34 +1193,32 @@
 	<codelist name="gmd:MD_PixelOrientationCode">
 		<entry>
 			<code>center</code>
-			<label>center</label>
-			<description>point halfway between the lower left and the upper right of the
-			pixel</description>
+			<label>Centerpunt</label>
+			<description>Punt halverwege tussen de linkerbenedenhoek en de rechterbovenhoek.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>lowerLeft</code>
-			<label>lowerLeft</label>
-			<description>the corner in the pixel closest to the origin of the SRS; if two are at the
-				same distance from the origin, the one with the smallest x-value</description>
+			<label>Linkerbenedenhoek</label>
+			<description> De hoek in de pixel die het dichtst ligt bij de oorsprong van het coordinatensysteel, wanneer er 2 zijn die op dezelfde afstand liggen wordt diegene met de kleinste x-waarde genomen.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>lowerRight</code>
-			<label>lowerRight</label>
-			<description>next corner counterclockwise from the lower left</description>
+			<label>Rechterbenedenhoek</label>
+			<description>Volgende hoek na de linkerbenedenhoek in tegenwijzerzin.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>upperRight</code>
-			<label>upperRight</label>
-			<description>next corner counterclockwise from the lower right</description>
+			<label>Rechterbovenhoek</label>
+			<description>Volgende hoek na de rechterbenedenhoek in tegenwijzerzin.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>upperLeft</code>
-			<label>upperLeft</label>
-			<description>next corner counterclockwise from the upper right</description>
+			<label>Linkerbovenhoek</label>
+			<description>Volgende hoek na de rechterbenedenhoek in tegenwijzerzin.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1376,7 +1349,7 @@ toegankelijk</label>
 		<entry>
 			<code>attributeType</code>
 			<label>Attribuut type</label>
-			<description>Information heeft betrekking op een eigenschap van een object.</description>
+			<description>Informatie heeft betrekking op een eigenschap van een object.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1435,8 +1408,8 @@ toegankelijk</label>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fieldSession</code>
-			<label>Veld opnamesessie</label>
-			<description>Informatie heeft betrekking op een veld opname sessie.</description>
+			<label>Veld opname</label>
+			<description>Informatie heeft betrekking op een veldopname sessie.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1460,7 +1433,7 @@ toegankelijk</label>
 		<entry>
 			<code>tile</code>
 			<label>Tegel</label>
-			<description>Informatie heeft betrekking op een tegel een ruimtelijke subset van geographische data.</description>
+			<description>Informatie heeft betrekking op een tegel, een ruimtelijke subset van geographische data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1672,67 +1645,57 @@ telecommunicatie, radio.</description>
 	<codelist name="gmd:MD_TopologyLevelCode">
 		<entry>
 			<code>geometryOnly</code>
-			<label>geometryOnly</label>
-			<description>geometry objects without any additional structure which describes
-			topology</description>
+			<label>Enkel geometrie</label>
+			<description>Geometrische objecten zonder bijkomende toplogische beschrijving.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>topology1D</code>
-			<label>topology1D</label>
-			<description>1-dimensional topological complex -- commonly called chain-node
-			topology</description>
+			<label>Topologie - 1D</label>
+			<description>1-dimensionaal topologisch complex.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planarGraph</code>
-			<label>planarGraph</label>
-			<description>1-dimensional topological complex that is planar. (A planar graph is a graph
-				that can be drawn in a plane in such a way that no two edges intersect except at a
-				vertex.)</description>
+			<label>Planaire graph</label>
+			<description>1-dimensionaal topologisch complex dat planair is. (Een planaire graph is een graph
+				die in 1 vlak kan getekend worden zodanig dat er geen 2 zijdes zijn die elkaar snijden buiten in een vertex.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fullPlanarGraph</code>
-			<label>fullPlanarGraph</label>
-			<description>2-dimensional topological complex that is planar. (A 2-dimensional topological
-				complex is commonly called full topology in a cartographic 2D
-			environment.)</description>
+			<label>Volledig planaire graph</label>
+			<description>2-dimensionaal topologisch complex dat planair is.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>surfaceGraph</code>
-			<label>surfaceGraph</label>
-			<description>1-dimensional topological complex that is isomorphic to a subset of a surface.
-				(A geometric complex is isomorphic to a topological complex if their elements are in a
-				one-to-one, dimensional-and boundry-preserving correspondence to one
-			another.)</description>
+			<label>Oppervlakte Graph</label>
+			<description>Een 1-dimensionaal topologisch complex dat isomorf is ten opzichte van een subset van een oppervlak.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fullSurfaceGraph</code>
-			<label>fullSurfaceGraph</label>
-			<description>2-dimensional topological complex that is isomorphic to a subset of a
-			surface</description>
+			<label>Volledig oppervlakte graph</label>
+			<description>2-dimensionaal topologisch complex dat isomorf is ten opzichte van een subset van een oppervlak.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>topology3D</code>
-			<label>topology3D</label>
-			<description>3-dimensional topological complex. (A topological complex is a collection of
-				topological primitives that are closed under the boundary operations.)</description>
+			<label>Topologie 3D</label>
+			<description>3-dimensionaal topologisch complex.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fullTopology3D</code>
-			<label>fullTopology3D</label>
-			<description>complete coverage of a 3D Euclidean coordinate space</description>
+			<label>Volledige 3D topologie</label>
+			<description>Complete bedekking van een 3D Euclidisch coordinaten systeem.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>abstract</code>
-			<label>abstract</label>
-			<description>topological complex without any specified geometric realisation</description>
+			<label>Abstract</label>
+			<description>Een topologisch complex zonder enig gespecifieerde geometrische realisatie.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1777,7 +1740,7 @@ telecommunicatie, radio.</description>
 		<entry>
 			<code>nonGeographicDataset</code>
 			<label>Niet-geographische dataset</label>
-			<description>Informatie is van toepassing op niet-geografische data</description>
+			<description>Informatie is van toepassing op niet-geografische data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1819,7 +1782,7 @@ telecommunicatie, radio.</description>
 		<entry>
 			<code>service</code>
 			<label>Dienst</label>
-			<description>Informatie is van toepassing op de mogelijkheden die een dienstenleverancier aanbiedt aan een dienstengebruiker door een set van interfaces die een bepaald gedrag definiëren.</description>
+			<description>Informatie is van toepassing op de mogelijkheden die een dienstenleverancier aanbiedt aan een dienstengebruiker door een set van interfaces die een bepaald gedrag defini&#235;ren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1831,7 +1794,7 @@ telecommunicatie, radio.</description>
 		<entry>
 			<code>tile</code>
 			<label>Tegel</label>
-			<description>Informatie is van toepassing op een tegel een ruimtelijke subset van geographische data.</description>
+			<description>Informatie is van toepassing op een tegel, een ruimtelijke subset van geographische data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1849,25 +1812,25 @@ telecommunicatie, radio.</description>
 		<entry>
 			<code>sensor</code>
 			<label>Sensor</label>
-			<description>Informatie is van toepassing op een aggregaat dat origineel geidentificeerd werd als een sensor (DS_Sensor)</description>
+			<description>Informatie is van toepassing op een aggregaat dat origineel ge&#239;dentificeerd werd als een sensor (DS_Sensor)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>platformSeries</code>
 			<label>Platform serie</label>
-			<description>Informatie is van toepassing op een aggregaat dat origineel geidentificeerd werd als een platform serie (DS_PlatformSeries)</description>
+			<description>Informatie is van toepassing op een aggregaat dat origineel geidentificeerd werd als een platform serie (DS_PlatformSeries).</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>sensorSeries</code>
 			<label>Sensor serie</label>
-			<description>Informatie is van toepassing op een aggregaat dat origineel geidentificeerd werd als een sensor serie (DS_SensorSeries)</description>
+			<description>Informatie is van toepassing op een aggregaat dat origineel geidentificeerd werd als een sensor serie (DS_SensorSeries).</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>productionSeries</code>
-			<label>Production serie</label>
-			<description>Informatie is van toepassing op een aggregaat dat origineel geidentificeerd werd als een productie serie (DS_ProductionSeries)</description>
+			<label>Productie serie</label>
+			<description>Informatie is van toepassing op een aggregaat dat origineel geidentificeerd werd als een productie serie (DS_ProductionSeries).</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1913,29 +1876,29 @@ telecommunicatie, radio.</description>
 		<entry>
 			<description>DCP is WebServices</description>
 			<code>WebServices</code>
-			<label>WebServices</label>
+			<label>Webdiensten</label>
 		</entry>
 		<entry>
 			<code>httpGet</code>
-			<label>httpGet</label>
+			<label>HTTP Get</label>
 			<description>Vraagt een representatie van de specifieke resource, door middel van een URL codering of naam/waarde paar.</description>
 		</entry>
 		<entry>
 			<code>httpPost</code>
-			<label>httpPost</label>
+			<label>HTTP Post</label>
 			<description>Verzend gebruikersdata naar de ge&#239;dentificeerde resource. De data is opgenomen in de "request".</description>
 		</entry>
 		<entry>
 			<code>httpSoap</code>
-			<label>httpSoap</label>
-			<description>Verzend gebruikersdata naar de ge&#239;dentificeerde resource over httpPost. De data is opgenomen
+			<label>HTTP SOAP</label>
+			<description>Verzend gebruikersdata naar de ge&#239;dentificeerde resource over HTTP Post. De data is opgenomen
 in de "request". Deze "request" is een "SOAP request".</description>
 		</entry>
 	</codelist>
 	<!--=== CouplingType from ISO19119 ===-->
 	<codelist name="srv:SV_CouplingType">
 		<entry>
-			<code>tight</code>
+			<code>tight</code>-
 			<label>tight</label>
 			<description>Een service instance die gekoppeld is met een specifieke dataset of dataset serie. Service metadata dienen zowel de service als geografische dataset te beschrijven (door middel van ISO
 19115).</description>

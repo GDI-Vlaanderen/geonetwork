@@ -36,21 +36,30 @@
         <xsl:param name="edit" select="false()"/>
         <xsl:param name="embedded"/>
 
-        <xsl:apply-templates mode="iso19139" select="." >
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="embedded" select="$embedded" />
-        </xsl:apply-templates>
+        <xsl:if test="name(.)!='gmd:MD_BrowseGraphic'">
+	        <xsl:apply-templates mode="iso19139" select="." >
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="embedded" select="$embedded" />
+	        </xsl:apply-templates>
+        </xsl:if>
         
         <xsl:if test="name(.)='gmd:MD_BrowseGraphic'">
         
+    	    <xsl:variable name="previousGraphicOverviewSiblingsCount" select="count(../../preceding-sibling::*[name(.) = 'gmd:graphicOverview'])" />
+            <xsl:variable name="uploadedThumbsCount" select="count(../../*/gmd:MD_BrowseGraphic/gmd:fileDescription[gco:CharacterString='large_thumbnail' or gco:CharacterString='thumbnail'])"/>
             <xsl:variable name="fileName" select="gmd:fileName/gco:CharacterString"/>
 			<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
             <xsl:variable name="url" select="if (contains($fileName, '://') or not(string(normalize-space($fileName))))
                                                 then $fileName
                                                 else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
+			<xsl:variable name="isUploadedThumb" select="string($fileDescr)='large_thumbnail' or string($fileDescr)='thumbnail'"/>
 
-
+	        <xsl:apply-templates mode="iso19139" select="." >
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="not($isUploadedThumb)"/>
+	            <xsl:with-param name="embedded" select="$embedded" />
+	        </xsl:apply-templates>
             <tr><td>
 	             <xsl:choose>
 	                 <xsl:when test="string($fileName)">
@@ -79,83 +88,32 @@
 	                     </xsl:variable>
 	
 	
-	                     <xsl:if test="string($fileName)">
-	                         <div class="md-view">
-	                             <a rel="lightbox-viewset" href="{$url}">
-	                                 <img class="logo" src="{$url}">
-	                                     <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-	                                     <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-	                                 </img>
-	                             </a>
-	                             <!--<br/>
-	                             <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>  -->
-	                         </div>
-							<xsl:if test="string($fileDescr)='large_thumbnail' or string($fileDescr)='small_thumbnail'">
-								<a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail();">Voorbeeld verwijderen</a>
-							</xsl:if>
-	                     </xsl:if>
+                         <div class="md-view">
+                             <a rel="lightbox-viewset" href="{$url}">
+                                 <img class="logo" src="{$url}">
+                                     <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+                                     <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+                                 </img>
+                             </a>
+                         </div>
+						<xsl:if test="$isUploadedThumb">
+							<a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail('{string($fileDescr)}');">Voorbeeld verwijderen</a>
+						</xsl:if>
 	
-	                     <xsl:if test="not(string($fileName))">
+	                     <xsl:if test="$uploadedThumbsCount=0 and $previousGraphicOverviewSiblingsCount=0">
 	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Voorbeeld toevoegen</a>
 	                     </xsl:if>
 	                 </xsl:when>
 	
 	                 <xsl:otherwise>
-	                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Voorbeeld toevoegen</a>
-	
+	                     <xsl:if test="$uploadedThumbsCount=0 and $previousGraphicOverviewSiblingsCount=0">
+		                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Voorbeeld toevoegen</a>
+	                     </xsl:if>
 	                 </xsl:otherwise>
 	             </xsl:choose>
 	
 	         </td></tr>
         </xsl:if>
-    </xsl:template>
-
-    <!-- =================================================================== -->
-    <!-- serviceType and serviceTypeVersion in the same box -->
-    <!-- =================================================================== -->
-    <xsl:template mode="iso19139" match="srv:serviceType" priority="99">
-	    <xsl:param name="schema"/>
-	    <xsl:param name="edit"/>
-        <xsl:apply-templates mode="complexElement" select=".">
-            <xsl:with-param name="schema"  select="$schema"/>
-            <xsl:with-param name="edit"    select="$edit"/>
-            <xsl:with-param name="content">
-	            <tr>
-	                <td class="col" style="border:none" >
-	                    <table class="gn">
-	                        <tbody>
-	                        <xsl:apply-templates mode="simpleElement" select="./gco:LocalName">
-	                            <xsl:with-param name="schema"  select="$schema"/>
-	                            <xsl:with-param name="edit"   select="$edit"/>
-	                            <xsl:with-param name="title">
-	                            	<xsl:call-template name="getTitle">
-					                    <xsl:with-param name="name" select="name(.)"/>
-					                    <xsl:with-param name="schema" select="$schema"/>
-	                            	</xsl:call-template>
-                            	</xsl:with-param>
-	                        </xsl:apply-templates>
-	                        </tbody>
-	                    </table>
-	                </td>
-	                <td class="col" style="border:none" >
-	                    <table class="gn">
-	                        <tbody>
-	                        <xsl:apply-templates mode="simpleElement" select="../srv:serviceTypeVersion/gco:CharacterString">
-	                            <xsl:with-param name="schema"  select="$schema"/>
-	                            <xsl:with-param name="edit"   select="$edit"/>
-	                            <xsl:with-param name="title">
-	                            	<xsl:call-template name="getTitle">
-					                    <xsl:with-param name="name" select="'srv:serviceTypeVersion'"/>
-					                    <xsl:with-param name="schema" select="$schema"/>
-	                            	</xsl:call-template>
-                            	</xsl:with-param>
-	                        </xsl:apply-templates>
-	                        </tbody>
-	                    </table>
-	                </td>
-	            </tr>
-	        </xsl:with-param>
-		</xsl:apply-templates>
     </xsl:template>
 
     <!-- =================================================================== -->
@@ -531,7 +489,19 @@
                 <xsl:variable name="text">
                     <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
                    	<xsl:variable name="currentMduuidValue" select="gco:CharacterString"/>
-                    <input type="text" class="md" name="_{$ref}" id="_{$ref}" onchange="validateNonEmpty(this)" value="{$currentMduuidValue}" size="30"/>
+<!-- 		        	<xsl:variable name="mandatory" select="geonet:element/@min='1' and not(@gco:nilReason)"/>-->
+		        	<xsl:variable name="mandatory" select="false()"/>
+			          <xsl:variable name="agivmandatory">
+			          	<xsl:call-template name="getMandatoryType">
+					    	<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+					    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+						</xsl:call-template>
+			          </xsl:variable>
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}" value="{$currentMduuidValue}" size="30">
+                            <xsl:if test="$mandatory or $agivmandatory != ''">
+                                <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
+                            </xsl:if>
+                    </input>
                     <xsl:choose>
                         <xsl:when test="count(../../../srv:operatesOn[@uuidref!=''])=0">
                             <xsl:value-of select="/root/gui/strings/noOperatesOn"/>
@@ -579,13 +549,14 @@
 
                 <xsl:apply-templates mode="simpleElement" select=".">
                     <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="edit"   select="true()"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
                     <xsl:with-param name="text"   select="$text"/>
                 </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates mode="simpleElement" select=".">
                     <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
                     <xsl:with-param name="text">
                     	<xsl:variable name="uuid">
 	                    	<xsl:call-template name="getIdFromCorrespondingOperatesOn">
@@ -619,11 +590,23 @@
 	                                <td class="col" style="border:none">
 	                                    <table class="gn">
 				                        <tbody>
+<!-- 
+					                        <xsl:apply-templates mode="simpleElement" select="gmd:code/gco:CharacterString">
+					                            <xsl:with-param name="schema"  select="$schema"/>
+					                            <xsl:with-param name="edit"   select="$edit"/>
+					                            <xsl:with-param name="title">
+					                            	<xsl:call-template name="getTitle">
+									                    <xsl:with-param name="name" select="'gmd:code'"/>
+									                    <xsl:with-param name="schema" select="$schema"/>
+					                            	</xsl:call-template>
+				                            	</xsl:with-param>
+					                        </xsl:apply-templates>
+ -->
 	                                        <xsl:apply-templates mode="iso19139" select="gmd:code">
 	                                            <xsl:with-param name="schema"  select="$schema"/>
 	                                            <xsl:with-param name="edit"   select="$edit"/>
 	                                        </xsl:apply-templates>
-	        	                        </tbody>
+ 	        	                        </tbody>
 	                                    </table>
 	                                </td>
 	                                <td class="col" style="border:none">
@@ -633,7 +616,7 @@
 	                                            <xsl:with-param name="schema"  select="$schema"/>
 	                                            <xsl:with-param name="edit"   select="$edit"/>
 	                                        </xsl:apply-templates>
-	        	                        </tbody>
+ 	        	                        </tbody>
 	                                    </table>
 	                                </td>
 	                            </tr>
@@ -1352,15 +1335,15 @@
                     <xsl:when test="$edit=true()">
                         <!-- codelist in edit mode -->
                         <select class="md" name="_{../geonet:element/@ref}_{name(.)}" id="_{../geonet:element/@ref}_{name(.)}" size="1">
-                            <!-- Check element is mandatory or not -->
-							 <!-- Agiv specific -->
+<!-- 		        	<xsl:variable name="mandatory" select="../../geonet:element/@min='1' and not(../../@gco:nilReason)"/>-->
+		        	<xsl:variable name="mandatory" select="false()"/>
 					          <xsl:variable name="agivmandatory">
 					          	<xsl:call-template name="getMandatoryType">
 							    	<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
 							    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
 								</xsl:call-template>
 					          </xsl:variable>
-                            <xsl:if test="(../../geonet:element/@min='1' and $edit) or $agivmandatory != ''">
+                            <xsl:if test="$mandatory or $agivmandatory != ''">
                                 <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
                             </xsl:if>
                             <xsl:if test="$isXLinked">
@@ -4313,13 +4296,15 @@
         <!-- do not show empty elements in view mode -->
         <xsl:choose>
             <xsl:when test="$edit=true()">
+<!-- 
                 <xsl:variable name="fileName" select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
                 <xsl:variable name="url" select="if (contains($fileName, '://') or not(string(normalize-space($fileName))))
                                                 then $fileName
                                                 else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
 
+ -->
                 <!-- display thumnail next to the edit fields -->
-
+<!-- 
                 <tr><td colspan="2">
                     <table class="gn">
                         <tbody>
@@ -4327,10 +4312,12 @@
                                 <td class="col" style="border:none">
                                     <table class="gn">
 			                        <tbody>
+-->
                                         <xsl:apply-templates mode="element" select=".">
                                             <xsl:with-param name="schema" select="$schema" />
                                             <xsl:with-param name="edit" select="true()" />
                                         </xsl:apply-templates>
+<!-- 
         	                        </tbody>
                                     </table>
                                 </td>
@@ -4338,7 +4325,7 @@
                         </tbody>
                     </table>
                 </td></tr>
-
+-->
 
             </xsl:when>
 

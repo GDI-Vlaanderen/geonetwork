@@ -623,6 +623,9 @@
 	<maintenanceTab>Onderhoud</maintenanceTab>
 	<management>Beheer</management>
 	<mandatory>Verplicht</mandatory>
+	<mandatoryiso>Verplicht voor ISO</mandatoryiso>
+	<mandatorygdi>Verplicht voor GDI</mandatorygdi>
+	<mandatoryinspire>Verplicht voor INSPIRE</mandatoryinspire>
 	<mandatoryIf>Verplicht als</mandatoryIf>
 	<mapType>Kaart type</mapType>
 	<mapViewerClose>Sluiten van de viewer</mapViewerClose>

@@ -2498,15 +2498,17 @@ public class DataManager {
 			e.printStackTrace();
 			Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata "+id+": "+e.getMessage());
 		}
-        try {
-            GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
-            ValidationHookFactory validationHookFactory = new ValidationHookFactory(gc.getValidationHookClass());
-            IValidationHook validationHook = validationHookFactory.createValidationHook(servContext, dbms);
-            validationHookFactory.onValidate(validationHook, id, valTypeAndStatus, now, workspace);
-        }
-        catch(ValidationHookException x) {
-            System.err.println("validation hook exception: " + x.getMessage());
-            x.printStackTrace();
+        if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv")) {
+        	try {
+	            GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
+	            ValidationHookFactory validationHookFactory = new ValidationHookFactory(gc.getValidationHookClass());
+	            IValidationHook validationHook = validationHookFactory.createValidationHook(servContext, dbms);
+	            validationHookFactory.onValidate(validationHook, id, valTypeAndStatus, now, workspace);
+	        }
+	        catch(ValidationHookException x) {
+	            System.err.println("validation hook exception: " + x.getMessage());
+	            x.printStackTrace();
+	        }
         }
 	}
 
@@ -3340,7 +3342,6 @@ public class DataManager {
 	public Element updateFixedInfo(String schema, String id, String uuid, Element md, String parentUuid,
                                    UpdateDatestamp updateDatestamp, Dbms dbms, boolean createdFromTemplate) throws Exception {
         boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enable", true);
-        String organization = settingMan.getValue("system/site/organization");
         if(autoFixing) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
         	Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
@@ -3363,7 +3364,7 @@ public class DataManager {
                 env.addContent(new Element("id").setText(id));
                 env.addContent(new Element("uuid").setText(uuid));
                 env.addContent(new Element("createdFromTemplate").setText(createdFromTemplate ? "y" : "n"));
-                if (createdFromTemplate && organization!=null && organization.toLowerCase().equals("agiv")) {
+                if (createdFromTemplate && servContext.getServlet().getNodeType().toLowerCase().equals("agiv")) {
                     env.addContent(new Element("mduuid").setText(UUID.randomUUID().toString()));
                 }
                 

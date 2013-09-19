@@ -84,12 +84,12 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         Ext.applyIf(this, this.defaultConfig);
         
         this.title = OpenLayers.i18n('validationReport');
-        this.tools = [{
+        this.tools = [/*{
             id : 'refresh',
             handler : function (e, toolEl, panel, tc) {
                 panel.reload(panel, panel.metadataId);
             }
-        }];
+        }*/];
         
         GeoNetwork.editor.ValidationPanel.superclass.initComponent.call(this);
         

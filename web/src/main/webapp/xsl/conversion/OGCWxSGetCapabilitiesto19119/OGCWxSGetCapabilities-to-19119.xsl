@@ -138,11 +138,11 @@ Mapping between :
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<metadataStandardName>
-				<gco:CharacterString>ISO 19119/2005</gco:CharacterString>
+				<gco:CharacterString>ISO 19119:2005/Amd 1:2008</gco:CharacterString>
 			</metadataStandardName>
 
 			<metadataStandardVersion>
-				<gco:CharacterString>1.0</gco:CharacterString>
+				<gco:CharacterString>GDI-Vlaanderen Best Practices – versie 1.0</gco:CharacterString>
 			</metadataStandardVersion>
 			
 
@@ -263,7 +263,7 @@ Mapping between :
 							</level>
 							<levelDescription>
 								<MD_ScopeDescription>
-									<attributes/>
+									<other><gco:CharacterString>Service</gco:CharacterString></other>
 								</MD_ScopeDescription>
 							</levelDescription>
 						</DQ_Scope>

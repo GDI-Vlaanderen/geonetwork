@@ -242,6 +242,11 @@
 		<description>Locatie voor online toegang bij gebruik van een Uniform Resource Locator adres of een vergelijkbaar schema.</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:URL" context="gmd:linkage">
+		<label>Connectiepunt URL</label>
+		<description>Locatie (adres) voor de on-line toegang, gebruik makend van een Uniform Resource Locator address (URL) of gelijkaardige adresschema's zoals http://www.statkart.na/isotc211.</description>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:verticalCRS">
 		<label>Verticaal CRS</label>
 		<description>Verticaal coordinaat referentiesysteem</description>
@@ -1236,12 +1241,6 @@
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:linkage" context="gmd:CI_OnlineResource">
-		<label>URL</label>
-		<description>Locatie (adres) voor de on-line toegang, gebruik makend van een Uniform Resource Locator address (URL) of gelijkaardige adresschema's zoals http://www.statkart.na/isotc211.</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
 	<element name="gmd:maintenanceAndUpdateFrequency">
 		<label>Frequentie</label>
 		<description>Frequentie waarmee de data herzien wordt.</description>
@@ -1260,7 +1259,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:maximumValue">
 		<label>Maximumwaarde (in m)</label>
-		<description>Hoogste verticale waarde die de dataset (formaat 999,999) bevat</description>
+		<description>Hoogste verticale waarde die de dataset (formaat 999.999) bevat</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1600,7 +1599,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:minimumValue">
 		<label>Minimumwaarde (in m)</label>
-		<description>Laagste verticale waarde (formaat 999,999) die de dataset bevat.</description>
+		<description>Laagste verticale waarde (formaat 999.999) die de dataset bevat.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1619,7 +1618,7 @@
         <description>Naam van de serie</description>
     </element>
 	<!-- ==================================================== -->
-	 <element name="gmd:name" context="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:offLine/gmd:MD_Medium/gmd:name" id="292.0">
+	 <element name="gmd:name" context="gmd:MD_Medium" id="292.0">
         <label>Offline Medium</label>
         <description>Name of the medium on which the resource can be received</description>
     </element>
@@ -1681,7 +1680,7 @@
 	<element name="gmd:organisationName">
 		<label>Organisatie</label>
 		<description>Naam van de verantwoordelijke organisatie.</description>
-	<condition>conditional</condition>
+	<condition>mandatory</condition>
 		<mandatoryType>gdi</mandatoryType>
 		<mandatoryTooltip>Verplicht voor GDI</mandatoryTooltip>
 	</element>
@@ -1695,6 +1694,12 @@
 	<element name="gmd:orientationParameterDescription">
 		<label>Beschrijving ori&#233;ntatie parameters</label>
 		<description> Beschrijving van de parameters gebruikt om de richting van de sensor te beschrijven.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:other" context="gmd:MD_ScopeDescription">
+		<label>Beschrijving niveau kwaliteitsinformatie</label>
+		<description>Beschrijving  van het niveau (dataset of datasetserie) waar de kwaliteitsbeschrijving betrekking op heeft.</description>
+		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:other">
@@ -2780,6 +2785,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Titel dataset(serie)</label>
 		<description>Titel of naam</description>
 		<condition>mandatory</condition>
+		
 	</element>
 	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
 		<label>Alternatieve titel dataset(serie)</label>

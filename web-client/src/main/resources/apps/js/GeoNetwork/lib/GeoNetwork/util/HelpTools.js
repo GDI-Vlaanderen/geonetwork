@@ -61,6 +61,10 @@ GeoNetwork.util.HelpTools = {
                 return descs;
             }
         },{
+            name: 'mandatoryType'
+        },{
+            name: 'mandatoryTooltip'
+        },{
             name: 'example'
         },{
             name: 'helper',
@@ -97,7 +101,15 @@ GeoNetwork.util.HelpTools = {
          *  Display all field information (label, description, help, example, tag name and helper).
          */
         COMPLETE: ['<div class="help"><span class="title">{label}</span>',
-                     '<div>{description}</div>',
+                     '<div>{description}',
+//                       '<tpl if="values.mandatoryType">',
+//                         '<div><span>' + OpenLayers.i18n('mandatory{mandatoryType}'),
+                           '<tpl if="values.mandatoryTooltip">',
+                             '<div>{mandatoryTooltip}</div>',
+                           '</tpl>',
+//                         '</span></div>',
+//                       '</tpl>',
+                     '</div>',
                      '<tpl for="help">',
                        '<div>{.}</div>',
                      '</tpl>',
@@ -127,30 +139,35 @@ GeoNetwork.util.HelpTools = {
     get: function (helpId, schema, url, cb) {
         var info = helpId.split('|'), 
         schema = !Ext.isEmpty(schema) ? schema : (info[0].split('.')[1] || 'iso19139'); // Fallback to iso19139 if schema undefined
+        var name = info.length > 1 ? info[1] : "";
+        var context = info.length > 2 ? info[2] : "";
+        var fullContext = info.length > 3 ? info[3] : "";
+        var isoType = info.length > 4 ? info[4] : "";
         var requestBody = '<request><element schema="' + schema + 
-                                '" name="' + info[1] + 
-                                '" context="' + info[2] + 
-                                '" fullContext="' + info[3] + 
-                                '" isoType="' + info[4] + '" /></request>';
+                                '" name="' + name + 
+                                '" context="' + context + 
+                                '" fullContext="' + fullContext + 
+                                '" isoType="' + isoType + '" /></request>';
+        if (!Ext.isEmpty(name)) {
+            OpenLayers.Request.POST({
+                url: url,
+                data: requestBody,
+                success: function(response){
+                    var el = response.responseXML.getElementsByTagName('element');
+                    if (el[0] && el[0].getAttribute('error') === 'not-found') {
+                        return;
+                    }
+                    var pReader = new Ext.data.XmlReader({
+                        record: 'element',
+                            fields: GeoNetwork.util.HelpTools.fields
+                    });
+                    var r = pReader.readRecords(response.responseXML);
 
-        OpenLayers.Request.POST({
-            url: url,
-            data: requestBody,
-            success: function(response){
-                var el = response.responseXML.getElementsByTagName('element');
-                if (el[0] && el[0].getAttribute('error') === 'not-found') {
-                    return;
+                    if(cb) {
+                        cb(r);
+                    }
                 }
-                var pReader = new Ext.data.XmlReader({
-                    record: 'element',
-                        fields: GeoNetwork.util.HelpTools.fields
-                });
-                var r = pReader.readRecords(response.responseXML);
-
-                if(cb) {
-                    cb(r);
-                }
-            }
-        });
+            });
+        }
     }
 };

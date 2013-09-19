@@ -11,8 +11,8 @@
     <!-- match descriptiveKeywords elements -->
     <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
         <xsl:choose>
-            <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Best Practices - thesaurus'  -->
-            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Best Practices - thesaurus'">
+            <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Trefwoorden'  -->
+            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Trefwoorden'">
                 <gmd:descriptiveKeywords>
                     <gmd:MD_Keywords>
                         <!-- put out each keyword -->
@@ -32,15 +32,15 @@
                     </gmd:MD_Keywords>
                 </gmd:descriptiveKeywords>
             </xsl:when>
-            <!-- this descriptiveKeywords does not use 'GDI-Vlaanderen Best Practices - thesaurus': just put out  -->
+            <!-- this descriptiveKeywords does not use 'GDI-Vlaanderen Trefwoorden': just put out  -->
             <xsl:otherwise>
                 <xsl:copy-of select="."></xsl:copy-of>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <!-- in case gmd:MD_DataIdentification does not have a gmd:descriptiveKeywords using  'GDI-Vlaanderen Best Practices - thesaurus', insert it at correct position -->
-    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification[count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[normalize-space(gco:CharacterString) = 'GDI-Vlaanderen Best Practices - thesaurus']) = 0]">
+    <!-- in case gmd:MD_DataIdentification does not have a gmd:descriptiveKeywords using  'GDI-Vlaanderen Trefwoorden', insert it at correct position -->
+    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification[count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[normalize-space(gco:CharacterString) = 'GDI-Vlaanderen Trefwoorden']) = 0]">
          <!-- all elements allowed to follow descriptiveKeywords in MD_DataIdentification -->
          <xsl:variable name="elements-after" select="gmd:resourceSpecificUsage|gmd:resourceConstraints|gmd:aggregationInfo|gmd:spatialRepresentationType|gmd:spatialResolution|gmd:language|gmd:characterSet|gmd:topicCategory|gmd:environmentDescription|gmd:extent|gmd:supplementalInformation"/>
          <xsl:copy>
@@ -53,12 +53,12 @@
                      <gmd:thesaurusName>
                          <gmd:CI_Citation>
                              <gmd:title>
-                                 <gco:CharacterString>GDI-Vlaanderen Best Practices - thesaurus</gco:CharacterString>
+                                 <gco:CharacterString>GDI-Vlaanderen Trefwoorden</gco:CharacterString>
                              </gmd:title>
                              <gmd:date>
                                  <gmd:CI_Date>
                                      <gmd:date>
-                                         <gco:Date>2013-06-16</gco:Date>
+                                         <gco:Date>2013-09-16</gco:Date>
                                      </gmd:date>
                                      <gmd:dateType>
 										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>

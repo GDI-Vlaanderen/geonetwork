@@ -90,7 +90,7 @@ public class AGIVValidationHook extends AbstractValidationHook {
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
             String schema = dm.getMetadataSchema(dbms, metadataId);
 
-            metadata = logISO19115Compliance(metadata, schema, valTypeAndStatus.get(XSD_KEY), valTypeAndStatus.get(ISO_SCHEMATRON_KEY));
+//            metadata = logISO19115Compliance(metadata, schema, valTypeAndStatus.get(XSD_KEY), valTypeAndStatus.get(ISO_SCHEMATRON_KEY));
             metadata = logINSPIRECompliance(metadata, schema, valTypeAndStatus.get(INSPIRE_SCHEMATRON_KEY));
             metadata = logAGIVCompliance(metadata, schema, valTypeAndStatus.get(AGIV_SCHEMATRON_KEY));
 

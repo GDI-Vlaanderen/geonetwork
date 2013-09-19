@@ -60,16 +60,19 @@ Ext.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
         this.wrap = this.el.wrap({cls:'x-form-field-wrap x-form-file-wrap'});
         this.el.addClass('x-form-file-text');
         this.el.dom.removeAttribute('name');
-        
-        this.fileInput = this.wrap.createChild({
+        var childCfg = {
             id: this.getFileInputId(),
             name: this.name||this.getId(),
             cls: 'x-form-file',
             tag: 'input', 
             type: 'file',
             size: 1
-        });
-        
+        };
+        if (this.buttonCfg && this.buttonCfg.tooltip) {
+        	childCfg.title = this.buttonCfg.tooltip;
+        	childCfg.alt = this.buttonCfg.tooltip;
+        }
+        this.fileInput = this.wrap.createChild(childCfg);
         var btnCfg = Ext.applyIf(this.buttonCfg || {}, {
             text: this.buttonText
         });

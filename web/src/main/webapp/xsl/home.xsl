@@ -16,9 +16,7 @@
           // Redirect according to config-gui.xml client configuration
           <xsl:if test="string(/root/gui/session/userId)!=''">
 				var GNCookie = new Ext.state.CookieProvider({
-				  	expires: new Date(new Date().getTime()+(1000*60*60*24*365))
-											//1 year from now
-								});
+				  	expires: null/*new Date(new Date().getTime()+(1000*60*60*24*365))*/});
 				GNCookie.set('user', {
 					id: '<xsl:value-of select="string(/root/gui/session/userId)" />',					
                     username: '<xsl:value-of select="string(/root/gui/session/username)" />',

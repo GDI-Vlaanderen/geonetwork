@@ -17,10 +17,10 @@
     <!-- match descriptiveKeywords elements -->
     <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
         <xsl:choose>
-            <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Best Practices - thesaurus'  -->
-            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Best Practices - thesaurus'">
+            <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Trefwoorden'  -->
+            <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Trefwoorden'">
                 <xsl:choose>
-                    <!-- contains a keyword matching  'Conform GDI-Vlaanderen Best Practices - thesaurus' -->
+                    <!-- contains a keyword matching  'Conform GDI-Vlaanderen Trefwoorden' -->
                     <xsl:when test="gmd:MD_Keywords//gmd:keyword/gco:CharacterString = 'Metadata GDI-Vl-conform'">
                         <!-- if there are other keywords, put them out -->
                         <xsl:if test="count(gmd:MD_Keywords/gmd:keyword) > 1">
@@ -46,14 +46,14 @@
                         </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
-                        <!-- does not contain a keyword matching  'Conform GDI-Vlaanderen Best Practices - thesaurus' : just put out-->
+                        <!-- does not contain a keyword matching  'Conform GDI-Vlaanderen Trefwoorden' : just put out-->
                         <gmd:descriptiveKeywords>
                             <xsl:apply-templates select="@*|node()"/>
                         </gmd:descriptiveKeywords>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
-            <!-- descriptiveKeywords not using 'GDI-Vlaanderen Best Practices - thesaurus' thesaurus : just put out -->
+            <!-- descriptiveKeywords not using 'GDI-Vlaanderen Trefwoorden' thesaurus : just put out -->
             <xsl:otherwise>
                 <gmd:descriptiveKeywords>
                     <xsl:apply-templates select="@*|node()"/>

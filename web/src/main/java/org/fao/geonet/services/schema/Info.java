@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.utils.Util;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -170,9 +171,9 @@ public class Info implements Service {
 
         Element entries = xf.exec(new Element("junk"), context);
 
-        Element result = checkEntries(scm, schema, entries, xpath, name, isoType);
-        if (result == null) {
-            result = checkEntries(scm, schema, entries, parent, name, isoType);
+        Element result = checkEntries(scm, schema, entries, parent, xpath, name, isoType);
+//        if (result == null) {
+//            result = checkEntries(scm, schema, entries, parent, name, isoType);
             if (result == null) {
                 if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
                     result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType,
@@ -181,16 +182,22 @@ public class Info implements Service {
                     return buildError(elem, NOT_FOUND);
                 }
             }
-        }
+//        }
         
         return result;
     }
 
     // --------------------------------------------------------------------------
 
-    private static Element checkEntries(SchemaManager scm, String schema, Element entries, String context,
+    private static Element checkEntries(SchemaManager scm, String schema, Element entries, String context, String fullContext,
             String name, String isoType) throws OperationAbortedEx {
-
+    	Element resultWithContext = null;
+    	Element resultWithFullContext = null;
+    	Element firstResult = null;
+    	Element resultWithoutContext = null;
+    	boolean contextNotEmpty = !StringUtils.isEmpty(context);
+    	boolean isoTypeNotEmpty = !StringUtils.isEmpty(isoType);
+    	boolean fullContextNotEmpty = !StringUtils.isEmpty(fullContext);
         for (Object o : entries.getChildren()) {
             Element currElem = (Element) o;
             String currName = currElem.getAttributeValue("name");
@@ -201,22 +208,34 @@ public class Info implements Service {
             if (currName == null) {
                 throw new OperationAbortedEx("No namespace found for : " + currName);
             }
-
-            if (currContext != null && context != null && isoType != null) {
-                // XPath context are supposed to use same namespace prefix
-                if (!currContext.contains("/")) {
-                    currContext = findNamespace(currContext, scm, schema);
+            if (name.equals(currName)) {
+                if ((resultWithFullContext==null || resultWithContext==null) && currContext != null && (contextNotEmpty || isoTypeNotEmpty || fullContextNotEmpty)) {
+                    if (!currContext.contains("/")) {
+                        currContext = findNamespace(currContext, scm, schema);
+                    }
+                    if (fullContextNotEmpty && fullContext.equals(currContext)) {
+                    	return (Element) currElem.clone();
+                    } else if ((contextNotEmpty && context.equals(currContext)) || (isoTypeNotEmpty && isoType.equals(currContext))) {
+                    	resultWithContext = (Element) currElem.clone();                    	
+                    } else if (firstResult==null) {
+                    	firstResult = (Element) currElem.clone();
+                    }
+                } else {
+                	if (currContext==null && resultWithoutContext==null) {
+        				resultWithoutContext = (Element) currElem.clone();
+                	}
                 }
-                
-                if (name.equals(currName)
-                        && (context.equals(currContext) || isoType.equals(currContext))) {
-                    return (Element) currElem.clone();
-                }
-            } else if (name.equals(currName)) {
-                return (Element) currElem.clone();
             }
         }
-
+        if (resultWithContext!=null) {
+        	return resultWithContext;
+        }
+        if (resultWithoutContext!=null) {
+        	return resultWithoutContext;
+        }
+        if (firstResult!=null) {
+        	return firstResult;        	
+        }
         return null; // no match found
 
     }

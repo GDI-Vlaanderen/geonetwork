@@ -45,6 +45,17 @@
 			</th>
 			<td class="padded" valign="top">
 				<xsl:value-of select="@help"/>
+				<xsl:if test="string(@mandatoryTooltip)!=''">
+					<br/>
+					<font class="warning">
+<!--						<xsl:value-of select="concat(/root/gui/strings/mandatory,string(@mandatoryType))"/>-->
+<!--						<xsl:if test="string(@mandatoryTooltip)!=''">-->
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="string(@mandatoryTooltip)"/>
+<!--						</xsl:if>-->
+					</font>
+				</xsl:if>
+<!-- 
 				<xsl:choose>
 					<xsl:when test="string(@condition)='conditional'">
 						<br/>
@@ -61,6 +72,7 @@
 						</font>
 					</xsl:when>
 				</xsl:choose>
+-->
 			</td>
 		</tr>
 	</xsl:template>

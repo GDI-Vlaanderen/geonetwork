@@ -1259,6 +1259,19 @@
     <xsl:param name="id" select="generate-id(.)"/>
     <xsl:param name="visible" select="true()"/>
 
+    <xsl:variable name="forcedHelpLink">
+    	<xsl:choose>
+			<xsl:when test="$helpLink!=''">
+				<xsl:value-of select="$helpLink"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="getHelpLink">
+					<xsl:with-param name="name" select="name(.)"/>
+					<xsl:with-param name="schema" select="$schema"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+    	</xsl:choose>
+    </xsl:variable>
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
     <xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
 
@@ -1384,15 +1397,17 @@
         <xsl:attribute name="style"> display:none; </xsl:attribute>
       </xsl:if>
       
-      <th id="stip.{$helpLink}">
+      <th id="stip.{$forcedHelpLink}">
         <xsl:attribute name="class">
           <xsl:text>main </xsl:text>
           <xsl:value-of select="geonet:clear-string-for-css(name(.))"/>
           <xsl:text> </xsl:text>
           <xsl:if test="$isXLinked">xlinked</xsl:if>
+<!-- 
           <xsl:text> </xsl:text>
-          <xsl:if test="geonet:element/@min='1' and $edit">mandatory</xsl:if>
-          <xsl:text> </xsl:text>
+          <xsl:if test="geonet:element/@min='1' and not(@gco:nilReason) and $edit">mandatory</xsl:if>
+ -->
+           <xsl:text> </xsl:text>
 	   	  <xsl:call-template name="getMandatoryType">
 	        <xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
 	       	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
@@ -1407,7 +1422,7 @@
           	</xsl:call-template>
           </xsl:attribute>
           <xsl:choose>
-            <xsl:when test="$helpLink!=''">
+            <xsl:when test="$forcedHelpLink!=''">
               <xsl:value-of select="$title"/>
             </xsl:when>
             <xsl:otherwise>
@@ -1935,77 +1950,77 @@
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
-    <xsl:choose>
-      <!-- list of values -->
-      <xsl:when test="geonet:element/geonet:text">
+	<xsl:variable name="agivmandatory">
+		<xsl:call-template name="getMandatoryType">
+			<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
+			<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+		</xsl:call-template>
+	</xsl:variable>
 
-		 <!-- Agiv specific -->
-          <xsl:variable name="agivmandatory">
-          	<xsl:call-template name="getMandatoryType">
-		    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
-		    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
-			</xsl:call-template>
-          </xsl:variable>
+ 	<xsl:choose>
+      	<!-- list of values -->
+      	<xsl:when test="geonet:element/geonet:text">
+<!-- 
+        	<xsl:variable name="mandatory"
+          		select="geonet:element/@min='1' and
+          		geonet:element/@max='1' and not(../@gco:nilReason)"/>
+-->
+        	<xsl:variable name="mandatory" select="false()"/>
 
-        <xsl:variable name="mandatory"
-          select="geonet:element/@min='1' and
-          geonet:element/@max='1' and not(@gco:nilReason)"/>
-
-        <!-- This code is mainly run under FGDC 
-          but also for enumeration like topic category and 
-          service parameter direction in ISO. 
-          
-          Create a temporary list and retrive label in 
-          current gui language which is sorted after. -->
-        <xsl:variable name="list">
-          <items>
-            <xsl:for-each select="geonet:element/geonet:text">
-              <xsl:variable name="choiceValue" select="string(@value)"/>
-              <xsl:variable name="label"
-                select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
-
-              <item>
-                <value>
-                  <xsl:value-of select="@value"/>
-                </value>
-                <label>
-                  <xsl:choose>
-                    <xsl:when test="$label">
-                      <xsl:value-of select="$label"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="$choiceValue"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </label>
-              </item>
-            </xsl:for-each>
-          </items>
-        </xsl:variable>
-        <select class="md" name="_{geonet:element/@ref}" size="1">
-          <xsl:if test="$visible = false()">
-            <xsl:attribute name="style">display:none;</xsl:attribute>
-          </xsl:if>
-          <xsl:if test="$isXLinked">
-            <xsl:attribute name="disabled">disabled</xsl:attribute>
-          </xsl:if>
-          <xsl:if test="($mandatory or not($agivmandatory = '')) and $edit">
-            <xsl:attribute name="onchange"> validateNonEmpty(this); </xsl:attribute>
-          </xsl:if>
-          <option name=""/>
-          <xsl:for-each select="exslt:node-set($list)//item">
-            <xsl:sort select="label"/>
-            <option>
-              <xsl:if test="value=$value">
-                <xsl:attribute name="selected"/>
-              </xsl:if>
-              <xsl:attribute name="value">
-                <xsl:value-of select="value"/>
-              </xsl:attribute>
-              <xsl:value-of select="label"/>
-            </option>
-          </xsl:for-each>
-        </select>
+	        <!-- This code is mainly run under FGDC 
+	          but also for enumeration like topic category and 
+	          service parameter direction in ISO. 
+	          
+	          Create a temporary list and retrive label in 
+	          current gui language which is sorted after. -->
+	        <xsl:variable name="list">
+				<items>
+		            <xsl:for-each select="geonet:element/geonet:text">
+		              <xsl:variable name="choiceValue" select="string(@value)"/>
+		              <xsl:variable name="label"
+		                select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+		              <item>
+		                <value>
+		                  <xsl:value-of select="@value"/>
+		                </value>
+		                <label>
+		                  <xsl:choose>
+		                    <xsl:when test="$label">
+		                      <xsl:value-of select="$label"/>
+		                    </xsl:when>
+		                    <xsl:otherwise>
+		                      <xsl:value-of select="$choiceValue"/>
+		                    </xsl:otherwise>
+		                  </xsl:choose>
+		                </label>
+		              </item>
+		            </xsl:for-each>
+        		</items>
+        	</xsl:variable>
+	        <select class="md" name="_{geonet:element/@ref}" size="1">
+	          <xsl:if test="$visible = false()">
+	            <xsl:attribute name="style">display:none;</xsl:attribute>
+	          </xsl:if>
+	          <xsl:if test="$isXLinked">
+	            <xsl:attribute name="disabled">disabled</xsl:attribute>
+	          </xsl:if>
+	          <xsl:if test="($mandatory or not($agivmandatory = '')) and $edit">
+	            <xsl:attribute name="onchange">validateNonEmpty(this); </xsl:attribute>
+	          </xsl:if>
+	          <option name=""/>
+	          <xsl:for-each select="exslt:node-set($list)//item">
+	            <xsl:sort select="label"/>
+	            <option>
+	              <xsl:if test="value=$value">
+	                <xsl:attribute name="selected"/>
+	              </xsl:if>
+	              <xsl:attribute name="value">
+	                <xsl:value-of select="value"/>
+	              </xsl:attribute>
+	              <xsl:value-of select="label"/>
+	            </option>
+	          </xsl:for-each>
+	        </select>
       </xsl:when>
       <xsl:when test="$edit=true() and $class=''">
         <xsl:choose>
@@ -2051,24 +2066,18 @@
           </xsl:when>
 
           <xsl:otherwise>
-			 <!-- Agiv specific -->
-	          <xsl:variable name="agivmandatory">
-	          	<xsl:call-template name="getMandatoryType">
-			    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
-			    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
-				</xsl:call-template>
-	          </xsl:variable>
-       		<div>
-	            <xsl:call-template name="helper">
-	              <xsl:with-param name="schema" select="$schema"/>
-	              <xsl:with-param name="attribute" select="false()"/>
-	            </xsl:call-template>
-            </div>
-            <input class="md {$class}" type="{$input_type}" value="{text()}">
-	          <xsl:if test="not($agivmandatory = '')">
-	            <xsl:attribute name="onchange"> validateNonEmpty(this); </xsl:attribute>
-<!--                   <xsl:attribute name="onkeyup"> validateNonEmpty(this); </xsl:attribute>-->
-	          </xsl:if>
+<!-- 		<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1' and not(../../@gco:nilReason='missing')) or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>-->
+        	<xsl:variable name="mandatory" select="false()"/>
+	       		<div>
+		            <xsl:call-template name="helper">
+		              <xsl:with-param name="schema" select="$schema"/>
+		              <xsl:with-param name="attribute" select="false()"/>
+		            </xsl:call-template>
+	            </div>
+	            <input class="md {$class}" type="{$input_type}" value="{text()}">
+    		      <xsl:if test="$mandatory or not($agivmandatory = '')">
+			            <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
+		          </xsl:if>
 	              <xsl:if test="$isXLinked">
 	                <xsl:attribute name="disabled">disabled</xsl:attribute>
 	              </xsl:if>
@@ -2096,19 +2105,6 @@
 	                <xsl:attribute name="style">display:none;</xsl:attribute>
 	              </xsl:if>
 	
-				 <!-- Agiv specific -->
-		          <xsl:variable name="agivmandatory">
-		          	<xsl:call-template name="getMandatoryType">
-				    	<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
-				    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
-					</xsl:call-template>
-		          </xsl:variable>
-		
-	              <xsl:variable name="mandatory"
-	                select="(name(.)='gmd:LocalisedCharacterString'
-	                and ../../geonet:element/@min='1')
-	                or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>
-	
 	              <xsl:choose>
 	                <!-- Numeric field -->
 	                <xsl:when
@@ -2126,8 +2122,7 @@
 	                  </xsl:choose>
 	                </xsl:when>
 	                <!-- Mandatory field (with extra validator) -->
-	                <xsl:when test="($mandatory or not($agivmandatory = ''))
-	                  and $edit">
+	                <xsl:when test="$mandatory or not($agivmandatory = '')">
 	                  <xsl:attribute name="onkeyup"> validateNonEmpty(this); </xsl:attribute>
 	                </xsl:when>
 	                <!-- Custom validator -->
@@ -2142,22 +2137,18 @@
         </xsl:choose>
       </xsl:when>
       <xsl:when test="$edit=true()">
-			<xsl:variable name="agivmandatory">
-				<xsl:call-template name="getMandatoryType">
-					<xsl:with-param name="name"><xsl:value-of select="name(..)"/></xsl:with-param>
-					<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
-				</xsl:call-template>
- 			</xsl:variable>
       		<div>
 			        <xsl:call-template name="helper">
 			          <xsl:with-param name="schema" select="$schema"/>
 			          <xsl:with-param name="attribute" select="false()"/>
 			        </xsl:call-template>
 			</div>
+<!-- 		<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1' and not(../../@gco:nilReason='missing')) or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>-->
+			<xsl:variable name="mandatory" select="false()"/>
 			<textarea class="md {$class}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
 				<xsl:if test="$isXLinked"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 				<xsl:if test="$visible = false()"><xsl:attribute name="style">display:none;</xsl:attribute></xsl:if>
-				<xsl:if test="((name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1') or (../geonet:element/@min='1' and not(../@gco:nilReason='missing')) or not($agivmandatory = '')) and $edit"><xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute></xsl:if>
+				<xsl:if test="$mandatory and $edit"><xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute></xsl:if>
 				<xsl:if test="text()"><xsl:value-of select="string(text())"/></xsl:if>
 			</textarea>
       </xsl:when>

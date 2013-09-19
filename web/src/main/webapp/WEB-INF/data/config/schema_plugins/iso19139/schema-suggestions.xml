@@ -72,8 +72,14 @@
 
     <field name="gmd:MD_DigitalTransferOptions">
         <suggest name="gmd:onLine"/>
+        <suggest name="gmd:unitsOfDistribution"/>
+        <suggest name="gmd:transferSize"/>
+        <suggest name="gmd:offLine"/>
     </field>
-	
+
+    <field name="gmd:MD_Medium">
+        <suggest name="gmd:name"/>
+	</field>
 	
 	<!-- Contact info: suggest all by default. -->
 	<field name="gmd:CI_ResponsibleParty">

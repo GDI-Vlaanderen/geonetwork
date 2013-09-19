@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import lizard.tiff.Tiff;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -99,38 +100,41 @@ public class    Set implements Service {
         String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
         new File(dataDir).mkdirs();
 
+        removeOldThumbnail(context, id, "large");
+        removeOldThumbnail(context, id, "small");
         Double scalingFactor = shouldScale(context.getUploadDir() + "/" + file);
 
         if (Math.abs(scalingFactor) > 1) { // We need to make it smaller
             String inFile = context.getUploadDir() + file;
             String outFile = dataDir + file;
-            
             File outFile_ = new File(outFile);
             if(outFile_.exists()) {
                 outFile_.delete();
             }
-
+/*
             removeOldThumbnail(context, id, "large");
-
+*/
             String scalingDir = "width";
             if (scalingFactor < 0) {
                 scalingDir = "height";
             }
             createThumbnail(inFile, outFile, 120, scalingDir);
 
-            if (!new File(inFile).delete())
+            if (!new File(inFile).delete()) {
                 context.error("Error while deleting thumbnail : " + inFile);
+            }
 
-            dataMan.setThumbnail(context, id, false, file);
+            dataMan.setThumbnail(context, id, /*false*/true, file);
         } else {// Image of exactly 120x120. Big thumbnail, no scale
             // or image too small, just upload as it is (small thumbnail)
-            String type = "large";
+/*
+        	String type = "large";
             if (Math.abs(scalingFactor) < 1) {
                 type = "small";
             }
             
             removeOldThumbnail(context, id, type);
-            
+*/            
             File inFile = new File(context.getUploadDir() + file);
             File outFile = new File(dataDir, file);
             
@@ -147,7 +151,7 @@ public class    Set implements Service {
                                 + outFile + ". Error: " + e.getMessage());
             }
             
-            dataMan.setThumbnail(context, id, type.equals("small"), file);
+            dataMan.setThumbnail(context, id, /*type.equals("small")*/true, file);
         }
 
         Element response = new Element("a");
@@ -312,11 +316,20 @@ public class    Set implements Service {
 		dataMan.unsetThumbnail(context, id, type.equals("small"));
 
 		//--- remove file
-
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
-
-		if (!new File(file).delete())
-			context.error("Error while deleting thumbnail : "+file);
+		String fileName = result.getText();
+		if (StringUtils.isNotBlank(fileName)) {
+			if (fileName.startsWith("http")) {
+				int iPos = fileName.indexOf(Params.FNAME + "=");
+				if (iPos>-1) {
+					fileName = fileName.substring(iPos + Params.FNAME.length() + 1);
+				}
+			}
+			String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + fileName;
+			File oldFile = new File(file); 
+			if (oldFile.exists() && !oldFile.delete()) {
+				context.error("Error while deleting thumbnail : "+file);
+			}
+		}
 	}
 
     /**

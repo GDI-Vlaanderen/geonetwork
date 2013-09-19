@@ -4,6 +4,8 @@
   TODO : remove some JS dependencies eg. setBunload 
   -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:exslt="http://exslt.org/common" xmlns:str="http://exslt.org/strings"
   xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="exslt geonet str">
 
@@ -92,7 +94,7 @@
 
       <!-- remove button -->
       <xsl:choose>
-        <xsl:when test="normalize-space($removeLink)">
+        <xsl:when test="normalize-space($removeLink) and (name(.)!='gmd:graphicOverview' or not(gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail'))">
           <xsl:variable name="linkTokens" select="tokenize($removeLink,'!')"/>
           <xsl:text> </xsl:text>
           <xsl:choose>
