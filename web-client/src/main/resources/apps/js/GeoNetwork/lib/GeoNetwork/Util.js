@@ -281,12 +281,12 @@ GeoNetwork.Util = {
         "_"+ id -> control related with calendar that stores the date
         id      -> hidden control to store the value of gco:Date or gco:DateTime and it' submitted
      */
-    updateDateValue: function(id, hasTime) {
-        if (hasTime) {
-            Ext.get(id).dom.value =  "<gco:DateTime xmlns:gco='http://www.isotc211.org/2005/gco'>" + Ext.get("_" + id).dom.value + "</gco:DateTime>";
+    updateDateValue: function(id, value, hasTime, forceDateTime) {
+        if (hasTime || forceDateTime) {
+            Ext.get(id).dom.value =  "<gco:DateTime xmlns:gco='http://www.isotc211.org/2005/gco' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + value + (forceDateTime && value!="" ? "T12:00:00" : "") + "</gco:DateTime>";
 
         } else {
-            Ext.get(id).dom.value =  "<gco:Date xmlns:gco='http://www.isotc211.org/2005/gco'>" + Ext.get("_" + id).dom.value + "</gco:Date>";
+            Ext.get(id).dom.value =  "<gco:Date xmlns:gco='http://www.isotc211.org/2005/gco' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + value + "</gco:Date>";
         }
     },
 
@@ -319,12 +319,14 @@ GeoNetwork.Util = {
                 var valueEl = Ext.getDom(id + '_cal', editorPanel.dom);
                 var value = (valueEl ? valueEl.value : '');
                 var showTime = format.indexOf('T') === -1 ? false : true;
-                
+                var parentId = cal.getAttribute("parentId");
+                var dynamicDate = cal.className.contains("dynamicDate");
                 if (showTime) {
-                    var dtCal = new Ext.ux.form.DateTime({
+                	var dtCal = new Ext.ux.form.DateTime({
                         renderTo: cal.id,
                         name: id,
                         id: id,
+                        parentId: parentId,
                         value: value,
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i',
@@ -338,29 +340,26 @@ GeoNetwork.Util = {
                     // The isnil attribute does however not exist on the gco:DateTime element.
                     // As a consequence the template contains empy gmd:dateTime elements.
                     // In the GeoNetwork GUI this means that no Datetime control is shown.
-                    if (cal.className.contains("dynamicDate")) {
+                    if (dynamicDate) {
                         dtCal.on('change', function() {
-                            GeoNetwork.Util.updateDateValue(this.id.substring(1), true, "");
+                            GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, true, false);
                         });
 
                     }
 
                 } else {
-/*
-                	var timeValue = null;
-
-                    if (value.length==19) {
-                    	timeValue = "T12:00:00";
-                    	value = value.substring(0,10);
+                    var forceDateTime = cal.getAttribute("forceDateTime");
+                    if (forceDateTime) {
+                        value = value.length==19 ? value.substring(0,10) : value;
                     }
-*/
                 	var dCal = new Ext.form.DateField({
-                        renderTo: cal,
+                        renderTo: cal.id,
                         name: id,
                         id: id,
+                        parentId: parentId,
+                		forceDateTime: forceDateTime,
                         width: 160,
                         value: value,
-//                        timeValue: timeValue,
                         format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
                     });
 
@@ -374,9 +373,9 @@ GeoNetwork.Util = {
                     // The isnil attribute does however not exist on the gco:DateTime element.
                     // As a consequence the template contains empy gmd:dateTime elements.
                     // In the GeoNetwork GUI this means that no Datetime control is shown.
-                    if (cal.className.contains("dynamicDate")) {
-                        dCal.on('change', function() {
-                            GeoNetwork.Util.updateDateValue(this.id.substring(1), false);
+                    if (dynamicDate || forceDateTime) {
+                        dCal.on('change', function(component, textValue) {
+                            GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, false, forceDateTime);
                         });
                     }/* else {
                         dCal.on('change', function() {
@@ -411,14 +410,35 @@ GeoNetwork.Util = {
                 // initialized
                 // or not
                 
-            	var dCombo = new Ext.form.DateField({
+                var valueEl = Ext.getDom(/*id + '_combobox'*/id.substring(0,id.indexOf("_combobox")), editorPanel.dom);
+                var value = (valueEl ? valueEl.value : '');
+                var config = combo.getAttribute("config");
+                var jsonConfig = Ext.decode(config);
+                var data = new Array();
+                for (var j=0;j<jsonConfig.optionValues.length;j++) {
+                	data.push([jsonConfig.optionValues[j],jsonConfig.optionLabels[j]]);
+                }
+                var dCombo = new Ext.form.ComboBox({
                     renderTo: combo,
-                    name: id,
                     id: id,
-                    width: 160,
+                    style: 'width: 60%',
+                    name: id,
+                    mode:'local',
                     value: value,
-//                        timeValue: timeValue,
-                    format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
+                    editable:true,
+                    triggerAction:'all',
+                    selectOnFocus:true,
+                    displayField:'label',
+                    valueField:'value',
+                    forceSelection:false,
+                    autoShow:true,
+                    store:new Ext.data.SimpleStore({
+                        fields:[
+                            'value', 'label'
+                        ],
+                        data: data,
+                        autoLoad:true
+                    })
                 });
 
                 //Small hack to put date button on its place
@@ -426,7 +446,7 @@ GeoNetwork.Util = {
                     dCombo.getEl().parent().setHeight("18");
                 }
                 dCombo.on('change', function() {
-                    Ext.get(id).dom.value =  Ext.get("_" + id).dom.value;
+                    Ext.get(this.id.substring(0,this.id.indexOf("_combobox"))).dom.value =  this.getValue();
                 });
                 
             }

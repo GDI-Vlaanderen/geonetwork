@@ -225,7 +225,7 @@
 		        						<xsl:value-of select="concat(geonet:info/id,',')"/>
 		        					</xsl:for-each>
 		        				</xsl:variable>
-		        				<xsl:if test="($profile = 'Administrator' or $profile = 'Editor' or $profile = 'Reviewer' or $profile = 'UserAdmin') and $childCount &gt; 0">
+		        				<xsl:if test="($profile = 'Administrator' or $profile = 'Editor' or $profile = 'Hoofdeditor' or $profile = 'UserAdmin') and $childCount &gt; 0">
 		        					<img src="{/root/gui/url}/images/plus.gif"
 		        						alt="{/root/gui/strings/updateChildren}" title="{/root/gui/strings/updateChildren}" align="absmiddle"/>
 		        					<xsl:text> </xsl:text>

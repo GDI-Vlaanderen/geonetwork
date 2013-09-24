@@ -146,7 +146,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             scope: this.editor
         });
         
-        cmp.push(this.createViewMenu(), ['-'], this.saveAction, this.checkAction, this.saveAndCloseAction, this.minorCheckbox, 
+        cmp.push(this.createViewMenu(), ['-'], /*this.saveAction,*/ this.checkAction, this.saveAndCloseAction, /*this.minorCheckbox,*/ 
                 ['->'], this.resetAction, this.cancelAction, this.configMenu());
 
         GeoNetwork.editor.EditorToolbar.superclass.initComponent.call(this);
@@ -204,7 +204,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
                         checked: false,
                         checkHandler: function(){
                             Ext.each(Ext.DomQuery.select(this.checked?'div.tgDown':'div.tgRight'), function(i) {
-                                if (i.onclick) {
+                                if (i.className.indexOf('toggle-attr')<0 && i.onclick) {
                                     i.onclick();
                                 }
                             });
@@ -224,7 +224,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
         };
         
         this.editor.on('metadataUpdated', function() {
-            this.editAttributesVisibility();
+//            this.editAttributesVisibility();
         }, this);
         
         return this.configMenu;

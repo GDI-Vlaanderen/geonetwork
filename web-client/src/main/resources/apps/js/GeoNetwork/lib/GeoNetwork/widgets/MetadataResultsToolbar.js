@@ -493,7 +493,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         var cat = this.catalogue;
 
         var isEditor = (cat.identifiedUser) && (cat.identifiedUser.role === 'Editor');
-        var isReviewer = (cat.identifiedUser) && (cat.identifiedUser.role === 'Reviewer');
+        var isReviewer = (cat.identifiedUser) && (cat.identifiedUser.role === 'Hoofdeditor');
         var isAdmin = (cat.identifiedUser) && (cat.identifiedUser.role === 'Administrator');
         var isUserAdmin = (cat.identifiedUser) && (cat.identifiedUser.role === 'UserAdmin');
 
@@ -558,7 +558,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
 
             var cat = this.catalogue;
 
-            var isReviewer = (cat.identifiedUser) && (cat.identifiedUser.role === 'Reviewer');
+            var isReviewer = (cat.identifiedUser) && (cat.identifiedUser.role === 'Hoofdeditor');
             var isAdmin = (cat.identifiedUser) && (cat.identifiedUser.role === 'Administrator');
             var isUserAdmin = (cat.identifiedUser) && (cat.identifiedUser.role === 'UserAdmin');
 

@@ -1,0 +1,1 @@
+update dbo.users set profile = 'Hoofdeditor' where profile='Reviewer'

@@ -2066,78 +2066,95 @@
           </xsl:when>
 
           <xsl:otherwise>
-<!-- 		<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1' and not(../../@gco:nilReason='missing')) or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>-->
-        	<xsl:variable name="mandatory" select="false()"/>
-	       		<div>
+<!--			<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1' and not(../../@gco:nilReason='missing')) or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>-->
+			<xsl:variable name="mandatory" select="false()"/>
+			<xsl:variable name="onkeyup">
+				<xsl:choose>
+	                <xsl:when test="name(.)='gco:Integer' or name(.)='gco:Decimal' or name(.)='gco:Real'">
+					<xsl:choose>
+						<xsl:when test="name(.)='gco:Integer'">validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory=''))"/>, false);</xsl:when>
+						<xsl:otherwise>validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory = ''))"/>, true);</xsl:otherwise>
+					</xsl:choose>
+	                </xsl:when>
+	                <!-- Mandatory field (with extra validator) -->
+	                <xsl:when test="$mandatory or not($agivmandatory = '')">validateNonEmpty(this);</xsl:when>
+	                <!-- Custom validator -->
+	                <xsl:when test="$validator"><xsl:value-of select="$validator"/></xsl:when>
+				</xsl:choose>
+          	</xsl:variable>
+<!--
+			<xsl:variable name="helperList">
+				<xsl:call-template name="helperList">
+			        <xsl:with-param name="schema" select="$schema"/>
+			        <xsl:with-param name="attribute" select="false()"/>
+			    </xsl:call-template>
+			</xsl:variable>
+			<xsl:if test="normalize-space($helperList)!='' and $visible">
+				<xsl:variable name="list" select="exslt:node-set($helperList)"/>
+				<xsl:variable name="ref" select="geonet:element/@ref"/>
+				<xsl:variable name="onchange">
+					<xsl:if test="$mandatory or not($agivmandatory = '')">\'validateNonEmpty(this)\'</xsl:if>
+				</xsl:variable>
+			    <xsl:variable name="optionValues" select="replace(replace(string-join($list*[@value]/@value, '#,#'), '''', '\\'''), '#', '''')"/>
+			    <xsl:variable name="optionLabels" select="replace(replace(string-join($list/*[@value], '#,#'), '''', '\\'''), '#', '''')"/>
+				<xsl:call-template name="combobox">
+				    <xsl:with-param name="ref" select="$ref"/>
+				    <xsl:with-param name="disabled" select="concat('''',$isXLinked,'''')"/>
+				    <xsl:with-param name="onchange" select="$onchange"/>
+				    <xsl:with-param name="onkeyup" select="concat('''',$onkeyup,'''')"/>
+				    <xsl:with-param name="value" select="text()"/>
+				    <xsl:with-param name="optionValues" select="$optionValues"/>
+				    <xsl:with-param name="optionLabels" select="$optionLabels"/>
+				</xsl:call-template>
+			</xsl:if>
+			<xsl:if test="not(normalize-space($helperList)!='' and $visible)">
+-->
+	       		<div style="width:90%">
 		            <xsl:call-template name="helper">
 		              <xsl:with-param name="schema" select="$schema"/>
 		              <xsl:with-param name="attribute" select="false()"/>
 		            </xsl:call-template>
 	            </div>
 	            <input class="md {$class}" type="{$input_type}" value="{text()}">
-    		      <xsl:if test="$mandatory or not($agivmandatory = '')">
-			            <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
-		          </xsl:if>
-	              <xsl:if test="$isXLinked">
-	                <xsl:attribute name="disabled">disabled</xsl:attribute>
-	              </xsl:if>
-	              <xsl:if test="$input_step">
-	                <xsl:attribute name="step"><xsl:value-of select="$input_step"/></xsl:attribute>
-	              </xsl:if>
-	              <xsl:if test="$tabindex">
-	                <xsl:attribute name="tabindex" select="$tabindex"/>
-	              </xsl:if>
-	              <xsl:choose>
-	                <xsl:when test="$no_name=false()">
-	                  <xsl:attribute name="name">_<xsl:value-of select="geonet:element/@ref"
-	                    /></xsl:attribute>
-	                  <xsl:attribute name="id">_<xsl:value-of select="geonet:element/@ref"
-	                    /></xsl:attribute>
-	                </xsl:when>
-	                <xsl:otherwise>
-	                  <xsl:attribute name="id">
-	                    <xsl:value-of select="geonet:element/@ref"/>
-	                  </xsl:attribute>
-	                </xsl:otherwise>
-	              </xsl:choose>
-	
-	              <xsl:if test="$visible = false()">
-	                <xsl:attribute name="style">display:none;</xsl:attribute>
-	              </xsl:if>
-	
-	              <xsl:choose>
-	                <!-- Numeric field -->
-	                <xsl:when
-	                  test="name(.)='gco:Integer' or 
-	                  name(.)='gco:Decimal' or name(.)='gco:Real'">
-	                  <xsl:choose>
-	                    <xsl:when test="name(.)='gco:Integer'">
-	                      <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of
-	                          select="not($mandatory or not($agivmandatory=''))"/>, false);</xsl:attribute>
-	                    </xsl:when>
-	                    <xsl:otherwise>
-	                      <xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of
-	                          select="not($mandatory or not($agivmandatory = ''))"/>, true);</xsl:attribute>
-	                    </xsl:otherwise>
-	                  </xsl:choose>
-	                </xsl:when>
-	                <!-- Mandatory field (with extra validator) -->
-	                <xsl:when test="$mandatory or not($agivmandatory = '')">
-	                  <xsl:attribute name="onkeyup"> validateNonEmpty(this); </xsl:attribute>
-	                </xsl:when>
-	                <!-- Custom validator -->
-	                <xsl:when test="$validator">
-	                  <xsl:attribute name="onkeyup">
-	                    <xsl:value-of select="$validator"/>
-	                  </xsl:attribute>
-	                </xsl:when>
-	              </xsl:choose>
-            </input>
+	    		      <xsl:if test="$mandatory or not($agivmandatory = '')">
+				            <xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
+			          </xsl:if>
+		              <xsl:if test="$isXLinked">
+		                <xsl:attribute name="disabled">disabled</xsl:attribute>
+		              </xsl:if>
+		              <xsl:if test="$input_step">
+		                <xsl:attribute name="step"><xsl:value-of select="$input_step"/></xsl:attribute>
+		              </xsl:if>
+		              <xsl:if test="$tabindex">
+		                <xsl:attribute name="tabindex" select="$tabindex"/>
+		              </xsl:if>
+		              <xsl:choose>
+		                <xsl:when test="$no_name=false()">
+		                  <xsl:attribute name="name">_<xsl:value-of select="geonet:element/@ref"
+		                    /></xsl:attribute>
+		                  <xsl:attribute name="id">_<xsl:value-of select="geonet:element/@ref"
+		                    /></xsl:attribute>
+		                </xsl:when>
+		                <xsl:otherwise>
+		                  <xsl:attribute name="id">
+		                    <xsl:value-of select="geonet:element/@ref"/>
+		                  </xsl:attribute>
+		                </xsl:otherwise>
+		              </xsl:choose>
+		
+		              <xsl:if test="$visible = false()">
+						<xsl:attribute name="style">display:none;</xsl:attribute>
+		              </xsl:if>
+		              <xsl:if test="normalize-space(onkeyup)!=''">
+	                      <xsl:attribute name="onkeyup"><xsl:value-of select="$onkeyup"/></xsl:attribute>
+	                  </xsl:if>
+	            </input>
+<!--            </xsl:if>-->
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
       <xsl:when test="$edit=true()">
-      		<div>
+       		<div style="width:90%">
 			        <xsl:call-template name="helper">
 			          <xsl:with-param name="schema" select="$schema"/>
 			          <xsl:with-param name="attribute" select="false()"/>
@@ -2148,7 +2165,7 @@
 			<textarea class="md {$class}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
 				<xsl:if test="$isXLinked"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 				<xsl:if test="$visible = false()"><xsl:attribute name="style">display:none;</xsl:attribute></xsl:if>
-				<xsl:if test="$mandatory and $edit"><xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute></xsl:if>
+				<xsl:if test="($mandatory or not($agivmandatory = '')) and $edit"><xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute></xsl:if>
 				<xsl:if test="text()"><xsl:value-of select="string(text())"/></xsl:if>
 			</textarea>
       </xsl:when>
@@ -2266,7 +2283,7 @@
         </select>
       </xsl:when>
       <xsl:when test="$edit=true() and $class=''">
-      		<div>
+       		<div style="width:90%">
 		        <xsl:call-template name="helper">
 		          <xsl:with-param name="schema" select="$schema"/>
 		          <xsl:with-param name="attribute" select="true()"/>

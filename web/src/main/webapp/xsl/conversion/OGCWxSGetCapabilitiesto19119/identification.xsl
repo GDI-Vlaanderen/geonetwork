@@ -54,9 +54,11 @@
 				</title>
 				<date>
 					<CI_Date>
-						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
+<!-- 						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>-->
+						<xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
 						<date>
-							<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
+<!--							<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>-->
+							<gco:Date><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:Date>
 						</date>
 						<dateType>
 							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>

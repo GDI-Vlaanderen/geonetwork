@@ -102,8 +102,8 @@ function radioModalUpdate(div, service, modalbox, title) {
         if(response.responseXML.getElementsByTagName("error").length > 0) {
             var errorst = "";
             Ext.each(response.responseXML.getElementsByTagName("error"), 
-                    function(e) {errorst += e.textContent || e.innerText;});
-            
+                    function(e) {
+            	errorst += e.textContent || e.innerText || e.text;});
             Ext.MessageBox.alert(OpenLayers.i18n('error'), OpenLayers.i18n(errorst));
         }
     }, null);

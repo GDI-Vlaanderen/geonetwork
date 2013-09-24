@@ -239,7 +239,7 @@ public class JeevesServlet extends HttpServlet
 	                roleProfileMapping.put("Authenticated","RegisteredUser");
 	                roleProfileMapping.put(nodeType + " Metadata Admin", "Administrator");
 	                roleProfileMapping.put(nodeType + " Metadata Editor", "Editor");
-	                roleProfileMapping.put(nodeType + " Metadata Hoofdeditor", "Reviewer");
+	                roleProfileMapping.put(nodeType + " Metadata Hoofdeditor", "Hoofdeditor");
 	                List<String> roleListToCheck = Arrays.asList(nodeType + " Metadata Admin", nodeType + " Metadata Hoofdeditor", nodeType + " Metadata Editor", "Authenticated");
 	                for (String item: roleListToCheck) {
 	                	if (req.isUserInRole(item)) {

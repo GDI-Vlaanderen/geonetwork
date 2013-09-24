@@ -112,6 +112,21 @@
 
 	<!-- ================================================================= -->
 	
+	<xsl:template match="gmd:dateTime">
+	    <xsl:copy>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:if test="normalize-space(gco:DateTime)=''">
+				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+				<xsl:apply-templates select="*[not(name()='gco:DateTime')]"/>
+			</xsl:if>
+			<xsl:if test="not(normalize-space(gco:DateTime)='')">
+				<xsl:apply-templates select="*"/>
+			</xsl:if>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ================================================================= -->
+
 	<!-- Only set metadataStandardName and metadataStandardVersion
 	if not set. -->
 	<xsl:template match="gmd:metadataStandardName[@gco:nilReason='missing' or gco:CharacterString='']" priority="10">
@@ -327,12 +342,41 @@
 		and constrain users to use uuidref attribute to link
 		service metadata to datasets. This will avoid to have
 		error on XSD validation. -->
-	<xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
+	<xsl:template match="srv:operatesOn">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
+			<xsl:apply-templates select="*"/>
 		</xsl:copy>
 	</xsl:template>
 
+	<xsl:template match="gmd:MD_FeatureCatalogueDescription">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+			<xsl:if test="/root/env/createdFromTemplate='y'">
+				<gmd:includedWithDataset>
+					<gco:Boolean>true</gco:Boolean>
+				</gmd:includedWithDataset>
+				<gmd:featureCatalogueCitation uuidref=""/>
+			</xsl:if>
+			<xsl:if test="/root/env/createdFromTemplate='n'">
+				<xsl:apply-templates select="*"/>
+			</xsl:if>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="gmd:series">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+			<xsl:if test="/root/env/createdFromTemplate='y'">
+				<gmd:CI_Series>
+					<gmd:name><gco:CharacterString/></gmd:name>
+				</gmd:CI_Series>
+			</xsl:if>
+			<xsl:if test="/root/env/createdFromTemplate='n'">
+				<xsl:apply-templates select="*"/>
+			</xsl:if>
+		</xsl:copy>
+	</xsl:template>
 
 	<!-- ================================================================= -->
 	<!-- Set local identifier to the first 2 letters of iso code. Locale ids

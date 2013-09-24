@@ -89,12 +89,12 @@
 									<xsl:value-of select="/root/gui/strings/UserAdmin"/>
 								</option>
 							</xsl:for-each>
-							<xsl:for-each select="/root/gui/profiles/Reviewer">
+							<xsl:for-each select="/root/gui/profiles/Hoofdeditor">
 								<option value="{name(.)}">
 									<xsl:if test="/root/response/record/profile=name(.)">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:value-of select="/root/gui/strings/Reviewer"/>
+									<xsl:value-of select="/root/gui/strings/Hoofdeditor"/>
 								</option>
 							</xsl:for-each>
 							<xsl:for-each select="/root/gui/profiles/Editor">

@@ -392,7 +392,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
 
         var sameLockedByAndLoggedUser = (this.catalogue.identifiedUser) && (this.record.get('lockedBy') === this.catalogue.identifiedUser.id);
 
-        var isReviewer = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'Reviewer');
+        var isReviewer = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'Hoofdeditor');
         var isAdmin = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'Administrator');
         var isUserAdmin = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'UserAdmin');
         var isEditor = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'Editor');

@@ -68,7 +68,7 @@ class LDAPContext
 
 		//--- init set of allowed profiles
 
-		profiles.add("Reviewer");
+		profiles.add("Hoofdeditor");
 		profiles.add("Editor");
 		profiles.add("RegisteredUser");
 	}
@@ -123,6 +123,9 @@ class LDAPContext
 				info.profile  = (profileAttr == null)
 										? defProfile
 										: get(attr, profileAttr);
+				if (info.profile.equals("Reviewer")) {
+					info.profile = "Hoofdeditor";
+				}
 				info.email = get(attr, emailAttr);
 
                 info.group = (groupAttr == null)

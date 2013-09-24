@@ -724,7 +724,7 @@
 	<profileChoice value="Administrator">Administrator</profileChoice>
 	<profileChoice value="Editor">Editor</profileChoice>
 	<profileChoice value="RegisteredUser">Registered user</profileChoice>
-	<profileChoice value="Reviewer">Content reviewer</profileChoice>
+	<profileChoice value="Hoofdeditor">Main editor</profileChoice>
 	<profileChoice value="UserAdmin">User administrator</profileChoice>
 	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Progress</progress>
@@ -813,7 +813,7 @@
 	<resultsCoordinate>Results matching the coordinate search </resultsCoordinate>
 	<resultsFreeText>Results matching the Free Text Word </resultsFreeText>
 	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
-	<Reviewer>Content reviewer</Reviewer>
+	<Hoofdeditor>Main editor</Hoofdeditor>
 	<rss>Open RSS feed</rss>
 	<rtitle>Title</rtitle>
 	<save>Save</save>

@@ -164,7 +164,7 @@
  -->
  <metadata-tab>
   <simple flat="true"/>
-  <advanced/><!-- This view should not be removed as this is the only view to be able
+<!--   <advanced/>--><!-- This view should not be removed as this is the only view to be able
   to edit all elements defined in a schema. -->
   <iso/>
   <!-- This view display all INSPIRE recommended elements

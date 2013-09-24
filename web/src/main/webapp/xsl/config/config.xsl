@@ -800,8 +800,8 @@
 				<xsl:value-of select="/root/gui/strings/UserAdmin"/>
 			</option-->
 		
-			<option value="Reviewer">
-				<xsl:value-of select="/root/gui/strings/Reviewer"/>
+			<option value="Hoofdeditor">
+				<xsl:value-of select="/root/gui/strings/Hoofdeditor"/>
 			</option>
 		
 			<option value="Editor">

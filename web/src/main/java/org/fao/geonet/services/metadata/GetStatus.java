@@ -125,7 +125,7 @@ public class GetStatus implements Service
 		ids.add(id);
 
 		Element cRevs = am.getContentReviewers(dbms, ids);
-		cRevs.setName("contentReviewers");
+		cRevs.setName("contentHoofdeditors");
 
 		//-----------------------------------------------------------------------
 		//--- put it all together

@@ -2527,7 +2527,6 @@ public class DataManager {
 	 */
 	public Pair <Element, String> doValidate(UserSession session, Dbms dbms, String schema, String id, Element md,
                                              String lang, boolean forEditing, boolean workspace) throws Exception {
-        System.out.println("doValidate(UserSession session, Dbms dbms, String schema, String id, Element md, String lang, boolean forEditing)");
 	    String version = null;
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
 		    Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");

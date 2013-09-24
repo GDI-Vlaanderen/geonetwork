@@ -387,9 +387,7 @@
 					<xsl:with-param name="title" select="$title"/>
 					<xsl:with-param name="content">
 						<tr>
-							<xsl:if test="name(.)='srv:operatesOn'">
-								<th class="main {$className}"><label class="" for="_"><xsl:value-of select="$label"/></label></th>
-							</xsl:if>
+							<th class="main {$className}"><label class="" for="_"><xsl:value-of select="$label"/></label></th>
 							<td>
 								<xsl:call-template name="getMetadataTitle">
 								    <xsl:with-param name="uuid" select="$uuid"/>
@@ -499,7 +497,7 @@
 			          </xsl:variable>
                     <input type="text" class="md" name="_{$ref}" id="_{$ref}" value="{$currentMduuidValue}" size="30">
                             <xsl:if test="$mandatory or $agivmandatory != ''">
-                                <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
+                                <xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
                             </xsl:if>
                     </input>
                     <xsl:choose>
@@ -1339,7 +1337,7 @@
 		        	<xsl:variable name="mandatory" select="false()"/>
 					          <xsl:variable name="agivmandatory">
 					          	<xsl:call-template name="getMandatoryType">
-							    	<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+							    	<xsl:with-param name="name"><xsl:value-of select="name(../..)"/></xsl:with-param>
 							    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
 								</xsl:call-template>
 					          </xsl:variable>
@@ -1744,8 +1742,9 @@
                             <xsl:with-param name="format" select="$format"/>
                         </xsl:call-template>-->
 
-                        <xsl:variable name="ref" select="gco:Date/geonet:element/@ref|gco:DateTime/geonet:element/@ref"/>
+                        <xsl:variable name="ref" select="gco:Date/geonet:element/@ref|gco:DateTime/geonet:element/@ref"/>			
                         <xsl:variable name="useDateFormat" select="contains(concat('gmd:DQ_CompletenessOmission','gmd:DQ_AbsoluteExternalPositionalAccuracy','gmd:DQ_ThematicClassificationCorrectness','gmd:DQ_DomainConsistency','gmd:LI_ProcessStep'),name(..))"/>
+						<xsl:variable name="parentId" select="concat('_X', ./geonet:element/@ref)" />
                         <xsl:choose>
                             <xsl:when test="string($ref)">
                                 <xsl:variable name="format">
@@ -1756,9 +1755,11 @@
                                 </xsl:variable>
 
                                 <xsl:call-template name="calendar">
-                                    <xsl:with-param name="ref" select="$ref"/>
+                                    <xsl:with-param name="ref" select="$ref" />
+                                    <xsl:with-param name="parentId" select="$parentId" />
                                     <xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
                                     <xsl:with-param name="format" select="$format"/>
+									<xsl:with-param name="forceDateTime" select="$useDateFormat"/>
                                 </xsl:call-template>
                             </xsl:when>
 
@@ -1774,11 +1775,11 @@
 
                                 <xsl:call-template name="calendar">
                                     <xsl:with-param name="ref" select="$hiddenId"/>
+                                    <xsl:with-param name="parentId" select="$parentId"/>
                                     <xsl:with-param name="date" select="''"/>
                                     <xsl:with-param name="format" select="$format"/>
                                     <xsl:with-param name="class" select="'dynamicDate'"/>
                                 </xsl:call-template>
-                                <input type="hidden" id="{$hiddenId}" name="{$hiddenId}" value="" />
                             </xsl:otherwise>
                         </xsl:choose>
 
@@ -3537,15 +3538,27 @@
                 <xsl:variable name="value" select="string(gco:CharacterString)"/>
 		        <xsl:choose>
 		          	<xsl:when test="$edit=true()">
-<!--
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
+<!-- 
+						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
 						<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
+						<xsl:variable name="onchange" select="concat('''checkForFileUpload(\''',$fref,'\'',\''',$ref,'\'',\''',$value,'\'')')"/>
+						<xsl:variable name="onkeyup" select="concat('''checkForFileUpload(\''',$fref,'\'',\''',$ref,'\'',\''',$value,'\'')')"/>
+-->
+					    <xsl:variable name="optionValues" select="replace(replace(string-join(/root/gui/strings/protocolChoice[@value]/@value, '#,#'), '''', '\\'''), '#', '''')"/>
+					    <xsl:variable name="optionLabels" select="replace(replace(string-join(/root/gui/strings/protocolChoice[@value], '#,#'), '''', '\\'''), '#', '''')"/>
                         <xsl:call-template name="combobox">
                             <xsl:with-param name="ref" select="$ref"/>
-                            <xsl:with-param name="value" select="gco:CharacterString/text()"/>
-                            <xsl:with-param name="options" select="[]"/>
+<!-- 
+						    <xsl:with-param name="disabled" select="concat('''',$isXLinked,'''')"/>
+						    <xsl:with-param name="onchange" select="$onchange"/>
+						    <xsl:with-param name="onkeyup" select="$onkeyup"/>
+ -->
+                             <xsl:with-param name="value" select="gco:CharacterString/text()"/>
+                            <xsl:with-param name="optionValues" select="$optionValues"/>
+                            <xsl:with-param name="optionLabels" select="$optionLabels"/>
                         </xsl:call-template>
--->
+<!--
 		                 <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
 		                 <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
 		                 <xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
@@ -3565,6 +3578,7 @@
 		                         </option>
 		                     </xsl:for-each>
 		                 </select>
+-->
 		          	</xsl:when>
 					<xsl:otherwise>
 		                     <xsl:for-each select="/root/gui/strings/protocolChoice[@value]">

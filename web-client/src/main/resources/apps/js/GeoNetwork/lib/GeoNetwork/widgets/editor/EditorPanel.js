@@ -94,9 +94,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             /** api: config[utilityPanelConfig.suggestionPanel] 
              *  Collapsed suggestion panel on startup. Default is true.
              */
+/*
             suggestionPanel: {
                 collapsed: true
             },
+*/
             /** api: config[utilityPanelConfig.helpPanel] 
              *  Collapsed thumbnail panel on startup. Default is false.
              */
@@ -1012,7 +1014,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         //console.log("metadata schema: " + this.metadataSchema.value + " type:" + this.metadataType.value + " tab:" + this.metadataCurrTab.value);
         
         this.initCalendar();
-//        GeoNetwork.Util.initComboBox(this.editorMainPanel);
+        GeoNetwork.Util.initComboBox(this.editorMainPanel);
         this.initMultipleSelect();
         this.validateMetadataFields();
         this.catalogue.extentMap.initMapDiv();
@@ -1259,12 +1261,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             setThumbnail: this.catalogue.services.mdSetThumbnail,
             unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
         }, this.utilityPanelConfig.thumbnailPanel));
-*/        
         this.suggestionPanel = new GeoNetwork.editor.SuggestionsPanel(Ext.applyIf({
             metadataId : this.metadataId,
             editor: this,
             catalogue: this.catalogue
         }, this.utilityPanelConfig.suggestionPanel));
+*/        
         
         optionsPanel = {
             region: 'east',
@@ -1280,7 +1282,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             items: [
 /*                this.thumbnailPanel,*/ 
                 this.relationPanel, 
-                this.suggestionPanel,
+//                this.suggestionPanel,
                 this.validationPanel, 
                 this.helpPanel]
         };

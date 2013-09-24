@@ -390,7 +390,7 @@
         </tip>
 
         <tip id="symbolicLocking.enable">
-            Wanneer deze is ingeschakeld, kan elke editor te openen metadata in zijn groepen (niet alleen Reviewers).
+            Wanneer deze is ingeschakeld, kan elke editor te openen metadata in zijn groepen (niet alleen Hoofdeditors).
         </tip>
 	</tips>
 	<data.dataDir>Data directory:</data.dataDir>

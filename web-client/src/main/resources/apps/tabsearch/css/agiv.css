@@ -1,38 +1,38 @@
 /**ISO MANDATORY**/
 tr.iso th + td span textarea, tr.iso th + td input {
-	border-color: #00ff00;
+	border-color: #0000ff;
 }
 
 tr.iso th + td span textarea.error, tr.iso th + td input.error {
-	border-color: #ddff00;
+	border-color: #ff0000;
 }
-
+/*
 tr.iso th label {
 	color: #00ff00;
 }
-
+*/
 /**INSPIRE MANDATORY**/
 tr.inspire th + td span textarea, tr.inspire th + td input {
-	border-color: #ffff00;
+	border-color: #0000ff;
 }
 
 tr.inspire th + td span textarea.error, tr.inspire th + td input.error {
-	border-color: #ffee00;
+	border-color: #ff0000;
 }
-
+/*
 tr.inspire th label {
 	color: #ffff00;
 }
-
+*/
 /**GDI MANDATORY**/
 tr.gdi th + td span textarea, tr.gdi th + td input {
 	border-color: #0000ff;
 }
 
 tr.gdi th + td span textarea.error, tr.gdi th + td input.error {
-	border-color: #ff00ff;
+	border-color: #ff0000;
 }
-
+/*
 tr.gdi th label {
 	color: #0000ff;
-}
+}*/

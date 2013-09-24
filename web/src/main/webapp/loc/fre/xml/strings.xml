@@ -728,7 +728,7 @@
 	<profileChoice value="Administrator">Administrateur</profileChoice>
 	<profileChoice value="Editor">Editeur</profileChoice>
 	<profileChoice value="RegisteredUser">Invité</profileChoice>
-	<profileChoice value="Reviewer">Relecteur</profileChoice>
+	<profileChoice value="Hoofdeditor">Editeur principal</profileChoice>
 	<profileChoice value="UserAdmin">Administrateur d'utilisateurs</profileChoice>
 	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Avancement</progress>
@@ -816,7 +816,7 @@
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats de la recherche</resultsFreeText>
 	<resultsMatching>Nombre de résultats : </resultsMatching>
-	<Reviewer>Relecteur</Reviewer>
+	<Hoofdeditor>Editeur principal</Hoofdeditor>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
 	<save>Sauver</save>

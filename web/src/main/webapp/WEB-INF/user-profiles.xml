@@ -149,7 +149,7 @@
 
 	<!-- ====================================================================== -->
 
-	<profile name="UserAdmin" extends="Reviewer">
+	<profile name="UserAdmin" extends="Hoofdeditor">
 
 		<!-- User maintenance services -->
 		<allow service="user.get"/>
@@ -185,9 +185,9 @@
 
 	<!-- ====================================================================== -->
 
-	<profile name="Reviewer" extends="Editor">
+	<profile name="Hoofdeditor" extends="Editor">
         <!-- These are the metadata privileges forms -->
-        <!-- AGIV only available for Reviewers and administrators -->
+        <!-- AGIV only available for Hoofdeditors and administrators -->
         <allow service="metadata.admin"/>
         <allow service="metadata.admin.form"/>
         <allow service="metadata.batch.admin.form"/>

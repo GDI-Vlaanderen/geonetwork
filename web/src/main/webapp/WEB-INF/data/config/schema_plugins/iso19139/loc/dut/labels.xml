@@ -256,11 +256,16 @@
 		<label>Samenvatting</label>
 		<description>Korte beschrijving van de inhoud van de dataset.</description>
 	    <condition>mandatory</condition>
+	    <mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B.1.2 - samenvatting is verplicht.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:accessConstraints">
 		<label>(Juridische) toegangsbeperking</label>
 		<description>Toegangseisen die er zorg voor dragen dat privacy of intellectueel eigendom gewaarborgd zijn en elke andere speciale beperkingen voor het verkrijgen van de metadata of data. </description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.2: verplicht</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:address">
@@ -430,6 +435,8 @@
 		<label>Type veiligheidsbeperking</label>
 		<description>Beperkingen opgelegd omdat informatie vertrouwelijk is.</description>
 	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.2: conditioneel - indien een URL beschikbaar is moet deze aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:classificationSystem">
@@ -457,7 +464,7 @@
             <option value="3812" title="EPSG">ETRS89/ Belgian Lambert 2008 (EPSG:3812)</option>
         </helper>
 		<mandatoryType>gdi</mandatoryType>
-		<mandatoryTooltip>Verplicht voor GDI</mandatoryTooltip>
+		<mandatoryTooltip>GDI-Vlaanderen Best Practices - SC-2</mandatoryTooltip>
     </element>
 
     <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code">
@@ -630,6 +637,8 @@
 		<label>Metadata wijzigingsdatum</label>
 		<description>Datum waarop de metadata is gecreeerd of gewijzigd.(JJJJ-MM-DD).</description>
 	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 10.2: verplicht</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateTime">
@@ -658,6 +667,8 @@
 		<label>Toepassingsschaal 1 : </label>
 		<description>De beoogde schaal waarop het bestand waarheidsgetrouw gebruikt mag worden. Dit moet een positief numeriek getal zijn.  (Dus u moet hier 10000 invoeren als de schaal 1:10000 betreft.)</description>
 	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 6.2: conditioneel - ofwel schaal noemer of resolutie (afstand) moet gespecifieerd zijn indien deze bestaat.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:density">
@@ -712,7 +723,9 @@
 	<element name="gmd:distance">
 		<label>Afstand</label>
 		<description>Afstand</description>
-	<condition>conditional</condition>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 6.2: conditioneel - ofwel schaal noemer of resolutie (afstand) moet gespecifieerd zijn indien deze bestaat.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionFormat">
@@ -879,6 +892,8 @@
 		<label>Maximum x-coordinaat</label>
 		<description>Meest oostelijke coordinaat uit de horizontale dekking van de dataset weergegeven in longitude en lattitude in decimale graden (noord en oost als positieve waarden).</description>
 	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 4.1: verplicht voor datasets en datasetseries, verplicht voor diensten met een expliciete geografische begrenzing. </mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:edition">
@@ -899,6 +914,30 @@
 	<element name="gmd:electronicMailAddress">
 		<label>Email</label>
 		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 9.1: Email adres is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 9.1: Email adres is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 10.1: Email adres van de organisatie verantwoordelijk voor de metadata is verplicht.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:environmentDescription">
@@ -1035,6 +1074,9 @@
 	<element name="gmd:fileIdentifier">
 		<label>Metadata identificator (fileIdentifier)</label>
 		<description>Unieke Identifier voor de metadata file.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>gdi</mandatoryType>
+		<mandatoryTooltip>GDI-Vlaanderen Best Practices SC-1</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileName">
@@ -1110,12 +1152,16 @@
 	<element name="gmd:hierarchyLevel">
 		<label>Hiërarchisch niveau</label>
 		<description>Hiërarchisch niveau waar de metadata betrekking op heeft.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.3: hiërarchisch niveau is verplicht.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevelName">
 		<label>Beschrijving hiërarchisch niveau</label>
 		<description>Naam van het hiërarchische niveau waarop de metadata betrekking heeft.</description>
 	</element>
+	
 	<!-- ==================================================== -->
 	<element name="gmd:hoursOfService">
 		<label>Contacturen</label>
@@ -1186,10 +1232,12 @@
 		<description>In het algemeen gebruikte woorden of geformaliseerde zinnen om een onderwerp te beschrijven.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:language">
+	<element name="gmd:language" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language">
 		<label>Taal dataset(serie)</label>
 		<description>Taal waarin de data is beschreven.</description>
-	<condition>conditional</condition>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.7: conditioneel - verplicht indien de bron tekstuele informatie bevat.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:languageCode">
@@ -1235,10 +1283,12 @@
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:linkage">
-		<label>URL</label>
+	<element name="gmd:URL" context="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
+		<label>Connectiepunt URL.</label>
 		<description>Locatie voor online toegang bij gebruik van een Uniform Resource Locator adres of een vergelijkbaar schema.</description>
 		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.4: conditioneel - verplicht indien een URL beschikbaar is moet deze aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maintenanceAndUpdateFrequency">
@@ -1482,7 +1532,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ReferenceSystem">
 		<label>Referentiesysteem</label>
-		<description>Informatie over het gebruikte referentiesysteem..</description>
+		<description>Informatie over het gebruikte referentiesysteem.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_RepresentativeFraction">
@@ -1534,7 +1584,14 @@
 	<element name="gmd:MD_TopicCategoryCode">
 		<label>Categorie(ën)</label>
 		<description>Hoofdthema van de dataset.</description>
-	<condition>mandatory</condition>
+<!-- ==================================================== -->
+	<element name="gmd:language" context="gmd:MD_DataIdentification/gmd:language">
+		<label>Taal dataset(serie)</label>
+		<description>Taal waarin de data is beschreven.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.8: verplicht voor datasets en datasetseries</mandatoryTooltip>
+	</element>	
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopologyLevelCode">
@@ -1644,6 +1701,8 @@
 		<label>Maximum y-coordinaat</label>
 		<description>Meest noordelijke coordinaat uit de horizontale dekking van de dataset weergegeven in longitude en lattitude in decimale graden (noord en oost als positieve waarden).</description>
 	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 4.1: verplicht voor datasets en datasetseries, verplicht voor diensten met een expliciete geografische begrenzing. </mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:numberOfDimensions">
@@ -1677,12 +1736,52 @@
 		<description>Algemene instructies, voorwaarden en diensten geleverd door de distributeur.</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:organisationName" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName">
+		<label>Organisatie</label>
+		<description>Naam van de verantwoordelijke organisatie.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B.9.1 Naam van de verantwoordelijke organisatie is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:organisationName" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName">
+		<label>Organisatie</label>
+		<description>Naam van de verantwoordelijke organisatie.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B.9.1 Naam van de verantwoordelijke organisatie is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email de verantwoordelijke organisatie.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B.9.1 Email van de verantwoordelijke organisatie is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email de verantwoordelijke organisatie.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B.10.1 Email van de verantwoordelijke organisatie is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:organisationName" context="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName">
+		<label>Organisatie</label>
+		<description>Naam van de verantwoordelijke organisatie.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B.10.1 Naam van de verantwoordelijke organisatie voor de metadata is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:organisationName">
 		<label>Organisatie</label>
 		<description>Naam van de verantwoordelijke organisatie.</description>
 	<condition>mandatory</condition>
 		<mandatoryType>gdi</mandatoryType>
-		<mandatoryTooltip>Verplicht voor GDI</mandatoryTooltip>
+		<mandatoryTooltip>GDI-Vlaanderen Best Practices SC-3</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:orientationParameterAvailability">
@@ -1716,7 +1815,9 @@
 	<element name="gmd:otherConstraints">
 		<label>Overige beperkingen</label>
 		<description>Andere restricties of beperkingen die niet in andere velden kunnen worden ondergebracht, bijvoorbeeld de naam van de copyrighthouder.</description>
-	<condition>conditional</condition>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.2: conditioneel - indien de toegangsbeperking gedefinieerd is als anders.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:page">
@@ -1731,7 +1832,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:parentEntity">
 		<label>Parent entiteit</label>
-		<description>Naam van de metadata-entiteit(enà onder de welke dit uitgebreide metadata element mag voorkomen Het kan gaan over standaard metadata elementen of uitbreidingen..</description>
+		<description>Naam van de metadata-entiteit(onder de welke dit uitgebreide metadata element mag voorkomen). Het kan gaan over standaard metadata elementen of uitbreidingen.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1744,6 +1845,15 @@
 		<label>Conform verklaard</label>
 		<description>Indicatie van de conformiteit met de specificatie </description>
 		<condition>mandatory</condition>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:pass" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
+		<label>Conform verklaard</label>
+		<description>Indicatie van de conformiteit met de specificatie </description>
+		<condition>mandatory</condition>
+         <condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 7.2: verplicht indien de conformiteit geëvalueerd werd.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gco:Boolean" context="gmd:pass">
@@ -1925,6 +2035,22 @@
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:role" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role">
+		<label>Rol</label>
+		<description>Functie die wordt uitgevoerd door de verantwoordelijke organisatie.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 9.2: verplicht rol van de verantwoordelijke organisatie moet aanwezig zijn.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:role" context="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:role">
+		<label>Rol</label>
+		<description>Functie die wordt uitgevoerd door de verantwoordelijke organisatie.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 10.1: verplicht - rol van de organisatie verantwoordelijk voor de metadata moet aanwezig zijn.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:RS_Identifier">
 		<label>RS identifier</label>
 		<description>Unieke code gebruikt voor referentiesystemen.</description>
@@ -2019,6 +2145,8 @@
 		<description>Meest zuidelijke coordinaat uit de horizontale dekking van de dataset weergegeven in longitude en lattitude in decimale graden (noord en oost als positieve waarden).
 </description>
 	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 4.1: verplicht voor datasets en datasetseries, verplicht voor diensten met een expliciete geografische begrenzing. </mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:spatialExtent">
@@ -2057,7 +2185,9 @@
 	<element name="gmd:statement">
 		<label>Algemene beschrijving herkomst</label>
 		<description>Algemene beschrijving of opmerking, betreffende de geschiedenis van een dataset in zoverre deze niet te plaatsen zijn in de overige kwaliteitsvelden. Dit kunnen ook beschrijvingen of opmerkingen zijn over de brongegevens en/of het productieproces.</description>
-	<condition>conditional</condition>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 6.1: verplicht - beschrijving van de herkomst moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:status">
@@ -2095,8 +2225,12 @@
 	<element name="gmd:topicCategory">
 		<label>Onderwerp</label>
 		<description>Belangrijkste themas van de dataset</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 2.1: verplicht voor datasets en dataset series.</mandatoryTooltip>
 	</element>
+	
+	
 	<!-- ==================================================== -->
 	<element name="gmd:topologyLevel">
 		<label>Topologie level</label>
@@ -2177,16 +2311,25 @@
 	<element name="gmd:useLimitation">
 		<label>Beschrijving gebruiksbeperkingen</label>
 		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.1: conditioneel - minstens 1 gebruiksbeperking (useLimitation) moet beschreven zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation" context="gmd:MD_LegalConstraints">
 		<label>Beschrijving legale beperkingen</label>
-		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
+		<description>Toepassingen waarvoor de data niet mag gebruikt worden.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.1: conditioneel - minstens 1 gebruiksbeperking (useLimitation) moet beschreven zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation" context="gmd:MD_SecurityConstraints">
 		<label>Beschrijving veiligheidsbeperkingen</label>
 		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.1: conditioneel - minstens 1 gebruiksbeperking (useLimitation) moet beschreven zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:userContactInfo">
@@ -2253,6 +2396,8 @@
 		<label>Minimum x-coordinaat</label>
 		<description>Meest westelijke coordinaat uit de horizontale dekking van de dataset weergegeven in longitude en lattitude in decimale graden (noord en oost als positieve waarden).</description>
 	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 4.1: verplicht voor datasets en datasetseries, verplicht voor diensten met een expliciete geografische begrenzing. </mandatoryTooltip>
 	</element>
 	
 	<!-- ==================================================== -->
@@ -2303,7 +2448,22 @@
 	<!-- ==================================================== -->
 	<!-- === GML namespace -->
 	<!-- ==================================================== -->
-	
+	<element name="gml:beginPosition" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition">
+		<label>Begindatum</label>
+		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 5.1: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:endPosition" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition">
+		<label>Einddatum</label>
+		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 5.1: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->	
 	<element name="gml:beginPosition">
 		<label>Begindatum</label>
 		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
@@ -2382,6 +2542,9 @@
 	<element name="srv:serviceType">
 		<label>Type service</label>
 		<description>Het type van de service. Bijvoorbeeld View of download.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 2.2 - verplicht voor services.</mandatoryTooltip>
 	</element>
 	<element name="srv:serviceTypeVersion">
 		<label>Versie type service</label>
@@ -2403,6 +2566,9 @@
 		<label>operatesOn (informatie over de datasets waarop de service werkt)</label>
 		<description>Dit element is conditioneel in INSPIRE. Het is verplicht als er links naar de (metadata) van datasets waarop de dienst opereert
 beschikbaar zijn. Voor diensten zoals WMS en WFS is het dus verplicht. Dit element geeft informatie (metadata) over de data die via de dienst beschikbaar wordt gesteld.</description>
+         <condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.6: verplicht indien deze dienst operaties uitvoert op gekoppelde datasets.</mandatoryTooltip>
 	</element>   
     <element name="srv:operationName">
 		<label>Naam van de operatie</label>
@@ -2785,7 +2951,8 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Titel dataset(serie)</label>
 		<description>Titel of naam</description>
 		<condition>mandatory</condition>
-		
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.1: titel is verplicht.</mandatoryTooltip>
 	</element>
 	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
 		<label>Alternatieve titel dataset(serie)</label>
@@ -2795,6 +2962,8 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Titel service</label>
 		<description>Titel of naam</description>
 		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.1: titel is verplicht.</mandatoryTooltip>
 	</element>
 	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
 		<label>Alternatieve titel service</label>
@@ -2815,16 +2984,25 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date">
 		<label>Versiedatum dataset(serie)</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 5.2/5.3/5.4: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Date" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date">
 		<label>Versiedatum service</label>
 		<description>Referentie datum en gebeurtenis waarmee deze wordt omschreven (JJJJ-MM-DD).</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 5.2/5.3/5.4: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	  <element name="gmd:identifier" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier">
 		<label>Dataset(serie) identificator</label>
-		<description>Unieke code gebruikt voor referentiesystemen.</description>
+		<description>Unieke code.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 1.5: verplicht voor datasets en dataset series.</mandatoryTooltip>
     </element>
 	<element name="gmd:title" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title">
 		<label>Titel verwante dataset(serie)</label>
@@ -2925,6 +3103,8 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<label>Titel specificatie</label>
 		<description>Titel of naam</description>
 		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 7.1: verplicht</mandatoryTooltip>
 	</element>
 	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:alternateTitle">
 		<label>Alternatieve titel specificatie</label>
@@ -2936,8 +3116,10 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	</element>
 	<element name="gmd:language" context="gmd:MD_Metadata/gmd:language">
 		<label>Taal metadatarecord</label>
-		<description>Taal waarin de data is beschreven.</description>
-	<condition>conditional</condition>
+		<description>Taal waarin de metadata beschreven is.</description>
+	<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 10.3: Taal waarin de metadata beschreven is, moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<element name="gmd:characterSet" context="gmd:MD_Metadata/gmd:characterSet">
 		<label>Karakterset metadatarecord</label>
@@ -2965,7 +3147,9 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	<element name="gmd:description" context="gmd:LI_Source">
 		<label>Omschrijving bron</label>
 		<description>Omschrijving van de bron</description>
-		<condition>mandatory</condition>
+		 <condition>mandatory</condition>
+	    <mandatoryType>iso</mandatoryType>
+		<mandatoryTooltip>Tabel A1 -Rij 13: bescrijving van de bron is verplicht.</mandatoryTooltip>
 	</element>
 	<element name="gmd:description" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:sourceStep/gmd:LI_ProcessStep/gmd:description">
 		<label>Inwinningsmethode</label>

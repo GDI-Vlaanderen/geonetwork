@@ -462,6 +462,28 @@ GeoNetwork.app = function(){
                     ]
                 },
 
+/*                {
+                    layout: {
+                        type: 'hbox',
+                        pack: 'center',
+                        align: 'center'
+                    },
+                    bodyStyle:'padding-top:5px;border-width:0px',
+                    border:true,
+                    items:[
+						{
+						    xtype: 'checkboxgroup',
+						    items: [
+					            {value:'dataset', fieldLabel: OpenLayers.i18n('dataset'), name:'E_type'},
+					            {value:'series', fieldLabel: OpenLayers.i18n('series') name:'E_type'},
+					            {value:'service', fieldLabel: OpenLayers.i18n('service') name:'E_type'},
+					            {value:'model', fieldLabel: OpenLayers.i18n('featureCat') name:'E_type'}
+						    ]
+						}
+						        
+                    ]
+                },
+*/
                 // Panel with Advanced search, Help and About Links
                 {
                     layout: 'column',

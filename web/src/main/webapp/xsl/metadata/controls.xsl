@@ -189,18 +189,23 @@
   <!-- Template to display a calendar with a clear button -->
   <xsl:template name="calendar">
     <xsl:param name="ref"/>
+    <xsl:param name="parentId" />
     <xsl:param name="date"/>
     <xsl:param name="format" select="'%Y-%m-%d'"/>
+    <xsl:param name="forceDateTime" select="false()"/>
     <xsl:param name="class" select="''"/>
 
     <table width="100%">
       <tr>
         <td>
           <xsl:if test="$class">
-            <div class="cal {$class}" id="_{$ref}"/>
+            <div class="cal {$class}" id="_{$ref}" forceDateTime="{$forceDateTime}" parentId="{$parentId}"/>
           </xsl:if>
           <xsl:if test="not($class)">
-            <div class="cal" id="_{$ref}"/>
+            <div class="cal" id="_{$ref}" forceDateTime="{$forceDateTime}" parentId="{$parentId}"/>
+          </xsl:if>
+          <xsl:if test="$forceDateTime or $class='dynamicDate'">
+			<input type="hidden" name="{$parentId}" id="{$parentId}"/>
           </xsl:if>
           <input type="hidden" id="_{$ref}_format" value="{$format}"/>
           <input type="hidden" id="_{$ref}_cal" value="{$date}"/>
@@ -212,14 +217,19 @@
   <!-- Template to display a calendar with a clear button -->
   <xsl:template name="combobox">
     <xsl:param name="ref"/>
+	<xsl:param name="disabled"/>
+	<xsl:param name="onchange"/>
+    <xsl:param name="onkeyup"/>
     <xsl:param name="value"/>
-    <xsl:param name="options"/>
+    <xsl:param name="optionValues"/>
+    <xsl:param name="optionLabels"/>
 
     <table width="100%">
       <tr>
         <td>
-		  <div class="combobox" id="_{$ref}"/>
-          <input type="hidden" id="_{$ref}_combobox" value="{$value}"/>
+<!-- 		  <div class="combobox" id="_{$ref}" config="{{disabled: {$disabled}, onchange: {$onchange}, onkeyup: {$onkeyup}, optionValues: ['{$optionValues}'],optionLabels: ['{$optionLabels}']}}"/> -->
+		  <div class="combobox" id="_{$ref}_combobox" config="{{optionValues: ['{$optionValues}'],optionLabels: ['{$optionLabels}']}}"/>
+          <input type="hidden" name="_{$ref}" id="_{$ref}" value="{$value}"/>
         </td>
       </tr>
     </table>
