@@ -274,22 +274,23 @@ public class Importer {
 
 					groupId = Util.getParam(params, Params.GROUP);
 					privileges = new Element("group");
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "view"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "editing"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "download"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "notify"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "dynamic"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "featured"));
 
 					// Get the Metadata uuid if it's not a template.
-					if (isTemplate.equals("n"))
-						uuid = dm.extractUUID(schema, md.get(index));
+					if (isTemplate.equals("n")) {
+						privileges.addContent(new Element("operation")
+						.setAttribute("name", "view"));
+						privileges.addContent(new Element("operation")
+								.setAttribute("name", "editing"));
+						privileges.addContent(new Element("operation")
+								.setAttribute("name", "download"));
+						privileges.addContent(new Element("operation")
+								.setAttribute("name", "notify"));
+						privileges.addContent(new Element("operation")
+								.setAttribute("name", "dynamic"));
+						privileges.addContent(new Element("operation")
+								.setAttribute("name", "featured"));
+						uuid = dm.extractUUID(schema, md.get(index));						
+					}
 
 					validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 

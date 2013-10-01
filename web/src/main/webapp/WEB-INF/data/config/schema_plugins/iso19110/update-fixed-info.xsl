@@ -23,6 +23,42 @@
 		 </xsl:copy>
 	</xsl:template>
 	
+	<!-- ================================================================= -->
+	<!-- Emptying title if created from template -->
+	<!-- ================================================================= -->
+	<xsl:template match="gmx:name">
+		<xsl:if test="/root/env/createdFromTemplate='y'">
+			<gmx:name gco:nilReason="missing">
+				<gco:CharacterString/>
+			</gmx:name>
+		</xsl:if>
+		<xsl:if test="/root/env/createdFromTemplate='n'">
+			<xsl:call-template name="updateElementWithCharacterStringChild"/>
+		</xsl:if>
+	</xsl:template>
+
+	<!-- =================================================================-->
+
+	<xsl:template name="updateElementWithCharacterStringChild">
+		<xsl:copy>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:choose>
+				<xsl:when test="normalize-space(gco:CharacterString)=''">
+					<xsl:attribute name="gco:nilReason">
+						<xsl:choose>
+							<xsl:when test="@gco:nilReason"><xsl:value-of select="@gco:nilReason"/></xsl:when>
+							<xsl:otherwise>missing</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+				</xsl:when>
+				<xsl:when test="@gco:nilReason!='missing' and normalize-space(gco:CharacterString)!=''">
+					<xsl:copy-of select="@gco:nilReason"/>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:apply-templates select="*"/>
+		</xsl:copy>
+	</xsl:template>
+
 	<!-- =================================================================-->
 	
 	<xsl:template match="gfc:versionDate|gmx:versionDate">

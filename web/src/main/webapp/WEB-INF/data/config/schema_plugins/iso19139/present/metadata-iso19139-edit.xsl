@@ -97,17 +97,17 @@
                              </a>
                          </div>
 						<xsl:if test="$isUploadedThumb">
-							<a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.removeThumbnail('{string($fileDescr)}');">Voorbeeld verwijderen</a>
+							<a href="#" onclick="javascript:Ext.getCmp('editorPanel').removeThumbnail('{string($fileDescr)}');">Voorbeeld verwijderen</a>
 						</xsl:if>
 	
 	                     <xsl:if test="$uploadedThumbsCount=0 and $previousGraphicOverviewSiblingsCount=0">
-	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Voorbeeld toevoegen</a>
+	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').uploadThumbnail();">Voorbeeld toevoegen</a>
 	                     </xsl:if>
 	                 </xsl:when>
 	
 	                 <xsl:otherwise>
 	                     <xsl:if test="$uploadedThumbsCount=0 and $previousGraphicOverviewSiblingsCount=0">
-		                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').thumbnailPanel.uploadThumbnail();">Voorbeeld toevoegen</a>
+		                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').uploadThumbnail();">Voorbeeld toevoegen</a>
 	                     </xsl:if>
 	                 </xsl:otherwise>
 	             </xsl:choose>
@@ -214,7 +214,7 @@
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
-              srv:serviceType|srv:containsOperations|srv:SV_CoupledResource|
+              srv:serviceType|srv:containsOperations|srv:coupledResource|
               gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
               gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS">
         <xsl:param name="schema"/>

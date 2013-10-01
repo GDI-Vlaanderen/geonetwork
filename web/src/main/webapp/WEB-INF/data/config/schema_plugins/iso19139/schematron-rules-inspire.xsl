@@ -805,7 +805,7 @@
       <xsl:variable name="thesaurus_date"
                     select="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:date/*/text()"/>
       <xsl:variable name="thesaurus_dateType"
-                    select="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
+                    select="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/normalize-space(.)"/>
       <xsl:variable name="keyword"
                     select="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString"/>
       <xsl:variable name="inspire-theme-found"

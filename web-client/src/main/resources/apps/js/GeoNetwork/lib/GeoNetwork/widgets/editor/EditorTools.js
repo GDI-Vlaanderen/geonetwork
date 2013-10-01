@@ -249,13 +249,19 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
                 Ext.DomHelper.insertHtml('afterEnd', thisElement.dom, html);
                 thisElement.remove();
                 //thisElement.update(html);
+                Ext.getCmp('editorPanel').save();
+                return;
             } else if (what == 'add' || what == 'after') {
                 var el = thisElement.insertHtml('afterEnd', html, true);
                 setAddControls(el, orElement);
+                Ext.getCmp('editorPanel').save();
+                return;
             } else if (what == 'before') { // only for orElement = true
                 // An or element in flat mode may be empty
                 var el = thisElement.insertHtml('beforeBegin', html, true);
                 setAddControls(el, orElement);
+                Ext.getCmp('editorPanel').save();
+                return;
             } else {
                 Ext.MessageBox.alert("doNewElementAjax: invalid what: " + what +
                 " should be one of replace, after or before.");

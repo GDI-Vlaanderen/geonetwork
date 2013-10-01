@@ -1399,4 +1399,8 @@
     <passChoice show="y" value="">Niet geëvalueerd</passChoice>
     <passChoice show="y" value="true">Conform</passChoice>
     <passChoice show="y" value="false">Niet conform</passChoice>
+    <crsType value="CoordinateReferenceSystem">CRS</crsType>
+    <crsType value="VerticalCRS">Vertikaal CRS</crsType>
+    <crsType value="ProjectedCRS">Geprojecteerd CRS</crsType>
+    <crsType value="GeographicCRS">Geografisch CRS</crsType>
 </strings>

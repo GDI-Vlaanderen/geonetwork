@@ -23,12 +23,19 @@
 
 package org.fao.geonet.services.crs;
 
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.jdom.Element;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
 
-import java.util.Iterator;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
 
 /**
  * Get all Coordinate Reference System types.
@@ -36,19 +43,71 @@ import java.util.Iterator;
  * @author francois
  */
 public class GetCRSTypes implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+    /** the Element doc containing I18N strings, got from the current app language */
+    private Element i18nStrings;
+    
+    /** the full path to the application directory */
+    private  String appDir;
+    
+    /** the current language */
+    private String lang;
+
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        this.appDir = appPath;
+        this.lang = "eng";
+        this.i18nStrings = loadStrings(appPath + "loc" + File.separator + this.lang + File.separator  + "xml" + File.separator + "strings.xml");
 	}
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
+        if (! this.lang.equalsIgnoreCase(context.getLanguage()) ) {
+            // user changed the language, must reload strings file to get translated values
+            this.lang = context.getLanguage();
+            this.i18nStrings = loadStrings(appDir + "loc" +
+                    File.separator +
+                    this.lang +
+                    File.separator  + 
+                    "xml" +
+                    File.separator +
+                    "strings.xml");
+        }
+
 		Element crsTypes = new Element("crsTypes");
-		Iterator<String> iterator = Constant.CRSType.keySet().iterator();
+        List crsTypeList = Xml.selectNodes(this.i18nStrings, "crsType");
+        for (Object crsType : crsTypeList) {
+			Element type = new Element("type");
+			type.addContent(new Element("id").setText(((Element)crsType).getAttributeValue("value")));
+			type.addContent(new Element("label").setText(((Element)crsType).getText()));
+			crsTypes.addContent(type);
+        }
+/*
+        Iterator<String> iterator = Constant.CRSType.keySet().iterator();
 
 		while (iterator.hasNext()) {
 			Element type = new Element("type");
 			type.addContent(new Element("id").setText(iterator.next()));
 			crsTypes.addContent(type);
 		}
+*/
 		return crsTypes;
 	}
+
+	private Element loadStrings(String filePath) {
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"loading file: " + filePath);
+        File f = new File(filePath);
+        Element xmlDoc = null;
+        Element ret = null;
+
+        if ( f.exists() ) {
+            try {
+                xmlDoc = Xml.loadFile(f);
+            } catch (Exception ex) {
+                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+        		Log.debug(Geonet.SEARCH_LOGGER,"Cannot load file: " + filePath + ": " + ex.getMessage());
+                return ret;
+            }
+            ret = xmlDoc;
+        }
+        return ret;
+    }
 }

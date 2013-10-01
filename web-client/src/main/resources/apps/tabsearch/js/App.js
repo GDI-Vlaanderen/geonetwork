@@ -329,7 +329,11 @@ GeoNetwork.app = function(){
         	item.setVisible(user && !Ext.isEmpty(user.role));
         });
 
-        var adminFields = [groupField, metadataTypeField/*, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField*/];
+        var reviewerFields = [metadataTypeField];
+        Ext.each(reviewerFields, function(item){
+            item.setVisible(user && (user.role=='Hoofdeditor' || user.role=='Administrator'));
+        });
+        var adminFields = [groupField/*, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField*/];
         Ext.each(adminFields, function(item){
             item.setVisible(user && user.role=='Administrator');
         });
@@ -337,6 +341,9 @@ GeoNetwork.app = function(){
         catalogue.on('afterLogin', function(){
             Ext.each(loggedInFields, function(item){
             	item.setVisible(user && !Ext.isEmpty(user.role));
+            });
+            Ext.each(reviewerFields, function(item){
+                item.setVisible(user && (user.role=='Hoofdeditor' || user.role=='Administrator'));
             });
             Ext.each(adminFields, function(item){
                 item.setVisible(user && user.role=='Administrator');
@@ -346,6 +353,9 @@ GeoNetwork.app = function(){
         });
         catalogue.on('afterLogout', function(){
             Ext.each(loggedInFields, function(item){
+                item.setVisible(false);
+            });
+            Ext.each(reviewerFields, function(item){
                 item.setVisible(false);
             });
             Ext.each(adminFields, function(item){

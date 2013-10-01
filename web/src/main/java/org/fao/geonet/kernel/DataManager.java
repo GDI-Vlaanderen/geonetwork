@@ -1873,7 +1873,9 @@ public class DataManager {
         xmlSerializer.insert(dbms, schema, metadata, id, source, uuid, createDate, changeDate, isTemplate, title, owner,
                 docType, context);
 
-        copyDefaultPrivForGroup(context, dbms, id, groupId);
+        if (isTemplate.equals("n")) {
+            copyDefaultPrivForGroup(context, dbms, id, groupId);
+        }
 
         if (category != null) {
             setCategory(context, dbms, id, category);

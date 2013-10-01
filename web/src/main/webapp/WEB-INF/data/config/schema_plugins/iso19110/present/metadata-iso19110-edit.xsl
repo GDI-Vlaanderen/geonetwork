@@ -471,12 +471,13 @@
 		                                    <xsl:with-param name="schema" select="$schema"/>
 		                                    <xsl:with-param name="edit"   select="$edit"/>
 		                                </xsl:apply-templates>
-		                                
+<!-- 		                                
 		                            </table>
 		                        </td>
 		                        <td valign="top">
 		                            <table width="100%">
-		                                <xsl:choose>
+ -->
+ 		                                <xsl:choose>
 		                                    <xsl:when test="$edit=true() or $currTab!='simple'">
 		                                        <xsl:apply-templates mode="elementEP" select="gfc:listedValue|geonet:child[string(@name)='listedValue']">
 		                                            <xsl:with-param name="schema" select="$schema"/>
@@ -509,22 +510,31 @@
 		                                        </xsl:if>
 		                                    </xsl:otherwise>
 		                                </xsl:choose>
-		                                
 		                            </table>
 		                        </td>
 		                    </tr>
 		                </table>
 		            </td>
         </xsl:variable>
-	    <xsl:variable name="featureAttributeElementName" select="name(.)" />
-	    <xsl:variable name="previousFeatureAttributeSiblingsCount" select="count(preceding-sibling::*[name(.) = $featureAttributeElementName])" />
-       	<xsl:if test="$previousFeatureAttributeSiblingsCount=0 and $edit=true()">
-			<xsl:apply-templates mode="addFeatureAttributeElement" select=".">
+	    <xsl:variable name="carrierOfCharacteristicsElementName" select="name(..)" />
+	    <xsl:variable name="previousCarrierOfCharacteristicsSiblingsCount" select="count(../preceding-sibling::*[name(.) = $carrierOfCharacteristicsElementName])" />
+       	<xsl:if test="$previousCarrierOfCharacteristicsSiblingsCount=0 and $edit=true()">
+			<xsl:apply-templates mode="addCarrierOfCharacteristicsElement" select="..">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
 			</xsl:apply-templates>
        	</xsl:if>
-        <xsl:apply-templates mode="complexElement" select=".">
+<!--
+	    <xsl:variable name="featureAttributeElementName" select="name(..)" />
+	    <xsl:variable name="previousFeatureAttributeSiblingsCount" select="count(preceding-sibling::*[name(.) = $featureAttributeElementName])" />
+       	<xsl:if test="$previousFeatureAttributeSiblingsCount=0 and $edit=true()">
+			<xsl:apply-templates mode="addFeatureAttributeElement" select="..">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+       	</xsl:if>
+-->
+        <xsl:apply-templates mode="complexElement" select="..">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit" select="$edit"/>
             <xsl:with-param name="content" select="$content"/>

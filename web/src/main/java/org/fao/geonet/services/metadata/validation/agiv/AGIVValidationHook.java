@@ -37,7 +37,7 @@ public class AGIVValidationHook extends AbstractValidationHook {
     private static final String XSD_KEY = "xsd";
     private static final String ISO_SCHEMATRON_KEY = "schematron-rules-iso";
     private static final String INSPIRE_SCHEMATRON_KEY = "schematron-rules-inspire";
-    private static final String AGIV_SCHEMATRON_KEY = "schematron-rules-agiv";
+    private static final String AGIV_SCHEMATRON_KEY = "schematron-rules-GDI-Vlaanderen";
 
     //
     // XSLT file names
@@ -202,15 +202,15 @@ public class AGIVValidationHook extends AbstractValidationHook {
         }
         try {
             boolean inspireValid = schematronResults[0] == 1;
-            System.out.println("AGIV validation hook: INSPIRE compliant? " + inspireValid);
+            System.out.println("INSPIRE validation hook: INSPIRE compliant? " + inspireValid);
             if(inspireValid) {
                 metadata = transformMd(metadata, schema, ADD_INSPIRE_KEYWORD);
             }
             else {
                 metadata = transformMd(metadata, schema, REMOVE_INSPIRE_KEYWORD);
             }
-            System.out.println("***** result of inspireCompliance:\n" + Xml.getString(metadata));
-            System.out.println("***** end result of inspireCompliance..\n");
+            System.out.println("***** result of logINSPIRECompliance:\n" + Xml.getString(metadata));
+            System.out.println("***** end result of logINSPIRECompliance..\n");
             return metadata;
         }
         catch(Exception x) {
@@ -245,8 +245,9 @@ public class AGIVValidationHook extends AbstractValidationHook {
             return metadata;
         }
         try {
-            boolean inspireValid = schematronResults[0] == 1;
-            if(inspireValid) {
+            boolean agivValid = schematronResults[0] == 1;
+            System.out.println("INSPIRE validation hook: INSPIRE compliant? " + agivValid);
+            if(agivValid) {
                 metadata = transformMd(metadata, schema, ADD_AGIV_KEYWORD);
             }
             else {

@@ -44,6 +44,10 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     editorToolBar: undefined,
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
+    uploadForm: undefined,
+    idField: undefined,
+    versionField: undefined,
+    thumbnailUploadWindow: undefined,
     defaultConfig: {
     	/** api: config[defaultViewMode] 
          *  Default view mode to open the editor. Default to 'simple'.
@@ -1252,6 +1256,116 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             serviceUrl: this.catalogue.services.mdRelation
         }, this.utilityPanelConfig.relationPanel));
         
+        this.idField = new Ext.form.TextField({
+            xtype: 'textfield',
+            name: 'id',
+            value: this.metadataId,
+            hidden: true
+        });
+        this.versionField = new Ext.form.TextField({
+            name: 'version',
+            value: this.versionId,
+            hidden: true
+        });
+        var tip = new Ext.slider.Tip({
+            getText: function(thumb){
+                return String.format('<b>{0} px</b>', thumb.value);
+            }
+        });
+        var scope = this;
+        this.uploadForm = new Ext.form.FormPanel({
+                    fileUpload: true,
+                    items: [this.idField, this.versionField, {
+                        xtype: 'textfield',
+                        name: 'scalingDir',
+                        value: 'width',
+                        hidden: true
+                    }, {
+                        xtype: 'textfield',
+                        name: 'smallScalingDir',
+                        value: 'width',
+                        hidden: true
+                    }, new Ext.form.FileUploadField({
+//	                        xtype: 'fileuploadfield',
+	                        emptyText: OpenLayers.i18n('selectImage'),
+	                        fieldLabel: OpenLayers.i18n('image'),
+	                        name: 'fname',
+	                        allowBlank: false,
+	                        buttonText: '',
+	                        buttonCfg: {
+	                            iconCls: 'thumbnailAddIcon',
+                                tooltip: 'Blader naar bestand'
+	                        }
+                    	})
+                    /*, {
+                        xtype: 'radio',
+                        checked: true,
+                        fieldLabel: 'Type',
+                        boxLabel: OpenLayers.i18n('large'),
+                        name: 'type',
+                        value: 'large'
+                    }, {
+                        xtype: 'radio',
+                        fieldLabel: '',
+                        boxLabel: OpenLayers.i18n('small'),
+                        name: 'type',
+                        value: 'small'
+                    }, {
+                        xtype: 'sliderfield',
+                        fieldLabel: OpenLayers.i18n('scalingFactor'),
+                        name: 'scalingFactor',
+                        value: 1000,
+                        minValue: 400,
+                        maxValue: 1800,
+                        increment: 200
+                    }, {
+                        xtype: 'checkbox',
+                        checked: true,
+                        hideLabel: true,
+                        fieldLabel: '',
+                        labelSeparator: '',
+                        boxLabel: OpenLayers.i18n('createSmall'),
+                        name: 'createSmall',
+                        value: 'true'
+                    },{
+                        xtype: 'sliderfield',
+                        fieldLabel: OpenLayers.i18n('smallScalingFactor'),
+                        name: 'smallScalingFactor',
+                        value: 180,
+                        minValue: 100,
+                        maxValue: 220,
+                        increment: 20
+                    }*/],
+                    buttons: [{
+                        text: OpenLayers.i18n('upload'),
+                        formBind: true,
+                        iconCls: 'thumbnailGoIcon',
+                        scope: this,
+                        handler: function(){
+                            if (this.uploadForm.getForm().isValid()) {
+                                var panel = this;
+                                panel.idField.setValue(panel.metadataId);
+                                panel.versionField.setValue(panel.versionId);
+                                this.uploadForm.getForm().submit({
+                                    url: this.catalogue.services.mdSetThumbnail,
+                                    waitMsg: OpenLayers.i18n('uploading'),
+                                    success: function(fp, o){
+                                          scope.init(scope.metadataId);
+                                          scope.thumbnailUploadWindow.hide();
+                                    }
+                                });
+                            }
+                        }
+                    }, {
+                        text: OpenLayers.i18n('reset'),
+                        iconCls: 'cancel',
+                        scope: this,
+                        handler: function(){
+                            this.uploadForm.getForm().reset();
+                        }
+                    }]
+                });
+
 /*
         this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
             metadataId: this.metadataId,
@@ -1344,6 +1458,41 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         } else {
         	Ext.getDom(id).value = "<gco:Boolean xmlns:gco=\"" + self.namespaces["gco"] + "\">" + value + "</gco:Boolean>";
         }
+    },
+
+    uploadThumbnail: function(){
+        if (!this.thumbnailUploadWindow) {
+            // TODO : before uploading thumbnails, save the current metadata
+            // record if ongoing updates
+            this.thumbnailUploadWindow = new Ext.Window({
+                title: OpenLayers.i18n('thumbnailUploadWindow'),
+                width: 300,
+                height: 100,
+                layout: 'fit',
+                modal: true,
+                items: this.uploadForm,
+                closeAction: 'hide',
+                constrain: true,
+                iconCls: 'thumbnailAddIcon'
+            });
+        }
+        
+        this.thumbnailUploadWindow.show();
+    },
+    removeThumbnail: function(description){
+        var panel = this,
+            url = this.catalogue.services.mdUnsetThumbnail + '?id=' + this.metadataId + 
+                                            '&version=' + this.versionId + 
+                                            '&type=' + (description === 'thumbnail' ? 'small' : 'large');
+        
+        OpenLayers.Request.GET({
+            url: url,
+            success: function(response){
+                panel.init(panel.metadataId);
+            },
+            failure: function(response){
+            }
+        });
     }
     /*
     updateChoicePass: function(id, value) {

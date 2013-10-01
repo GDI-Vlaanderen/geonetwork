@@ -422,6 +422,22 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
+	<!-- Updating reference system RS_Identifier gmd:code -->
+	<!-- ================================================================= -->
+	<xsl:template match="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
+	    <xsl:copy>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:if test="normalize-space(gco:CharacterString)=''">
+				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+				<gco:CharacterString/>
+			</xsl:if>
+			<xsl:if test="not(normalize-space(gco:CharacterString)='')">
+				<xsl:apply-templates select="*"/>
+			</xsl:if>
+		</xsl:copy>
+	</xsl:template>
+	
+	<!-- ================================================================= -->
 	<!-- Emptying title if created from template -->
 	<!-- ================================================================= -->
 	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title">

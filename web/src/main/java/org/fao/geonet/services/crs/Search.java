@@ -67,6 +67,9 @@ public class Search implements Service {
 		// List of word space separated.
 		String searchText = Util.getParam(params, Params.NAME, "");
 		String filter[] = searchText.toUpperCase().split(" ");
+		if (filter!=null && filter.length==1 && filter[0].equals("*")) {
+			filter[0]="";
+		}
 
 		// CRS type could be one of CoordinateReferenceSystem,
 		// VerticalCRS, ProjectedCRS, GeographicCRS.
@@ -130,7 +133,6 @@ public class Search implements Service {
 						description = "-";
 					}
 					description += " (" + authorityCodeSpace + ":" + code + ")";
-					
 					if (matchesFilter(description.toUpperCase(), filter)) {
 						Element crs = GetCRS.formatCRS(authorityTitle,
 								authorityEdition, authorityCodeSpace, code,

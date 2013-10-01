@@ -1412,4 +1412,11 @@
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+    <passChoice show="y" value="">Niet geëvalueerd</passChoice>
+    <passChoice show="y" value="true">Conform</passChoice>
+    <passChoice show="y" value="false">Niet conform</passChoice>
+    <crsType value="CoordinateReferenceSystem">CRS</crsType>
+    <crsType value="VerticalCRS">Vertical CRS</crsType>
+    <crsType value="ProjectedCRS">Projected CRS</crsType>
+    <crsType value="GeographicCRS">Geographic CRS</crsType>
 </strings>

@@ -81,12 +81,22 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
         this.crsStore = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
                 url: this.catalogue.services.searchCRS,
-                method: 'GET'
+                method: 'GET'/*,
+                listeners: {
+                    'beforeload': function(proxy, params) {
+                    	if (Ext.isEmpty(params.type)) {
+                    		params.type = 'CoordinateReferenceSystem';
+                    	}
+                    	if (Ext.isEmpty(params.maxResults)) {
+                    		params.maxResults = '100';
+                    	}
+                    }
+                }*/
             }),
             baseParams: {
                 name: '',
                 type: '',
-                maxResults: 50
+                maxResults: 100
             },
             reader: new Ext.data.XmlReader({
                 record: 'crs',
@@ -95,7 +105,8 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
             fields: ["code", "codeSpace", "authority", "description", "version"],
             sortInfo: {
                 field: "description"
-            }
+            },
+            autoLoad: true
         });
         
         this.items = [{
@@ -111,9 +122,12 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
             'loadexception': function(){
             },
             'beforeload': function(store, options){
-                if (Ext.getCmp('maxResults')) {
-                    store.baseParams.maxResults = Ext.getCmp('maxResults').getValue();
-                }
+            	var name = Ext.getCmp('crsSearchField') ? Ext.getCmp('crsSearchField').getValue() : ""; 
+                store.baseParams.name = name;
+            	var type = Ext.getCmp('search-crs') ? Ext.getCmp('search-crs').getValue() : ""; 
+                store.baseParams.type = Ext.isEmpty(type) ? "CoordinateReferenceSystem" : type;
+                var maxResults = Ext.getCmp('maxResults') ? Ext.getCmp('maxResults').getValue() : "";
+                store.baseParams.maxResults = Ext.isEmpty(maxResults) ? "100" : maxResults;
                 if (!this.loadingMask) {
                     this.loadingMask = new Ext.LoadMask(this.itemSelector.fromMultiselect.getEl(), {
                         msg: OpenLayers.i18n('searching')
@@ -152,7 +166,17 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
             id: 'crsSearchField',
             width: 240,
             store: this.crsStore,
-            paramName: 'name'
+            paramName: 'name',
+            onTrigger1Click: function(){
+                if (this.hasSearch) {
+                    this.el.dom.value = '';
+                    this.triggers[0].hide();
+                    this.store.removeAll();
+                    this.store.reload();
+                    this.hasSearch = false;
+                    this.focus();
+                }
+            }
         });
     },
     
@@ -166,59 +190,79 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
             xtype: 'textfield',
             name: 'maxResults',
             id: 'maxResults',
-            value: 50,
+            value: 100,
             width: 40
         };
     },
     
-    getCRSTypeCombo: function(){
-        var CRSType = Ext.data.Record.create([{
-            name: 'id'
-        }]);
+    getCRSTypeCombo: function() {
+		var CRSType = Ext.data.Record.create([
+		  {
+			  name: 'id'
+		  },
+		  {
+			  name: 'label'
+		  }
+		]);
         
         var crsTypeStore = new Ext.data.Store({
             url: this.catalogue.services.getCRSTypes,
             reader: new Ext.data.XmlReader({
                 record: 'type'
             }, CRSType),
-            fields: ['id']
+            autoLoad: true,
+            listeners:{
+                load: function(){
+                    Ext.getCmp('search-crs').setValue('CoordinateReferenceSystem');
+                },
+                scope: this
+            },
+            fields: ['id','label']
         });
-        
+/*        
         var record = new CRSType({
             filename: OpenLayers.i18n('any')
         });
         record.set('id', '');
+        record.set('label', '');
         
         crsTypeStore.add(record);
+
         crsTypeStore.load({
             add: true
         });
-        
+*/        
         return {
             xtype: 'combo',
             width: 150,
             id: 'search-crs',
-            value: 0,
+            value: '',
+            editable: false,
             store: crsTypeStore,
+            forceSelection: true,
             triggerAction: 'all',
             mode: 'local',
-            displayField: 'id',
+            displayField: 'label',
             valueField: 'id',
             listWidth: 250,
             listeners: {
                 select: function(combo, record, index){
                     this.crsStore.removeAll();
+/*
                     this.crsStore.baseParams.type = combo.getValue();
                     var value = Ext.getCmp('crsSearchField').getValue();
-                    if (value.length < 1) {
+                    if (Ext.isEmpty(value)) {
                         this.crsStore.baseParams.name = '';
                     } else {
                         this.crsStore.baseParams.name = value;
                     }
+*/
                     this.crsStore.reload();
                 },
                 clear: function(combo){
-                    this.crsStore.load();
+                    this.crsStore.removeAll();
+//                    this.crsStore.baseParams.name = '';
+                    this.crsStore.reload();
                 },
                 scope: this
             }

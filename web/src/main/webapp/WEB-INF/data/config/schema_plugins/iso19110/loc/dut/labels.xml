@@ -33,8 +33,8 @@
         <description>Verantwoordelijke organisatie voor de objectencatalogus</description>
     </element>
     <element name="gfc:featureType">
-        <label>Object Type</label>
-        <description>ObjectType</description>
+        <label>Entiteit</label>
+        <description>Entiteit</description>
     </element>
     <element name="gfc:isAbstract">
         <label>Abstract</label>
@@ -76,9 +76,13 @@
         <label>Hoogste cardinaliteit</label>
         <description>Hoogste cardinaliteit</description>
     </element>
-    <element name="gco:LocalName">
-        <label>Naam attribuut</label>
-        <description></description>
+    <element name="gco:LocalName" context="gfc:typeName">
+        <label>Naam</label>
+        <description>Naam</description>
+    </element>
+    <element name="gco:LocalName" context="gfc:aliases">
+        <label>Alternatieve naam</label>
+        <description>Alternatieve naam</description>
     </element>
     <element name="gfc:cardinality">
         <label>Cardinaliteit attribuut</label>

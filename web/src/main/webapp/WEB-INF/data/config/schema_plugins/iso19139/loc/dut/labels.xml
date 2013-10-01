@@ -7,7 +7,8 @@
 		  xmlns:gco="http://www.isotc211.org/2005/gco"
 		  xmlns:gml="http://www.opengis.net/gml"
           xmlns:srv="http://www.isotc211.org/2005/srv"
-          xmlns:gmx="http://www.isotc211.org/2005/gmx">			          
+          xmlns:gmx="http://www.isotc211.org/2005/gmx"
+          xmlns:gfc="http://www.isotc211.org/2005/gfc">			          
 	
 	<!-- ==================================================== -->
 	<element name="gmd:CI_OnlineResource">
@@ -1988,7 +1989,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:referenceSystemInfo">
-		<label>Referentiesysteem</label>
+		<label>Horizontaal en/of verticaal referentiesysteem</label>
 		<description>Beschrijving van de referentiesystemen welke van toepassing zijn op de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2722,6 +2723,15 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
     <element name="gco:LocalName">
         <label>Naam attribuut</label>
         <description></description>
+    </element>
+
+    <element name="gco:LocalName" context="gfc:typeName">
+        <label>Naam</label>
+        <description>Naam</description>
+    </element>
+    <element name="gco:LocalName" context="gfc:aliases">
+        <label>Alternatieve naam</label>
+        <description>Alternatieve naam</description>
     </element>
 
     <element name="uuidref" context="srv:operatesOn">

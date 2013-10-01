@@ -213,7 +213,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 this.catalogue.massiveOp('Privileges');
             },
             scope: this,
-            hidden: hide
+            hidden: hide || this.catalogue.identifiedUser.role!='Administrator'
         });
         this.updateStatusAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateStatus'),
@@ -514,7 +514,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             // AGIV: Editors can't change privileges of metadata
             } else if (e.id == 'updatePrivilegesAction') {
 
-                if (!(isReviewer || isAdmin || isUserAdmin)) {
+                if (!(/*isReviewer || */isAdmin || isUserAdmin)) {
                     e.hide();
 
                 } else if (nb > 0) {
@@ -562,7 +562,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             var isAdmin = (cat.identifiedUser) && (cat.identifiedUser.role === 'Administrator');
             var isUserAdmin = (cat.identifiedUser) && (cat.identifiedUser.role === 'UserAdmin');
 
-            if (isReviewer || isAdmin || isUserAdmin) {
+            if (/*isReviewer || */isAdmin || isUserAdmin) {
                 this.updatePrivilegesAction.show();
 
             } else {
@@ -571,6 +571,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
 
         } else {
             this.sortByCombo.bindStore(GeoNetwork.util.SearchFormTools.getSortByStore());
+            this.updatePrivilegesAction.hide();
         }
     },
     /** private: method[onDestroy] 

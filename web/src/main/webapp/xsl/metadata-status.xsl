@@ -24,8 +24,8 @@
 
                             <!-- loop on all status -->
 
-                            <xsl:for-each select="/root/response/statusvalues/status">
-                                <xsl:sort select="label/child::*[name() = $lang]"/>
+                            <xsl:for-each select="/root/response/statusvalues/status[label/child::*[name() = $lang]]">
+<!--                                <xsl:sort select="[label/child::*[name() = $lang]]"/>-->
                                 <!-- do not display status JUSTCREATED -->
                                 <xsl:if test="id != 6">
                                     <tr>

@@ -40,6 +40,12 @@
 		<suggest name="srv:SV_CoupledResource"/>
 	</field>
 	
+	<field name="srv:SV_CoupledResource">
+		<suggest name="srv:operationName"/>
+		<suggest name="srv:identifier"/>
+		<suggest name="gco:ScopedName"/>
+	</field>
+	
 	<field name="srv:parameters">
 		<suggest name="srv:SV_Parameter"/>
 	</field>
@@ -244,5 +250,13 @@
     <suggest name="gmd:useLimitation"/>
   </field>
 
+  <field name="gmd:MD_ReferenceSystem">
+    <suggest name="gmd:referenceSystemIdentifier"/>
+  </field>
+
+  <field name="gmd:RS_Identifier">
+    <suggest name="gmd:code"/>
+    <suggest name="gmd:codeSpace"/>
+  </field>
 
 </fields>

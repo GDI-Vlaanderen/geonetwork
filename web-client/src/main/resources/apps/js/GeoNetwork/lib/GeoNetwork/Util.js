@@ -344,11 +344,11 @@ GeoNetwork.Util = {
                         dtCal.on('change', function() {
                             GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, true, false);
                         });
-
+                        GeoNetwork.Util.updateDateValue(parentId, value, true, false);
                     }
 
                 } else {
-                    var forceDateTime = cal.getAttribute("forceDateTime");
+                    var forceDateTime = cal.getAttribute("forceDateTime")=="true";
                     if (forceDateTime) {
                         value = value.length==19 ? value.substring(0,10) : value;
                     }
@@ -377,6 +377,7 @@ GeoNetwork.Util = {
                         dCal.on('change', function(component, textValue) {
                             GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, false, forceDateTime);
                         });
+                        GeoNetwork.Util.updateDateValue(parentId, value, false, forceDateTime);
                     }/* else {
                         dCal.on('change', function() {
                         	if (!Ext.isEmpty(this.timeValue)) {

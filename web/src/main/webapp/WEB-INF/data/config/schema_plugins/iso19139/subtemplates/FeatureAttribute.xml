@@ -30,4 +30,11 @@
 			</gco:aName>
 		</gco:TypeName>
 	</gfc:valueType>
+	<gfc:listedValue>
+		<gfc:FC_ListedValue>
+			<gfc:label></gfc:label>
+			<gfc:code></gfc:code>
+			<gfc:definition></gfc:definition>
+		</gfc:FC_ListedValue>
+	</gfc:listedValue>
 </gfc:FC_FeatureAttribute>
