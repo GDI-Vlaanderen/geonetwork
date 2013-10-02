@@ -917,7 +917,7 @@
 		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:electronicMailAddress" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
 		<label>Email</label>
 		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
 		<condition>mandatory</condition>
@@ -933,7 +933,7 @@
 		<mandatoryTooltip>INSPIRE B 9.1: Email adres is verplicht.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:electronicMailAddress" context="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
 		<label>Email</label>
 		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
 		<condition>mandatory</condition>
@@ -1239,6 +1239,7 @@
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 1.7: conditioneel - verplicht indien de bron tekstuele informatie bevat.</mandatoryTooltip>
+<!--		<mandatoryTooltip>INSPIRE B 1.8: verplicht voor datasets en datasetseries</mandatoryTooltip>-->
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:languageCode">
@@ -1585,14 +1586,6 @@
 	<element name="gmd:MD_TopicCategoryCode">
 		<label>Categorie(ën)</label>
 		<description>Hoofdthema van de dataset.</description>
-<!-- ==================================================== -->
-	<element name="gmd:language" context="gmd:MD_DataIdentification/gmd:language">
-		<label>Taal dataset(serie)</label>
-		<description>Taal waarin de data is beschreven.</description>
-		<condition>mandatory</condition>
-		<mandatoryType>inspire</mandatoryType>
-		<mandatoryTooltip>INSPIRE B 1.8: verplicht voor datasets en datasetseries</mandatoryTooltip>
-	</element>	
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopologyLevelCode">
@@ -1737,7 +1730,7 @@
 		<description>Algemene instructies, voorwaarden en diensten geleverd door de distributeur.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:organisationName" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName">
+	<element name="gmd:organisationName" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName">
 		<label>Organisatie</label>
 		<description>Naam van de verantwoordelijke organisatie.</description>
 	<condition>mandatory</condition>
@@ -1753,23 +1746,7 @@
 		<mandatoryTooltip>INSPIRE B.9.1 Naam van de verantwoordelijke organisatie is verplicht.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
-		<label>Email</label>
-		<description>Email de verantwoordelijke organisatie.</description>
-	<condition>mandatory</condition>
-		<mandatoryType>inspire</mandatoryType>
-		<mandatoryTooltip>INSPIRE B.9.1 Email van de verantwoordelijke organisatie is verplicht.</mandatoryTooltip>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
-		<label>Email</label>
-		<description>Email de verantwoordelijke organisatie.</description>
-	<condition>mandatory</condition>
-		<mandatoryType>inspire</mandatoryType>
-		<mandatoryTooltip>INSPIRE B.10.1 Email van de verantwoordelijke organisatie is verplicht.</mandatoryTooltip>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:organisationName" context="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName">
+	<element name="gmd:organisationName" context="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName">
 		<label>Organisatie</label>
 		<description>Naam van de verantwoordelijke organisatie.</description>
 	<condition>mandatory</condition>
@@ -1780,9 +1757,15 @@
 	<element name="gmd:organisationName">
 		<label>Organisatie</label>
 		<description>Naam van de verantwoordelijke organisatie.</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
 		<mandatoryType>gdi</mandatoryType>
 		<mandatoryTooltip>GDI-Vlaanderen Best Practices SC-3</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:organisationName" context="gfc:FC_FeatureCatalogue/gfc:producer/gmd:CI_ResponsibleParty/gmd:organisationName">
+		<label>Organisatie</label>
+		<description>Naam van de verantwoordelijke organisatie.</description>
+		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:orientationParameterAvailability">
@@ -1848,19 +1831,19 @@
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:pass" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
+	<element name="gmd:pass" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
 		<label>Conform verklaard</label>
 		<description>Indicatie van de conformiteit met de specificatie </description>
 		<condition>mandatory</condition>
          <condition>mandatory</condition>
-		<mandatoryType>inspire</mandatoryType>
-		<mandatoryTooltip>INSPIRE B 7.2: verplicht indien de conformiteit geëvalueerd werd.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gco:Boolean" context="gmd:pass">
 		<label>Conform verklaard</label>
 		<description>Indicatie van de conformiteit met de specificatie </description>
 		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 7.2: verplicht indien de conformiteit geëvalueerd werd.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:peakResponse">
@@ -1994,7 +1977,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:report">
-		<label>Type meeting</label>
+		<label>Type meting</label>
 		<description>Kwantitieve kwaliteitsbeschrijving van de data gespecifieerd door het toepassingsgebied.</description>
 	<condition>conditional</condition>
 	</element>
@@ -2036,7 +2019,7 @@
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:role" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role">
+	<element name="gmd:role" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role">
 		<label>Rol</label>
 		<description>Functie die wordt uitgevoerd door de verantwoordelijke organisatie.</description>
 	<condition>mandatory</condition>
@@ -2044,7 +2027,7 @@
 		<mandatoryTooltip>INSPIRE B 9.2: verplicht rol van de verantwoordelijke organisatie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:role" context="/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:role">
+	<element name="gmd:role" context="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:role">
 		<label>Rol</label>
 		<description>Functie die wordt uitgevoerd door de verantwoordelijke organisatie.</description>
 	<condition>mandatory</condition>
@@ -2449,7 +2432,7 @@
 	<!-- ==================================================== -->
 	<!-- === GML namespace -->
 	<!-- ==================================================== -->
-	<element name="gml:beginPosition" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition">
+	<element name="gml:beginPosition" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition">
 		<label>Begindatum</label>
 		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
 		<condition>mandatory</condition>
@@ -2457,7 +2440,7 @@
 		<mandatoryTooltip>INSPIRE B 5.1: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gml:endPosition" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition">
+	<element name="gml:endPosition" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition">
 		<label>Einddatum</label>
 		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
 		<condition>mandatory</condition>
@@ -2884,7 +2867,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	</element>
     <!-- ==================================================== -->
 	<element name="gco:aName" context="gco:TypeName">
-		<label>Type name</label>
+		<label>Type</label>
 		<description/>
 		<helper>
 			<option value="Punt">Punt</option>

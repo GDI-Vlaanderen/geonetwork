@@ -6,7 +6,7 @@
     xmlns:gmx="http://www.isotc211.org/2005/gmx">
     
     <element name="gfc:FC_FeatureCatalogue">
-        <label>Beschrijving</label>
+        <label>Objectencatalogus</label>
         <description>Beschrijving van de objectencatalogus</description>
     </element>
     <element name="gfc:FC_FeatureAttribute">
@@ -52,10 +52,20 @@
         <label>Attribuut</label>
         <description>Association, attribute, operation, ...</description>
     </element>
-    <element name="gfc:definition">
+	<element name="gfc:definition">
         <label>Definitie</label>
         <description>Definitie</description>
     </element>
+<!--
+	<element name="gfc:definition" context="gfc:FC_FeatureType">
+        <label>Definitie</label>
+        <description>Definitie</description>
+    </element>
+	<element name="gfc:definition" context="gfc:FC_FeatureAttribute">
+        <label>Omschrijving</label>
+        <description>Definitie van de waarde van het attribuut in natuurlijke taal</description>
+	</element>
+-->	
     <element name="gfc:fieldOfApplication">
         <label>Toepassingsgebied</label>
         <description>Toepassingsgebied</description>
@@ -69,12 +79,12 @@
         <description>Verantwoordelijke organisatie</description>
     </element>
     <element name="gco:lower">
-        <label>Laagste Cardinaliteit</label>
-        <description>Laagste Cardinaliteit</description>
+        <label>Minimale cardinaliteit</label>
+        <description>Minimale cardinaliteit</description>
     </element>
     <element name="gco:upper">
-        <label>Hoogste cardinaliteit</label>
-        <description>Hoogste cardinaliteit</description>
+        <label>Maximale cardinaliteit</label>
+        <description>Maximale cardinaliteit</description>
     </element>
     <element name="gco:LocalName" context="gfc:typeName">
         <label>Naam</label>
@@ -89,11 +99,11 @@
         <description>Cardinaliteit van het attribuut</description>
     </element>
     <element name="gfc:label">
-        <label>Domein definitie</label>
-        <description>Beschrijvend label één mogelijke waarde van het attribuut uniek identificeert.</description>
+        <label>Waarde</label>
+        <description>Beschrijvend label dat één mogelijke waarde van het attribuut uniek identificeert.</description>
     </element>
     <element name="gfc:listedValue">
-        <label>Codelijst</label>
+        <label>Domein</label>
         <description>Lijst van waarden voor dit element</description>
     </element>
     <element name="gfc:constrainedBy">
@@ -165,7 +175,7 @@
         <description></description>
     </element>
     <element name="gfc:FC_ListedValue">
-        <label>Codelijst</label>
+        <label>Domein waarde</label>
         <description></description>
     </element>
     <element name="gfc:valueType">

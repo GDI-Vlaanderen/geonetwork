@@ -357,6 +357,7 @@ GeoNetwork.Util = {
                         name: id,
                         id: id,
                         parentId: parentId,
+                        dynamicDate: dynamicDate,
                 		forceDateTime: forceDateTime,
                         width: 160,
                         value: value,
@@ -375,9 +376,9 @@ GeoNetwork.Util = {
                     // In the GeoNetwork GUI this means that no Datetime control is shown.
                     if (dynamicDate || forceDateTime) {
                         dCal.on('change', function(component, textValue) {
-                            GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, false, forceDateTime);
+                            GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, this.dynamicDate, this.forceDateTime);
                         });
-                        GeoNetwork.Util.updateDateValue(parentId, value, false, forceDateTime);
+                        GeoNetwork.Util.updateDateValue(parentId, value, dynamicDate, forceDateTime);
                     }/* else {
                         dCal.on('change', function() {
                         	if (!Ext.isEmpty(this.timeValue)) {

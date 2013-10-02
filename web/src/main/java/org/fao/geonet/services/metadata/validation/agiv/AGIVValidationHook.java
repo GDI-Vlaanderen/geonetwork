@@ -166,8 +166,10 @@ public class AGIVValidationHook extends AbstractValidationHook {
                 // empty metadataStandardname and metadataStandardVersion
                 transformMd(metadata, schema, EMPTY_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
             }
+/*
             System.out.println("***** result of logISO19115Compliance:\n" + Xml.getString(metadata));
             System.out.println("***** end result of logISO19115Compliance..\n");
+*/
             return metadata;
         }
         catch(Exception x) {
@@ -209,8 +211,10 @@ public class AGIVValidationHook extends AbstractValidationHook {
             else {
                 metadata = transformMd(metadata, schema, REMOVE_INSPIRE_KEYWORD);
             }
+/*
             System.out.println("***** result of logINSPIRECompliance:\n" + Xml.getString(metadata));
             System.out.println("***** end result of logINSPIRECompliance..\n");
+*/
             return metadata;
         }
         catch(Exception x) {
@@ -253,8 +257,10 @@ public class AGIVValidationHook extends AbstractValidationHook {
             else {
                 metadata = transformMd(metadata, schema, REMOVE_AGIV_KEYWORD);
             }
+/*
             System.out.println("***** result of logAGIVCompliance:\n" + Xml.getString(metadata));
             System.out.println("***** end result of logAGIVCompliance..\n");
+*/
             return metadata;
         }
         catch(Exception x) {

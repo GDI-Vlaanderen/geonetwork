@@ -786,7 +786,9 @@
         <xsl:param name="edit" />
 
         <xsl:variable name="text">
-            <xsl:value-of select="format-number(gco:Integer, '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
+	        <xsl:if test="gco:Integer!=''">
+	            <xsl:value-of select="format-number(gco:Integer, '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
+	        </xsl:if>
         </xsl:variable>
 
         <xsl:choose>
@@ -1779,6 +1781,7 @@
                                     <xsl:with-param name="date" select="''"/>
                                     <xsl:with-param name="format" select="$format"/>
                                     <xsl:with-param name="class" select="'dynamicDate'"/>
+									<xsl:with-param name="forceDateTime" select="$useDateFormat"/>
                                 </xsl:call-template>
                             </xsl:otherwise>
                         </xsl:choose>
