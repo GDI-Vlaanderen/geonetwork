@@ -126,9 +126,9 @@ GeoNetwork.map.ExtentMap = function(){
         
         // Disable mouse wheel and navigation toolbar in view mode.
         // User can still pan the map.
+        var navigationControl = map.getControlsByClass('OpenLayers.Control.Navigation')[0];
+        navigationControl.disableZoomWheel();
         if (!edit) {
-//            var navigationControl = map.getControlsByClass('OpenLayers.Control.Navigation')[0];
-//            navigationControl.disableZoomWheel();
             map.removeControl(map.getControlsByClass('OpenLayers.Control.PanZoom')[0]);
         }
         
@@ -474,10 +474,10 @@ GeoNetwork.map.ExtentMap = function(){
     function zoomToFeatures(map, vectorLayer){
         var extent = vectorLayer.getDataExtent();
         if (extent && !isNaN(extent.left)) {
-        	var width = extent.getWidth() / 2;
-            var height = extent.getHeight() / 2;
+        	var width = extent.getWidth();
+            var height = extent.getHeight();
         	var zoom = map.getZoomForExtent(extent);
-        	map.setCenter(new OpenLayers.LonLat(extent.left + width/2, extent.top + height/2), zoom);
+        	map.setCenter(new OpenLayers.LonLat(extent.left + width/2, extent.bottom + height/2), zoom);
 /*
             extent.left -= width;
             extent.right += width;

@@ -321,9 +321,27 @@ GeoNetwork.Util = {
                 var showTime = format.indexOf('T') === -1 ? false : true;
                 var parentId = cal.getAttribute("parentId");
                 var dynamicDate = cal.className.contains("dynamicDate");
+                var agivmandatoryconfig = cal.getAttribute("agivmandatoryconfig");
+                var jsonAgivmandatoryconfig = Ext.decode(agivmandatoryconfig);
+
+                var mandatoryImgCmp;
+                if (!Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                	mandatoryImgCmp = {
+	    	        	style: {
+	    	        		height:'22px'
+	    	        	},
+	    	        	autoEl: {
+	    	        		tag: 'img',
+	    	        		src: '../../apps/images/default/' + jsonAgivmandatoryconfig.type + '.png',
+	    	        		cls: jsonAgivmandatoryconfig.type,
+	    	        		alt: jsonAgivmandatoryconfig.tooltip,
+	    	        		title: jsonAgivmandatoryconfig.tooltip
+	    	        	}
+	    	        };
+                }
+
                 if (showTime) {
-                	var dtCal = new Ext.ux.form.DateTime({
-                        renderTo: cal.id,
+            		var dateFieldConfig = {
                         name: id,
                         id: id,
                         parentId: parentId,
@@ -332,28 +350,49 @@ GeoNetwork.Util = {
                         timeFormat: 'H:i',
                         hiddenFormat: 'Y-m-d\\TH:i:s',
                         dtSeparator: 'T'
-                    });
-
-                    // See issue AGIV  #2783:
-                    // For DateTimes you can give the gmd:dateTime the attribute nilreason ,
-                    // then you do not need to include the gco:dateTime.
-                    // The isnil attribute does however not exist on the gco:DateTime element.
-                    // As a consequence the template contains empy gmd:dateTime elements.
-                    // In the GeoNetwork GUI this means that no Datetime control is shown.
-                    if (dynamicDate) {
-                        dtCal.on('change', function() {
-                            GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, true, false);
-                        });
-                        GeoNetwork.Util.updateDateValue(parentId, value, true, false);
+                    };
+                    if (Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                        dateFieldConfig.renderTo = cal.id;
+                    } else {
+                        dateFieldConfig.jsonAgivmandatoryconfig = jsonAgivmandatoryconfig;
+                        dateFieldConfig.cls = jsonAgivmandatoryconfig.type;
                     }
+                	var dtCal = new Ext.ux.form.DateTime(dateFieldConfig);
+                    if (!Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                        new Ext.form.CompositeField({
+                        	renderTo: cal.id,
+                        	items: [
+                    	        dtCal,
+                    	        mandatoryImgCmp
+                	        ]
+                        });
+                    } 
 
+                	if (dtCal.jsonAgivmandatoryconfig) {
+                		validateNonEmpty(dtCal.el.dom);
+                	}
+                    if (Ext.isChrome){
+                        dtCal.getEl().parent().setHeight("18");
+                    }
+                	if (dynamicDate) {
+                		dtCal.on('change', function() {
+                        	if (this.jsonAgivmandatoryconfig) {
+                				validateNonEmpty(this.el.dom);
+                			}
+                			GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, true, false);
+                		});
+                		GeoNetwork.Util.updateDateValue(parentId, value, true, false);
+                	} else if (dtCal.jsonAgivmandatoryconfig) {
+                		dtCal.on('change', function() {
+            				validateNonEmpty(this.el.dom);
+                		});
+                	}
                 } else {
                     var forceDateTime = cal.getAttribute("forceDateTime")=="true";
                     if (forceDateTime) {
                         value = value.length==19 ? value.substring(0,10) : value;
                     }
-                	var dCal = new Ext.form.DateField({
-                        renderTo: cal.id,
+                    var dateFieldConfig = {
                         name: id,
                         id: id,
                         parentId: parentId,
@@ -362,8 +401,27 @@ GeoNetwork.Util = {
                         width: 160,
                         value: value,
                         format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
-                    });
+                    };
+                    if (Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                        dateFieldConfig.renderTo = cal.id;
+                    } else {
+                        dateFieldConfig.jsonAgivmandatoryconfig = jsonAgivmandatoryconfig;
+                        dateFieldConfig.cls = jsonAgivmandatoryconfig.type;
+                    }
+                    var dCal = new Ext.form.DateField(dateFieldConfig);
+                    if (!Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                        new Ext.form.CompositeField({
+                        	renderTo: cal.id,
+                        	items: [
+                    	        dCal,
+                    	        mandatoryImgCmp                	        ]
+                        });
+                    } 
 
+                	if (dCal.jsonAgivmandatoryconfig) {
+                		validateNonEmpty(dCal.el.dom);
+                	}
+                	
                     //Small hack to put date button on its place
                     if (Ext.isChrome){
                         dCal.getEl().parent().setHeight("18");
@@ -376,16 +434,17 @@ GeoNetwork.Util = {
                     // In the GeoNetwork GUI this means that no Datetime control is shown.
                     if (dynamicDate || forceDateTime) {
                         dCal.on('change', function(component, textValue) {
+                        	if (this.jsonAgivmandatoryconfig) {
+                        		validateNonEmpty(this.el.dom);
+                        	}
                             GeoNetwork.Util.updateDateValue(this.parentId, textValue=="" ? textValue : this.value, this.dynamicDate, this.forceDateTime);
                         });
                         GeoNetwork.Util.updateDateValue(parentId, value, dynamicDate, forceDateTime);
-                    }/* else {
-                        dCal.on('change', function() {
-                        	if (!Ext.isEmpty(this.timeValue)) {
-                            	this.setValue(this.value + this.timeValue);
-                        	}
-                        });
-                    }*/
+                	} else if (dCal.jsonAgivmandatoryconfig) {
+                		dCal.on('change', function() {
+            				validateNonEmpty(this.el.dom);
+                		});
+                	}
                 }
                 
             }

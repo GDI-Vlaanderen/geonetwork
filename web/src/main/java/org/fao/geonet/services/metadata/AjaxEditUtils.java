@@ -366,6 +366,63 @@ public class AjaxEditUtils extends EditUtils {
 	}
 
     /**
+     * For Ajax Editing : adds an subtemplate to a metadata element ([add] link).
+     *
+     * @param dbms
+     * @param session
+     * @param id
+     * @param ref
+     * @param name
+     * @param childName
+     * @return
+     * @throws Exception
+     */
+	public synchronized Element addSubtemplateEmbedded(Dbms dbms, UserSession session, String id, String ref, String name, Element subtemplate)  throws Exception {
+		String  schema = dataManager.getMetadataSchema(dbms, id);
+		//--- get metadata from session
+		Element md = getMetadataFromSession(session, id);
+
+		//--- ref is parent element so find it
+		EditLib editLib = dataManager.getEditLib();
+        Element el = editLib.findElement(md, ref);
+		if (el == null)
+			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+
+		//--- locate the geonet:element and geonet:info elements and clone for
+		//--- later re-use
+		Element refEl = (Element)(el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
+		Element info = (Element)(md.getChild(Edit.RootChild.INFO,Edit.NAMESPACE)).clone();
+		md.removeChild(Edit.RootChild.INFO,Edit.NAMESPACE);
+
+		Element child = null;
+		MetadataSchema mds = dataManager.getSchema(schema);
+
+		el.addContent(subtemplate);
+
+        el.addContent(refEl);
+
+		int iRef = editLib.findMaximumRef(md);
+		editLib.expandElements(schema, subtemplate);
+		editLib.enumerateTreeStartingAt(subtemplate, iRef+1, Integer.parseInt(ref));
+
+		//--- add editing info to everything from the parent down
+		editLib.expandTree(mds,el);
+
+		//--- attach the info element to the child
+		subtemplate.addContent(info);
+
+		//--- attach the info element to the metadata root)
+		md.addContent((Element)info.clone());
+
+		//--- store the metadata in the session again
+		setMetadataIntoSession(session,(Element)md.clone(), id);
+
+		// Return element added
+		return subtemplate;
+
+	}
+
+	/**
      * For Ajax Editing : removes an element from a metadata ([del] link).
      *
      * @param dbms

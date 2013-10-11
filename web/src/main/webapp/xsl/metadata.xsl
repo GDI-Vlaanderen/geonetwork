@@ -16,7 +16,7 @@
     <xsl:include href="utils-fn.xsl"/>
     <xsl:include href="metadata-tab-utils.xsl"/>
     <xsl:include href="metadata-utils.xsl"/>
-    <xsl:include href="metadata-controls.xsl"/>
+    <xsl:include href="metadata/controls.xsl"/>
 
     <xsl:variable name="flat" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat"/>
     <xsl:variable name="ancestorException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/ancestorException/@for"/>

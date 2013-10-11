@@ -68,13 +68,13 @@
 			<!-- actions - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
-				<!--button class="content" onclick="harvesting.ogcwxs.removeGroupRow('csw.group.{@id}')">
+				<!--button class="content" onclick="harvesting.ogcwxs.removeGroupRow('ogcwxs.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
 				</button-->
 
 				<!-- Yet another fix for IE -->
 
-				<a href="javascript:harvesting.ogcwxs.removeGroupRow('csw.group.{@id}')">
+				<a href="javascript:harvesting.ogcwxs.removeGroupRow('ogcwxs.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
 				</a>		
 			</td>

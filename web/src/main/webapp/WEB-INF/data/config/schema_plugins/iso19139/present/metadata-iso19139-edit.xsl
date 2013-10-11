@@ -89,7 +89,7 @@
 	
 	
                          <div class="md-view">
-                             <a rel="lightbox-viewset" href="{$url}">
+                             <a rel="lightbox-viewset" href="{$url}" target="_blank">
                                  <img class="logo" src="{$url}">
                                      <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
                                      <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
@@ -272,22 +272,25 @@
                 <xsl:variable name="text">
                     <xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
 
-                    <input type="number" class="md" name="_{$ref}" id="_{$ref}"
-                           onkeyup="validateNumber(this,true,true);"
-                           onchange="validateNumber(this,true,true);"
-                           value="{gco:Distance}" size="30"/>
-
-                    &#160;
-                    <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
-                    &#160;
-                    <xsl:for-each select="gco:Distance">
-                    	<div>
-	                        <xsl:call-template name="helper">
-	                            <xsl:with-param name="schema" select="$schema"/>
-	                            <xsl:with-param name="attribute" select="false()"/>
-	                        </xsl:call-template>
-                    	</div>
-                    </xsl:for-each>
+<!-- 		        	<xsl:variable name="mandatory" select="gco:Distance/geonet:element/@min='1' and not(@gco:nilReason)"/>-->
+		        	<xsl:variable name="mandatory" select="false()"/>
+			          <xsl:variable name="agivmandatory">
+			          	<xsl:call-template name="getMandatoryType">
+					    	<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+					    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+						</xsl:call-template>
+			          </xsl:variable>
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}" value="{gco:Distance}" size="30">
+                            <xsl:if test="$mandatory or $agivmandatory != ''">
+                                <xsl:attribute name="onkeyup">validateNumber(this,<xsl:value-of select="not($mandatory or not($agivmandatory=''))"/>,true);</xsl:attribute>
+                                <xsl:attribute name="onchange">validateNumber(this,<xsl:value-of select="not($mandatory or not($agivmandatory=''))"/>,true);</xsl:attribute>
+                            </xsl:if>
+                    </input>
+<!--
+                    <xsl:text>&#160;</xsl:text>
+                    <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'gml:uom']/label"/>
+					<xsl:text>&#160;</xsl:text>
+-->
                     <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
                            value="{gco:Distance/@uom}" style="width:30px;"/>
 					                           
@@ -307,7 +310,7 @@
                         <xsl:if test="gco:Distance/@uom"><xsl:text>&#160;</xsl:text>
                             <xsl:choose>
                                 <xsl:when test="contains(gco:Distance/@uom, '#')">
-                                    <a href="{gco:Distance/@uom}"><xsl:value-of select="substring-after(gco:Distance/@uom, '#')"/></a>
+                                    <a href="{gco:Distance/@uom}" target="_blank"><xsl:value-of select="substring-after(gco:Distance/@uom, '#')"/></a>
                                 </xsl:when>
                                 <xsl:otherwise><xsl:value-of select="gco:Distance/@uom"/></xsl:otherwise>
                             </xsl:choose>
@@ -796,6 +799,7 @@
                 <xsl:apply-templates mode="simpleElement" select="gco:Integer">
                     <xsl:with-param name="schema"   select="$schema"/>
                     <xsl:with-param name="edit"     select="$edit"/>
+<!--
                     <xsl:with-param name="helpLink">
                         <xsl:call-template name="getHelpLink">
                             <xsl:with-param name="name" select="name(.)"/>
@@ -809,7 +813,7 @@
                             <xsl:with-param name="schema" select="$schema"/>
                         </xsl:call-template>
                     </xsl:with-param>
-
+-->
                 </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
@@ -1069,7 +1073,7 @@
                         </xsl:apply-templates>
                     </xsl:when>
                     <xsl:otherwise>
-                        <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor"/></a>
+                        <a href="{gmx:Anchor/@xlink:href}" target="_blank"><xsl:value-of select="gmx:Anchor"/></a>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:with-param>
@@ -1175,7 +1179,7 @@
                                     <div class="logo-wrap"><img src="{gmx:FileName/@src}"/></div>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <a href="{gmx:FileName/@src}"><xsl:value-of select="gmx:FileName"/></a>
+                                    <a href="{gmx:FileName/@src}" target="_blank"><xsl:value-of select="gmx:FileName"/></a>
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:variable>
@@ -1565,7 +1569,7 @@
 
                                 <xsl:choose>
                                     <xsl:when test="gmx:Anchor">
-                                        <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="if (gmx:Anchor/text()) then gmx:Anchor/text() else gmx:Anchor/@xlink:href"/></a>
+                                        <a href="{gmx:Anchor/@xlink:href}" target="_blank"><xsl:value-of select="if (gmx:Anchor/text()) then gmx:Anchor/text() else gmx:Anchor/@xlink:href"/></a>
                                     </xsl:when>
                                     <xsl:otherwise>
 
@@ -1739,6 +1743,7 @@
                         </xsl:variable>
 
                         <xsl:call-template name="calendar">
+		                    <xsl:with-param name="schema" select="$schema"/>
                             <xsl:with-param name="ref" select="$ref"/>
                             <xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
                             <xsl:with-param name="format" select="$format"/>
@@ -1757,6 +1762,7 @@
                                 </xsl:variable>
 
                                 <xsl:call-template name="calendar">
+				                    <xsl:with-param name="schema" select="$schema"/>
                                     <xsl:with-param name="ref" select="$ref" />
                                     <xsl:with-param name="parentId" select="$parentId" />
                                     <xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
@@ -1776,6 +1782,7 @@
                                 </xsl:variable>
 
                                 <xsl:call-template name="calendar">
+		                    		<xsl:with-param name="schema" select="$schema"/>
                                     <xsl:with-param name="ref" select="$hiddenId"/>
                                     <xsl:with-param name="parentId" select="$parentId"/>
                                     <xsl:with-param name="date" select="''"/>
@@ -1839,6 +1846,7 @@
 
 
                                                 <xsl:call-template name="calendar">
+								                    <xsl:with-param name="schema" select="$schema"/>
                                                     <xsl:with-param name="ref" select="$ref"/>
                                                     <xsl:with-param name="date" select="gmd:date/gco:DateTime/text()|gmd:date/gco:Date/text()"/>
                                                     <xsl:with-param name="format" select="$format"/>
@@ -1896,6 +1904,7 @@
                         </xsl:variable>
 
                         <xsl:call-template name="calendar">
+		                    <xsl:with-param name="schema" select="$schema"/>
                             <xsl:with-param name="ref" select="$ref"/>
                             <xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
                             <xsl:with-param name="format" select="$format"/>
@@ -1947,6 +1956,7 @@
                             </xsl:variable>
 
                             <xsl:call-template name="calendar">
+			                    <xsl:with-param name="schema" select="$schema"/>
                                 <xsl:with-param name="ref" select="$ref"/>
                                 <xsl:with-param name="date" select="text()"/>
                                 <xsl:with-param name="format" select="$format"/>
@@ -3837,9 +3847,12 @@
 
                 <xsl:element name="link">
                     <xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
+                    <xsl:attribute name="href" select="$linkage"/>
+<!--
                     <xsl:attribute name="href">
                         <xsl:value-of select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
                     </xsl:attribute>
+-->                    
                     <xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
                     <xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>
                 </xsl:element>
@@ -5029,7 +5042,7 @@ to build the XML fragment in the editor. -->
         <xsl:param name="edit"/>
 	    <xsl:variable name="spatialResolutionElementName" select="name(.)" />
 	    <xsl:variable name="previousResolutionSiblingsCount" select="count(preceding-sibling::*[name(.) = $spatialResolutionElementName])" />
-       	<xsl:if test="$previousResolutionSiblingsCount=0 and $edit=true()">
+       	<xsl:if test="$previousResolutionSiblingsCount=0 and $edit=true() and name(..)='gmd:MD_DataIdentification'">
 			<xsl:apply-templates mode="addSpatialResolutionElement" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
@@ -5125,13 +5138,15 @@ to build the XML fragment in the editor. -->
                 <xsl:apply-templates mode="simpleElement" select="gco:Boolean">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="false()"/>
+<!-- 
 	                <xsl:with-param name="title">
 	                   	<xsl:call-template name="getTitle">
 	        		       <xsl:with-param name="name" select="name(.)"/>
 			               <xsl:with-param name="schema" select="$schema"/>
 	                   	</xsl:call-template>
 	               	</xsl:with-param>
-                </xsl:apply-templates>
+ -->
+                 </xsl:apply-templates>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

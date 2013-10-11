@@ -266,6 +266,9 @@ public class DefaultStatusActions implements StatusActions {
 						informOwnersApprovedOrRejected(metadataIds, changeDate,
 								changeMessage, false);
 					}
+					else if (status.equals(Params.Status.RETIRED)) {
+						unsetAllOperations(mid);
+					}
 				} else {
 					unchanged.add(mid);
 					System.out
@@ -467,16 +470,12 @@ public class DefaultStatusActions implements StatusActions {
 	 *            The metadata id to unset privileges on
 	 */
 	private void unsetAllOperations(String mdId) throws Exception {
-		// for AGIV / new workflow: md status does not impact visibility
-		/*
-		 * String allGroup = "1"; dm.unsetOperation(context, dbms, mdId+"",
-		 * allGroup, AccessManager.OPER_VIEW); dm.unsetOperation(context, dbms,
-		 * mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-		 * dm.unsetOperation(context, dbms, mdId+"", allGroup,
-		 * AccessManager.OPER_NOTIFY); dm.unsetOperation(context, dbms, mdId+"",
-		 * allGroup, AccessManager.OPER_DYNAMIC); dm.unsetOperation(context,
-		 * dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
-		 */
+		String allGroup = "1";
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);		 
 	}
 
 	/**

@@ -373,7 +373,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         }
         // TODO : only register if one map available ?
        
-        this.on('selectionchange', this.selectionChange);
+        this.on('selectionchange', this.selectionChange, this);
     },
     /** api: method[setStore] 
      *  :param store: ``GeoNetwork.data.MetadataResultsStore`` A metadata store
@@ -483,6 +483,10 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     applyTemplate: function(name){
         this.tpl = this.templates[name];
         this.refresh();
+    	if (this.catalogue.getSelectedRecords()>0) {
+            this.catalogue.metadataSelectNone();
+            this.selectNone();
+    	}
     },
     /** private: method[initStyle]
      *  Define default layer styles

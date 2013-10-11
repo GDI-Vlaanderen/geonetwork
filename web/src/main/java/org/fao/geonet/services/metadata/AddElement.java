@@ -23,12 +23,15 @@
 
 package org.fao.geonet.services.metadata;
 
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -50,7 +53,6 @@ public class AddElement implements Service {
 	public Element exec(Element params, ServiceContext context) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
@@ -59,9 +61,16 @@ public class AddElement implements Service {
 		String ref   = Util.getParam(params, Params.REF);
 		String name  = Util.getParam(params, Params.NAME);
 		String child = params.getChildText(Params.CHILD);
-
-		// -- build the element to be added and return it
-		Element elResp = new AjaxEditUtils(context).addElementEmbedded(dbms, session, id, ref, name, child);
+		Element elResp = null;
+    	Element rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND root = ?", name);
+    	if (rec!=null  && rec.getContentSize()==1) {
+    		String xmlData = rec.getChild(Jeeves.Elem.RECORD).getChildText("data");
+    		rec = Xml.loadString(xmlData, false);
+    		elResp = new AjaxEditUtils(context).addSubtemplateEmbedded(dbms, session, id, ref, name, (Element) rec.detach());
+    	} else {
+        	// -- build the element to be added and return it
+    		elResp = new AjaxEditUtils(context).addElementEmbedded(dbms, session, id, ref, name, child);
+    	}
 		return elResp;
 	}
 }

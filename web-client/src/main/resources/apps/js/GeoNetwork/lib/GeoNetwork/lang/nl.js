@@ -117,6 +117,7 @@ GeoNetwork.Lang.nl = {
     'loadLayer.error.title': "Ophalen kaartlaag",
     'loadLayer.error.message': "De kaartlaag kon niet worden geladen",
     'disclaimer.windowTitle': "Disclaimer",
+    'metadata.loading': "Laden metadatarecord...",
     'disclaimer.loading': "Laden...",
     'disclaimer.buttonClose': "Sluiten"  ,
     'gazetteerAddressField1Label': "Postcode",

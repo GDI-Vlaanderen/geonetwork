@@ -667,7 +667,12 @@
 	<element name="gmd:denominator">
 		<label>Toepassingsschaal 1 : </label>
 		<description>De beoogde schaal waarop het bestand waarheidsgetrouw gebruikt mag worden. Dit moet een positief numeriek getal zijn.  (Dus u moet hier 10000 invoeren als de schaal 1:10000 betreft.)</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gco:Integer" context="gmd:denominator">
+		<label>Toepassingsschaal 1 : </label>
+		<description>De beoogde schaal waarop het bestand waarheidsgetrouw gebruikt mag worden. Dit moet een positief numeriek getal zijn.  (Dus u moet hier 10000 invoeren als de schaal 1:10000 betreft.)</description>
+		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 6.2: conditioneel - ofwel schaal noemer of resolutie (afstand) moet gespecifieerd zijn indien deze bestaat.</mandatoryTooltip>
 	</element>
@@ -1831,12 +1836,13 @@
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
+<!--
 	<element name="gmd:pass" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
 		<label>Conform verklaard</label>
 		<description>Indicatie van de conformiteit met de specificatie </description>
 		<condition>mandatory</condition>
-         <condition>mandatory</condition>
 	</element>
+-->	
 	<!-- ==================================================== -->
 	<element name="gco:Boolean" context="gmd:pass">
 		<label>Conform verklaard</label>
@@ -2428,34 +2434,37 @@
 			* nS geeft het aantal seconden aan       
 		</description>
 	</element>
-	
-	<!-- ==================================================== -->
-	<!-- === GML namespace -->
-	<!-- ==================================================== -->
-	<element name="gml:beginPosition" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition">
+<!--	
+	<element name="gml:beginPosition" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:TimePeriodTypeCHOICE_ELEMENT2/gml:beginPosition">
 		<label>Begindatum</label>
 		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 5.1: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
-	<!-- ==================================================== -->
-	<element name="gml:endPosition" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition">
+	<element name="gml:endPosition" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:TimePeriodTypeCHOICE_ELEMENT3/gml:endPosition">
 		<label>Einddatum</label>
 		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 5.1: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
+-->
 	<!-- ==================================================== -->	
 	<element name="gml:beginPosition">
 		<label>Begindatum</label>
 		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 5.1: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:endPosition">
 		<label>Einddatum</label>
 		<description>Als in 2007-09-12 (YYYY-MM-DD)</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 5.1: conditioneel - minstens 1 temporele referentie moet aanwezig zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:relatedTime">
@@ -2525,7 +2534,7 @@
 	</element>
 	<element name="srv:serviceType">
 		<label>Type service</label>
-		<description>Het type van de service. Bijvoorbeeld View of download.</description>
+		<description>Het type van de service. Bijvoorbeeld view en download.</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 2.2 - verplicht voor services.</mandatoryTooltip>

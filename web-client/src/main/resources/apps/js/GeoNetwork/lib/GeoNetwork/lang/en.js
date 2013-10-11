@@ -118,6 +118,7 @@ GeoNetwork.lang.en = {
     'loadLayer.error.title': "Load layer",
     'loadLayer.error.message': "The layer could not be loaded",
     'disclaimer.windowTitle': "Disclaimer",
+    'metadata.loading': "Loading metadatarecord...",
     'disclaimer.loading': "Loading...",
     'disclaimer.buttonClose': "Close",
     'gazetteerAddressField1Label': "Postcode",

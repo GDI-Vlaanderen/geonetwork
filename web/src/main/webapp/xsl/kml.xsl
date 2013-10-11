@@ -100,22 +100,26 @@
 				</description>
 				<xsl:apply-templates select="$metadata/geoBox" />
 				<!-- for each WMS service -->
-				<xsl:for-each select="$metadata/link">
-					<xsl:choose>
-                        <xsl:when test="contains(@type,'application/vnd.ogc.wms_xml')">
-                        	
-                        	<xsl:variable name="qm">
+				<xsl:for-each select="$metadata/link[@type='application/vnd.google-earth.kml+xml' or @type='application/vnd.google-earth.kmz']">
+                        	<xsl:variable name="qmoramp">
                         		<xsl:choose> 
-                        			<xsl:when test="not(contains(@href,'?'))"> 
-                        				<xsl:text>?</xsl:text> 
-                        			</xsl:when> 
+                        			<xsl:when test="not(contains(@href,'?'))"><xsl:text>?</xsl:text></xsl:when> 
+                        			<xsl:when test="not(ends-with(@href,'?'))"><xsl:text>&#0038;</xsl:text></xsl:when>
                         		</xsl:choose>
                         	</xsl:variable>
-                        	
+                        	<xsl:variable name="version">
+                       			<xsl:if test="not(contains(lower-case(@href),'version'))">&#0038;VERSION=1.1.1</xsl:if> 
+                        	</xsl:variable>
+                        	<xsl:variable name="request">
+                       			<xsl:if test="not(contains(lower-case(@href),'request'))">&#0038;REQUEST=GetMap</xsl:if> 
+                        	</xsl:variable>
+                        	<xsl:variable name="service">
+                       			<xsl:if test="not(contains(lower-case(@href),'service'))">&#0038;SERVICE=WMS</xsl:if> 
+                        	</xsl:variable>
 							<GroundOverlay>
 								<name><xsl:value-of select="@title"/></name>
 								<Icon>
-									<href><xsl:value-of select="@href"/><xsl:value-of select="$qm"/>VERSION=1.1.1&#0038;REQUEST=GetMap&#0038;SERVICE=WMS&#0038;SRS=EPSG:4326&#0038;WIDTH=512&#0038;HEIGHT=512&#0038;LAYERS=<xsl:value-of select="@name"/>&#0038;TRANSPARENT=TRUE&#0038;STYLES=&#0038;FORMAT=image/png&#0038;</href>
+									<href><xsl:value-of select="@href"/><xsl:value-of select="$qmoramp"/>SRS=EPSG:4326&#0038;WIDTH=512&#0038;HEIGHT=512&#0038;LAYERS=<xsl:value-of select="@name"/>&#0038;TRANSPARENT=TRUE&#0038;STYLES=&#0038;FORMAT=image/png<xsl:value-of select="$version"/><xsl:value-of select="$request"/><xsl:value-of select="$service"/>&#0038;</href>
 									<viewRefreshMode>onStop</viewRefreshMode>
 									<viewRefreshTime>3</viewRefreshTime>
 									<viewBoundScale>1.0</viewBoundScale>
@@ -135,11 +139,15 @@
                                 </xsl:choose>
 								
 							</GroundOverlay>
+							<xsl:variable name="getLegendHref">
+								<xsl:if test="contains(@href,'?')"><xsl:value-of select="substring-before(@href,'?')"/></xsl:if> 
+								<xsl:if test="not(contains(@href,'?'))"><xsl:value-of select="@href"/></xsl:if> 
+							</xsl:variable>
 							<Document>
 								<name><xsl:value-of select="/root/gui/strings/legend"/></name>
 								<ScreenOverlay>
 									<Icon>
-										<href><xsl:value-of select="@href"/><xsl:value-of select="$qm"/>VERSION=1.1.1&#0038;REQUEST=GetLegendGraphic&#0038;SERVICE=WMS&#0038;LAYER=<xsl:value-of select="@name"/>&#0038;FORMAT=image/png</href>
+										<href><xsl:value-of select="$getLegendHref"/>?REQUEST=GetLegendGraphic<xsl:value-of select="$version"/><xsl:value-of select="$service"/>&#0038;LAYER=<xsl:value-of select="@name"/>&#0038;FORMAT=image/png</href>
 									</Icon>
 									<overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
 									<screenXY x="5" y="5" xunits="pixels" yunits="insetPixels"/>
@@ -147,8 +155,6 @@
 									<size x="0" y="0" xunits="fraction" yunits="fraction"/>
 								</ScreenOverlay>
 							</Document>
-						</xsl:when>
-					</xsl:choose>
 				</xsl:for-each>
 			</Folder>
 		</kml>

@@ -189,6 +189,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                         handler: function(){
                             this.showLinkedServiceMetadataSelectionPanel('attachService', '', '');
                         },
+                        hidden: true,
                         scope: this.editor
                     });
         this.featureCatAction = new Ext.Action({

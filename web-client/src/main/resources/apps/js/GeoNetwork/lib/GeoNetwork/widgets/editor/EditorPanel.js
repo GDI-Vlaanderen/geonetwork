@@ -823,6 +823,24 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.loadUrl('metadata.update.new', 'validate', this.validatorLoadCallback);
         this.validationPanel.expand(true);
     },
+    /** api: method[validate]
+     * 
+     *  Save metadata and open uploadform.
+     *  
+     */
+    saveBeforeUploadThumbnail: function(){
+        this.loadUrl('metadata.update.new', undefined, this.thumbnailLoadCallback, false);
+        this.validationPanel.expand(true);
+    },
+    /** api: method[validate]
+     * 
+     *  Save metadata and remove thumbnail.
+     *  
+     */
+    saveBeforeRemoveThumbnail: function(filedescription){
+        this.loadUrl('metadata.update.new', undefined, this.thumbnailRemoveCallback, false, {filedescription: filedescription});
+        this.validationPanel.expand(true);
+    },
     /** api: method[reset]
      * 
      *  Reset current editing session calling 'metadata.update.forget.new' service.
@@ -912,7 +930,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             callback: cb,
             scope: this,
             loadScripts: true,
-            text: OpenLayers.i18n(action) + ' (' + action + ')'
+            text: OpenLayers.i18n('metadata.loading') /*OpenLayers.i18n(action) + ' (' + action + ')'*/
         });
     },
     closeCallback: function(){
@@ -944,6 +962,36 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     validatorLoadCallback: function(el, success, response, options){
         if (success) {
             this.loadUrl(this.editUrl + '?id=' + this.metadataId + '&currTab=' + (document.mainForm ? document.mainForm.currTab.value : this.defaultViewMode), undefined, this.loadCallback);
+        } else {
+            if (!this.managerInitialized) {
+                this.initManager();
+            }
+            this.getError(response);
+        }
+    },
+    /**
+     * After metadata load, use this callback to show uploadform
+     * alert on failure.
+     *  
+     */
+    thumbnailLoadCallback: function(el, success, response, options){
+        if (success) {
+            this.uploadThumbnail();
+        } else {
+            if (!this.managerInitialized) {
+                this.initManager();
+            }
+            this.getError(response);
+        }
+    },
+    /**
+     * After metadata load, use this callback to remove thumbnail
+     * alert on failure.
+     *  
+     */
+    thumbnailRemoveCallback: function(el, success, response, options){
+        if (success) {
+            this.uploadThumbnail();
         } else {
             if (!this.managerInitialized) {
                 this.initManager();

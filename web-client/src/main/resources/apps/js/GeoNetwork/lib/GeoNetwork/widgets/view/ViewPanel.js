@@ -390,7 +390,8 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
                     autoLoad: {
                         url: this.serviceUrl + '&currTab=' + this.currTab,
                         callback: this.afterMetadataLoad,
-                        scope: this
+                        scope: this,
+                        text: OpenLayers.i18n('metadata.loading')
                     },
                     border: false,
                     frame: false,

@@ -153,7 +153,8 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         var panel = new Ext.Panel({
             autoLoad: {
                 url: this.serviceUrl,
-                callback: scope.afterDiffLoad
+                callback: scope.afterDiffLoad,
+                text: OpenLayers.i18n('metadata.loading')
             },
             layout: 'fit',
             border: false,

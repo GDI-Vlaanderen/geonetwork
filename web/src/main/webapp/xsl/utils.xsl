@@ -269,35 +269,37 @@
     <xsl:template name="getMandatoryTooltip">
         <xsl:param name="name"/>
         <xsl:param name="schema"/>
-		<xsl:variable name="tooltip">
-	        <xsl:call-template name="getLabelElementValue">
-				<xsl:with-param name="name" select="$name"/>
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="elementName">mandatoryTooltip</xsl:with-param>			
-	        </xsl:call-template>
-        </xsl:variable>
-		<xsl:variable name="type">
-	        <xsl:call-template name="getLabelElementValue">
-				<xsl:with-param name="name" select="$name"/>
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="elementName">mandatoryType</xsl:with-param>			
-	        </xsl:call-template>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$type = 'iso' or $type = 'gdi' or $type = 'inspire' ">
-			    <img src="../../apps/images/default/{$type}.png" >
-					<xsl:attribute name="class"><xsl:value-of select="$type"/></xsl:attribute>
-			        <xsl:if test="$tooltip">
-				    	<xsl:attribute name="alt">
-				    		<xsl:value-of select="$tooltip"/>
-				    	</xsl:attribute>
-				    	<xsl:attribute name="title">
-				    		<xsl:value-of select="$tooltip"/>
-				    	</xsl:attribute>
-			    	</xsl:if>
-			    </img>
-            </xsl:when>
-        </xsl:choose>
+        <xsl:if test="not(name(.)='gml:beginPosition' or name(.)='gml:endPosition' or name(.)='gml:timePosition')">
+			<xsl:variable name="tooltip">
+		        <xsl:call-template name="getLabelElementValue">
+					<xsl:with-param name="name" select="$name"/>
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="elementName">mandatoryTooltip</xsl:with-param>			
+		        </xsl:call-template>
+	        </xsl:variable>
+			<xsl:variable name="type">
+		        <xsl:call-template name="getLabelElementValue">
+					<xsl:with-param name="name" select="$name"/>
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="elementName">mandatoryType</xsl:with-param>			
+		        </xsl:call-template>
+	        </xsl:variable>
+	        <xsl:choose>
+	            <xsl:when test="$type = 'iso' or $type = 'gdi' or $type = 'inspire' ">
+				    <img src="../../apps/images/default/{$type}.png" >
+						<xsl:attribute name="class"><xsl:value-of select="$type"/></xsl:attribute>
+				        <xsl:if test="$tooltip">
+					    	<xsl:attribute name="alt">
+					    		<xsl:value-of select="$tooltip"/>
+					    	</xsl:attribute>
+					    	<xsl:attribute name="title">
+					    		<xsl:value-of select="$tooltip"/>
+					    	</xsl:attribute>
+				    	</xsl:if>
+				    </img>
+	            </xsl:when>
+	        </xsl:choose>
+        </xsl:if>
     </xsl:template>
 
 </xsl:stylesheet>

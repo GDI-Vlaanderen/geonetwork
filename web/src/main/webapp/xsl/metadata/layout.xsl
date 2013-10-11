@@ -617,58 +617,60 @@
   <xsl:template name="addLink">
     <xsl:param name="id"/>
 
-    <xsl:variable name="name" select="name(.)"/>
-    <xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
-    <xsl:variable name="nb">
-      <xsl:if test="name($nextBrother)='geonet:child'">
-        <xsl:choose>
-          <xsl:when test="$nextBrother/@prefix=''">
-            <xsl:if test="$nextBrother/@name=$name">
-              <xsl:copy-of select="$nextBrother"/>
-            </xsl:if>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:if test="concat($nextBrother/@prefix,':',$nextBrother/@name)=$name">
-              <xsl:copy-of select="$nextBrother"/>
-            </xsl:if>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:variable name="newBrother" select="exslt:node-set($nb)"/>
-
-    <xsl:choose>
-        <!-- AGIV: special management to allow add new date from default editor
-
-            As it's a choose element (gco:Date/gco:DateTime), default editor doesn't handle + button by default
-        -->
-        <xsl:when test="name(.) = 'gmd:date' and name(..) = 'gmd:CI_Date' and ../../geonet:element/@add='true'">
-            <xsl:variable name="dateId" select="concat('_X', ../../geonet:element/@parent, '_', replace(name(.), ':', 'COLON'))" />
-
-            <xsl:value-of
-                select="concat('GeoNetwork.editor.EditorTools.addDateFormFieldFragment(',$apos,$dateId,$apos,');')"
-                />
-        </xsl:when>
-      <!-- place + because schema insists ie. next element is geonet:child -->
-      <xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
-        <xsl:value-of
-          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
-        />
-      </xsl:when>
-      <!-- place optional + for use when re-ordering etc -->
-      <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
-        <xsl:value-of
-          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');!OPTIONAL')"
-        />
-      </xsl:when>
-      <!-- place + because schema insists but no geonet:child nextBrother 
-			     this case occurs in the javascript handling of the + -->
-      <xsl:when test="geonet:element/@add='true' and not($newBrother/*/geonet:choose)">
-        <xsl:value-of
-          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
-        />
-      </xsl:when>
-    </xsl:choose>
+	<xsl:if test="not(name(.)='gmd:spatialResolution')">
+	    <xsl:variable name="name" select="name(.)"/>
+	    <xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
+	    <xsl:variable name="nb">
+	      <xsl:if test="name($nextBrother)='geonet:child'">
+	        <xsl:choose>
+	          <xsl:when test="$nextBrother/@prefix=''">
+	            <xsl:if test="$nextBrother/@name=$name">
+	              <xsl:copy-of select="$nextBrother"/>
+	            </xsl:if>
+	          </xsl:when>
+	          <xsl:otherwise>
+	            <xsl:if test="concat($nextBrother/@prefix,':',$nextBrother/@name)=$name">
+	              <xsl:copy-of select="$nextBrother"/>
+	            </xsl:if>
+	          </xsl:otherwise>
+	        </xsl:choose>
+	      </xsl:if>
+	    </xsl:variable>
+	    <xsl:variable name="newBrother" select="exslt:node-set($nb)"/>
+	
+	    <xsl:choose>
+	        <!-- AGIV: special management to allow add new date from default editor
+	
+	            As it's a choose element (gco:Date/gco:DateTime), default editor doesn't handle + button by default
+	        -->
+	        <xsl:when test="name(.) = 'gmd:date' and name(..) = 'gmd:CI_Date' and ../../geonet:element/@add='true'">
+	            <xsl:variable name="dateId" select="concat('_X', ../../geonet:element/@parent, '_', replace(name(.), ':', 'COLON'))" />
+	
+	            <xsl:value-of
+	                select="concat('GeoNetwork.editor.EditorTools.addDateFormFieldFragment(',$apos,$dateId,$apos,');')"
+	                />
+	        </xsl:when>
+	      <!-- place + because schema insists ie. next element is geonet:child -->
+	      <xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
+	        <xsl:value-of
+	          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
+	        />
+	      </xsl:when>
+	      <!-- place optional + for use when re-ordering etc -->
+	      <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
+	        <xsl:value-of
+	          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');!OPTIONAL')"
+	        />
+	      </xsl:when>
+	      <!-- place + because schema insists but no geonet:child nextBrother 
+				     this case occurs in the javascript handling of the + -->
+	      <xsl:when test="geonet:element/@add='true' and not($newBrother/*/geonet:choose)">
+	        <xsl:value-of
+	          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
+	        />
+	      </xsl:when>
+	    </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
   <!-- 
@@ -1585,15 +1587,26 @@
     <xsl:choose>
       <!-- Hidden text field is use to store WGS84 values which are stored in metadata records. -->
       <xsl:when test="$edit=true()">
+      	<xsl:variable name="mandatory" select="false()"/>
+        <xsl:variable name="agivmandatory">
+         	<xsl:call-template name="getMandatoryType">
+	    		<xsl:with-param name="name"><xsl:value-of select="$name"/></xsl:with-param>
+	    		<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
         <xsl:call-template name="getElementText">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="edit" select="$edit"/>
           <xsl:with-param name="input_type" select="'number'"/>
           <xsl:with-param name="input_step" select="'0.00001'"/>
-          <xsl:with-param name="validator" select="'validateNumber(this, false)'"/>
+          <xsl:with-param name="validator" select="concat('validateNumber(this,', not($mandatory or not($agivmandatory = '')),',true);')"/>
           <xsl:with-param name="no_name" select="true()"/>
           <xsl:with-param name="tabindex" select="$tabIndex"/>
         </xsl:call-template>
+      	<xsl:call-template name="getMandatoryTooltip">
+      		<xsl:with-param name="name"><xsl:value-of select="$name"/></xsl:with-param>
+      		<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+      	</xsl:call-template>
         <xsl:call-template name="getElementText">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="edit" select="true()"/>
@@ -2070,16 +2083,22 @@
 			<xsl:variable name="mandatory" select="false()"/>
 			<xsl:variable name="onkeyup">
 				<xsl:choose>
+	                <!-- Custom validator -->
+	                <xsl:when test="$validator"><xsl:value-of select="$validator"/></xsl:when>
 	                <xsl:when test="name(.)='gco:Integer' or name(.)='gco:Decimal' or name(.)='gco:Real'">
-					<xsl:choose>
-						<xsl:when test="name(.)='gco:Integer'">validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory=''))"/>, false);</xsl:when>
-						<xsl:otherwise>validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory = ''))"/>, true);</xsl:otherwise>
-					</xsl:choose>
+						<xsl:variable name="agivmandatory">
+							<xsl:call-template name="getMandatoryType">
+								<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+								<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+							</xsl:call-template>
+						</xsl:variable>
+						<xsl:choose>
+							<xsl:when test="name(.)='gco:Integer'">validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory=''))"/>, false);</xsl:when>
+							<xsl:otherwise>validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory = ''))"/>, true);</xsl:otherwise>
+						</xsl:choose>
 	                </xsl:when>
 	                <!-- Mandatory field (with extra validator) -->
 	                <xsl:when test="$mandatory or not($agivmandatory = '')">validateNonEmpty(this);</xsl:when>
-	                <!-- Custom validator -->
-	                <xsl:when test="$validator"><xsl:value-of select="$validator"/></xsl:when>
 				</xsl:choose>
           	</xsl:variable>
 <!--
@@ -2145,7 +2164,7 @@
 		              <xsl:if test="$visible = false()">
 						<xsl:attribute name="style">display:none;</xsl:attribute>
 		              </xsl:if>
-		              <xsl:if test="normalize-space(onkeyup)!=''">
+		              <xsl:if test="normalize-space($onkeyup)!=''">
 	                      <xsl:attribute name="onkeyup"><xsl:value-of select="$onkeyup"/></xsl:attribute>
 	                  </xsl:if>
 	            </input>

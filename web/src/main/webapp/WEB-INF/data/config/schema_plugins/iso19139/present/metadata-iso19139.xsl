@@ -1253,6 +1253,7 @@
                         </xsl:variable>
 
                         <xsl:call-template name="calendar">
+		                    <xsl:with-param name="schema" select="$schema"/>
                             <xsl:with-param name="ref" select="$ref"/>
                             <xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
                             <xsl:with-param name="format" select="$format"/>
@@ -1298,6 +1299,7 @@
                         </xsl:variable>
 
                         <xsl:call-template name="calendar">
+		                    <xsl:with-param name="schema" select="$schema"/>
                             <xsl:with-param name="ref" select="$ref"/>
                             <xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
                             <xsl:with-param name="format" select="$format"/>
@@ -1333,6 +1335,7 @@
                             <xsl:variable name="format"><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:variable>
 
                             <xsl:call-template name="calendar">
+			                    <xsl:with-param name="schema" select="$schema"/>
                                 <xsl:with-param name="ref" select="$ref"/>
                                 <xsl:with-param name="date" select="text()"/>
                                 <xsl:with-param name="format" select="$format"/>
@@ -3247,9 +3250,12 @@
 
                 <xsl:element name="link">
                     <xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
+                    <xsl:attribute name="href" select="$linkage"/>
+<!--
                     <xsl:attribute name="href">
                         <xsl:value-of select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
                     </xsl:attribute>
+-->                    
                     <xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
                     <xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>
                 </xsl:element>
@@ -3281,9 +3287,11 @@
                     <link type="wms">
                         <xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
                     </link>
-                    <link type="googleearth">
-                        <xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
-                    </link>
+					<xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
+	                    <link type="googleearth">
+	                        <xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
+	                    </link>
+                    </xsl:if>
                 </xsl:when>
                 <xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and not(string($name))) or ($protocol = 'OGC:WMS' and string($linkage)!='' and not(string($name)))">
                     <link type="wms">
