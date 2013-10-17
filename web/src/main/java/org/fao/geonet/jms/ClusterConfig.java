@@ -184,6 +184,7 @@ public class ClusterConfig {
     private static void initJMSConnection() throws ClusterException {
         try {
             // Getting JMS connection from the server
+        	System.out.println("Getiing JMS Connection");
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ClusterConfig.getBrokerURL());
             connection = connectionFactory.createConnection();
             connection.setClientID(ClusterConfig.getClientID());
@@ -195,9 +196,10 @@ public class ClusterConfig {
             // Set connection and session for all JMSActors
             JMSActor.connection = connection;
             JMSActor.session = session;
-
+        	System.out.println("Getiing JMS Connection successfull");
         }
         catch(JMSException x) {
+        	System.out.println("Getiing JMS Connection failed");
             System.err.println(x.getMessage());
             x.printStackTrace();
             throw new ClusterException(x.getMessage(), x);

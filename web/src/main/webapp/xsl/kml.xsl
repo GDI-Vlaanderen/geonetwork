@@ -95,8 +95,8 @@
 						</tr>
 					</table>
 					<p><strong><xsl:value-of select="/root/gui/strings/abstract"/>:</strong> <xsl:value-of select="$metadata/abstract"/></p>
-					<![CDATA[ [<a target="]]><xsl:value-of select="/root/gui/env/site/name"/><xsl:text>" href="</xsl:text><xsl:value-of select="$siteURL"/><xsl:value-of select="/root/gui/locService"/><![CDATA[/metadata.show?currTab=simple&id=]]><xsl:value-of select="$metadata/geonet:info/id"/><![CDATA[">]]><xsl:value-of select="/root/gui/strings/descriptionTab"/><![CDATA[</a>]
-					[<a target="]]><xsl:value-of select="/root/gui/env/site/name"/><xsl:text>" href="</xsl:text><xsl:value-of select="$siteURL"/><xsl:value-of select="/root/gui/locService"/><![CDATA[/main.home">]]><xsl:value-of select="/root/gui/strings/searchPage"/><![CDATA[</a>]<br/>]]>
+					<![CDATA[ [<a target="]]><xsl:value-of select="/root/gui/env/site/name"/><xsl:text>" href="</xsl:text><xsl:value-of select="$siteURL"/><xsl:value-of select="/root/gui/url"/><![CDATA[/apps/tabsearch/index.html?hl=dut&id=]]><xsl:value-of select="$metadata/geonet:info/id"/><![CDATA[">]]><xsl:value-of select="/root/gui/strings/descriptionTab"/><![CDATA[</a>]
+					[<a target="]]><xsl:value-of select="/root/gui/env/site/name"/><xsl:text>" href="</xsl:text><xsl:value-of select="$siteURL"/><xsl:value-of select="/root/gui/url"/><![CDATA[?hl=dut">]]><xsl:value-of select="/root/gui/strings/searchPage"/><![CDATA[</a>]<br/>]]>
 				</description>
 				<xsl:apply-templates select="$metadata/geoBox" />
 				<!-- for each WMS service -->

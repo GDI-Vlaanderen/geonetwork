@@ -109,11 +109,12 @@ public class UpdateStatus implements Service {
 		Set<String> unchanged = saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
 		    
 		//--- reindex metadata
-        boolean workspace = false;
+/*
+		boolean workspace = false;
         dataMan.indexMetadata(dbms, id, false, workspace, true);
         workspace = true;
         dataMan.indexMetadata(dbms, id, false, workspace, true);
-
+*/
         if(unchanged.size() > 0){
             return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Jeeves.Elem.ERROR).setText("statusChangeFailed"));
         }

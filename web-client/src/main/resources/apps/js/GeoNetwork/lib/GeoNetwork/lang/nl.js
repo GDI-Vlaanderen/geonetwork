@@ -257,22 +257,25 @@ GeoNetwork.Lang.nl = {
     'metadataStatus': "Status metadatarecord",
     'setStatus': 'Wijzig status',	
     'updateStatus': 'Update status',
-    'status_label': 'Status:',
+    'status_label': 'Status record: ',
     'status_0': 'Onbekend',
     'status_1': 'Ontwerp',
     'status_2': 'Intern goedgekeurd en gepubliceerd',
     'status_3': 'Gearchiveerd',
-    'status_4': 'Ter interne controle ingediend',
-    'status_5': 'Afgekeurd door hoofdeditor',
+    'status_4': 'Intern ingediend',
+    'status_5': 'Afgekeurd door Hoofdeditor',
     'status_6': 'Pas gecreëerd',
-    'agiv_status_label': 'Status MD-record:',
+    'agiv_status_label': 'Status record: ',
     'agiv_status_0': 'Onbekend',
     'agiv_status_1': 'Ontwerp',
     'agiv_status_2': 'Goedgekeurd door AGIV en gepubliceerd',
     'agiv_status_3': 'Gearchiveerd',
-    'agiv_status_4': 'Ter interne controle ingediend',
-    'agiv_status_5': 'Afgekeurd door hoofdeditor',
+    'agiv_status_4': 'Intern ingediend',
+    'agiv_status_5': 'Afgekeurd door Hoofdeditor',
     'agiv_status_6': 'Pas gecreëerd',
+    'agiv_status_7': 'Intern goedgekeurd en ingediend bij AGIV',
+    'agiv_status_8': 'Klaar voor publicatie',
+    'agiv_status_9': 'Afgekeurd door AGIV-validator',
     'updateVersion': 'Start versionering (via SVN)',
     'statusTT': 'Verander de status van een metadatarecord overeenkomstig zijn levenscyclus fase',
     'setVersioning': 'Metadata versionering',
@@ -550,7 +553,7 @@ GeoNetwork.Lang.nl = {
 
     'error-login': 'Je moet eerst inloggen om deze pagina te bekijken.',
 
-    'statusChangeFailed': 'De statuswijziging is niet gelukt aangezien het metadatarecord niet gevalideerd kon worden. Editeer het metadatarecord om de validatiefouten te zien.'
+    'statusChangeFailed': 'De statuswijziging is niet gelukt aangezien u niet de rechten hebt of het metadatarecord niet gevalideerd kon worden. Editeer het metadatarecord om de validatiefouten te zien.'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

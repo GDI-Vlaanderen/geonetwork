@@ -152,6 +152,9 @@ public class Params {
         public static final String SUBMITTED = "4";
         public static final String REJECTED  = "5";
         public static final String JUSTCREATED  = "6";
+        public static final String SUBMITTED_FOR_AGIV  = "7";
+        public static final String APPROVED_BY_AGIV  = "8";
+        public static final String REJECTED_BY_AGIV  = "9";
 	}
 
     /**

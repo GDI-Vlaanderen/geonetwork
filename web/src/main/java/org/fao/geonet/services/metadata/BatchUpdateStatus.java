@@ -23,6 +23,10 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -30,6 +34,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,10 +44,6 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 //=============================================================================
 
@@ -92,9 +93,11 @@ public class BatchUpdateStatus implements Service
                 if (info == null) {
                     notFound.add(id);
                 }
+/*
                 else if (!accessMan.isOwner(context, id)) {
                     notOwner.add(id);
                 }
+*/
                 else {
                     metadata.add(id);
                 }
@@ -107,7 +110,7 @@ public class BatchUpdateStatus implements Service
         StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
         StatusActions sa = saf.createStatusActions(context, dbms);
 
-        Set<String> noChange = saf.statusChange(sa, status, metadata, changeDate, changeMessage);
+        Set<String> notChanged = saf.statusChange(sa, status, metadata, changeDate, changeMessage);
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
@@ -116,10 +119,10 @@ public class BatchUpdateStatus implements Service
 
 		// -- for the moment just return the sizes - we could return the ids at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)
-						.addContent(new Element("done")    .setText(metadata.size()+""))
-						.addContent(new Element("notOwner").setText(notOwner.size()+""))
+						.addContent(new Element("done")    .setText((metadata.size()/*-notOwner.size()*/-notFound.size()-notChanged.size())+""))
+//						.addContent(new Element("notOwner").setText(notOwner.size()+""))
 						.addContent(new Element("notFound").setText(notFound.size()+""))
-						.addContent(new Element("noChange").setText(noChange.size()+""));
+						.addContent(new Element("notChanged").setText(notChanged.size()+""));
 	}
 }
 

@@ -13,13 +13,19 @@
 				<td><xsl:value-of select="/root/gui/info/updated"/></td>
 				<td style="text-align: center;"><xsl:value-of select="/root/response/done"/></td>
 			</tr>
+<!--
 			<tr>
 				<td><xsl:value-of select="/root/gui/info/notowner"/></td>
 				<td style="text-align: center;"><xsl:value-of select="/root/response/notOwner"/></td>
 			</tr>
+-->
 			<tr>
 				<td><xsl:value-of select="/root/gui/info/notfound"/></td>
 				<td style="text-align: center;"><xsl:value-of select="/root/response/notFound"/></td>
+			</tr>
+			<tr>
+				<td><xsl:value-of select="/root/gui/info/notchanged"/></td>
+				<td style="text-align: center;"><xsl:value-of select="/root/response/notChanged"/></td>
 			</tr>
 			<xsl:if test="/root/gui/reqService='metadata.batch.processing'">
 				<tr>

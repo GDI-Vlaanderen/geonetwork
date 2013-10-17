@@ -443,7 +443,7 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-    public Element getContentReviewers(Dbms dbms, Set<String> metadataIds) throws Exception {
+    public Element getContentHoofdeditors(Dbms dbms, Set<String> metadataIds) throws Exception {
 
         StringBuffer metadataIdsList = new StringBuffer();
         for (Iterator i = metadataIds.iterator(); i.hasNext(); ) {
@@ -469,10 +469,56 @@ public class AccessManager {
                 "AND u.profile = '"+Geonet.Profile.REVIEWER+"' "+
                 "ORDER BY u.id";
 
-        System.out.println("** getContentReviewers query: " + query);
+        System.out.println("** getContentHoofdeditors query: " + query);
         return dbms.select(query);
     }
 
+    public Element getContentUsers(Dbms dbms, Set<String> metadataIds, String profile) throws Exception {
+
+        StringBuffer metadataIdsList = new StringBuffer();
+        for (Iterator i = metadataIds.iterator(); i.hasNext(); ) {
+            String metadataId = (String) i.next();
+            metadataIdsList.append('\'' + metadataId + '\'');
+
+            if(i.hasNext()) {
+                metadataIdsList.append(", ");
+            }
+        }
+
+        String query =
+        "SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m, Users u "+
+                "WHERE m.id IN (" + metadataIdsList + ") "+
+                "AND m.id IN (SELECT metadataid FROM OperationAllowed WHERE operationid = '2' AND groupid IN (SELECT groupid FROM UserGroups WHERE userid=u.id)) "+
+                "AND u.profile = '"+ profile +"' "+
+                "ORDER BY u.id";
+
+        System.out.println("** getContentUsers query: " + query);
+        return dbms.select(query);
+    }
+
+/*
+    public Element getAdmins(Dbms dbms, Set<String> metadataIds) throws Exception {
+
+        StringBuffer metadataIdsList = new StringBuffer();
+        for (Iterator i = metadataIds.iterator(); i.hasNext(); ) {
+            String metadataId = (String) i.next();
+            metadataIdsList.append('\'' + metadataId + '\'');
+
+            if(i.hasNext()) {
+                metadataIdsList.append(", ");
+            }
+        }
+
+        String query =
+        "SELECT id as userid, name as name, surname as surname, email as email from Users "+
+                "WHERE profile = '"+Geonet.Profile.ADMINISTRATOR+"' "+
+                "ORDER BY id";
+
+        System.out.println("** getAdmins query: " + query);
+        return dbms.select(query);
+    }
+*/
+    
     /**
      * Returns whether a particular metadata is visible to group 'all'.
      *

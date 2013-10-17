@@ -103,7 +103,7 @@ public class PrepareBatchUpdateStatus implements Service
 
 		//-----------------------------------------------------------------------
 		//--- get the list of content reviewers for this metadata record
-		Element cRevs = am.getContentReviewers(dbms, ids);
+		Element cRevs = am.getContentHoofdeditors(dbms, ids);
 		cRevs.setName("contentHoofdeditors");
 
 		//-----------------------------------------------------------------------

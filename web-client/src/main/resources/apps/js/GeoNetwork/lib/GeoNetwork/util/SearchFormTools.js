@@ -1196,13 +1196,15 @@ GeoNetwork.util.SearchFormTools = {
         var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var store = GeoNetwork.data.StatusStore(url);
+
+        /*
         store.load({ 
             callback: function() {
                 this.sortByLang(GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()));
             }, 
             scope: store
         });
-        
+        */
         var tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
         
         var config = {

@@ -309,8 +309,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             login: serviceUrl + 'xml.user.login',
             agivLogin: serviceUrl + 'user.agiv.login',
             logout: serviceUrl + 'xml.user.logout',
-            agivLogout: 'https://auth.beta.agiv.be/sts/?wa=wsignout1.0&wreply=' + serviceUrl + /*'user.agiv.logout'*/ 'home',
-//            agivLogout: serviceUrl + 'user.agiv.logout',
             mef: serviceUrl + 'mef.export?format=full&version=2',
             csv: serviceUrl + 'csv.search',
             pdf: serviceUrl + 'pdf.selection.search',
@@ -1340,10 +1338,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Fires the afterLogout or afterBadLogout events
      */
     logout: function(){
+        var serviceUrl = this.URL + '/srv/' + this.LANG + "/";
+    	var agivLogout = GeoNetwork.Settings.logoutUrlSTS + '?wa=wsignout1.0&wreply=' + serviceUrl + /*'user.agiv.logout'*/ 'home';
+//      var agivLogout: serviceUrl + 'user.agiv.logout';
         if (GeoNetwork.Settings.useSTS) {
             var cookie = Ext.state.Manager.getProvider();
             cookie.set('user', undefined);
-            location.replace(this.services.agivLogout);
+            location.replace(agivLogout);
         } else {
 	        var app = this;
 	        OpenLayers.Request.GET({

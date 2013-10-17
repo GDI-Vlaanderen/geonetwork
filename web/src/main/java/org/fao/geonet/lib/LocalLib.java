@@ -275,7 +275,7 @@ public class LocalLib {
      * @return
      * @throws SQLException
      */
-	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args) throws SQLException {
+	public Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args) throws SQLException {
 		String query1 = "SELECT * FROM "+table;
 		String query2 = "SELECT * FROM "+table+"Des";
 

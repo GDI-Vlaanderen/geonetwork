@@ -2366,10 +2366,8 @@ public class DataManager {
         // Do a commit, otherwise cluster nodes can receive the reindex message, before data stored in database
         dbms.commit();
 
-        if(true) {
-            boolean indexGroup = false;
-            indexMetadata(dbms, id, indexGroup, workspace, true);
-        }
+        boolean indexGroup = false;
+        indexMetadata(dbms, id, indexGroup, workspace, true);
 
         return true;
     }
@@ -3159,7 +3157,13 @@ public class DataManager {
 		return dbms.select(query, id);
 	}
 
-    public String getLastBeforeCurrentStatus(Dbms dbms, String id) throws Exception {
+	public String getStatusDes(Dbms dbms, String id, String langid) throws Exception {
+		String query = "SELECT label FROM StatusValuesDes WHERE iddes=? AND langid=?";
+		return dbms.select(query, id, langid).getChild("record").getChildText("label");
+
+	}
+
+	public String getLastBeforeCurrentStatus(Dbms dbms, String id) throws Exception {
         String query = "SELECT statusId, userId, changeDate, changeMessage FROM MetadataStatus WHERE metadataId=? ORDER BY changeDate DESC";
         Element states = dbms.select(query, id);
         List results = states.getChildren(Jeeves.Elem.RECORD);
@@ -3252,9 +3256,9 @@ public class DataManager {
      * @param changeMessage
      * @throws Exception
      */
-	private void setStatusExt(ServiceContext context, Dbms dbms, String id, int status, String changeDate, String changeMessage) throws Exception {
+	public void setStatusExt(ServiceContext context, Dbms dbms, String id, int status, String changeDate, String changeMessage) throws Exception {
 		dbms.execute("INSERT into MetadataStatus(metadataId, statusId, userId, changeDate, changeMessage) VALUES (?,?,?,?,?)",
-                id, status, context.getUserSession().getUserId(), changeDate, changeMessage);
+                id, status, context.getUserSession().getUserId()!=null?context.getUserSession().getUserId():'1', changeDate, changeMessage);
 		if (svnManager != null) {
 		    svnManager.setHistory(dbms, id+"", context);
 		}

@@ -103,7 +103,7 @@ public class QueryInfo {
 	}
 
 	public Float getSimilarity() {
-		return similarity;
+		return (float) Math.round(similarity*1000) / 1000;
 	}
 
 	public void setSimilarity(Float similarity) {

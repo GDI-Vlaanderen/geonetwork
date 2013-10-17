@@ -58,7 +58,7 @@ GeoNetwork.data.StatusStore = function(url){
         return labels;
     }
     
-     return new GeoNetwork.data.GeoNetworkLabelsXmlStore ({
+     return new Ext.data.XmlStore ({
         autoDestroy: true,
         proxy: new Ext.data.HttpProxy({
             method: 'GET',
@@ -76,6 +76,7 @@ GeoNetwork.data.StatusStore = function(url){
         }, {
             name: 'label',
             convert: getLabel
-        }]
+        }],
+        autoLoad: true
     });
 };

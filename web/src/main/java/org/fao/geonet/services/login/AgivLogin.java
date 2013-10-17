@@ -84,7 +84,7 @@ public class AgivLogin implements Service
 
 		Element user = null;
 		List list = null;
-		if ("Administrator".equals(userSession.getProfile()))
+		if ("Administrator".equals(userSession.getProfile()) && userSession.getUsername().equals("admin"))
 		{
 			list = dbms.select("SELECT * FROM Users WHERE id = '1'").getChildren();
 			user = (Element) list.get(0);

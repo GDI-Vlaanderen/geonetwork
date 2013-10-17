@@ -62,9 +62,11 @@ import com.yammer.metrics.core.HealthCheckRegistry;
 public class JeevesServlet extends HttpServlet
 {
     public static final String NODE_TYPE = "NODE_TYPE";
+    public static final String FROM_DESCRIPTION = "FROM_DESCRIPTION";
 	private JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
 	private String nodeType = "AGIV";
+	private String fromDescription = "Metadata Workflow";
 
 	//---------------------------------------------------------------------------
 	//---
@@ -77,6 +79,10 @@ public class JeevesServlet extends HttpServlet
         String nodeType = getServletConfig().getInitParameter(NODE_TYPE);
         if(nodeType != null) {
         	this.nodeType = nodeType;
+        }
+        String fromDescription = getServletConfig().getInitParameter(FROM_DESCRIPTION);
+        if(fromDescription != null) {
+        	this.fromDescription = fromDescription;
         }
 		String appPath = getServletContext().getRealPath("/");
 
@@ -270,6 +276,7 @@ public class JeevesServlet extends HttpServlet
 
 	public String getNodeType() { return nodeType;	}
 
+	public String getFromDescription() { return fromDescription;	}
 }
 
 //=============================================================================

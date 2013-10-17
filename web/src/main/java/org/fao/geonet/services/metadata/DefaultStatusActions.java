@@ -100,7 +100,7 @@ public class DefaultStatusActions implements StatusActions {
 			emailNotes = false;
 		}
 
-		fromDescr = "Metadata Workflow";
+		fromDescr = context.getServlet().getFromDescription();
 
 		session = context.getUserSession();
 		replyTo = session.getEmailAddr();
@@ -124,7 +124,7 @@ public class DefaultStatusActions implements StatusActions {
 	public void onCreate(String id) throws Exception {
 		String changeMessage = "GeoNetwork gebruiker " + session.getUserId()
 				+ " (" + session.getUsername()
-				+ ")heeft metadata record met id " + id + " gecrëeerd.";
+				+ ") heeft metadata record met id " + id + " gecrëeerd.";
 		dm.setStatus(context, dbms, id, new Integer(Params.Status.JUSTCREATED),
 				new ISODate().toString(), changeMessage);
 	}
@@ -149,7 +149,7 @@ public class DefaultStatusActions implements StatusActions {
 			// "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") edited metadata record "+id;
 			String changeMessage = "GeoNetwork gebruiker "
 					+ session.getUserId() + " (" + session.getUsername()
-					+ ")heeft metadata record met id " + id + " bewerkt.";
+					+ ") heeft metadata record met id " + id + " bewerkt.";
 			// unsetAllOperations(id);
 			dm.setStatus(context, dbms, id, new Integer(Params.Status.DRAFT),
 					new ISODate().toString(), changeMessage);
@@ -223,25 +223,23 @@ public class DefaultStatusActions implements StatusActions {
 
 				// templates need not be valid, other md must be valid to change
 				// status to approved
-				if (isTemplate
-						|| statusChangeAllowed(currentStatus, status, mid)) {
+				if (statusChangeAllowedByUser(currentStatus, status, mid) && (isTemplate || 
+					!(status.equals(Params.Status.SUBMITTED_FOR_AGIV) || status.equals(Params.Status.APPROVED_BY_AGIV) ||
+					 status.equals(Params.Status.APPROVED)) || statusChangeAllowed(currentStatus, status, mid))) {
 					System.out.println("Change status of metadata " + mid
 							+ " from " + currentStatus + " to " + status);
 					if (status.equals(Params.Status.APPROVED)) {
-						if (isTemplate && session.getProfile().equals(Geonet.Profile.REVIEWER)) {
-							setAllOperationsForReviewerGroup(mid); // todo get
-																	// the
-																	// groups of
-																	// the
-																	// reviewer
+						if (isTemplate && (session.getProfile().equals(Geonet.Profile.REVIEWER) || session.getProfile().equals(Geonet.Profile.ADMINISTRATOR))) {
+							setAllOperationsForUserGroup(mid);
 						} else {
-							setAllOperations(mid); // - this is a short cut that
-													// could be enabled
+							setAllOperations(mid);
 						}
 						dm.moveFromWorkspaceToMetadata(context, dbms, mid);
 					} else if (status.equals(Params.Status.DRAFT)
-							|| status.equals(Params.Status.REJECTED)) {
-						// unsetAllOperations(mid);
+							|| status.equals(Params.Status.RETIRED)
+							|| status.equals(Params.Status.REJECTED)
+							|| status.equals(Params.Status.REJECTED_BY_AGIV)) {
+						unsetAllOperations(mid);
 					}
 
 					// --- set status, indexing is assumed to take place later
@@ -251,23 +249,30 @@ public class DefaultStatusActions implements StatusActions {
 					dm.setStatus(context, dbms, mid, new Integer(status),
 							new ISODate().toString(), changeMessage);
 
-					// --- inform content reviewers if the status is submitted
-					if (status.equals(Params.Status.SUBMITTED)) {
-						informContentReviewers(metadataIds, changeDate,
-								changeMessage);
-					}
-					// --- inform owners if status is approved
-					else if (status.equals(Params.Status.APPROVED)) {
-						informOwnersApprovedOrRejected(metadataIds, changeDate,
-								changeMessage, true);
-					}
-					// --- inform owners if status is rejected
-					else if (status.equals(Params.Status.REJECTED)) {
-						informOwnersApprovedOrRejected(metadataIds, changeDate,
-								changeMessage, false);
-					}
-					else if (status.equals(Params.Status.RETIRED)) {
-						unsetAllOperations(mid);
+					if (!currentStatus.equals(Params.Status.UNKNOWN)) {
+						if (status.equals(Params.Status.DRAFT)) {
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.EDITOR, status);
+						} else if (status.equals(Params.Status.SUBMITTED)) {
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.REVIEWER, status);
+						} else if (status.equals(Params.Status.REJECTED)) {
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.EDITOR, status);
+						} else if (status.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.ADMINISTRATOR, status);
+						} else if (status.equals(Params.Status.REJECTED_BY_AGIV)) {
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.EDITOR, status);
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.REVIEWER, status);
+						} else if (status.equals(Params.Status.APPROVED)) {
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.EDITOR, status);
+							informContentUsers(metadataIds, changeDate,
+									changeMessage, Geonet.Profile.REVIEWER, status);
+						}
 					}
 				} else {
 					unchanged.add(mid);
@@ -283,6 +288,53 @@ public class DefaultStatusActions implements StatusActions {
 			x.printStackTrace();
 			throw new Exception(x);
 		}
+	}
+
+	/**
+	 * 
+	 * @param currentStatus
+	 * @param status
+	 * @param mid
+	 * @return
+	 * @throws Exception
+	 */
+	private boolean statusChangeAllowedByUser(String currentStatus, String status,
+			String mid) throws Exception {
+		boolean changeAllowed = am.canEdit(context, mid);
+		if (changeAllowed) {
+			if (session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+				if (status.equals(Params.Status.REJECTED) || status.equals(Params.Status.SUBMITTED)) {
+					changeAllowed = false;
+				}
+/*
+				if (status.equals(Params.Status.APPROVED) && !context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+					changeAllowed = false;
+*/
+			}
+			if (changeAllowed && session.getProfile().equals(Geonet.Profile.REVIEWER) || session.getProfile().equals(Geonet.Profile.EDITOR)) {
+				if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.UNKNOWN) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
+					changeAllowed = false;
+				}
+			}
+			if (changeAllowed && session.getProfile().equals(Geonet.Profile.REVIEWER)) {
+				if (status.equals(Params.Status.SUBMITTED)) {
+					changeAllowed = false;
+				}
+			}
+			if (changeAllowed && session.getProfile().equals(Geonet.Profile.REVIEWER) && context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+				if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.RETIRED) ||
+					status.equals(Params.Status.APPROVED_BY_AGIV) || status.equals(Params.Status.REJECTED_BY_AGIV)) {
+					changeAllowed = false;
+				}
+			} else if (session.getProfile().equals(Geonet.Profile.EDITOR)) {
+				if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.RETIRED) ||
+					status.equals(Params.Status.REJECTED) || status.equals(Params.Status.SUBMITTED_FOR_AGIV) ||
+					status.equals(Params.Status.APPROVED_BY_AGIV) || status.equals(Params.Status.REJECTED_BY_AGIV)) {
+					changeAllowed = false;
+				}
+			}
+		}
+		return changeAllowed;
 	}
 
 	/**
@@ -311,11 +363,15 @@ public class DefaultStatusActions implements StatusActions {
 		// if the current status is submitted and the status to be set is
 		// approved
 		boolean workspace;
-		if ((currentStatus.equals(Params.Status.DRAFT) || currentStatus
-				.equals(Params.Status.REJECTED)
-				&& (status.equals(Params.Status.SUBMITTED)))
-				|| (currentStatus.equals(Params.Status.SUBMITTED))
-				&& (status.equals(Params.Status.APPROVED))) {
+/*
+		if (((currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.REJECTED)) && status.equals(Params.Status.SUBMITTED)) ||
+			(currentStatus.equals(Params.Status.SUBMITTED) && status.equals(Params.Status.APPROVED))) {
+			workspace = true;
+		} else {
+			workspace = false;
+		}
+*/
+		if (!(currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.JUSTCREATED) || currentStatus.equals(Params.Status.UNKNOWN))) {
 			workspace = true;
 		} else {
 			workspace = false;
@@ -387,9 +443,11 @@ public class DefaultStatusActions implements StatusActions {
 			for (Element record : validationStatus) {
 				// check that xsd validation succeeded
 				if (record.getChildText("valtype").equals("xsd")) {
-					if (!record.getChildText("status").equals("1")
-							&& (status.equals(Params.Status.SUBMITTED) || status
-									.equals(Params.Status.APPROVED))) {
+					if (!record.getChildText("status").equals("1")/*
+							&& (status
+									.equals(Params.Status.SUBMITTED_FOR_AGIV) || status
+									.equals(Params.Status.APPROVED_BY_AGIV) || status
+									.equals(Params.Status.APPROVED))*/) {
 						System.out.println("Metadata with id " + mid
 								+ " failed XSD validation: status change not "
 								+ "allowed");
@@ -398,12 +456,16 @@ public class DefaultStatusActions implements StatusActions {
 				}
 				// check that iso schematron validation succeeded
 				if (record.getChildText("valtype").equals(
-						"schematron-rules-iso")) {
-					if (!record.getChildText("status").equals("1")) {
+						"schematron-rules-iso") || record.getChildText("valtype").equals("schematron-rules-inspire")) {
+					if (!record.getChildText("status").equals("1")/*
+							&& (status
+									.equals(Params.Status.SUBMITTED_FOR_AGIV) || status
+									.equals(Params.Status.APPROVED_BY_AGIV) || status
+									.equals(Params.Status.APPROVED))*/) {
 						System.out
 								.println("Metadata with id "
 										+ mid
-										+ " failed ISO Schematron validation: status change not allowed");
+										+ " failed ISO Schematron and/of INSPIRE Schematron validation: status change not allowed");
 						return false;
 					}
 				}
@@ -443,7 +505,7 @@ public class DefaultStatusActions implements StatusActions {
 	 * @param mdId
 	 *            The metadata id to set privileges on
 	 */
-	private void setAllOperationsForReviewerGroup(String mdId) throws Exception {
+	private void setAllOperationsForUserGroup(String mdId) throws Exception {
 		Set<String> groups = am.getUserGroups(dbms, session, null);
 		for (Iterator i = groups.iterator(); i.hasNext();) {
 			String groupId = (String) i.next();
@@ -479,8 +541,7 @@ public class DefaultStatusActions implements StatusActions {
 	}
 
 	/**
-	 * Inform content reviewers of metadata records in list that they need to
-	 * review the record.
+	 * Inform content users of metadata records in list
 	 * 
 	 * @param metadata
 	 *            The selected set of metadata records
@@ -488,73 +549,22 @@ public class DefaultStatusActions implements StatusActions {
 	 *            The date that of the change in status
 	 * @param changeMessage
 	 *            Message supplied by the user that set the status
+	 * @param status
+	 *            New status
+	 * @param profile
+	 *            Profile of users to be informed
 	 */
-	private void informContentReviewers(Set<String> metadata,
-			String changeDate, String changeMessage) throws Exception {
+	private void informContentUsers(Set<String> metadata,
+			String changeDate, String changeMessage, String profile, String status) throws Exception {
 
 		// --- get content reviewers (sorted on content reviewer userid)
-		Element contentRevs = am.getContentReviewers(dbms, metadata);
+		Element contentRevs = am.getContentUsers(dbms, metadata, profile);
 
-		String subject;
-		if (metadata.size() == 1) {
-			subject = "Metadata record INGEDIEND door " + replyTo + " ("
+		String subject = "Status metadata record(s) gewijzigd naar '" + dm.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
 					+ replyToDescr + ") op " + changeDate;
 
-		} else {
-			// String subject =
-			// "Metadata records SUBMITTED by "+replyTo+" ("+replyToDescr+") on "+changeDate;
-			subject = "Metadata records INGEDIEND door " + replyTo + " ("
-					+ replyToDescr + ") op " + changeDate;
-		}
-		boolean multiple = metadata.size() > 1;
-		processList(contentRevs, subject, Params.Status.SUBMITTED, changeDate,
+		processList(contentRevs, subject, status, changeDate,
 				changeMessage, metadata);
-	}
-
-	/**
-	 * Inform owners of metadata records that the records have approved or
-	 * rejected.
-	 * 
-	 * @param metadata
-	 *            The selected set of metadata records
-	 * @param changeDate
-	 *            The date that of the change in status
-	 * @param changeMessage
-	 *            Message supplied by the user that set the status
-	 */
-	private void informOwnersApprovedOrRejected(Set<String> metadata,
-			String changeDate, String changeMessage, boolean approved)
-			throws Exception {
-
-		// --- get metadata owners (sorted on owner userid)
-		Element owners = am.getOwners(dbms, metadata);
-
-		String subject;
-		if (metadata.size() == 1) {
-			// String subject = "Metadata records APPROVED";
-			subject = "Metadata record GOEDGEKEURD";
-		} else {
-			subject = "Metadata records GOEDGEKEURD";
-		}
-
-		String status = Params.Status.APPROVED;
-		if (!approved) {
-			if (metadata.size() == 1) {
-				subject = "Metadata record AFGEWEZEN";
-			} else {
-				// subject = "Metadata records REJECTED";
-				subject = "Metadata records AFGEWEZEN";
-			}
-			status = Params.Status.REJECTED;
-		}
-		// subject += " by "+replyTo+" ("+replyToDescr+") on "+changeDate;
-		subject += " door " + replyTo + " (" + replyToDescr + ") op "
-				+ changeDate;
-
-		boolean multiple = metadata.size() > 1;
-		processList(owners, subject, status, changeDate, changeMessage,
-				metadata);
-
 	}
 
 	/**

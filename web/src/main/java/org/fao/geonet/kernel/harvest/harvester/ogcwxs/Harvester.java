@@ -48,6 +48,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.IDFactory;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -373,6 +374,8 @@ class Harvester
 		
 		dataMan.setHarvestedExt(dbms, id, params.uuid, params.url);
 		dataMan.setTemplate(dbms, id, "n", null);
+		dataMan.setStatusExt(context, dbms, id, new Integer(Params.Status.APPROVED),
+				new ISODate().toString(), "Status veranderd na harvesting");
 		
 		dbms.commit();
 		//dataMan.indexMetadata(dbms, id); setTemplate update the index

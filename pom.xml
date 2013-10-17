@@ -850,7 +850,7 @@
   </modules>
     </profile>
   </profiles>
-
+<!--
   <distributionManagement>
     <snapshotRepository>
       <id>scp-repository.geonetwork-opensource.org</id>
@@ -858,7 +858,7 @@
       <url>scpexe://TO DEFINED</url>
     </snapshotRepository>
   </distributionManagement>
-
+ -->
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>2.7.4</geotools.version>

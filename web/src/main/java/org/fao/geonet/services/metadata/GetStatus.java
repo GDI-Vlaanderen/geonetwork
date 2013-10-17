@@ -43,46 +43,50 @@ import java.util.Set;
 
 //=============================================================================
 
-/** Given a metadata id returns all associated status records. Called by the
-  * metadata.status service
-  */
+/**
+ * Given a metadata id returns all associated status records. Called by the
+ * metadata.status service
+ */
 
-public class GetStatus implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class GetStatus implements Service {
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Init
+	// ---
+	// --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Service
+	// ---
+	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
 		AccessManager am = gc.getAccessManager();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 
-		//-----------------------------------------------------------------------
-		//--- check access
+		// -----------------------------------------------------------------------
+		// --- check access
 		if (!dataMan.existsMetadata(dbms, id))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		if (!am.isOwner(context,id)) 
-			throw new IllegalArgumentException("You are not the owner of metadata --> "+id);
+		if (!am.isOwner(context, id))
+			throw new IllegalArgumentException(
+					"You are not the owner of metadata --> " + id);
 
-		//-----------------------------------------------------------------------
-		//--- retrieve metadata status
+		// -----------------------------------------------------------------------
+		// --- retrieve metadata status
 
 		Element stats = dataMan.getStatus(dbms, id);
 
@@ -90,55 +94,52 @@ public class GetStatus implements Service
 		String userId = "-1"; // no userId
 		if (stats != null) {
 			List<Element> mdStat = stats.getChildren();
-			if (mdStat.size() > 0) {	
-				Element stat = mdStat.get(0);	
+			if (mdStat.size() > 0) {
+				Element stat = mdStat.get(0);
 				status = stat.getChildText("statusid");
 				userId = stat.getChildText("userid");
 			}
 		}
 
-		//-----------------------------------------------------------------------
-		//--- retrieve status values 
+		// -----------------------------------------------------------------------
+		// --- retrieve status values
 
 		Element elStatus = Lib.local.retrieve(dbms, "StatusValues");
-
 		List<Element> kids = elStatus.getChildren();
 
 		for (Element kid : kids) {
 
 			kid.setName(Geonet.Elem.STATUS);
 
-			//--- set status value of this metadata to 'on'
+			// --- set status value of this metadata to 'on'
 
 			if (kid.getChildText("id").equals(status)) {
 				kid.addContent(new Element("on"));
 
-				//--- set the userId of the submitter into the result
+				// --- set the userId of the submitter into the result
 				kid.addContent(new Element("userId").setText(userId));
 			}
 		}
 
-		//-----------------------------------------------------------------------
-		//--- get the list of content reviewers for this metadata record
+		// -----------------------------------------------------------------------
+		// --- get the list of content reviewers for this metadata record
 
 		Set<String> ids = new HashSet<String>();
 		ids.add(id);
 
-		Element cRevs = am.getContentReviewers(dbms, ids);
+		Element cRevs = am.getContentHoofdeditors(dbms, ids);
 		cRevs.setName("contentHoofdeditors");
 
-		//-----------------------------------------------------------------------
-		//--- put it all together
+		// -----------------------------------------------------------------------
+		// --- put it all together
 
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(new Element(Geonet.Elem.ID).setText(id))
-										.addContent(elStatus)
-										.addContent(cRevs);
+				.addContent(new Element(Geonet.Elem.ID).setText(id))
+				.addContent(elStatus).addContent(cRevs).addContent(new Element(Geonet.Elem.NODE_TYPE).setText(context.getServlet().getNodeType())).addContent(new Element(Geonet.Elem.STATUS).setText(status));
 
 		return elRes;
 	}
 }
 
-//=============================================================================
-
+// =============================================================================
 

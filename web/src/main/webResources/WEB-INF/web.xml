@@ -157,7 +157,12 @@
           -->
         <init-param>
 		    <param-name>NODE_TYPE</param-name>
-            <param-value>AGIV</param-value>
+            <param-value>GDI</param-value>
+        </init-param>
+        <init-param>
+		    <param-name>FROM_DESCRIPTION</param-name>
+            <param-value>AGIV-Metadatacenter (beta)</param-value>
+<!--             <param-value>Geopunt-Metadatacenter</param-value>-->
         </init-param>
 		<init-param>
 			<param-name>jeeves.configuration.overrides.file</param-name>
@@ -341,9 +346,9 @@
     </welcome-file-list>
 <!-- 	
 	<security-role>
-		<role-name>GDI Metadata Editor</role-name>
-		<role-name>GDI Metadata Admin</role-name>
-		<role-name>GDI Metadata Hoofdeditor</role-name>
+		<role-name>Geopunt Metadata Editor</role-name>
+		<role-name>Geopunt Metadata Admin</role-name>
+		<role-name>Geopunt Metadata Hoofdeditor</role-name>
 		<role-name>AGIV Metadata Editor</role-name>
 		<role-name>AGIV Metadata Admin</role-name>
 		<role-name>AGIV Metadata Hoofdeditor</role-name>

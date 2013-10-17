@@ -160,6 +160,7 @@ GeoNetwork.map.ExtentMap = function(){
         
         maps[eltRef] = map;
         vectorLayers[eltRef] = vectorLayer;
+//        map.zoomToExtent(map.maxExtent);
         return map;
     }
     
@@ -400,7 +401,8 @@ GeoNetwork.map.ExtentMap = function(){
         vectorLayer.addFeatures(feature);
         // optionally, zoom on the layer features extent
         if (options.zoomToFeatures) {
-            zoomToFeatures(map, vectorLayer);
+            //zoomToFeatures(map, vectorLayer);
+            map.zoomToExtent(map.maxExtent);
         }
         return true;
     }
