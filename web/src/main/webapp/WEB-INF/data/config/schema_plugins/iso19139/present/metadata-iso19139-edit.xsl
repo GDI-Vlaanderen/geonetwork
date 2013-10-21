@@ -4527,6 +4527,7 @@ This parameter define the class of the textarea (see CSS). -->
           or name(.)='gmd:statement'">medium</xsl:when>
                 <xsl:when test="name(.)='gmd:description'
           or name(.)='gmd:specificUsage'
+		  or name(.)='gmd:title' and name(../../../../..)='gmd:DQ_DomainConsistency'
           or name(.)='gmd:explanation'
           or name(.)='gmd:credit'
           or name(.)='gmd:evaluationMethodDescription'

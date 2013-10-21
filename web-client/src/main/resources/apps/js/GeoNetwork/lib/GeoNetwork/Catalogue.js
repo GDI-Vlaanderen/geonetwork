@@ -234,7 +234,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         Ext.apply(this, config);
         
         
-        if (this.hostUrl) {
+        if (this.hostUrl!=null) {
             // relative path
             if (this.hostUrl.indexOf('http') === -1) {
                 this.hostUrl = window.location.href.match(/http.*\//, '') + this.hostUrl;
@@ -245,7 +245,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         }
         
         // Set catalogue URL based on hostUrl first
-        if (this.hostUrl) {
+        if (this.hostUrl!=null) {
             this.URL = this.SERVERURL;
         } else if (this.servlet) {
             this.URL = this.SERVERURL + this.servlet;
@@ -1338,8 +1338,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Fires the afterLogout or afterBadLogout events
      */
     logout: function(){
-        var serviceUrl = this.URL + '/srv/' + this.LANG + "/";
-    	var agivLogout = GeoNetwork.Settings.logoutUrlSTS + '?wa=wsignout1.0&wreply=' + serviceUrl + /*'user.agiv.logout'*/ 'home';
+    	var agivLogout = GeoNetwork.Settings.logoutUrlSTS + '?wa=wsignout1.0&wreply=' + this.services.rootUrl + /*'user.agiv.logout'*/ 'home';
 //      var agivLogout: serviceUrl + 'user.agiv.logout';
         if (GeoNetwork.Settings.useSTS) {
             var cookie = Ext.state.Manager.getProvider();

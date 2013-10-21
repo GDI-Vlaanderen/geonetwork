@@ -116,13 +116,19 @@ public class BatchUpdateStatus implements Service
 		context.info("Re-indexing metadata");
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
 		r.processWithFastIndexing();
-
+		Set<String> notChangedByErrors = new HashSet<String>();
+		for (String mid : notChanged) {
+			if (mid.startsWith("!")) {
+				notChangedByErrors.add(mid);
+			}
+		}
 		// -- for the moment just return the sizes - we could return the ids at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)
 						.addContent(new Element("done")    .setText((metadata.size()/*-notOwner.size()*/-notFound.size()-notChanged.size())+""))
 //						.addContent(new Element("notOwner").setText(notOwner.size()+""))
 						.addContent(new Element("notFound").setText(notFound.size()+""))
-						.addContent(new Element("notChanged").setText(notChanged.size()+""));
+						.addContent(new Element("notChanged").setText((notChanged.size() - notChangedByErrors.size())+""))
+						.addContent(new Element("notChangedByErrors").setText(notChangedByErrors.size()+""));
 	}
 }
 

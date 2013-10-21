@@ -275,9 +275,10 @@
 
 	    
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- postgresql -->
+		<!-- postgresql development -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
+<!-- 		<resource enabled="false">-->
 		<resource enabled="true">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
@@ -305,22 +306,31 @@
 		</resource>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- sqlserver 2008 -->
+		<!-- sqlserver 2008 agiv en geopunt (beta en productie)-->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+<!-- 		<resource enabled="true">-->
 		<resource enabled="false">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
+<!-- 
 				<user>www-data</user>
 				<password>www-data</password>
-				<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
-                <url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
-				<poolSize>10</poolSize>
-        <validationQuery>SELECT 1</validationQuery>
+-->
+ 				<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+<!-- 			Productie agiv --> 				
+<!--                 <url>jdbc:sqlserver://aocsrv620;database=GeoNetWorkAGIV;integratedSecurity=true;</url> -->
+<!-- 			Productie geopunt --> 				
+<!--                 <url>jdbc:sqlserver://aocsrv620;database=GeoNetWorkGeopunt;integratedSecurity=true;</url> -->
+<!-- 			Beta agiv nieuwe databank ter vervanging van de huidige geonetwork database)--> 				
+<!--                 <url>jdbc:sqlserver://aocsrv605;database=GeoNetWorkAGIV;integratedSecurity=true;</url> -->
+<!-- 			Beta geopunt)--> 				
+<!--                 <url>jdbc:sqlserver://aocsrv605;database=GeoNetWorkGeopunt;integratedSecurity=true;</url> -->
+                <url>jdbc:sqlserver://agivsqlgeonettest;database=geonetwork;integratedSecurity=true;</url>
+				<poolSize>30</poolSize>
+                <validationQuery>SELECT 1</validationQuery>
 			</config>
-		</resource>
-	    
+		</resource>	    	    
 	</resources>
 
 	<!-- ====================================================================== -->
@@ -995,9 +1005,6 @@
 			</error>
 
 			<output file="true" />
-<!-- 
-			<output forward="home" />
- -->
  		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

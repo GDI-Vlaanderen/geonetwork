@@ -373,9 +373,9 @@ class Harvester
 		addCategories(id);
 		
 		dataMan.setHarvestedExt(dbms, id, params.uuid, params.url);
-		dataMan.setTemplate(dbms, id, "n", null);
 		dataMan.setStatusExt(context, dbms, id, new Integer(Params.Status.APPROVED),
 				new ISODate().toString(), "Status veranderd na harvesting");
+		dataMan.setTemplate(dbms, id, "n", null);
 		
 		dbms.commit();
 		//dataMan.indexMetadata(dbms, id); setTemplate update the index

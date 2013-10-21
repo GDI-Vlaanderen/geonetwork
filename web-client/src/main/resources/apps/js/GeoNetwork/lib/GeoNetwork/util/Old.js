@@ -92,7 +92,7 @@ function radioModalUpdate(div, service, modalbox, title) {
         }
     });
     
-    catalogue.doAction(service + pars, null, null, title, function(response){
+    catalogue.doAction(service + pars, null, null, /*title*/null, function(response){
         if(Ext.getDom(div)) {
             Ext.getDom(div).innerHTML = response.responseText;
         }
@@ -106,7 +106,10 @@ function radioModalUpdate(div, service, modalbox, title) {
             	errorst += e.textContent || e.innerText || e.text;});
             Ext.MessageBox.alert(OpenLayers.i18n('error'), OpenLayers.i18n(errorst));
         }
-    }, null);
+    }, function(response){
+    	getError(response);
+    	//Ext.MessageBox.alert(OpenLayers.i18n('error'), "Fout tijdens updaten van de status");
+    });
 }
 
 
@@ -227,3 +230,27 @@ function checkBatchNewOwner(action, title) {
     });
 }
 
+function getError(response){
+    if (response && response.responseText) {
+        var errorPage = response.responseText, 
+            errorTitle1, errorTitle, 
+            errorMsg, errorMsg1, errorMsg2;
+            
+        errorTitle = errorPage.match(/<h2 class=\"error\"\>(.*)<\/h2\>/);
+        errorTitle1 = errorTitle || errorPage.match(/<div id=\"error\"\>\n[ ]*<h2>(.*)<\/h2\>/);
+        errorMsg = errorPage.match(/<\/h2\>\n[ ]*<p\><\/p\>(.*)/);
+        if (!errorMsg) {
+             errorMsg1 = errorPage.match(/<p id=\"error\">(.*)<\/p\>/);
+             errorMsg2 = errorPage.match(/<p id=\"stacktrace\">(.*)<\/p\>/);
+             errorMsg = errorMsg1[1] + errorMsg2[1];
+        } else {
+            errorMsg = errorMsg[1];
+        }
+        
+        if (errorTitle1) {
+            Ext.Msg.alert(errorTitle1[1], (errorMsg ? errorMsg : ''), function(){
+                this.ownerCt.hide();
+            }, this);
+        }
+    } 
+}

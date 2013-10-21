@@ -3,6 +3,8 @@
 	<notfound>Metadata records die niet gevonden zijn</notfound>
 	<notowner>Metadata records waarvan de status niet gewijzigd is omdat u niet de eigenaar bent</notowner>
 	<updated>Metadata records waarvan de status is gewijzigd</updated>
+	<notchanged>Metadata records waarvan de status niet is gewijzigd omdat deze reeds dezelfde status hadden</notchanged>
+	<notchangedByErrors>Metadata records waarvan de status niet is gewijzigd aangezien u niet de rechten hebt of deze metadatarecords konden niet gevalideerd worden</notchangedByErrors>
 	<notchanged>Metadata records waarvan de status niet is gewijzigd aangezien u niet de rechten hebt of deze metadatarecords konden niet gevalideerd worden</notchanged>
 	<resultstitle>Status Update Results</resultstitle>
 </strings>

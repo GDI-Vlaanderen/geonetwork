@@ -105,9 +105,9 @@
 					</gfc:valueType>
 					<gfc:listedValue>
 						<gfc:FC_ListedValue>
-							<gfc:label></gfc:label>
-							<gfc:code></gfc:code>
-							<gfc:definition></gfc:definition>
+							<gfc:label><gco:CharacterString></gco:CharacterString></gfc:label>
+							<gfc:code><gco:CharacterString></gco:CharacterString></gfc:code>
+							<gfc:definition><gco:CharacterString></gco:CharacterString></gfc:definition>
 						</gfc:FC_ListedValue>
 					</gfc:listedValue>
 				</gfc:FC_FeatureAttribute>

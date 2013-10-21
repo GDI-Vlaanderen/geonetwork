@@ -287,10 +287,13 @@ Mapping between :
 											<title>
 												<gco:CharacterString>Verordening (EG) nr. 976/2009 van de Commissie van 19 oktober 2009 tot uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad wat betreft de netwerkdiensten</gco:CharacterString>
 											</title>
+											<alternateTitle>
+												<gco:CharacterString/>
+											</alternateTitle>
 											<date>
 												<CI_Date>
 													<date>
-														<gco:Date>2008-11-28</gco:Date>
+														<gco:Date>2009-10-19</gco:Date>
 													</date>
 													<dateType>
 														<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</CI_DateTypeCode>
@@ -300,7 +303,7 @@ Mapping between :
 										</CI_Citation>
 									</specification>
 									<explanation>
-										<gco:CharacterString>Zie de gerefereerde specificatie</gco:CharacterString>
+										<gco:CharacterString>Zie de gerefereerde specificatie.</gco:CharacterString>
 									</explanation>
 									<pass>
 										<gco:Boolean>true</gco:Boolean>

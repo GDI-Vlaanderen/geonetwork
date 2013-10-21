@@ -43,6 +43,7 @@ import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -94,6 +95,20 @@ public class UpdateStatus implements Service {
         }
 
 		String status = Util.getParam(params, Params.STATUS);
+
+		Element stats = dataMan.getStatus(dbms, id);
+		String currentStatus = Params.Status.UNKNOWN;
+		if (stats != null) {
+			List<Element> mdStat = stats.getChildren();
+			if (mdStat.size() > 0) {
+				Element stat = mdStat.get(0);
+				currentStatus = stat.getChildText("statusid");
+				if (currentStatus.equals(status)) {
+					return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
+				}
+			}
+		}
+
 		String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
 		String changeDate = new ISODate().toString();
 

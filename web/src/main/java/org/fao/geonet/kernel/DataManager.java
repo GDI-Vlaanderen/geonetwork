@@ -1924,7 +1924,9 @@ public class DataManager {
      */
     public Element getMetadataFromWorkspaceNoInfo(ServiceContext srvContext, String id) throws Exception {
         Element md = getMetadataFromWorkspace(srvContext, id, false, false, false, false);
-        md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        if (md!=null) {
+            md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        }
         return md;
     }
 
@@ -3258,7 +3260,7 @@ public class DataManager {
      */
 	public void setStatusExt(ServiceContext context, Dbms dbms, String id, int status, String changeDate, String changeMessage) throws Exception {
 		dbms.execute("INSERT into MetadataStatus(metadataId, statusId, userId, changeDate, changeMessage) VALUES (?,?,?,?,?)",
-                id, status, context.getUserSession().getUserId()!=null?context.getUserSession().getUserId():'1', changeDate, changeMessage);
+                id, status, (context.getUserSession()!=null && context.getUserSession().getUserId()!=null)?context.getUserSession().getUserId():"1", changeDate, changeMessage);
 		if (svnManager != null) {
 		    svnManager.setHistory(dbms, id+"", context);
 		}

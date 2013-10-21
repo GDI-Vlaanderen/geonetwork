@@ -103,14 +103,15 @@ public class PrepareBatchUpdateStatus implements Service
 
 		//-----------------------------------------------------------------------
 		//--- get the list of content reviewers for this metadata record
+/*
 		Element cRevs = am.getContentHoofdeditors(dbms, ids);
 		cRevs.setName("contentHoofdeditors");
-
+*/
 		//-----------------------------------------------------------------------
 		//--- put all together
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(elStatus)
-										.addContent(cRevs);
+										.addContent(elStatus)/*
+										.addContent(cRevs)*/;
 
 		return elRes;
 	}

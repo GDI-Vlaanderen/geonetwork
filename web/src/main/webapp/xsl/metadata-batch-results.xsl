@@ -27,6 +27,10 @@
 				<td><xsl:value-of select="/root/gui/info/notchanged"/></td>
 				<td style="text-align: center;"><xsl:value-of select="/root/response/notChanged"/></td>
 			</tr>
+			<tr>
+				<td><xsl:value-of select="/root/gui/info/notchangedByError"/></td>
+				<td style="text-align: center;"><xsl:value-of select="/root/response/notChangedByError"/></td>
+			</tr>
 			<xsl:if test="/root/gui/reqService='metadata.batch.processing'">
 				<tr>
 					<td><xsl:value-of select="/root/gui/info/notProcessFound"/></td>

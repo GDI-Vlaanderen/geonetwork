@@ -674,7 +674,7 @@
 		<description>De beoogde schaal waarop het bestand waarheidsgetrouw gebruikt mag worden. Dit moet een positief numeriek getal zijn.  (Dus u moet hier 10000 invoeren als de schaal 1:10000 betreft.)</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
-		<mandatoryTooltip>INSPIRE B 6.2: conditioneel - ofwel schaal noemer of resolutie (afstand) moet gespecifieerd zijn indien deze bestaat.</mandatoryTooltip>
+		<mandatoryTooltip>INSPIRE B 6.2: conditioneel - ofwel schaal noemer of grondresolutie moet gespecifieerd zijn indien deze bestaat.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:density">
@@ -727,11 +727,11 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distance">
-		<label>Afstand</label>
-		<description>Afstand</description>
+		<label>Grondresolutie</label>
+		<description>Grondresolutie</description>
 	<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
-		<mandatoryTooltip>INSPIRE B 6.2: conditioneel - ofwel schaal noemer of resolutie (afstand) moet gespecifieerd zijn indien deze bestaat.</mandatoryTooltip>
+		<mandatoryTooltip>INSPIRE B 6.2: conditioneel - ofwel schaal noemer of grondresolutie moet gespecifieerd zijn indien deze bestaat.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionFormat">
@@ -819,7 +819,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_DomainConsistency">
-		<label>Domainconsistentie</label>
+		<label>Domeinconsistentie</label>
 		<description>Overeenkomst van waarden met de opgelegde domeinen voor deze waarden.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2895,6 +2895,10 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 			<option value="Boolean">Boolean</option>
 			<option value="URI">URI</option>
 			<option value="Breuk (&lt;n&gt;,&lt;m&gt;)">Breuk (&lt;n&gt;,&lt;m&gt;)</option>
+			<option value="GM_Point">GM_Point</option>
+			<option value="GM_Curve">GM_Curve</option>
+			<option value="GM_Polygon">GM_Polygon</option>
+			<option value="GM_GriddedSurface">GM_GriddedSurface</option>
 		</helper>
 	</element>
     <element name="gmx:FileName">

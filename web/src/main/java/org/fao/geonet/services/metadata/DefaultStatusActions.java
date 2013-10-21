@@ -201,6 +201,9 @@ public class DefaultStatusActions implements StatusActions {
 		try {
 
 			Set<String> unchanged = new HashSet<String>();
+			Set<String> changedMmetadataIdsToInformEditors = new HashSet<String>();
+			Set<String> changedMmetadataIdsToInformReveiwers = new HashSet<String>();
+			Set<String> changedMmetadataIdsToInformAdministrators = new HashSet<String>();
 
 			// -- process the metadata records to set status
 			for (String mid : metadataIds) {
@@ -223,7 +226,7 @@ public class DefaultStatusActions implements StatusActions {
 
 				// templates need not be valid, other md must be valid to change
 				// status to approved
-				if (statusChangeAllowedByUser(currentStatus, status, mid) && (isTemplate || 
+				if (!currentStatus.equals(status) && statusChangeAllowedByUser(currentStatus, status, mid) && (isTemplate || 
 					!(status.equals(Params.Status.SUBMITTED_FOR_AGIV) || status.equals(Params.Status.APPROVED_BY_AGIV) ||
 					 status.equals(Params.Status.APPROVED)) || statusChangeAllowed(currentStatus, status, mid))) {
 					System.out.println("Change status of metadata " + mid
@@ -248,39 +251,48 @@ public class DefaultStatusActions implements StatusActions {
 					// changeDate, changeMessage);
 					dm.setStatus(context, dbms, mid, new Integer(status),
 							new ISODate().toString(), changeMessage);
-
-					if (!currentStatus.equals(Params.Status.UNKNOWN)) {
+					if (!(currentStatus.equals(Params.Status.UNKNOWN) && status.equals(Params.Status.APPROVED))) {
 						if (status.equals(Params.Status.DRAFT)) {
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.EDITOR, status);
+							changedMmetadataIdsToInformEditors.add(mid);
 						} else if (status.equals(Params.Status.SUBMITTED)) {
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.REVIEWER, status);
+							changedMmetadataIdsToInformReveiwers.add(mid);
 						} else if (status.equals(Params.Status.REJECTED)) {
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.EDITOR, status);
+							changedMmetadataIdsToInformEditors.add(mid);
 						} else if (status.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.ADMINISTRATOR, status);
+							changedMmetadataIdsToInformAdministrators.add(mid);
 						} else if (status.equals(Params.Status.REJECTED_BY_AGIV)) {
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.EDITOR, status);
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.REVIEWER, status);
+							changedMmetadataIdsToInformEditors.add(mid);
+							changedMmetadataIdsToInformReveiwers.add(mid);
 						} else if (status.equals(Params.Status.APPROVED)) {
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.EDITOR, status);
-							informContentUsers(metadataIds, changeDate,
-									changeMessage, Geonet.Profile.REVIEWER, status);
+							changedMmetadataIdsToInformEditors.add(mid);
+							if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+								changedMmetadataIdsToInformReveiwers.add(mid);
+							}
 						}
 					}
 				} else {
-					unchanged.add(mid);
+					if (currentStatus.equals(status)) {
+						unchanged.add(mid);
+					} else {
+						unchanged.add("!" + mid);
+					}
 					System.out
 							.println("Status change not allowed for metadata "
 									+ mid + " from " + currentStatus + " to "
 									+ status);
 				}
+			}
+			if (changedMmetadataIdsToInformEditors.size()>0) {
+				informContentUsers(changedMmetadataIdsToInformEditors, changeDate,
+						changeMessage, Geonet.Profile.EDITOR, status);
+			}
+			if (changedMmetadataIdsToInformReveiwers.size()>0) {
+				informContentUsers(changedMmetadataIdsToInformReveiwers, changeDate,
+						changeMessage, Geonet.Profile.REVIEWER, status);
+			}
+			if (changedMmetadataIdsToInformAdministrators.size()>0) {
+				informContentUsers(changedMmetadataIdsToInformAdministrators, changeDate,
+						changeMessage, Geonet.Profile.ADMINISTRATOR, status);
 			}
 			return unchanged;
 		} catch (Throwable x) {
@@ -370,7 +382,14 @@ public class DefaultStatusActions implements StatusActions {
 		} else {
 			workspace = false;
 		}
-*/
+		if (((currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV)) && status.equals(Params.Status.SUBMITTED)) ||
+			(currentStatus.equals(Params.Status.SUBMITTED) && (status.equals(Params.Status.APPROVED_BY_AGIV) || status.equals(Params.Status.APPROVED))) ||
+			(currentStatus.equals(Params.Status.APPROVED_BY_AGIV) && status.equals(Params.Status.APPROVED))) {
+			workspace = true;
+		} else {
+			workspace = false;
+		}
+*/		
 		if (!(currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.JUSTCREATED) || currentStatus.equals(Params.Status.UNKNOWN))) {
 			workspace = true;
 		} else {
@@ -381,6 +400,10 @@ public class DefaultStatusActions implements StatusActions {
 		Element mdE;
 		if (workspace) {
 			mdE = dm.getMetadataFromWorkspaceNoInfo(context, mid);
+			if (mdE==null) {
+				mdE = dm.getMetadataNoInfo(context, mid);
+				workspace=false;
+			}
 		} else {
 			mdE = dm.getMetadataNoInfo(context, mid);
 		}
@@ -554,62 +577,61 @@ public class DefaultStatusActions implements StatusActions {
 	 * @param profile
 	 *            Profile of users to be informed
 	 */
-	private void informContentUsers(Set<String> metadata,
+	private void informContentUsers(Set<String> metadataIds,
 			String changeDate, String changeMessage, String profile, String status) throws Exception {
 
 		// --- get content reviewers (sorted on content reviewer userid)
-		Element contentRevs = am.getContentUsers(dbms, metadata, profile);
+		Element contentUsers = am.getContentUsers(dbms, metadataIds, profile);
 
 		String subject = "Status metadata record(s) gewijzigd naar '" + dm.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
 					+ replyToDescr + ") op " + changeDate;
 
-		processList(contentRevs, subject, status, changeDate,
-				changeMessage, metadata);
+		processList(contentUsers, subject, status, changeDate, changeMessage);
 	}
 
 	/**
 	 * Process the users and metadata records for emailing notices.
 	 * 
-	 * @param users
-	 *            The selected set of users
+	 * @param records
+	 *            The selected set of records
 	 * @param subject
 	 *            Subject to be used for email notices
 	 * @param status
 	 *            The status being set
 	 * @param changeDate
 	 *            Datestamp of status change
-	 * @param changeMessage
-	 *            The message indicating why the status has changed
 	 */
-	private void processList(Element users, String subject, String status,
-			String changeDate, String changeMessage, Set<String> metadataIds)
+	@SuppressWarnings("unchecked")
+	private void processList(Element contentUsers, String subject, String status,
+			String changeDate, String changeMessage)
 			throws Exception {
 
-		List<Element> userList = users.getChildren();
-
-		List<String> mIds = new ArrayList<String>();
-		boolean first = true;
-		String lastUserId = "-100";
-		String email = "";
-		String id = "";
-
-		for (Element user : userList) {
-			String mid = user.getChildText("metadataid");
-			id = user.getChildText("userid");
-			email = user.getChildText("email");
-			if (!id.equals(lastUserId) && !first) { // send out list
-				sendEmail(email, subject, status, changeDate, changeMessage,
-						metadataIds);
-				mIds = new ArrayList<String>();
-				lastUserId = id;
+		Set<String> metadataIds = new HashSet<String>();
+		String currentUserId = null;
+		String userId = null;
+		String currentEmail = null;
+		List<Element> records = contentUsers.getChildren();
+		Iterator<Element> recordsIterator = records.iterator();
+		while(recordsIterator.hasNext()) {
+			Element record = recordsIterator.next();
+			String metadataId = record.getChildText("metadataid");
+			userId = record.getChildText("userid");
+			if (currentUserId==null) {
+				currentUserId = userId;
+				currentEmail = record.getChildText("email");
+			} else if (!currentUserId.equals(userId)) {
+				if (StringUtils.isNotBlank(currentEmail)) {
+					sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
+				}
+				metadataIds.clear();
+				currentUserId = userId;
+				currentEmail = record.getChildText("email");
 			}
-			mIds.add(mid);
-			first = false;
+			metadataIds.add(metadataId);
 		}
 
-		if (mIds.size() > 0) { // send out the last one
-			sendEmail(email, subject, status, changeDate, changeMessage,
-					metadataIds);
+		if (records.size() > 0) { // send out the last one
+			sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
 		}
 	}
 
@@ -632,21 +654,22 @@ public class DefaultStatusActions implements StatusActions {
 			String changeDate, String changeMessage, Set<String> metadataIds)
 			throws Exception {
 
-		String message = "";
-
+		if (metadataIds.size() > 1) {
+			changeMessage += "\n\nDe metadatarecords zijn beschikbaar via de volgende URL's:\n";
+		} else {
+			changeMessage += "\n\nHet metadatarecord is beschikbaar via de volgende URL:\n";
+		}
 		for (String metadataId : metadataIds) {
-			message = changeMessage
-					+ "\n\nHet metadatarecord is beschikbaar via de volgende URL:\n"
-					+ buildMetadataLink(metadataId);
+			changeMessage += "\n" + buildMetadataLink(metadataId);
 		}
 
 		if (!emailNotes) {
-			context.info("Would send email with message:\n" + message);
+			context.info("Would send email with message:\n" + changeMessage);
 		} else {
 			MailSender sender = new MailSender(context);
 			sender.sendWithReplyTo(host, Integer.parseInt(port), from,
 					fromDescr, sendTo, null, replyTo, replyToDescr, subject,
-					message);
+					changeMessage);
 		}
 	}
 

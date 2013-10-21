@@ -59,9 +59,9 @@ GeoNetwork.defaultViewMode = 'simple';
 Ext.BLANK_IMAGE_URL = '../js/ext/resources/images/default/s.gif';
 
 GeoNetwork.Settings.ratingEnabled = false;
-GeoNetwork.Settings.nodeType = "gdi";
+GeoNetwork.Settings.nodeType = "geopunt";
 GeoNetwork.Settings.useSTS = true;
-GeoNetwork.Settings.logoutUrlSTS = 'https://auth.beta.agiv.be/sts';
-GeoNetwork.Settings.nodeFooterInfo = "Build: 15/10/2013 - Geopunt-Metadatacenter (beta)";
-//GeoNetwork.Settings.nodeFooterInfo = "Build: 15/10/2013 - AGIV-Metadatacenter (beta)";
+GeoNetwork.Settings.logoutUrlSTS = 'https://auth.beta.agiv.be/sts/';
+GeoNetwork.Settings.nodeFooterInfo = "Build: 18/10/2013 - Geopunt-Metadatacenter (beta)";
+//GeoNetwork.Settings.nodeFooterInfo = "Build: 18/10/2013 - AGIV-Metadatacenter (beta)";
 
