@@ -23,8 +23,22 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -33,6 +47,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
@@ -85,20 +100,8 @@ import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
  * search metadata locally using lucene.
@@ -521,7 +524,7 @@ public class LuceneSearcher extends MetaSearcher {
 
             @SuppressWarnings("unchecked")
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
-            Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
+            List<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
             UserSession userSession = srvContext.getUserSession();
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||
@@ -534,6 +537,10 @@ public class LuceneSearcher extends MetaSearcher {
                         }
                     }
                 }
+            } else {
+            	if (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+                    userGroups =  new ArrayList<String>();
+            	}
             }
 
             // remove elements from user input that compromise this request
@@ -543,7 +550,7 @@ public class LuceneSearcher extends MetaSearcher {
 
 			// if 'restrict to' is set then don't add any other user/group info
 			if ((request.getChild(SearchParameter.GROUP) == null) ||
-                (!StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
+                (StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
 				for (String group : userGroups) {
 					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
                 }

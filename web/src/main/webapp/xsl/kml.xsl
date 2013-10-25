@@ -110,6 +110,12 @@
                         	<xsl:variable name="version">
                        			<xsl:if test="not(contains(lower-case(@href),'version'))">&#0038;VERSION=1.1.1</xsl:if> 
                         	</xsl:variable>
+                        	<xsl:variable name="CRS">
+                        		<xsl:choose>
+                        			<xsl:when test="contains(lower-case(@href),'version') and contains(lower-case(@href),'1.3.0')">CRS=CRS:84</xsl:when>
+                        			<xsl:otherwise>SRS=EPSG:4326</xsl:otherwise>
+                        		</xsl:choose>
+                        	</xsl:variable>
                         	<xsl:variable name="request">
                        			<xsl:if test="not(contains(lower-case(@href),'request'))">&#0038;REQUEST=GetMap</xsl:if> 
                         	</xsl:variable>
@@ -119,7 +125,7 @@
 							<GroundOverlay>
 								<name><xsl:value-of select="@title"/></name>
 								<Icon>
-									<href><xsl:value-of select="@href"/><xsl:value-of select="$qmoramp"/>SRS=EPSG:4326&#0038;WIDTH=512&#0038;HEIGHT=512&#0038;LAYERS=<xsl:value-of select="@name"/>&#0038;TRANSPARENT=TRUE&#0038;STYLES=&#0038;FORMAT=image/png<xsl:value-of select="$version"/><xsl:value-of select="$request"/><xsl:value-of select="$service"/>&#0038;</href>
+									<href><xsl:value-of select="@href"/><xsl:value-of select="$qmoramp"/><xsl:value-of select="$CRS"/>&#0038;WIDTH=512&#0038;HEIGHT=512&#0038;LAYERS=<xsl:value-of select="@name"/>&#0038;TRANSPARENT=TRUE&#0038;STYLES=&#0038;FORMAT=image/png<xsl:value-of select="$version"/><xsl:value-of select="$request"/><xsl:value-of select="$service"/>&#0038;</href>
 									<viewRefreshMode>onStop</viewRefreshMode>
 									<viewRefreshTime>3</viewRefreshTime>
 									<viewBoundScale>1.0</viewBoundScale>

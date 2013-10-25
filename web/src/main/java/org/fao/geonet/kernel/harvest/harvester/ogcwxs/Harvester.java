@@ -910,9 +910,9 @@ class Harvester
 		{
 			String name = localCateg.getName (catId);
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
-			else {
+			}else {
 				dataMan.setCategory (context, dbms, id, catId);
 			}
 		}

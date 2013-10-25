@@ -27,22 +27,22 @@
 					</xsl:for-each>
 
 					<div style="width:100%">
-					<div id="users" style="width:65%;float:left;overflow:auto;">
+					<div id="users" style="width:40%;float:left;overflow:auto;">
 						<div id="users.title">
-							<xsl:value-of select="/root/gui/info/users"/>
+							<b><xsl:value-of select="/root/gui/info/users"/></b>
 						</div>
 						<div id="users.select">
 							<select id="user" name="user" size="10" onchange="doGroups(this.value);">
 								<xsl:for-each select="/root/response/editor">
-									<xsl:sort select="username"/>
+									<xsl:sort select="concat(surname,name)"/>
 									<option>
 										<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
 										<xsl:choose>
 											<xsl:when test="normalize-space(name)='' and normalize-space(surname)=''">
-												<xsl:value-of select="username"/>
+												<xsl:value-of select="concat(username,' (',profile,')')"/>
 											</xsl:when>
 											<xsl:otherwise>
-												<xsl:value-of select="concat(profile,': ',username,' - ',name,' ',surname)"/>
+												<xsl:value-of select="concat(surname,' ',name,' (',profile,')')"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</option>
@@ -50,12 +50,12 @@
 							</select>
 						</div>
 					</div>
-					<div id="groups" style="width:35%;float:right;">
+					<div id="groups" style="width:60%;float:right;">
 						<div id="groups.title">
-							<xsl:value-of select="/root/gui/info/groups"/>
+							<b><xsl:value-of select="/root/gui/info/groups"/></b>
 						</div>
 						<div id="groups.select">
-							<select id="group" name="group" size="10">
+							<select id="group" name="group" size="10" style="width:400px">
 							</select>
 						</div>
 					</div>

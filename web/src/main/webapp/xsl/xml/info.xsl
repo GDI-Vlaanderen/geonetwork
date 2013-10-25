@@ -83,7 +83,7 @@
 	<xsl:template match="groups">
 		<xsl:copy>
 			<xsl:for-each select="record">
-				<xsl:sort select="name" order="ascending"/>
+				<xsl:sort select="label" order="ascending"/>
 				<group id="{id}">
 					<xsl:copy-of select="name"/>
 					<xsl:copy-of select="description"/>

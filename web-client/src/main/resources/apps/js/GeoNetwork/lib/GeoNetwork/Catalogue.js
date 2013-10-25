@@ -329,12 +329,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getIcons: serviceUrl + 'xml.harvesting.info?type=icons',
             opensearchSuggest: serviceUrl + 'main.search.suggest',
             massiveOp: {
-                NewOwner: serviceUrl + 'metadata.batch.newowner.form',
-                Categories: serviceUrl + 'metadata.batch.category.form',
-                Delete: serviceUrl + 'metadata.batch.delete',
-                Privileges: serviceUrl + 'metadata.batch.admin.form',
-                Versioning: serviceUrl + 'metadata.batch.version',
-                Status: serviceUrl + 'metadata.batch.status.form'
+                "newOwner": serviceUrl + 'metadata.batch.newowner.form',
+                "categories": serviceUrl + 'metadata.batch.category.form',
+                "delete": serviceUrl + 'metadata.batch.delete',
+                "privileges": serviceUrl + 'metadata.batch.admin.form',
+                "versioning": serviceUrl + 'metadata.batch.version',
+                "status": serviceUrl + 'metadata.batch.status.form'
             },
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
@@ -1437,7 +1437,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     massiveOp: function(type, cb){
         var url = this.services.massiveOp[type];
-        this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
+        this.modalAction(OpenLayers.i18n('massiveOp') + " - " + OpenLayers.i18n(type), url, cb);
     },
     /** private: method[modalAction]
      *

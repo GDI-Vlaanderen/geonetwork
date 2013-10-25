@@ -128,7 +128,7 @@ GeoNetwork.editor.EditorTools = {
             
             scope.newMetadataWindow = new Ext.Window({
                 title: title === undefined ? OpenLayers.i18n('newMetadata') : title,
-                width: 300,
+                width: 550,
                 height: 100,
                 layout: 'fit',
                 modal: true,

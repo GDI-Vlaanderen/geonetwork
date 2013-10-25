@@ -93,14 +93,19 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         var i, contact = [], el, name;
         
         if (record.responsibleParty) {
+            var addedContacts = [];
             for (i = 0; i < record.responsibleParty.length; i++) {
                 var tokens = record.responsibleParty[i].value.split(separator);
-                contact.push({
-                            applies: tokens[1],
-                            logo: tokens[3],
-                            role: tokens[0],
-                            name: tokens[2]
-                        });
+                var name = tokens[2];
+                if (!Ext.isEmpty(name) && !addedContacts.contains(name)) {
+                    contact.push({
+                        applies: tokens[1],
+                        logo: tokens[3],
+                        role: tokens[0],
+                        name: name
+                    });
+                    addedContacts.push(name);
+                }
             }
         }
         return contact;

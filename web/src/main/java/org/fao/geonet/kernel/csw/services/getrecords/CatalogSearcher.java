@@ -539,8 +539,7 @@ public class CatalogSearcher {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		AccessManager am = gc.getAccessManager();
-		Set<String> hs = am.getUserGroups(dbms, context.getUserSession(),
-				context.getIpAddress());
+		List<String> hs = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 		BooleanQuery query = new BooleanQuery();
 

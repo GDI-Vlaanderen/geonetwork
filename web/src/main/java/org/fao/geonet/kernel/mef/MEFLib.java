@@ -507,7 +507,7 @@ public class MEFLib {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		AccessManager am = gc.getAccessManager();
-		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+		List<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 		// --- scan query result to collect info
 

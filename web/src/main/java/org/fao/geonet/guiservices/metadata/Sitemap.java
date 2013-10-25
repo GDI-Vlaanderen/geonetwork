@@ -27,17 +27,18 @@
 
 package org.fao.geonet.guiservices.metadata;
 
+import java.util.List;
+
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.jdom.Element;
-
-import java.util.Set;
 
 /**
  * Create a sitemap document with metadata records
@@ -67,7 +68,7 @@ public class Sitemap implements Service
 
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        Set<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+        List<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
         String query = "SELECT DISTINCT id, uuid, schemaId, changeDate FROM Metadata, OperationAllowed "+
                             "WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (";

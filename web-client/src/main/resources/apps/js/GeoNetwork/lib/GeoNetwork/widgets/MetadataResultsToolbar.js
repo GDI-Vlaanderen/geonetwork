@@ -178,7 +178,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             iconCls: 'cancel',
             id: 'deleteAction',
             handler: function(){
-                this.catalogue.massiveOp('Delete', function() {
+                this.catalogue.massiveOp('delete', function() {
                     this.catalogue.metadataSelectNone();
                 });
             },
@@ -189,7 +189,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text: OpenLayers.i18n('newOwner'),
             id: 'ownerAction',
             handler: function(){
-                this.catalogue.massiveOp('NewOwner');
+                this.catalogue.massiveOp('newOwner');
             },
             scope: this,
             hidden: hide
@@ -200,7 +200,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text: OpenLayers.i18n('updateCategories'),
             id: 'updateCategoriesAction',
             handler: function(){
-                this.catalogue.massiveOp('Categories');
+                this.catalogue.massiveOp('categories');
             },
             scope: this,
             hidden: true
@@ -210,7 +210,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             id: 'updatePrivilegesAction',
             iconCls : 'privIcon',
             handler: function(){
-                this.catalogue.massiveOp('Privileges');
+                this.catalogue.massiveOp('privileges');
             },
             scope: this,
             hidden: hide || this.catalogue.identifiedUser.role!='Administrator'
@@ -220,7 +220,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             id: 'updateStatusAction',
             iconCls : 'statusIcon',
             handler: function(){
-                this.catalogue.massiveOp('Status');
+                this.catalogue.massiveOp('status');
             },
             scope: this,
             hidden: hide
@@ -231,7 +231,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             id: 'updateVersionAction',
             iconCls : 'versioningIcon',
             handler: function(){
-                this.catalogue.massiveOp('Versioning');
+                this.catalogue.massiveOp('versioning');
             },
             scope: this,
             hidden: true

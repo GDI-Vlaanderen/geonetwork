@@ -46,7 +46,7 @@
 				<th class="padded"><xsl:value-of select="/root/gui/strings/operation"/></th>
 			</tr>
 			<xsl:for-each select="/root/response/record">
-				<xsl:sort select="name"/>
+				<xsl:sort select="description"/>
 				<tr>
 					<td class="padded, bottom_border"><xsl:value-of select="name"/></td>
 					<td class="padded, bottom_border" width="150"><xsl:value-of select="description"/></td>

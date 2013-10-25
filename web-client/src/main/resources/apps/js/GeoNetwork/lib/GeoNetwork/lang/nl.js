@@ -254,7 +254,7 @@ GeoNetwork.Lang.nl = {
     'administration': "Beheer",
     'validationReport': "Validatierapport",
     'status': "Status",
-    'metadataStatus': "Status metadatarecord",
+    'metadataStatus': "Status record",
     'setStatus': 'Wijzig status',	
     'updateStatus': 'Update status',
     'status_label': 'Status record: ',

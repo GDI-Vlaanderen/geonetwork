@@ -544,7 +544,7 @@
 	<help>Help</help>
     <helpLinkTooltip js="true">Help</helpLinkTooltip>  
 	<helpComplete>Complete help</helpComplete>
-	<helperList>Suggestions:</helperList>
+	<helperList>Suggesties:</helperList>
 	<hideAdvancedOptions>Verberg geavanceerde opties</hideAdvancedOptions>
 	<highlights>Highlights</highlights>
 	<hitsPerPage>Bezoeken per pagina</hitsPerPage>

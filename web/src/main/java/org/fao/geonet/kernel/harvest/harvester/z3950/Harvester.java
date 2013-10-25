@@ -396,10 +396,10 @@ class Harvester {
 		for (Privileges priv : params.getPrivileges()) {
 			String name = localGroups.getName(priv.getGroupId());
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled())
                     log.debug("    - Skipping removed group with id:" + priv.getGroupId());
-			else {
+			}else {
 				for (String opId : priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 

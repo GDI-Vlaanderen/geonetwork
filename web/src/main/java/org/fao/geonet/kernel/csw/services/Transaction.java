@@ -240,7 +240,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         // Set default group: user first group
-        Set<String> userGroups = am.getVisibleGroups(dbms, userId);
+        List<String> userGroups = am.getVisibleGroups(dbms, userId);
         String group = (String) userGroups.toArray()[0];
 
         //

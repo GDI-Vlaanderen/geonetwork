@@ -686,8 +686,14 @@ public class DataManager {
             moreFields.add(SearchManager.makeField(LuceneIndexField._USERINFO, user.getChildText("username") + "|" +
                     user.getChildText("surname") + "|" + user.getChildText("name") + "|" + user.getChildText("profile"),
                     true, false));
-
-            moreFields.add(SearchManager.makeField(LuceneIndexField._OWNERNAME, user.getChildText("username"), true, false));
+            String ownername = "";
+            if (user.getChildText("surname")!=null) {
+            	ownername += user.getChildText("surname");	
+            }
+            if (user.getChildText("name")!=null) {
+            	ownername += " " + user.getChildText("name");            	
+            }
+            moreFields.add(SearchManager.makeField(LuceneIndexField._OWNERNAME, ownername, true, false));
         }
         //***
         // if (groupOwner != null) {

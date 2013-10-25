@@ -547,11 +547,15 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 return cswPrefix + ":Record";
             }
             // not empty: scan comma-separated string
+/*
             Scanner commaSeparator = new Scanner(typeNamesValue);
             commaSeparator.useDelimiter(",");
+*/
+            String[] typeNamesList = typeNamesValue.split(" ");
             String result = cswPrefix + ":Record";
-            while(commaSeparator.hasNext()) {
-                String typeName = commaSeparator.next();
+//            while(commaSeparator.hasNext()) {
+            for (int i=0;i<typeNamesList.length;i++) {
+                String typeName = typeNamesList[i];//commaSeparator.next();
                 typeName = typeName.trim();
                 if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                     Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);

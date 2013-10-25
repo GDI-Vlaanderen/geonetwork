@@ -69,6 +69,12 @@ public class AgivLogin implements Service
 	//--------------------------------------------------------------------------
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		updateNewGroups(dbms);
 		UserSession userSession = context.getUserSession();
 		if (StringUtils.isBlank(userSession.getUsername())) {
 			throw new MissingParameterEx(Params.USERNAME);
@@ -76,11 +82,6 @@ public class AgivLogin implements Service
 		defaultPassword = "!" + userSession.getUsername() + "!";
 		String username = userSession.getUsername();
 	    String userinfo = "false";
-
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getSettingManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Element user = null;
 		List list = null;
@@ -204,5 +205,37 @@ public class AgivLogin implements Service
     	}
 
 		dbms.commit();
+	}
+
+	/**
+    *
+    * @param context
+    * @param dbms
+    * @param info
+    * @throws SQLException
+    * @throws UserLoginEx 
+    */
+	@SuppressWarnings("unchecked")
+	private void updateNewGroups(Dbms dbms) throws SQLException, UserLoginEx {
+       String selectQuery = "SELECT * FROM GroupsToCreate";
+	   String insertQuery = "INSERT INTO GROUPS(id, name, description) VALUES(?,?,?)";
+	   String deleteQuery = "DELETE FROM GroupsToCreate WHERE name=?";
+       List<Element> groupsToCreateList  = dbms.select(selectQuery).getChildren();
+	   for(Element groupToCreate : groupsToCreateList) {
+           String queryExistingGroup = "SELECT id FROM Groups WHERE name=?";
+           String name = groupToCreate.getChildText("name");
+           List<Element> listExistingGroups  = dbms.select(queryExistingGroup, name).getChildren();
+
+           if (listExistingGroups.isEmpty()) {
+        	   String id = IDFactory.newID();
+        	   String groupDescription = groupToCreate.getChildText("description");
+        	   if (groupDescription!=null) {
+            	   dbms.execute(insertQuery, id, name, groupDescription);
+            	   Lib.local.insert(dbms, "Groups", id, groupDescription);
+            	   dbms.execute(deleteQuery, name);
+        	   }
+           }
+	   }
+       dbms.commit();
 	}
 }

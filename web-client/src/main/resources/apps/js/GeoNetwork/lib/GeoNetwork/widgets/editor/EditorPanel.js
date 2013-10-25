@@ -829,8 +829,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  
      */
     saveBeforeUploadThumbnail: function(){
-        this.loadUrl('metadata.update.new', undefined, this.thumbnailLoadCallback, false);
-        this.validationPanel.expand(true);
+        this.loadUrl('metadata.update.new', undefined, this.thumbnailLoadCallback);
     },
     /** api: method[validate]
      * 
@@ -838,7 +837,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  
      */
     saveBeforeRemoveThumbnail: function(filedescription){
-        this.loadUrl('metadata.update.new', undefined, this.thumbnailRemoveCallback, false, {filedescription: filedescription});
+        this.loadUrl('metadata.update.new', undefined, this.thumbnailRemoveCallback);
         this.validationPanel.expand(true);
     },
     /** api: method[reset]

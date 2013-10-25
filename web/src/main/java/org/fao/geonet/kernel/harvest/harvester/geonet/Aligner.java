@@ -372,8 +372,9 @@ public class Aligner
 		{
 			String name = localCateg.getName(catId);
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
+			}
 			else
 			{
                 if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
@@ -685,8 +686,9 @@ public class Aligner
 	private void updateFile(String id, String file, String dir, String changeDate,
 									InputStream is, Element files) throws IOException
 	{
-		if (files == null)
+		if (files == null) {
             if(log.isDebugEnabled()) log.debug("  - No file found in info.xml. Cannot update file:" + file);
+		}
 		else
 		{
 			removeOldFile(id, files, dir);

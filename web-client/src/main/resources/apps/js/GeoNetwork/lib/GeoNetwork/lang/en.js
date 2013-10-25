@@ -258,7 +258,7 @@ GeoNetwork.lang.en = {
     'validationReport': 'Validation report',
     'setStatus': 'Metadata status',
     'status': 'Status',
-    'metadataStatus': "Status metadatarecord",
+    'metadataStatus': "Status record",
     'updateStatus': 'Update status',
     'status_label': 'Status:',
     'status_0': 'Unknown',

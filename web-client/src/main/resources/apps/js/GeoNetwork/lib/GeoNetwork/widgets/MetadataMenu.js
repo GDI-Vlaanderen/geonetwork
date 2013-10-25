@@ -387,8 +387,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         var isSymbolicLocking  = this.record.get('symbolicLocking') === 'y';
         var isLocked = this.record.get('locked') === 'y';
         var isWorkspace = this.record.get('workspace') === 'true';
+        var workspaceCanExists = !(this.record.get('status')=='0' || this.record.get('status')=='6');
         var isOwner = this.record.get('owner') === 'true';
-        var sameOwnerName = (this.catalogue.identifiedUser) && (this.record.get('ownername') === this.catalogue.identifiedUser.username);
 
         var sameLockedByAndLoggedUser = (this.catalogue.identifiedUser) && (this.record.get('lockedBy') === this.catalogue.identifiedUser.id);
 
@@ -426,20 +426,32 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                     this.viewOriginalCopyAction.hide();
                     this.diffOriginalCopyAction.hide();
                     this.diffOriginalCopyEditModeAction.hide();
-                    this.viewWorkspaceCopyAction.show();
-                    this.printWorkspaceCopyAction.show();
-                    this.diffWorkspaceCopyAction.show();
+                    if (workspaceCanExists) {
+                        this.viewWorkspaceCopyAction.show();
+                        this.printWorkspaceCopyAction.show();
+                        this.diffWorkspaceCopyAction.show();
+                    } else {
+                        this.viewWorkspaceCopyAction.hide();
+                        this.printWorkspaceCopyAction.hide();
+                        this.diffWorkspaceCopyAction.hide();
+                    }
                 }
                 else {
                     this.viewAction.hide();
                     //this.viewWorkspaceCopyAction.hide();
                     this.printWorkspaceCopyAction.hide();
                     this.diffWorkspaceCopyAction.hide();
-
-                    this.viewWorkspaceCopyAction.show();
-                    this.viewOriginalCopyAction.show();
-                    this.diffOriginalCopyAction.show();
-                    this.diffOriginalCopyEditModeAction.show();
+                    if (workspaceCanExists) {
+                        this.viewWorkspaceCopyAction.show();
+                        this.viewOriginalCopyAction.show();
+                        this.diffOriginalCopyAction.show();
+                        this.diffOriginalCopyEditModeAction.show();
+                    } else {
+                        this.viewWorkspaceCopyAction.hide();
+                        this.viewOriginalCopyAction.hide();
+                        this.diffOriginalCopyAction.hide();
+                        this.diffOriginalCopyEditModeAction.hide();
+                    }
                 }
             }
         }
@@ -471,12 +483,12 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.statusAction.setDisabled(!(isOwner && (!isHarvested || GeoNetwork.Settings.editor.editHarvested)));
         this.cancelEditSessionAction.setDisabled(!(isLocked && (isAdmin || sameLockedByAndLoggedUser)));
         this.changeEditSessionOwnerAction.setDisabled(!(isLocked && (isOwner || (isEditable && isSymbolicLocking))));
-        this.viewWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
-        this.diffWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
-        this.viewOriginalCopyAction.setDisabled(!(isLocked && isEditable));
-        this.diffOriginalCopyAction.setDisabled(!(isLocked && isEditable));
-        this.diffOriginalCopyEditModeAction.setDisabled(this.editAction.isDisabled());
-        this.printWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
+        this.viewWorkspaceCopyAction.setDisabled(!(isLocked && isEditable && workspaceCanExists));
+        this.diffWorkspaceCopyAction.setDisabled(!(isLocked && isEditable && workspaceCanExists));
+        this.viewOriginalCopyAction.setDisabled(!(isLocked && isEditable && workspaceCanExists));
+        this.diffOriginalCopyAction.setDisabled(!(isLocked && isEditable && workspaceCanExists));
+        this.diffOriginalCopyEditModeAction.setDisabled(this.editAction.isDisabled() || !workspaceCanExists);
+        this.printWorkspaceCopyAction.setDisabled(!(isLocked && isEditable && workspaceCanExists));
         if (this.versioningAction) this.versioningAction.setDisabled(!((!isLocked || sameLockedByAndLoggedUser)  && (!isHarvested || GeoNetwork.Settings.editor.editHarvested)));
 
         this.deleteAction.setDisabled(!((isLocked && sameLockedByAndLoggedUser) || (!isLocked && isEditable)));

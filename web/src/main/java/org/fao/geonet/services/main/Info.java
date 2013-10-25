@@ -174,11 +174,11 @@ public class Info implements Service {
 		//--- retrieve user groups
 
         if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
-            return Lib.local.retrieve(dbms, "Groups");
+            return Lib.local.retrieve(dbms, "Groups", null, null, "description");
         } else {
-            String query = "SELECT ug.groupId as id FROM UserGroups ug WHERE ug.userId=?";
+            String query = "SELECT ug.groupId as id FROM UserGroups ug, Groups WHERE ug.userId=? and ug.groupId=Groups.id order by Groups.description";
             Set<String> ids = Lib.element.getIds(dbms.select(query, session.getUserId()));
-            Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
+            Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "description");
 
             return Lib.element.pruneChildren(groups, ids);
         }

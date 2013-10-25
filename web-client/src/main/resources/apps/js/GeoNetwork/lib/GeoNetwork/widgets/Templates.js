@@ -334,12 +334,16 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<div class="md-contact">',
             '<tpl for="contact">',
             // metadata contact are not displayed.
+/*
             '<tpl if="applies==\'resource\'">',
-            '<span title="{role} - {applies}"><tpl if="values.logo !== undefined && values.logo !== \'\'">',
+            '<span title="{role} - {applies}">',
+            '<tpl if="values.logo !== undefined && values.logo !== \'\'">',
             '<img src="{logo}" class="orgLogo"/>',
             '</tpl>',
             '{name}&nbsp;&nbsp;</span>',
             '</tpl>',
+*/
+            '<span>{name}&nbsp;&nbsp;</span>',
             '</tpl>',
             '<tpl if="edit==\'true\' && isharvested!=\'y\'">',
             '<br/><span class="md-mn md-mn-user" title="' + OpenLayers.i18n('ownerName') + '">{ownername} - ' + OpenLayers.i18n('lastUpdate') + '{[values.changedate.split(\'T\')[0]]}</span>',

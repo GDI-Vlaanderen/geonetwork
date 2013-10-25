@@ -319,13 +319,13 @@
 -->
  				<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
 <!-- 			Productie agiv --> 				
-<!--                 <url>jdbc:sqlserver://aocsrv620;database=GeoNetWorkAGIV;integratedSecurity=true;</url> -->
+<!--                 <url>jdbc:sqlserver://agivsqlGeoNetworkAGIV;database=GeoNetWorkAGIV;integratedSecurity=true;</url> -->
 <!-- 			Productie geopunt --> 				
-<!--                 <url>jdbc:sqlserver://aocsrv620;database=GeoNetWorkGeopunt;integratedSecurity=true;</url> -->
+<!--                 <url>jdbc:sqlserver://agivsqlGeoNetworkGeopunt;database=GeoNetWorkGeopunt;integratedSecurity=true;</url> -->
 <!-- 			Beta agiv nieuwe databank ter vervanging van de huidige geonetwork database)--> 				
-<!--                 <url>jdbc:sqlserver://aocsrv605;database=GeoNetWorkAGIV;integratedSecurity=true;</url> -->
+<!--                 <url>jdbc:sqlserver://agivsqlGeoNetworkAGIVBeta;database=GeoNetWorkAGIV;integratedSecurity=true;</url> -->
 <!-- 			Beta geopunt)--> 				
-<!--                 <url>jdbc:sqlserver://aocsrv605;database=GeoNetWorkGeopunt;integratedSecurity=true;</url> -->
+<!--                 <url>jdbc:sqlserver://agivsqlGeoNetworkGeopuntBeta;database=GeoNetWorkGeopunt;integratedSecurity=true;</url> -->
                 <url>jdbc:sqlserver://agivsqlgeonettest;database=geonetwork;integratedSecurity=true;</url>
 				<poolSize>30</poolSize>
                 <validationQuery>SELECT 1</validationQuery>
@@ -972,7 +972,7 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+ <!--
 		<service name="user.login">
 			<class name=".services.login.Login" />
 
@@ -982,7 +982,7 @@
 				<xml name="error" file="xml/login-error.xml" />
 			</error>
 		</service>
-
+-->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="shib.user.login">
@@ -1009,11 +1009,12 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+<!-- 
 		<service name="user.logout">
 			<class name=".services.login.Logout" />
 			<output forward="home" />
 		</service>
-
+-->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Administration services                                       -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

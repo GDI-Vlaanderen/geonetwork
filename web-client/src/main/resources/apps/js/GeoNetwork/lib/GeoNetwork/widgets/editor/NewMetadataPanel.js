@@ -40,6 +40,7 @@ Ext.namespace('GeoNetwork.editor');
  */
 GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
+    	layout:'fit',
         border: false,
         frame: false,
         isTemplate: 'n'
@@ -56,7 +57,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
     combo: undefined,
     createBt: undefined,
     validate: function(){
-        if (this.selectedGroup !== undefined && this.selectedTpl !== undefined) {
+        if (!Ext.isEmpty(this.selectedGroup) && this.selectedTpl !== undefined) {
             this.createBt.setDisabled(false);
         } else {
             this.createBt.setDisabled(true);
@@ -94,7 +95,52 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
 
         GeoNetwork.editor.NewMetadataPanel.superclass.initComponent.call(this);
 
-        this.groupStore = GeoNetwork.data.GroupStore(this.getGroupUrl);
+        this.groupStore = new Ext.data.XmlStore({
+            autoDestroy: true,
+            proxy: new Ext.data.HttpProxy({
+                method: 'GET',
+                url: this.getGroupUrl,
+                disableCaching: false
+            }),
+            record: 'group',
+            idPath: 'id',
+            fields: [{
+                name: 'id',
+                mapping: '@id'
+            }, {
+                name: 'name'
+            }, {
+                name: 'label', mapping: 'label>dut'
+            }],
+            autoLoad: true
+        });
+        
+        this.combo = new Ext.form.ComboBox({
+        	name: 'E_group',
+            mode: 'local',
+            emptyText: OpenLayers.i18n('chooseGroup'),
+            editable: true,
+            selectOnFocus:true,
+            forceSelection:true,
+            autoShow:true,
+            triggerAction: 'all',
+            fieldLabel: OpenLayers.i18n('group'),
+            labelWidth: 50,
+            store: this.groupStore,
+            allowBlank: false,
+            valueField: 'id',
+            displayField: 'label',
+            width: 400, 
+//            tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()) + ']}</div></tpl>',
+            listeners: {
+                change: function(combo, newValue, oldValue){
+                    this.selectedGroup = newValue;
+//                    this.combo.setValue(record.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
+                    this.validate();
+                },
+                scope: this
+            }
+        });
 
         // Only add template if not already defined (ie. duplicate action)
         if (!this.selectedTpl) {
@@ -139,45 +185,27 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                         this.validate();
                     },
                     scope : this
-                }
+                },
+                fbar: [OpenLayers.i18n('group'),this.combo]            
             }));
 
             this.catalogue.search({E_template: 'y'}, null, null, 1, true, this.tplStore, null);
+        } else {
+            this.add({
+            	border: false,
+                layout:'form',
+                items:[
+                   	this.combo
+                ]
+            });
         }
-
-        this.combo = new Ext.form.ComboBox({
-            name: 'E_group',
-            mode: 'local',
-            emptyText: OpenLayers.i18n('chooseGroup'),
-            editable: false,
-            triggerAction: 'all',
-            fieldLabel: OpenLayers.i18n('group'),
-            labelWidth: 50,
-            store: this.groupStore,
-            allowBlank: false,
-            valueField: 'id',
-            displayField: 'name',
-            width: 300,
-            tpl: '<tpl for="."><div class="x-combo-list-item" style="width:300px">{[values.label.' + GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()) + ']}</div></tpl>',
-            listeners: {
-                select: function(field, record, idx){
-                    this.selectedGroup = record.get('id');
-                    this.combo.setValue(record.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
-                    this.validate();
-                },
-                scope: this
-            }
-        });
-
-        this.add(this.combo);
-
+        
         this.add({
             xtype: 'textfield',
             name: 'isTemplate',
             hidden: true,
             value: this.isTemplate
         });
-
         // Remove special groups and select first group in the list
         this.groupStore.load({
             callback: function(){
@@ -192,7 +220,8 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                     var recordSelected = this.groupStore.getAt(0);
                     if (recordSelected) {
                         this.selectedGroup = recordSelected.get('id');
-                        this.combo.setValue(recordSelected.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
+                        this.combo.setValue(recordSelected.get('id'));
+//                        this.combo.setValue(recordSelected.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
                         this.validate();
                     }
                 }

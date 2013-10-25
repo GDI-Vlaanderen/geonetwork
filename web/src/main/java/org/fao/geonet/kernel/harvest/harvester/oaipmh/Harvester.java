@@ -386,8 +386,9 @@ class Harvester
 		{
 			String name = localCateg.getName(catId);
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
+			}
 			else
 			{
                 if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
@@ -406,8 +407,9 @@ class Harvester
 		{
 			String name = localGroups.getName(priv.getGroupId());
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
+			}
 			else
 			{
                 if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);

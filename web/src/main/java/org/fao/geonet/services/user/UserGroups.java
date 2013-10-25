@@ -85,9 +85,9 @@ public class UserGroups implements Service
 			Element theGroups;
 
 			if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) && (theProfile.equals(Geonet.Profile.ADMINISTRATOR))) {
-				theGroups = dbms.select("SELECT id, name, description FROM Groups");
+				theGroups = dbms.select("SELECT id, name, description FROM Groups order by description");
 			} else {
-				theGroups = dbms.select("SELECT id, name, description FROM UserGroups, Groups WHERE groupId=id AND userId=?", id);
+				theGroups = dbms.select("SELECT id, name, description FROM UserGroups, Groups WHERE groupId=id AND userId=? order by Groups.description", id);
 			}
 
 			List<Element> list = theGroups.getChildren();

@@ -46,7 +46,7 @@ public class OwnershipUtils
 			return new ArrayList<Element>();
 
 
-		String query = "SELECT DISTINCT Users.id, username, name, surname, profile FROM Users, Metadata WHERE owner=Users.id";
+		String query = "SELECT DISTINCT Users.id, username, name, surname, profile FROM Users, Metadata WHERE owner=Users.id order by surname, name";
 
 		List<Element> list  = dbms.select(query).getChildren();
 
@@ -58,7 +58,7 @@ public class OwnershipUtils
 		if (!us.isAuthenticated())
 			return new ArrayList<Element>();
 
-		String query = "SELECT DISTINCT id, username, name, surname, profile FROM Users WHERE profile not like 'RegisteredUser'";
+		String query = "SELECT DISTINCT id, username, name, surname, profile FROM Users WHERE profile not like 'RegisteredUser' order by surname, name";
 
 		List<Element>   list  = dbms.select(query).getChildren();
 
@@ -75,7 +75,7 @@ public class OwnershipUtils
 
 		//--- we have a user admin
 
-		Set<String> hsMyGroups = getUserGroups(dbms, id);
+		List<String> hsMyGroups = getUserGroups(dbms, id);
 
 		Set profileSet = context.getProfileManager().getProfilesSet(us.getProfile());
 
@@ -105,12 +105,12 @@ public class OwnershipUtils
 	//---
 	//--------------------------------------------------------------------------
 
-	private static Set<String> getUserGroups(Dbms dbms, String id) throws SQLException
+	private static List<String> getUserGroups(Dbms dbms, String id) throws SQLException
 	{
 
-		Set<String> hs = new HashSet<String>();
+		List<String> hs = new ArrayList<String>();
 
-		String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
+		String query = "SELECT groupId AS id FROM UserGroups, Groups WHERE userId=? AND UserGroups.groupId=Groups.id order by Groups.description";
 		List<Element> list = dbms.select(query, id).getChildren();
 		for (Element el : list) {
 			hs.add(el.getChildText("id"));

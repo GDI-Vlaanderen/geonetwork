@@ -108,17 +108,21 @@ GeoNetwork.data.MetadataResultsStore = function(){
         var i, contact = [], el, name;
         
         if (record.responsibleParty) {
+            var addedContacts = [];
             for (i = 0; i < record.responsibleParty.length; i++) {
                 el = record.responsibleParty[i];
                 
                 name = (record.responsibleParty.organisationName && record.responsibleParty.organisationName[i] ? 
                             record.responsibleParty.organisationName[i].value : '');
-                contact.push({
-                            applies: el.appliesTo,
-                            logo: el.logo,
-                            role: el.role,
-                            name: name
-                        });
+                if (!Ext.isEmpty(name) && !addedContacts.contains(name)) {
+	                contact.push({
+	                            applies: el.appliesTo,
+	                            logo: el.logo,
+	                            role: el.role,
+	                            name: name
+	                        });
+                    addedContacts.push(name);
+                }
             }
         }
         return contact;

@@ -1,3 +1,5 @@
+DELETE FROM dbo.Sources;
+DELETE FROM dbo.HarvestHistory;
 DELETE FROM dbo.Params;
 DELETE FROM dbo.Requests;
 DELETE FROM dbo.MetadataNotifications;

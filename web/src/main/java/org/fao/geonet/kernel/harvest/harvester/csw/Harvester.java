@@ -181,7 +181,7 @@ class Harvester
 
 		request.setResultType(ResultType.RESULTS);
 		//request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
-		request.setElementSetName(ElementSetName.SUMMARY);
+		request.setElementSetName(ElementSetName.FULL);
 		request.setMaxRecords(GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE +"");
 
 		CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
@@ -277,6 +277,7 @@ class Harvester
     private void configRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, String preferredMethod)
             throws Exception {
         // Use the preferred HTTP method and check one exist.
+    	boolean isCSWGetRecords = oper.name!=null && oper.name.equalsIgnoreCase("GetRecords");
 		if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
 			request.setUrl(oper.getUrl);
             request.setServerVersion(server.getPreferredServerVersion());
@@ -285,9 +286,11 @@ class Harvester
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getCqlConstraint(s));
 			request.setMethod(CatalogRequest.Method.GET);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
-            }
+			if (!isCSWGetRecords) {
+	            for(String typeName: oper.typeNamesList) {
+	                request.addTypeName(TypeName.getTypeName(typeName));
+	            }
+			}
             request.setOutputFormat(oper.preferredOutputFormat) ;
 
 		} else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
@@ -298,9 +301,11 @@ class Harvester
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getFilterConstraint(s));
 			request.setMethod(CatalogRequest.Method.POST);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
-            }
+			if (!isCSWGetRecords) {
+	            for(String typeName: oper.typeNamesList) {
+	                request.addTypeName(TypeName.getTypeName(typeName));
+	            }
+			}
             request.setOutputFormat(oper.preferredOutputFormat) ;
 
 		} else {
@@ -312,9 +317,11 @@ class Harvester
                 request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
                 request.setConstraint(getCqlConstraint(s));
                 request.setMethod(CatalogRequest.Method.GET);
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
+    			if (!isCSWGetRecords) {
+	                for(String typeName: oper.typeNamesList) {
+	                    request.addTypeName(TypeName.getTypeName(typeName));
+	                }
+    			}
                 request.setOutputFormat(oper.preferredOutputFormat) ;
 
             } else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
@@ -325,16 +332,20 @@ class Harvester
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getFilterConstraint(s));
 				request.setMethod(CatalogRequest.Method.POST);
-
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
+				if (!isCSWGetRecords) {
+			        for(String typeName: oper.typeNamesList) {
+			            request.addTypeName(TypeName.getTypeName(typeName));
+			        }
+				}
                 request.setOutputFormat(oper.preferredOutputFormat) ;
 
 			} else {
 			    // TODO : add GET+FE and POST+CQL support
 				throw new OperationAbortedEx("No GET (using CQL) or POST (using FE) DCP available in this service.");
 			}
+		}
+		if (isCSWGetRecords) {
+			request.addTypeName(TypeName.getTypeName("gmd:MD_Metadata"));
 		}
     }
 
@@ -476,12 +487,13 @@ class Harvester
 	{
 		try
 		{
-			log.info("Searching on : "+ params.name +" ("+ start +".."+ (start + max) +")");
+			System.out.println("Searching on : "+ params.name +" ("+ start +".."+ (start + max) +")");
 			Element response = request.execute();
             if(log.isDebugEnabled()) {
 			log.debug("Sent request "+request.getSentData());
 			log.debug("Search results:\n"+Xml.getString(response));
             }
+			System.out.println("Sent request "+request.getSentData());
 
 			return response;
 		}

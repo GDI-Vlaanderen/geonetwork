@@ -133,7 +133,7 @@
                 <xsl:value-of select="/root/gui/strings/group"/>
             </th>
             <td class="padded">
-                <select class="content" name="group" size="1">
+                <select class="content" name="group" size="1" style="width:400px">
                     <xsl:for-each select="/root/gui/groups/record">
                         <xsl:sort select="label/child::*[name() = $lang]"/>
                         <option value="{id}">

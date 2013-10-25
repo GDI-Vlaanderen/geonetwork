@@ -119,7 +119,7 @@ function addGroups(xmlRes){
     Ext.getDom('group').options.length = 0;
     for (i = 0; i < list.length; i++) {
         var id = list[i].getElementsByTagName('id')[0].firstChild.nodeValue;
-        var name = list[i].getElementsByTagName('name')[0].firstChild.nodeValue;
+        var name = list[i].getElementsByTagName('description')[0].firstChild.nodeValue;
         var opt = document.createElement('option');
         opt.text = name;
         opt.value = id;

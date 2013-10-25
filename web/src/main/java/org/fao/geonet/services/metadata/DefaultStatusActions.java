@@ -529,7 +529,7 @@ public class DefaultStatusActions implements StatusActions {
 	 *            The metadata id to set privileges on
 	 */
 	private void setAllOperationsForUserGroup(String mdId) throws Exception {
-		Set<String> groups = am.getUserGroups(dbms, session, null);
+		List<String> groups = am.getUserGroups(dbms, session, null);
 		for (Iterator i = groups.iterator(); i.hasNext();) {
 			String groupId = (String) i.next();
 	        if(!(groupId.equals("-1") || groupId.equals("0") || groupId.equals("1"))) {

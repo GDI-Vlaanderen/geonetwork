@@ -2940,6 +2940,27 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
     <element name="gmx:scope">
         <label>Categorie</label>
         <description>Toepassingsdomein van de entiteiten gedefinieerd in deze objectencatalogus</description>
+        <helper>
+			<option value="imageryBaseMapsEarthCover" title="Basiskaarten. Vb: landbedekking, topografische kaarten, foto's, ongeclassificeerde kaarten.">beelden, basiskaarten, grondgebruik</option>
+			<option value="inlandWaters" title="Binnenwater, drainagesystemen en hun karakteristieken. Vb: Rivieren en gletsjers, dijken, stromen, waterzuiveringsinstallaties, overloopgebieden.">binnenwateren</option>
+            <option value="biota" title="Flora en fauna in natuurlijke omgeving. Vb: habitats, ecologie.">biota</option>
+            <option value="economy" title="Economische activiteiten, condities en werkgelegenheid. Vb: Werkgelegenheid, industrie, toerisme, olie- en gasvelden, bosbouw, visserij.">economie</option>
+			<option value="geoscientificInformation" title="Data die behoort tot een aardwetenschap. Vb: geologie, mineralen, structuur van de aarde, zwaartekrachtskaart, grondstoffen, erosie.">geowetenschappelijke informatie</option>
+			<option value="health" title="Gezondheid(szorg), menselijke ecologie en veiligheid. Vb: ziekten, hygi&#233;ne, gezondheidszorg.">gezondheid</option>
+            <option value="boundaries" title="Wettelijke gebiedsbeschrijvingen. Vb: politieke en administratieve grenzen.">grenzen</option>
+            <option value="elevation" title="Hoogte boven of onder zeeniveau. Vb: hoogtekaart, DEM, hellingen.">hoogte</option>
+			<option value="intelligenceMilitary" title="Militaire basissen, structuren en activiteiten. Vb: barakken, oefenterreinen, militaire transporten.">inlichtingen, militaire gegevens</option>
+            <option value="climatologyMeteorologyAtmosphere" title="Processen en fenomenen in de atmosfeer. Vb: wolkbedekking, weer, klimaat verandering.">klimatologie, meteorologie, atmosfeer</option>
+            <option value="farming" title="Houden van dieren en/of verbouwen van planten. Vb: landbouw, irrigatie, ziekten die gewassen aantasten.">landbouw en veeteelt</option>
+			<option value="location" title="Positionele informatie en services. Vb: adressen, geodetisch netwerk, postcode gebieden, plaatsnamen, controlepunten.">locatie</option>
+			<option value="society" title="Kenmerken van maatschappij en culturen. Vb: antropologie, archeologie, criminaliteit, gewoonten, nederzettingen, onderwijs.">maatschappij</option>
+			<option value="environment" title="Natuurlijke bronnen, bescherming en beheer. Vb: milieuverontreiniging, landschap, natuurlijke reserves, vuilopslag.">milieu</option>>
+			<option value="utilitiesCommunication" title="Energie, waterleidingen en riolering en communicatie infrastructuren en services. Vb: elektriciteit- en gasdistributie, waterzuivering en verstrekking, telecommunicatie, radio.">nutsdiensten, communicatie</option>
+			<option value="oceans" title="Gebieden met zoutwaterlichamen (niet binnenlands). Vb: Getijden, tsunami's, kustinformatie, riffen.">oceanen</option>
+			<option value="planningCadastre" title="Informatie die gebruikt wordt voor nodige planmatige activiteiten. Vb: Landgebruik, kadastrale informatie.">planning, kadaster</option>
+			<option value="structure" title="Civiele werken (door mensen gemaakte structuren). Gebouwen, musea, kerken, winkels, torens.">structuur</option>
+			<option value="transportation" title="Middelen voor vervoer van goederen en/of personen. Vb: Wegen, Vliegvelden, tunnels, spoorwegen.">vervoer</option>
+        </helper>
     </element>
     <element name="gmx:versionNumber">
         <label>Versie</label>

@@ -23,17 +23,8 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.exceptions.OperationNotAllowedEx;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
-
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -41,6 +32,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import jeeves.exceptions.OperationNotAllowedEx;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
 
 /**
  * Handles the access to a metadata depending on the metadata/group.
@@ -180,7 +182,7 @@ public class AccessManager {
 		UserSession usrSess = context.getUserSession();
 
         // build group list
-		Set<String>  groups = getUserGroups(dbms, usrSess, ip);
+		List<String>  groups = getUserGroups(dbms, usrSess, ip);
 		StringBuffer groupList = new StringBuffer();
 
 		for (Iterator i = groups.iterator(); i.hasNext(); ) {
@@ -229,8 +231,8 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Set<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception {
-		Set<String> hs = new HashSet<String>();
+	public List<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception {
+		List<String> hs = new ArrayList<String>();
 
 		// add All (1) network group
 		hs.add("1");
@@ -245,7 +247,7 @@ public class AccessManager {
 			hs.add("-1");
 
 			if (usrSess.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-				Element elUserGrp = dbms.select("SELECT id FROM Groups");
+				Element elUserGrp = dbms.select("SELECT id FROM Groups order by description");
 
 				List list = elUserGrp.getChildren();
 
@@ -256,7 +258,7 @@ public class AccessManager {
                 }
 			}
 			else {
-				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?", usrSess.getUserId());
+				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups, Groups WHERE userId=? and UserGroups.groupId = Groups.id order by Groups.description", usrSess.getUserId());
 
 				List list = elUserGrp.getChildren();
 
@@ -278,8 +280,8 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Set<String> getVisibleGroups(Dbms dbms, String userId) throws Exception {
-		Set<String> hs = new HashSet<String>();
+	public List<String> getVisibleGroups(Dbms dbms, String userId) throws Exception {
+		List<String> hs = new ArrayList<String>();
 
 		String query= "SELECT * FROM Users WHERE id=?";
 		List   list = dbms.select(query, userId).getChildren();
@@ -295,10 +297,10 @@ public class AccessManager {
 
 		Element elUserGrp;
 		if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
-			elUserGrp = dbms.select("SELECT id AS grp FROM Groups");
+			elUserGrp = dbms.select("SELECT id AS grp FROM Groups order by description");
 		}
         else {
-			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", userId);
+			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups, Groups WHERE userId=? and UserGroups.groupId = Groups.id order by Groups.description", userId);
 		}
 
 		for(Object o : elUserGrp.getChildren()) {

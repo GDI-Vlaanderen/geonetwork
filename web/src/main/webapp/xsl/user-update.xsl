@@ -22,7 +22,7 @@
 			
 			function init()
 			{
-				profileChanged();
+//				profileChanged();
 			}
 </script>
 	</xsl:template>

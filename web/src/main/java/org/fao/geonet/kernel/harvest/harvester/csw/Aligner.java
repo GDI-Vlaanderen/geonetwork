@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.CswOperation;
 import org.fao.geonet.csw.common.CswServer;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -42,6 +43,7 @@ import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.util.IDFactory;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.util.List;
@@ -151,9 +153,19 @@ public class Aligner
 			result.totalMetadata++;
 
 			String id = dataMan.getMetadataId(dbms, ri.uuid);
-
-			if (id == null)	addMetadata(ri);
-			else				updateMetadata(ri, id);
+			if (id == null) {
+				try {
+					addMetadata(ri);
+	            } catch (Exception ex) {
+	                log.error("Can not insert metadata with uuid " + ri.uuid + ":" + ex);
+				}
+			} else {
+				try {
+					updateMetadata(ri, id);
+	            } catch (Exception ex) {
+	                log.error("Can not update metadata with uuid " + ri.uuid + ":" + ex);
+				}
+			}
 		}
 
 		log.info("End of alignment for : "+ params.name);
@@ -203,6 +215,8 @@ public class Aligner
 
 		addPrivileges(id);
 		addCategories(id);
+		dataMan.setStatusExt(context, dbms, id, new Integer(Params.Status.APPROVED),
+				new ISODate().toString(), "Status veranderd na harvesting");
 
 		dbms.commit();
         boolean workspace = false;
@@ -220,9 +234,10 @@ public class Aligner
 		{
 			String name = localCateg.getName(catId);
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled())
 				log.debug("    - Skipping removed category with id:"+ catId);
+			}
 			else
 			{
                 if(log.isDebugEnabled())
@@ -242,9 +257,10 @@ public class Aligner
 		{
 			String name = localGroups.getName(priv.getGroupId());
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled())
-				log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
+				log.debug("    - Skipping removed group with id:"+ priv.getGroupId());				
+			}
 			else
 			{
                 if(log.isDebugEnabled())
@@ -278,9 +294,9 @@ public class Aligner
 	{
 		String date = localUuids.getChangeDate(ri.uuid);
 
-		if (date == null)
-            if(log.isDebugEnabled())
-			log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+		if (date == null) {
+			log.error("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+		}
 		else
 		{
 			if (!ri.isMoreRecentThan(date))
@@ -313,6 +329,8 @@ public class Aligner
 
 				dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
 				addCategories(id);
+				dataMan.setStatusExt(context, dbms, id, new Integer(Params.Status.APPROVED),
+						new ISODate().toString(), "Status veranderd na harvesting");
 
 				dbms.commit();
                 boolean workspace = false;

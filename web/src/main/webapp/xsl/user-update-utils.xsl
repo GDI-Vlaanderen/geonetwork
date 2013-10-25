@@ -72,7 +72,7 @@
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/profile"/></th>
 					<td class="padded">
-						<select class="content" size="1" name="profile" onchange="profileChanged()" id="user.profile">
+						<select class="content" size="1" name="profile" id="user.profile">
 							<xsl:for-each select="/root/gui/profiles/Administrator">
 								<option value="{name(.)}">
 									<xsl:if test="/root/response/record/profile=name(.)">
@@ -132,9 +132,9 @@
 				<tr id="group.list">
 					<th class="padded"><xsl:value-of select="/root/gui/strings/usergroups"/></th>
 					<td class="padded">
-						<select class="content" size="7" name="groups" multiple="" id="groups">
+						<select class="content" size="7" name="groups" multiple="" id="groups" style="width:400px">
 							<xsl:for-each select="/root/gui/groups/record">
-								<xsl:sort select="name"/>
+								<xsl:sort select="label/child::*[name() = $lang]"/>
 								<option value="{id}">
 									<xsl:variable name="aGroup" select="id"/>
 									<xsl:for-each select="/root/response/groups/id">
