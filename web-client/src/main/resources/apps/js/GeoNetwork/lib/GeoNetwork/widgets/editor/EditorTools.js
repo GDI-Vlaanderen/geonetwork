@@ -263,7 +263,7 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
                 Ext.getCmp('editorPanel').save();
                 return;
             } else {
-                Ext.MessageBox.alert("doNewElementAjax: invalid what: " + what +
+                Ext.MessageBox.alert("Fout", "doNewElementAjax: invalid what: " + what +
                 " should be one of replace, after or before.");
             }
             
@@ -277,7 +277,7 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
             setBunload(true); // reset warning for window destroy
         },
         onFailure: function(req){
-            Ext.MessageBox.alert(translate("errorAddElement") + name +
+            Ext.MessageBox.alert("Fout", translate("errorAddElement") + name +
             translate("errorFromDoc") +
             " / status " +
             req.status +
@@ -370,7 +370,7 @@ function doRemoveElementAction(action, ref, parentref, id, min){
             setBunload(true); // reset warning for window destroy
         },
         failure: function(result, request){
-            Ext.MessageBox.alert(translate("errorDeleteElement") + name + " " +
+            Ext.MessageBox.alert("Fout", translate("errorDeleteElement") + name + " " +
             translate("errorFromDoc") +
             " / status " +
             result.status +
@@ -409,7 +409,7 @@ function doRemoveAttributeAction(action, ref, parentref)
 			setBunload(true); // reset warning for window destroy
 		},
 		failure:function (result, request) { 
-			Ext.MessageBox.alert(translate("errorDeleteAttribute") + name + " " + translate("errorFromDoc") 
+			Ext.MessageBox.alert("Fout", translate("errorDeleteAttribute") + name + " " + translate("errorFromDoc") 
 						+ " / status " + result.status + " text: " + result.statusText + " - " + translate("tryAgain"));
 			setBunload(true); // reset warning for window destroy
 		}
@@ -442,7 +442,7 @@ function doProcessing(config, cb){
             }
         },
         failure: function(req){
-            Ext.MessageBox.alert(translate("errorSaveFailed") + "/ status " +
+            Ext.MessageBox.alert("Fout", translate("errorSaveFailed") + "/ status " +
             req.status +
             " text: " +
             req.statusText +
@@ -482,7 +482,7 @@ function doMoveElementAction(action, ref, id){
             setBunload(true); // reset warning for window destroy
         },
         failure: function(req){
-            Ext.MessageBox.alert(translate("errorMoveElement") + ref + " / status " + req.status +
+            Ext.MessageBox.alert("Fout", translate("errorMoveElement") + ref + " / status " + req.status +
             " text: " +
             req.statusText +
             " - " +
@@ -630,8 +630,16 @@ function getControlsFromElement(el){
            });
        });
     }
-    for (var i = 0; i < controls.length; i++) {
-        controls[i] = Ext.get(controls[i]).setVisibilityMode(Ext.Element.DISPLAY);
+/*
+    var isTopElement = false;
+	if (topElement(el)) {
+		isTopElement = true;
+	}
+*/
+    for (var i = 0, j = 0; i < controls.length; i++) {
+//    	if (!isTopElement || controls[i].className.indexOf(" del") == -1) {
+    		controls[j++] = Ext.get(controls[i]).setVisibilityMode(Ext.Element.DISPLAY);
+//		}
     }
     return controls;
 }
@@ -991,13 +999,13 @@ function googleTranslate(ref, divSuggestion, target, fromLang, toLang){
     
     // --- Check text to translate
     if ($(ref).value == "") {
-        Ext.Msg.alert(translate("translateWithGoogle.emptyInput"));
+        Ext.Msg.alert("Editor",translate("translateWithGoogle.emptyInput"));
         return;
     }
     
     if ($(ref).value.length > 5000) {
         // TODO : i18n
-        Ext.Msg.alert(translate("translateWithGoogle.maxSize"));
+        Ext.Msg.alert("Editor",translate("translateWithGoogle.maxSize"));
         return;
     }
     
@@ -1015,7 +1023,7 @@ function googleTranslate(ref, divSuggestion, target, fromLang, toLang){
                     $(divSuggestion).style.display = "block";
                 }
             } else {
-                Ext.Msg.alert(result.error.message + " (" + result.error.code + ")");
+                Ext.Msg.alert("Editor", result.error.message + " (" + result.error.code + ")");
                 // Sometime 400 characters seems to be the limit.
             }
             

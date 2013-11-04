@@ -11,7 +11,7 @@
 <!-- 	<Environment name="fediz.keyalias" value="zoekdienstgeopuntrpkey" type="java.lang.String" override="true" />-->
  	<Environment name="fediz.keyalias" value="zoekdienstagivrpkey" type="java.lang.String" override="true" />
 	<Environment name="fediz.response.idattribute" value="AssertionID" type="java.lang.String" override="true" />
-<!-- 	<Environment name="fediz.forward.url" value="http://metadata.beta.geopunt.be/zoekdienst/srv/dut/user.agiv.login" type="java.lang.String" override="true" />-->
-<!-- 	<Environment name="fediz.forward.url" value="http://metadata.beta.agiv.be/zoekdienst/srv/dut/user.agiv.login" type="java.lang.String" override="true" />-->
+<!-- 	<Environment name="fediz.forward.url" value="https://metadata.beta.geopunt.be/zoekdienst/srv/dut/user.agiv.login" type="java.lang.String" override="true" />-->
+<!-- 	<Environment name="fediz.forward.url" value="https://metadata.beta.agiv.be/zoekdienst/srv/dut/user.agiv.login" type="java.lang.String" override="true" />-->
 	<Environment name="fediz.forward.url" value="http://localhost/zoekdienst/srv/dut/user.agiv.login" type="java.lang.String" override="true" />
 </Context>

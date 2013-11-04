@@ -215,8 +215,8 @@
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:serviceType|srv:containsOperations|srv:coupledResource|
-              gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:MD_AggregateInformation|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
-              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS">
+              gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:aggregationInfo|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
+              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS|gmd:onLine">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -1593,8 +1593,8 @@
                 <xsl:value-of select="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
                 <xsl:text>)</xsl:text>
               </xsl:if>
--->
               <xsl:text>.</xsl:text>
+-->
             </xsl:variable>
             <xsl:copy-of select="$value"/>
           </xsl:with-param>
@@ -5036,7 +5036,7 @@ to build the XML fragment in the editor. -->
 	 <xsl:template mode="iso19139" match="gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:VerticalCRS/gml:scope" priority="99" />
 
     <!-- Don't display frame attribute -->
-	<xsl:template mode="simpleAttribute" match="@*[name(.)='frame']" priority="99" />
+	<xsl:template mode="simpleAttribute" match="@*[name(.)='frame' or name(.)='xlink:type']" priority="99" />
 
     <xsl:template mode="iso19139" match="gmd:spatialResolution">
         <xsl:param name="schema"/>

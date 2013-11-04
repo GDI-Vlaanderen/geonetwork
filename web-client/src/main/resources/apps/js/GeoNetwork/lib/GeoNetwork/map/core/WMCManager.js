@@ -45,7 +45,7 @@ GeoNetwork.WMC = function() {
                 var format = new OpenLayers.Format.WMC({'layerOptions': {buffer: 0}});
                 map = format.read(xml, {map: map});
             } catch(err) {
-                Ext.MessageBox.alert(OpenLayers.i18n("selectWMCFile.errorLoadingWMC"));
+                Ext.MessageBox.alert("Fout", OpenLayers.i18n("selectWMCFile.errorLoadingWMC"));
             }
         },
 
@@ -63,7 +63,7 @@ GeoNetwork.WMC = function() {
                 var format = new OpenLayers.Format.WMC({'layerOptions': {buffer: 0}});
                 map = format.read(xml, {map: map});
             } catch(err) {
-                Ext.MessageBox.alert(OpenLayers.i18n("selectWMCFile.errorLoadingWMC"));
+                Ext.MessageBox.alert("Fout", OpenLayers.i18n("selectWMCFile.errorLoadingWMC"));
             }
         },
 

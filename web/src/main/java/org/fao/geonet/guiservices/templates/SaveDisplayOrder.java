@@ -58,6 +58,7 @@ public class SaveDisplayOrder implements Service {
 	            String displayPosition = param.getText();
 	            dm.updateDisplayOrder(dbms, id, displayPosition);
 	            dbms.commit();
+	            dm.indexMetadata(dbms, id, false, false, true);
             }
         }
         return null;

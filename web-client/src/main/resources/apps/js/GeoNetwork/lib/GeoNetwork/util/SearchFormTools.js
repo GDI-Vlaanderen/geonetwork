@@ -230,7 +230,7 @@ GeoNetwork.util.SearchFormTools = {
         
         fields.push(fullTextField, advancedTextField, titleField, abstractField, themekeyField, orgNameField, 
                         geoFields, types, /*mapTypes, denominatorField, */when);
-        if (GeoNetwork.Settings.nodeType != "agiv") {
+        if (GeoNetwork.Settings.nodeType.toLowerCase() != "agiv") {
         	fields.push(catalogueField);	
         } 
         fields.push(this.groupField, metadataTypeField, categoryField, options, accuracySettings);

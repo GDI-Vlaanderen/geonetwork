@@ -307,7 +307,7 @@
 	<createRelation js="true">Create relation</createRelation>
 	<export>Export</export>
 	<exportText>Export (TXT)</exportText>	
-	<addXMLFragment>Add from dictionary ...</addXMLFragment>
+	<addXMLFragment>Kies een sleutelwoord uit één van de thesauri</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
 	<translateWithGoogle.emptyInput js="true">Main language input is empty. Add the main language value before using the translation service.</translateWithGoogle.emptyInput>
@@ -898,6 +898,7 @@
 	<uuidAction>Import acties:</uuidAction>
 	<validate>Valideren</validate>
 	<assign>Aan huidige cataloog toewijzen</assign>
+	<relatedOnly>Initiële import waarbij metadata gelinkt wordt aan groepen</relatedOnly>
 	<validityBegins>Validatie begint</validityBegins>
 	<validityEnds>en eindigt op</validityEnds>
 	<view>Bekijk</view>

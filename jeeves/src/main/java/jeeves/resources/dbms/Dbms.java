@@ -471,7 +471,14 @@ public class Dbms
 	 * finalize.
 	 */
 	protected void finalize() {
-		disconnect();
+		try {
+			if (!conn.isClosed()) {
+		        if(Log.isDebugEnabled(Log.RESOURCES)) {
+		            Log.debug(Log.RESOURCES, "Close connection in finalize: "+ conn.hashCode());
+		        }
+				conn.close();
+			}
+		} catch(SQLException e) { e.printStackTrace(); }
 	}
 	
 }

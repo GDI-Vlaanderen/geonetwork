@@ -1382,6 +1382,7 @@ public class LuceneSearcher extends MetaSearcher {
         String lockedBy = doc.get(LuceneIndexField._LOCKEDBY);
         String ownerName = doc.get(LuceneIndexField._OWNERNAME);
         String isWorkspace = doc.get(LuceneIndexField._IS_WORKSPACE);
+        String displayOrder = doc.get(LuceneIndexField._DISPLAY_ORDER);
 
         String createDate = doc.get(LuceneIndexField._CREATE_DATE);
         if (createDate != null) {
@@ -1419,6 +1420,7 @@ public class LuceneSearcher extends MetaSearcher {
         else {
             addElement(info, Edit.Info.Elem.IS_WORKSPACE, "false");
         }
+        addElement(info, Edit.Info.Elem.DISPLAY_ORDER, displayOrder);
 
         addElement(info, Edit.Info.Elem.LOCKED_BY, lockedBy);
         addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
@@ -1510,6 +1512,7 @@ public class LuceneSearcher extends MetaSearcher {
                     if (name.equals(LuceneIndexField._IS_LOCKED)) return FieldSelectorResult.LOAD;
                     if (name.equals(LuceneIndexField._LOCKEDBY)) return FieldSelectorResult.LOAD;
                     if (name.equals(LuceneIndexField._OWNER))       return FieldSelectorResult.LOAD;
+                    if (name.equals(LuceneIndexField._DISPLAY_ORDER))       return FieldSelectorResult.LOAD;
                     // ***
                     // if (name.equals("_groupOwner"))  return FieldSelectorResult.LOAD;
                     if (name.equals(LuceneIndexField._STATUS)) return FieldSelectorResult.LOAD;
@@ -1560,6 +1563,7 @@ public class LuceneSearcher extends MetaSearcher {
           else {
               mdInfo.isWorkspace = false;
           }
+          String displayOrder = doc.get(LuceneIndexField._DISPLAY_ORDER);
 
           mdInfo.lockedBy = doc.get(LuceneIndexField._LOCKEDBY);
 
@@ -1569,6 +1573,7 @@ public class LuceneSearcher extends MetaSearcher {
           mdInfo.title        = doc.get(LuceneIndexField._TITLE);
           mdInfo.root         = doc.get(LuceneIndexField._ROOT);
           mdInfo.owner        = doc.get(LuceneIndexField._OWNER);
+          mdInfo.displayOrder = doc.get(LuceneIndexField._DISPLAY_ORDER);
           //***
           // mdInfo.groupOwner   = doc.get("_groupOwner");
           mdInfo.status = doc.get(LuceneIndexField._STATUS);

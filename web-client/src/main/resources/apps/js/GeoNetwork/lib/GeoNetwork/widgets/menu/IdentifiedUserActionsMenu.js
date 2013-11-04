@@ -42,64 +42,88 @@ GeoNetwork.IdentifiedUserActionsMenu = Ext.extend(Ext.menu.Menu, {
     catalogue: undefined,
     
     newMetadataWindow: undefined,
+    newMetadataMenu: undefined,
+    importMetadataMenu: undefined,
+    administrationMenu: undefined,
 
     /** private: method[initComponent] 
      *  Initializes the toolbar results view.
      */
     initComponent: function(){
-    	var hide = !this.catalogue.isIdentified();
-    	this.items = [new Ext.menu.Item({
+        GeoNetwork.IdentifiedUserActionsMenu.superclass.initComponent.call(this);
+    	this.newMetadataMenu = new Ext.menu.Item({
             text: OpenLayers.i18n('newMetadata'),
             iconCls: 'addIcon',
             handler: function(){
                 // FIXME : could be improved. Here we clean the window
                 // A simple template reload could be enough probably
-                if (this.newMetadataWindow) {
-                    this.newMetadataWindow.close();
-                    this.newMetadataWindow = undefined;
+				if (this.isUserLoggedIn()) {
+	                if (this.newMetadataWindow) {
+	                    this.newMetadataWindow.close();
+	                    this.newMetadataWindow = undefined;
+	                }
+	                
+	                // Create a window to choose the template and the group
+	                if (!this.newMetadataWindow) {
+	                    var newMetadataPanel = new GeoNetwork.editor.NewMetadataPanel({
+	                                getGroupUrl: this.catalogue.services.getGroups,
+	                                catalogue: this.catalogue
+	                            });
+	                    
+	                    this.newMetadataWindow = new Ext.Window({
+	                        title: OpenLayers.i18n('newMetadata'),
+	                        width: 600,
+	                        height: 420,
+	                        layout: 'fit',
+	                        modal: true,
+	                        items: newMetadataPanel,
+	                        closeAction: 'hide',
+	                        constrain: true,
+	                        iconCls: 'addIcon'
+	                    });
+	                }
+	                this.newMetadataWindow.show();
                 }
-                
-                // Create a window to choose the template and the group
-                if (!this.newMetadataWindow) {
-                    var newMetadataPanel = new GeoNetwork.editor.NewMetadataPanel({
-                                getGroupUrl: this.catalogue.services.getGroups,
-                                catalogue: this.catalogue
-                            });
-                    
-                    this.newMetadataWindow = new Ext.Window({
-                        title: OpenLayers.i18n('newMetadata'),
-                        width: 600,
-                        height: 420,
-                        layout: 'fit',
-                        modal: true,
-                        items: newMetadataPanel,
-                        closeAction: 'hide',
-                        constrain: true,
-                        iconCls: 'addIcon'
-                    });
-                }
-                this.newMetadataWindow.show();
             },
-            scope: this,
-            hidden: hide
-        }),
-        new Ext.menu.Item({
+            scope: this
+        });
+        this.add(this.newMetadataMenu);
+        this.importMetadataMenu = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
             handler: function(){
-                this.catalogue.metadataImport();
+				if (this.isUserLoggedIn()) {
+	                this.catalogue.metadataImport();
+                }
             },
-            scope: this,
-            hidden: hide
-        }),
-    	new Ext.menu.Item({
+            scope: this
+        });
+        this.add(this.importMetadataMenu);
+    	this.administrationMenu = new Ext.menu.Item({
             text: OpenLayers.i18n('administration'),
             handler: function(){
-                this.catalogue.admin();
+				if (this.isUserLoggedIn()) {
+	                this.catalogue.admin();
+                }
             },
-            scope: this,
-            hidden: hide || this.catalogue.identifiedUser.role!='Administrator'
-        })];
-        GeoNetwork.IdentifiedUserActionsMenu.superclass.initComponent.call(this);
+            scope: this
+        });        
+        this.add(this.administrationMenu);
+        this.updateMenuItems();
+    },
+    updateMenuItems: function() {
+    	var visible = this.catalogue.isIdentified();
+	    this.newMetadataMenu.setVisible(visible);
+	    this.importMetadataMenu.setVisible(visible);
+	    this.administrationMenu.setVisible(visible && this.catalogue.identifiedUser.role=='Administrator')
+    },
+    isUserLoggedIn: function() {
+		this.catalogue.isLoggedIn(false);
+		if (this.catalogue.isIdentified()) {
+			return true;
+		} else {
+			Ext.MessageBox.alert(OpenLayers.i18n('error'),OpenLayers.i18n('userSessionEnded'))
+			return false;
+		}
     }
 
 });

@@ -997,6 +997,12 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="user.session">
+			<class name="jeeves.guiservices.session.Get" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="user.agiv.logout">
 			<class name=".services.login.AgivLogout" />
 

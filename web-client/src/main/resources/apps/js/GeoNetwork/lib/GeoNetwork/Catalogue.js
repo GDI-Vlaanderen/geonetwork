@@ -308,6 +308,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             geopublisher: serviceUrl + 'geoserver.publisher',
             login: serviceUrl + 'xml.user.login',
             agivLogin: serviceUrl + 'user.agiv.login',
+            userSession: serviceUrl + 'user.session',
             logout: serviceUrl + 'xml.user.logout',
             mef: serviceUrl + 'mef.export?format=full&version=2',
             csv: serviceUrl + 'csv.search',
@@ -1248,16 +1249,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
         });
     },
-    /** api: method[isLoggedIn]
+    /** api: method[getUserSession]
      * 
-     *  Check a service available only for identified user. If user is not identified
-     *  response status is 403. If catalogue URL is wrong, response status is 404 (check catalogue URL).
-     *  In case of exception continue catalogue connection validation
-     *  using the xml.main.error service (@see checkError).
+     *  Get the user session object.
      */
-    isLoggedIn: function(){
+    isLoggedIn: function(callAfterLogin){
         var response = OpenLayers.Request.GET({
-            url: this.services.admin, // FIXME : add a ping user info service in GeoNetwork
+            url: this.services.userSession,
             async: false
         }), exception;
        
@@ -1266,16 +1264,25 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         exception = response.responseText.indexOf('Exception') !== -1;
         
         if (response.status === 200 && !exception) {
-            this.identifiedUser = {
-                firstName: '',
-                surName: '',
-                role: ''
-            };
-            this.onAfterLogin();
-            return true;
+            var user = response.responseXML.getElementsByTagName('session')[0];
+            var id = user ? (user.getElementsByTagName('userId')[0].firstChild ? user.getElementsByTagName('userId')[0].firstChild.nodeValue : '') : '';
+            if (!Ext.isEmpty(id)) {
+                this.identifiedUser = {
+                    id: id,
+                    username: user ? user.getElementsByTagName('username')[0].firstChild.nodeValue : '',
+                    name: user ? user.getElementsByTagName('name')[0].firstChild.nodeValue : '',
+                    surname: user ? user.getElementsByTagName('surname')[0].firstChild.nodeValue : '',
+                    role: user ? user.getElementsByTagName('profile')[0].firstChild.nodeValue : ''
+                };
+            } else {
+            	this.identifiedUser = undefined;
+            }
+            if (callAfterLogin) {
+            	this.onAfterLogin();
+        	}
         } else if (response.status === 404) {
             this.showError(OpenLayers.i18n('connectIssue'), 
-                OpenLayers.i18n('connectIssueMsg') + this.services.rootUrl + '.');
+                OpenLayers.i18n('connectIssueMsg') + this.services.userSession + '.');
         } else if (exception) {
             this.checkError();
             return false;
@@ -1287,8 +1294,34 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
             return false;
         }
+/*
+        var app = this, user;
+        OpenLayers.Request.GET({
+            url: this.services.userSession,
+            success: function(response){
+                user = response.responseXML.getElementsByTagName('record')[0];
+                var id = user ? user.getElementsByTagName('id')[0].firstChild.nodeValue : '';
+                if (!Ext.isEmpty(id)) {
+	                app.identifiedUser = {
+	                    id: id,
+	                    username: user ? user.getElementsByTagName('username')[0].firstChild.nodeValue : '',
+	                    name: user ? user.getElementsByTagName('name')[0].firstChild.nodeValue : '',
+	                    surname: user ? user.getElementsByTagName('surname')[0].firstChild.nodeValue : '',
+	                    role: user ? user.getElementsByTagName('profile')[0].firstChild.nodeValue : ''
+	                };
+                } else {
+                	app.identifiedUser = undefined;
+                }
+                app.onAfterLogin();
+            },
+            failure: function(response){
+            	app.identifiedUser = undefined;
+                app.onAfterLogin();
+            }
+        });
+*/
     },
-    
+
     /**	api: method[login]
      *	:param username: ``String`` The user name
      *	:param password: ``String`` The password for the user

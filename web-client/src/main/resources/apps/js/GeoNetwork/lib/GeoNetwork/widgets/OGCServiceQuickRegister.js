@@ -142,7 +142,7 @@ GeoNetwork.OGCServiceQuickRegister = Ext.extend(Ext.menu.Menu, {
             url: url,
             success: function(response){
                 if (response.responseText.indexOf('Some unexpected') !== -1) { // FIXME : better error handling
-                    Ext.Msg.alert('Failed to check service url.', response.responseText);
+                    Ext.Msg.alert("Fout", 'Failed to check service url.', response.responseText);
                     return;
                 }
                 var xml = response.responseXML;

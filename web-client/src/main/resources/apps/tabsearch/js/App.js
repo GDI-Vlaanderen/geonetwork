@@ -104,17 +104,7 @@ GeoNetwork.app = function(){
      *
      * @return
      */
-    function createLoginForm(user){
-        var loginForm = new GeoNetwork.LoginForm({
-            renderTo: 'login-form',
-            catalogue: catalogue,
-            layout: 'hbox',
-            bodyStyle:{"background-color":"transparent"},
-            hideLoginLabels: GeoNetwork.hideLoginLabels
-        });
-
-        catalogue.on('afterBadLogin', loginAlert, this);
-
+    function createLoginForm(/*user*/){
         // Store user info in cookie to be displayed if user reload the page
         // Register events to set cookie values
         catalogue.on('afterLogin', function(){
@@ -126,11 +116,15 @@ GeoNetwork.app = function(){
             cookie.set('user', undefined);
         });
 
-        if (user && !Ext.isEmpty(user.role)) {
-            loginForm.login(catalogue, true);
-        } else {
-            loginForm.login(catalogue, false);        	
-        }
+        var loginForm = new GeoNetwork.LoginForm({
+            renderTo: 'login-form',
+            catalogue: catalogue,
+            layout: 'hbox',
+            bodyStyle:{"background-color":"transparent"},
+            hideLoginLabels: GeoNetwork.hideLoginLabels
+        });
+
+        catalogue.on('afterBadLogin', loginAlert, this);
     }
 
     /**
@@ -293,7 +287,7 @@ GeoNetwork.app = function(){
         //advancedCriteria.push(themekeyField, orgNameField, categoryField,
         advancedCriteria.push(themekeyField, orgNameField/*,
             spatialTypes, denominatorField*/);
-        if (GeoNetwork.Settings.nodeType != "agiv") {
+        if (GeoNetwork.Settings.nodeType.toLowerCase() != "agiv") {
         	advancedCriteria.push(catalogueField);	
         } 
         advancedCriteriaExtra.push(groupField,
@@ -885,13 +879,15 @@ GeoNetwork.app = function(){
 
     function createHeader(){
         var info = catalogue.getInfo();
-        Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/agiv.gif" title="'  + info.name + '"/>';
+        Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/logo' + GeoNetwork.Settings.nodeType.toLowerCase() + '.gif" title="'  + info.name + '"/>';
         document.title = info.name;
     }
 
     // public space:
     return {
         init: function(){
+    		Ext.Msg.minWidth = 360;
+    		Ext.MessageBox.minWidth = 360;
             geonetworkUrl = /*GeoNetwork.URL || */window.location.href.match(/(http.*\/.*)\/apps\/tabsearch.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
@@ -920,25 +916,19 @@ GeoNetwork.app = function(){
                 editMode: 2, // TODO : create constant
                 metadataEditFn: edit
             });
-
+			catalogue.metadataSelectNone();
             createHeader();
-
-            var user = Ext.state.Manager.getProvider().get('user');
-            if (user) {
-                catalogue.identifiedUser = user;
-            }
-
-            // Search form
-            searchForm = createSearchForm(user);
-
-
 
             // Top navigation widgets
             //createModeSwitcher();
             //createLanguageSwitcher(lang);
             if (Ext.get("login-form")) {
-                createLoginForm(user);
+                createLoginForm(/*user*/);
             }
+            var user = Ext.state.Manager.getProvider().get('user');
+            // Search form
+            searchForm = createSearchForm(user);
+
             edit();
 
             // Results map 
@@ -1238,7 +1228,7 @@ GeoNetwork.app = function(){
         },
 
         getIMap: function(){
-//        	Ext.Msg.alert("Deze funktie zal later beschikbaar gesteld worden");
+//        	Ext.Msg.alert("Kaart","Deze funktie zal later beschikbaar gesteld worden");
             // init map if not yet initialized
 /*
         	if (!iMap) {

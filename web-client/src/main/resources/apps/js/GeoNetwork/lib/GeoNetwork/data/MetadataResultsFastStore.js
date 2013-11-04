@@ -119,7 +119,7 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             	links.push({
             		name: tokens[0],
             		title: tokens[1],
-            		href: tokens[2],
+            		href: tokens[2] + (tokens[2].indexOf('google.kml') !== -1 ? '&fromWorkspace=' + getWorkspace(v,record) : ''),
             		protocol: tokens[3],
             		type: tokens[4]
             	});

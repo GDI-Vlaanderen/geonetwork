@@ -89,6 +89,7 @@
                 displayElement('gn.groups',display);
                 displayElement('gn.categories',display);
                 displayElement('gn.assign',mefdisplay);
+                displayElement('gn.relatedOnly','none');
                 
             }
             

@@ -326,7 +326,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.add(this.printWorkspaceCopyAction);
 
-        if (GeoNetwork.Settings.nodeType!='agiv') {
+        if (GeoNetwork.Settings.nodeType.toLowerCase()!='agiv') {
             this.getMEFAction = new Ext.Action({
                 text: OpenLayers.i18n('getMEF'),
                 iconCls: 'md-mn-zip',

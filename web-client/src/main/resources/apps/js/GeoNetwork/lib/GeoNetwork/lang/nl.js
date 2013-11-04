@@ -417,7 +417,7 @@ GeoNetwork.Lang.nl = {
     'mdMenu': "Acties",
     'deleteRecord': "Verwijder metadatarecord?",
     'deleteConfirm': "Bent u zeker dat u dit metadatarecord wil verwijderen?",
-    'deleteRecordSuccess': "Metadataracord verwijderd.",
+    'deleteRecordSuccess': "Metadatarecord verwijderd.",
     'deleteRecordFailure': "Fout bij het verwijderen van het metadatarecord.",
     'unlockRecordSuccess': 'Editeersessie geannuleerd',
     'unlockRecordFailure': 'Er is een fout opgetreden bij het unlocken van het metadatarecord.',
@@ -505,6 +505,7 @@ GeoNetwork.Lang.nl = {
     'thesaurusFromRepository': "Thesaurus",
     'externalThesaurusURL': "URL",
     'thesaurusCreation': "Voeg een thesaurus toe",
+	'addFromThesaurus': "Kies een sleutelwoord uit één van de thesauri",
     'Type': "Type",
     'Activated': "Geactiveerd",
     'emptyThesaurus': "Nieuwe lege thesaurus",
@@ -553,7 +554,8 @@ GeoNetwork.Lang.nl = {
 
     'error-login': 'Je moet eerst inloggen om deze pagina te bekijken.',
 
-    'statusChangeFailed': 'De statuswijziging is niet gelukt aangezien u niet de rechten hebt of het metadatarecord niet gevalideerd kon worden. Editeer het metadatarecord om de validatiefouten te zien.'
+    'statusChangeFailed': 'De statuswijziging is niet gelukt aangezien u niet de rechten hebt of het metadatarecord niet gevalideerd kon worden. Editeer het metadatarecord om de validatiefouten te zien.',
+    'userSessionEnded': 'De sessie is vervallen en u moet opnieuw inloggen.'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

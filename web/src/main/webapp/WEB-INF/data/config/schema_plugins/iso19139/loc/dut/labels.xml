@@ -27,7 +27,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:aggregationInfo">
-		<label>Informatie over de aggregatierelatie</label>
+		<label>Verwante dataset(serie)s</label>
 		<description>Voorziet informatie over de verwantschap met een andere dataset of datasetserie.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1291,7 +1291,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:URL" context="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
-		<label>Connectiepunt URL.</label>
+		<label>Connectiepunt URL</label>
 		<description>Locatie voor online toegang bij gebruik van een Uniform Resource Locator adres of een vergelijkbaar schema.</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>

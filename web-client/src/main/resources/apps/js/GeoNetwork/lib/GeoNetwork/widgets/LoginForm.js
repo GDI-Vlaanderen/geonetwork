@@ -108,17 +108,6 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 	                scope: form
 	            }
 	        }),
-	        adminBt = new Ext.Button({
-	            width: 80,
-	            text: OpenLayers.i18n('administration'),
-	            //iconCls : 'md-mn md-mn-advanced',
-	            listeners: {
-	                click: function(){
-	                    catalogue.admin();
-	                },
-	                scope: this
-	            }
-	        }),
 	        logoutBt = new Ext.Button({
 	            width: 80,
 	            text: OpenLayers.i18n('logout'),
@@ -185,33 +174,25 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
         	this.toggledFields.push(loginBt);
     	}
     	this.toggledFieldsOff.push(this.userInfo, 
-                logoutBt);
-        if (this.catalogue.adminAppUrl !== '') {
-//        	this.toggledFieldsOff.push(adminBt);
-        }
-        this.items = [this.loginFields, this.toggledFieldsOff, new Ext.Button({
-            text: OpenLayers.i18n('Actions'),
-            menu: new GeoNetwork.IdentifiedUserActionsMenu({
-                catalogue: this.catalogue
-            }),
-            hidden: !this.catalogue.isIdentified()
-        })];
+                logoutBt, new Ext.Button({
+            		text: OpenLayers.i18n('Actions'),
+            		menu: new GeoNetwork.IdentifiedUserActionsMenu({
+                		catalogue: this.catalogue
+            		})}));
+        this.items = [this.loginFields, this.toggledFieldsOff];
         GeoNetwork.LoginForm.superclass.initComponent.call(this);
         
         // check user on startup with a kind of ping service
-/*
-        var loggedIn = this.catalogue.isLoggedIn();
-        this.login(this.catalogue, loggedIn); // FIXME : login expect a user not a boolean
-*/
         this.catalogue.on('afterLogin', this.login, this);
         this.catalogue.on('afterLogout', this.login, this);
+        this.catalogue.isLoggedIn(true);
     },
     
     /** private: method[login]
      *  Update layout according to login/out operation
      */
     login: function(cat, user){
-        var status = user ? true : false;
+        var status = cat.identifiedUser ? true : false;
         
         Ext.each(this.toggledFields, function(item) {
         	item.setVisible(!status);
@@ -221,6 +202,9 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                	item.setVisible(status && cat.identifiedUser.role=='Administrator');
         	} else {
             	item.setVisible(status);
+	        	if (item.text==OpenLayers.i18n('Actions')) {
+	        		item.menu.updateMenuItems();
+	        	}
         	}
         });
         if (cat.identifiedUser && cat.identifiedUser.username) {

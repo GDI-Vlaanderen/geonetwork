@@ -179,6 +179,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                         handler: function(){
                             this.showLinkedServiceMetadataSelectionPanel('coupledResource', '', '');
                         },
+//                        hidden: true,
                         scope: this.editor
                         // TODO : hide if dataset
                     });

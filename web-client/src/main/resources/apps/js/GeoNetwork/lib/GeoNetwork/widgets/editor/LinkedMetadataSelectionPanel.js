@@ -111,14 +111,14 @@ GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
                 id: 'capabilitiesStore',
                 listeners: {
                     exception: function(proxy, type, action, options, res, arg){
-                        Ext.MessageBox.alert(OpenLayers.i18n("error"));
+                        Ext.MessageBox.alert("Fout", OpenLayers.i18n("error"));
                     },
                     beforeload: function(){
                         // Update store URL according to selected service.
                         if (this.mode === 'attachService') {
                             var selected = Ext.getCmp('linkedMetadataGrid').getSelectionModel().getSelections();
                             if (selected === undefined || selected[0].data.uri === '') {
-                                Ext.MessageBox.alert(OpenLayers.i18n("noServiceURLError"));
+                                Ext.MessageBox.alert("Fout", OpenLayers.i18n("noServiceURLError"));
                             }
                             this.capabilitiesStore.baseParams.url = selected[0].data.uri + 
                                         "?&SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.1.1";
@@ -127,7 +127,7 @@ GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
                         }
                     },
                     loadexception: function(){
-                        Ext.MessageBox.alert(OpenLayers.i18n("GetCapabilitiesDocumentError") + this.capabilitiesStore.baseParams.url);
+                        Ext.MessageBox.alert("Fout", OpenLayers.i18n("GetCapabilitiesDocumentError") + this.capabilitiesStore.baseParams.url);
                     },
                     scope: this
                 }

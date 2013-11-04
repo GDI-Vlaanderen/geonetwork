@@ -79,6 +79,9 @@ table.related * li {
 .md-view ul li * .md-logo img {
   max-width : 30px;
 }
+.md-view ul li * .md-logo-type img {
+  max-width : 125px;
+}
 .md-view ul li {
   border-top : 1px solid transparent;
   color : #222222;

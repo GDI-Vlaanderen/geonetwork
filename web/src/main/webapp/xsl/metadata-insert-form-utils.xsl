@@ -126,6 +126,18 @@
             </td>
         </tr>
 
+        <!-- Only metadata link to groups configured in tabel metadatagrouprelation will be imported -->
+        <tr id="gn.relatedOnly">
+            <th class="padded" style="witdh:100px">
+                <label for="relatedOnly">
+                    <xsl:value-of select="/root/gui/strings/relatedOnly"/>
+                </label>
+            </th>
+            <td>
+                <input class="content" type="checkbox" name="relatedOnly" id="relatedOnly"/>
+            </td>
+        </tr>
+
 
         <!-- groups -->
         <tr id="gn.groups">

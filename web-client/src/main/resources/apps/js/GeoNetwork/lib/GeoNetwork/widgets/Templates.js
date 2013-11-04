@@ -142,13 +142,19 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '</ul>'
         );
 
-    	var prefix = (!GeoNetwork.Settings || GeoNetwork.Settings.nodeType!='agiv') ? "" : "agiv_";
+    	var prefix = (!GeoNetwork.Settings || GeoNetwork.Settings.nodeType.toLowerCase()!='agiv') ? "" : "agiv_";
+    	var showHarvesterLogo = (!GeoNetwork.Settings || GeoNetwork.Settings.nodeType.toLowerCase()!='agiv') ? true : false;
+    	var isGeopunt = (GeoNetwork.Settings && GeoNetwork.Settings.nodeType.toLowerCase()=='geopunt') ? true : false;
+    	var isAgiv = (GeoNetwork.Settings && GeoNetwork.Settings.nodeType.toLowerCase()=='agiv') ? true : false;
         GeoNetwork.Templates.SIMPLE = new Ext.XTemplate(
             '<ul>',
             '<tpl for=".">',
             '<li class="md md-simple" title="{abstract}" style="{featurecolorCSS}">',
             '<table><tr>',  // FIXME
-            prefix=="" ? ('<td style="width:30px;">' + GeoNetwork.Templates.LOGO + '</td>') : '',
+            '<td style="width:30px;">',
+            showHarvesterLogo ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>' : '',
+            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{[catalogue.URL]}/apps/tabsearch/images/' + (isAgiv ? '{type}' : 'geopunt') + '.png"/></div>' : '',
+			'</td>',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
             '<tpl if="subject">',
@@ -220,7 +226,10 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<tpl for=".">',
             '<li class="md md-full" style="{featurecolorCSS}">',
             '<table><tr>',
-            (!GeoNetwork.Settings || GeoNetwork.Settings.nodeType!='agiv') ? ('<td class="left">' + GeoNetwork.Templates.LOGO + '</td>') : '',
+            '<td class="left">',
+        	showHarvesterLogo ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>': '',
+            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{[catalogue.URL]}/apps/tabsearch/images/' + (isAgiv ? '{type}' : 'geopunt') + '.png"/></div>' : '',
+            '</td>',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
             '<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>',    // FIXME : 250 as parameters

@@ -78,11 +78,23 @@ GeoNetwork.util.SearchTools = {
     			cat.services.rootUrl + metadataStore.service + "?" + query,
 			);
 */
+		var scope = Ext.getCmp("GNtabs");
+
+        if (scope!=null) {
+        	if (!scope.loadingMask) {
+	            scope.loadingMask = new Ext.LoadMask(scope.getEl(), {
+	                msg: OpenLayers.i18n('searching')
+	            });
+            }
+	        scope.loadingMask.show();
+        }
     	OpenLayers.Request.GET({
             url: cat.services.rootUrl + metadataStore.service + "?" + query,
             async: async === false ? false : true,
             success: function(result){
-            
+		        if (scope!=null && scope.loadingMask !== null) {
+		            scope.loadingMask.hide();
+		        }
                 if (updateStore) {
                     /* TODO : improve */
                     var getRecordsFormat = new OpenLayers.Format.GeoNetworkRecords();
@@ -139,7 +151,7 @@ GeoNetwork.util.SearchTools = {
 
 
                     } else {
-        	            Ext.Msg.alert("", 'Er werden geen metadatasets gevonden.');
+        	            Ext.Msg.alert("Zoeken", 'Er werden geen metadatasets gevonden.');
                     }                    
                     
                     if (isCatalogueSStore) {
@@ -162,6 +174,9 @@ GeoNetwork.util.SearchTools = {
                 }
             },
             failure: function(response){
+		        if (scope!=null && scope.loadingMask !== null) {
+		            scope.loadingMask.hide();
+		        }
                 if (onFailure) {
                     onFailure(response);
                 }

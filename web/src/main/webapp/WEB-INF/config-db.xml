@@ -58,13 +58,21 @@
     </version>
     <version id="265">
       <file path="WEB-INF/classes/setup/sql/migrate/v265" filePrefix="migrate-"/>
+    </version>    <version id="280">
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-"/>
+      <java class="org.fao.geonet.MigrationTask"/>
     </version>
+    
     <version id="270">
       <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-db-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-"/>
     </version>
     <version id="280">
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-"/>
+      <java class="org.fao.geonet.MigrationTask"/>
+    </version>
+    <version id="281">
+      <file path="WEB-INF/classes/setup/sql/migrate/v281" filePrefix="migrate-"/>
       <java class="org.fao.geonet.MigrationTask"/>
     </version>
   </migrate>

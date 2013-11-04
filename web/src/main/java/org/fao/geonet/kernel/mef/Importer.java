@@ -23,6 +23,16 @@
 
 package org.fao.geonet.kernel.mef;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import jeeves.exceptions.BadFormatEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -30,6 +40,7 @@ import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -41,16 +52,6 @@ import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.jdom.Element;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  *
@@ -246,13 +247,17 @@ public class Importer {
 				String style = Util.getParam(params, Params.STYLESHEET,
 				"_none_");
 
-				if (!style.equals("_none_"))
-					md.add(index, Xml.transform(md.get(index), stylePath
-							+ FS + style));
-				
-				
 				Element metadata = md.get(index);
 				String schema = dm.autodetectSchema(metadata);
+				if (style.equals("_none_")) {
+					if (schema.equals("iso19139")) {
+						md.add(index, Xml.transform(md.get(index), dm.getSchemaDir(schema) + Geonet.File.UPDATE_IMPORT_INFO));
+					}
+				} else {
+					md.add(index, Xml.transform(md.get(index), stylePath
+							+ FS + style));
+				}
+				
 
 				if (schema == null) {
 					throw new Exception("Unknown schema format : " + schema);
@@ -311,7 +316,7 @@ public class Importer {
 					boolean assign = Util.getParam(params, "assign", "off").equals("on");
 					if (assign) {
                         if(Log.isDebugEnabled(Geonet.MEF)) {
-						Log.debug(Geonet.MEF, "Assign to local catalog");
+                        	Log.debug(Geonet.MEF, "Assign to local catalog");
                         }
 						source = gc.getSiteId();
 					}
@@ -338,7 +343,16 @@ public class Importer {
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION,
 						Params.NOTHING);
 
-				importRecord(uuid, localId, uuidAction, md, schema, index,
+				boolean relatedOnly = Util.getParam(params, Params.RELATED_ONLY, "off").equals("on");
+				if (relatedOnly) {
+		            String relatedGroupId = dm.getGroupIdFromMetadataGroupRelations(dbms, uuid, schema);
+		            if (relatedGroupId!=null) {
+		            	groupId = relatedGroupId;
+		            } else {
+		            	throw new Exception("Metadatarecord met uuid: " + uuid + " niet verwerkt omdat er geen gerelateerde groep gevonden kon worden");
+	            	}
+				}
+        		importRecord(uuid, localId, uuidAction, md, schema, index,
 						source, sourceName, context, id, createDate,
 						changeDate, groupId, isTemplate, dbms);
 
@@ -532,7 +546,8 @@ public class Importer {
                     //
                     String docType = "", title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
-                    dm.insertMetadata(context, dbms, schema, md.get(index), localId, uuid, context.getUserSession().getUserId(), groupId, source,
+//                    String relatedGroupId = dm.getGroupIdFromMetadataGroupRelations(dbms, uuid);
+                    dm.insertMetadata(context, dbms, schema, md.get(index), localId, uuid, context.getUserSession().getUserId(), /*relatedGroupId!=null ? relatedGroupId : */groupId, source,
                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 					id.add(index, localId);
@@ -554,9 +569,10 @@ public class Importer {
             String userid = context.getUserSession().getUserId();
             String docType = null, title = null, category = null;
             boolean ufo = false, indexImmediate = false;
+//            String relatedGroupId = dm.getGroupIdFromMetadataGroupRelations(dbms, uuid);
             id.add(index,
                     dm.insertMetadata(context, dbms, schema, md.get(index), IDFactory.newID(), uuid,
-                    userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
+                    userid, /*relatedGroupId!=null ? relatedGroupId : */groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
 		}
 
 	}

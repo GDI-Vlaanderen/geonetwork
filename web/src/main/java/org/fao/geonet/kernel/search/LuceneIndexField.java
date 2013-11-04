@@ -60,6 +60,7 @@ public class LuceneIndexField {
     public static final String _IS_HARVESTED = "_isHarvested";
     public static final String _IS_TEMPLATE = "_isTemplate";
     public static final String _IS_WORKSPACE = "_isWorkspace";
+    public static final String _DISPLAY_ORDER = "_displayOrder";
     public static final String KEYWORD = "keyword";
     public static final String _LOCKEDBY = "_lockedBy";
     public static final String METADATA_STANDARD_NAME = "metadataStandardName";

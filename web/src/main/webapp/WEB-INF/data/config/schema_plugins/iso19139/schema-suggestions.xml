@@ -259,4 +259,33 @@
     <suggest name="gmd:codeSpace"/>
   </field>
 
+  <field name="gmd:MD_AggregateInformation">
+    <suggest name="gmd:aggregateDataSetName"/>
+    <suggest name="gmd:aggregateDataSetIdentifier"/>
+    <suggest name="gmd:associationType"/>
+  </field>
+
+  <field name="gmd:aggregateDataSetName">
+    <suggest name="gmd:CI_Citation"/>
+  </field>
+
+  <field name="gmd:aggregateDataSetIdentifier">
+    <suggest name="gmd:RS_Identifier"/>
+  </field>
+
+  <field name="gmd:CI_Citation">
+    <suggest name="gmd:title"/>
+    <suggest name="gmd:alternateTitle"/>
+    <suggest name="gmd:date"/>
+  </field>
+
+  <field name="gmd:date">
+    <suggest name="gmd:CI_Date"/>
+  </field>
+
+  <field name="gmd:CI_Date">
+    <suggest name="gmd:date"/>
+    <suggest name="gmd:dateType"/>
+  </field>
+
 </fields>

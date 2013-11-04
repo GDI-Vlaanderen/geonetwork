@@ -570,7 +570,8 @@
     <xsl:variable name="removeLink">
       <xsl:value-of
         select="concat('doRemoveElementAction(', $apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
-      <xsl:if test="not(geonet:element/@del='true') or ($currTab = 'simple' and (geonet:element/@del='true') and ($siblingsCount = 0))">
+<!--       <xsl:if test="not(geonet:element/@del='true') or ($currTab = 'simple' and (geonet:element/@del='true') and ($siblingsCount = 0))">-->
+		<xsl:if test="not(geonet:element/@del='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
     </xsl:variable>
@@ -695,8 +696,7 @@
       <xsl:choose>
         <xsl:when test="$subtemplate">
           <!-- FIXME: remove ref to editorPanel -->
-          <xsl:if test="count(/root/gui/subtemplates/record[type=$subTemplateName]) &gt; 0"
-            >Ext.getCmp('editorPanel').showSubTemplateSelectionPanel</xsl:if>
+          <xsl:if test="count(/root/gui/subtemplates/record[type=$subTemplateName]) &gt; 0">Ext.getCmp('editorPanel').showSubTemplateSelectionPanel</xsl:if>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates mode="addXMLFragment" select="."/>
@@ -867,9 +867,9 @@
     <xsl:variable name="removeLink">
       <xsl:value-of
         select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
-       <xsl:if test="not(geonet:element/@del='true') or (($currTab = 'simple') and (geonet:element/@del='true') and ($siblingsCount = 0))">
-        <xsl:text>!OPTIONAL</xsl:text>
-      </xsl:if>
+        <xsl:if test="not(geonet:element/@del='true') or (($currTab = 'simple') and (geonet:element/@del='true') and ($siblingsCount = 0))">
+        	<xsl:text>!OPTIONAL</xsl:text>
+      	</xsl:if>
     </xsl:variable>
     <xsl:variable name="upLink">
       <xsl:value-of
@@ -2557,17 +2557,25 @@
 		      select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
 		    <xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
 		    <xsl:variable name="isXLinked" select="false()"/>
+<!--         	<xsl:variable name="service" select="../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/> -->
 			<xsl:variable name="text">
 		        <xsl:variable name="options">
 		          <options>
 		              <option name="gmd:MD_Resolution|gmd:equivalentScale">
-		                <xsl:attribute name="selected">selected</xsl:attribute>
+<!--		          	<xsl:if test="$service=false()">-->
+			                <xsl:attribute name="selected">selected</xsl:attribute>
+<!--		                </xsl:if>-->
 		                <xsl:call-template name="getTitle">
 		                  <xsl:with-param name="name">gmd:equivalentScale</xsl:with-param>
 		                  <xsl:with-param name="schema" select="$schema"/>
 		                </xsl:call-template>
 		              </option>
 		              <option name="gmd:MD_Resolution|gmd:distance">
+<!--
+			          	<xsl:if test="$service=true()">
+			                <xsl:attribute name="selected">selected</xsl:attribute>
+		                </xsl:if>
+-->
 		                <xsl:call-template name="getTitle">
 		                  <xsl:with-param name="name">gmd:distance</xsl:with-param>
 		                  <xsl:with-param name="schema" select="$schema"/>
@@ -2578,7 +2586,12 @@
 		        <select class="md" name="_{$parentName}_{$qname}_subtemplate" size="1">
 		          <xsl:for-each select="exslt:node-set($options)//option">
 		            <xsl:sort select="."/>
-		            <option value="{@name}"><xsl:value-of select="."/></option>
+		            <option value="{@name}">
+		            	<xsl:if test="@selected='selected'">
+                    		<xsl:attribute name="selected">selected</xsl:attribute>
+                    	</xsl:if>
+		            	<xsl:value-of select="."/>
+	            	</option>
 		          </xsl:for-each>
 		        </select>
 		    </xsl:variable>

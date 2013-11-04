@@ -719,7 +719,7 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                 
                 var items = [{
                     xtype: 'menutextitem',
-                    text: 'Add from thesaurus ...'
+                    text: '<b>' + OpenLayers.i18n('addFromThesaurus') + '</b>'
                 }];
                 store.each(function (thesaurus) {
                     items.push({

@@ -257,7 +257,7 @@ public class JeevesServlet extends HttpServlet
 	                session.authenticate(contactid,contactid + "_" + Util.getClaimValue(fp,"name"), Util.getClaimValue(fp,"givenname"), Util.getClaimValue(fp,"surname"), profile!=null ? profile : "RegisteredUser", Util.getClaimValue(fp,"emailaddress"));
 	                List<Map<String,String>> groups = new ArrayList<Map<String,String>>();
 	                Map<String,String> group = new HashMap<String,String>();
-	                group.put("name", Util.getClaimValue(fp,"organisationid") + "_" + Util.getClaimValue(fp,"organisationpublicid"));
+	                group.put("name", Util.getClaimValue(fp,"organisationid")/* + "_" + Util.getClaimValue(fp,"organisationpublicid")*/);
 	                group.put("description", Util.getClaimValue(fp,"organisationdisplayname"));
 	                groups.add(group);                		
 	                session.setProperty("groups", groups);

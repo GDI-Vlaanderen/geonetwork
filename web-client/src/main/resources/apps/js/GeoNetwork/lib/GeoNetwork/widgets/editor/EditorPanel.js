@@ -86,10 +86,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             /** api: config[utilityPanelConfig.relationPanel] 
              *  Collapsed relation panel on startup. Default is true.
              */
+/*
             relationPanel: {
                 collapsed: true
             },
-            /** api: config[utilityPanelConfig.validationPanel] 
+*/            /** api: config[utilityPanelConfig.validationPanel] 
              *  Collapsed validation panel on startup. Default is true.
              */
             validationPanel: {
@@ -554,7 +555,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                             var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
                             if (xlinkHref) {
                             	if (Ext.isEmpty(xlinkHref.dom.value)) {
-                            		xlinkHref.dom.value = panel.catalogue.URL.replace("apps/tabsearch/../../","") + '/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + metadata[0].data.uuid;
+                            		xlinkHref.dom.value = panel.catalogue.rootUrl + 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + metadata[0].data.uuid;
                             	} else {
                                 	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
                                 	var id = parameters["id"];
@@ -697,9 +698,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
 		                                
 		                                // Check error
 		                                if (response.indexOf('Not owner') !== -1) {
-		                                    Ext.MessageBox.alert(OpenLayers.i18n("NotOwnerError"));
+		                                    Ext.MessageBox.alert("Fout", OpenLayers.i18n("NotOwnerError"));
 		                                } else if (response.indexOf('error') !== -1) {
-		                                    Ext.MessageBox.alert(OpenLayers.i18n("error") + response);
+		                                    Ext.MessageBox.alert("Fout", OpenLayers.i18n("error") + response);
 		                                }
 		                                // 2. Update current metadata record, in current window
 		                                var datasetUpdateUrl = editorPanel.catalogue.services.mdProcessing + 
@@ -716,13 +717,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
 		                                        editorPanel.updateEditor(result);
 		                                    },
 		                                    failure: function(result, request){
-		                                        Ext.MessageBox.alert(OpenLayers.i18n("datasetUpdateError"));
+		                                        Ext.MessageBox.alert("Fout", OpenLayers.i18n("datasetUpdateError"));
 		                                        setBunload(true);
 		                                    }
 		                                });
 		                            },
 		                            failure: function(result, request){
-		                                Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateError"));
+		                                Ext.MessageBox.alert("Fout", OpenLayers.i18n("ServiceUpdateError"));
 		                                setBunload(true);
 		                            }
 		                        });
@@ -746,9 +747,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                 var response = result.responseText;
                                 // Check error
                                 if (response.indexOf('Not owner') !== -1) {
-                                    Ext.MessageBox.alert(OpenLayers.i18n("NotOwnerError"));
+                                    Ext.MessageBox.alert("Fout", OpenLayers.i18n("NotOwnerError"));
                                 } else if (response.indexOf('error') !== -1) {
-                                    Ext.MessageBox.alert(OpenLayers.i18n("error") + response);
+                                    Ext.MessageBox.alert("Fout", OpenLayers.i18n("error") + response);
                                 }
                                 
                                 // 2. Update current metadata record, in current window FIXME
@@ -763,7 +764,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                             	});
                             },
                             failure: function(result, request){
-                                Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateError"));
+                                Ext.MessageBox.alert("Fout", OpenLayers.i18n("ServiceUpdateError"));
                                 setBunload(true);
                             }
                         });
@@ -1295,14 +1296,14 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             editor: this,
             html: ''
         }, this.utilityPanelConfig.helpPanel));
-        
+/*        
         this.relationPanel = new GeoNetwork.editor.LinkedMetadataPanel(Ext.applyIf({
             editor: this,
             metadataId: this.metadataId,
             metadataSchema: this.metadataSchema,
             serviceUrl: this.catalogue.services.mdRelation
         }, this.utilityPanelConfig.relationPanel));
-        
+*/        
         this.idField = new Ext.form.TextField({
             xtype: 'textfield',
             name: 'id',
@@ -1442,7 +1443,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             width: 380,
             items: [
 /*                this.thumbnailPanel,*/ 
-                this.relationPanel, 
+//                this.relationPanel, 
 //                this.suggestionPanel,
                 this.validationPanel, 
                 this.helpPanel]

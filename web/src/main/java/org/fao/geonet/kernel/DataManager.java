@@ -80,9 +80,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.StatusActions;
 import org.fao.geonet.services.metadata.StatusActionsFactory;
-import org.fao.geonet.services.metadata.validation.IValidationHook;
 import org.fao.geonet.services.metadata.validation.ValidationHookException;
-import org.fao.geonet.services.metadata.validation.ValidationHookFactory;
+import org.fao.geonet.services.metadata.validation.agiv.AGIVValidation;
 import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.ThreadUtils;
@@ -611,11 +610,11 @@ public class DataManager {
         //***String query = "SELECT schemaId, createDate, changeDate, source, isTemplate, isLocked, root, " +
         //        "title, uuid, isHarvested, owner, groupOwner, popularity, rating FROM Metadata WHERE id = ?";
             query = "SELECT schemaId, createDate, changeDate, source, isTemplate, isLocked, lockedBy, root, " +
-                "title, uuid, isHarvested, owner, popularity, rating FROM Metadata WHERE id = ?";
+                "title, uuid, isHarvested, owner, popularity, rating, displayOrder FROM Metadata WHERE id = ?";
         }
         else {
             query = "SELECT schemaId, createDate, changeDate, source, isTemplate, isLocked, lockedBy, root, " +
-                    "title, uuid, isHarvested, owner, popularity, rating FROM Workspace WHERE id = ?";
+                    "title, uuid, isHarvested, owner, popularity, rating, displayOrder FROM Workspace WHERE id = ?";
         }
 
         Element rec = dbms.select(query, id).getChild("record");
@@ -645,6 +644,7 @@ public class DataManager {
         String  uuid       = rec.getChildText("uuid");
         String  isHarvested= rec.getChildText("isharvested");
         String  owner      = rec.getChildText("owner");
+        String  displayOrder=rec.getChildText("displayorder");
         //***
         // String  groupOwner = rec.getChildText("groupowner");
         String  popularity = rec.getChildText("popularity");
@@ -662,6 +662,7 @@ public class DataManager {
             moreFields.add(SearchManager.makeField(LuceneIndexField._IS_WORKSPACE, "false", true, true));
         }
 
+        moreFields.add(SearchManager.makeField(LuceneIndexField._DISPLAY_ORDER, displayOrder!=null ? displayOrder : "0", true, true));
         moreFields.add(SearchManager.makeField(LuceneIndexField._ROOT, root, true, true));
         moreFields.add(SearchManager.makeField(LuceneIndexField._SCHEMA, schema, true, true));
         moreFields.add(SearchManager.makeField(LuceneIndexField._CREATE_DATE, createDate, true, true));
@@ -2190,6 +2191,25 @@ public class DataManager {
 	}
 
     /**
+     * Returns true if the metadata uuid exists in the database.
+     * @param dbms
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+	public String getGroupIdFromMetadataGroupRelations(Dbms dbms, String uuid, String schema) throws Exception {
+		//FIXME : should use lucene
+
+		List list = null;
+		if (schema.equals("iso19139")) {
+			list = dbms.select("SELECT id FROM MetadataGroupRelations, Groups WHERE MetadataGroupRelations.groupname=Groups.name and metadatauuid=?",uuid).getContent();
+		} else if (schema.equals("iso19110")) {
+			list = dbms.select("SELECT distinct id FROM CatalogueMetadataRelations, MetadataGroupRelations, Groups WHERE CatalogueMetadataRelations.metadatauuid = MetadataGroupRelations.metadatauuid and MetadataGroupRelations.groupname=Groups.name and CatalogueMetadataRelations.catalogueuuid=?",uuid).getContent();
+		}
+		return list.size() == 1 ? ((Element)list.get(0)).getChildText("id") : null;
+	}
+
+    /**
      * Returns all the keywords in the system.
      *
      * @return
@@ -2508,10 +2528,13 @@ public class DataManager {
 		}
         if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv")) {
         	try {
-	            GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
+        		GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
+/*
 	            ValidationHookFactory validationHookFactory = new ValidationHookFactory(gc.getValidationHookClass());
 	            IValidationHook validationHook = validationHookFactory.createValidationHook(servContext, dbms);
 	            validationHookFactory.onValidate(validationHook, id, valTypeAndStatus, now, workspace);
+*/
+	            new AGIVValidation(servContext, dbms).getValidatedMetadata(id, valTypeAndStatus, now, workspace);
 	        }
 	        catch(ValidationHookException x) {
 	            System.err.println("validation hook exception: " + x.getMessage());
@@ -3693,7 +3716,7 @@ public class DataManager {
         addElement(info, Edit.Info.Elem.LOCKED_BY, lockedBy);
         addElement(info, Edit.Info.Elem.POPULARITY,  popularity);
 		addElement(info, Edit.Info.Elem.RATING,      rating);
-                addElement(info, Edit.Info.Elem.DISPLAY_ORDER,  displayOrder);
+        addElement(info, Edit.Info.Elem.DISPLAY_ORDER,  displayOrder);
 
 		if (isHarvested.equals("y"))
 			info.addContent(harvestMan.getHarvestInfo(harvestUuid, id, uuid));

@@ -363,7 +363,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         /* Export action
          */
-        if (GeoNetwork.Settings.nodeType!='agiv') {
+        if (GeoNetwork.Settings.nodeType.toLowerCase()!='agiv') {
 	        var mefExportAction = new Ext.Action({
 	            text: OpenLayers.i18n('exportZip'),
 	            iconCls: 'md-mn-zip',
@@ -396,7 +396,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
 
         this.actionMenu.add(
             '<b class="menu-title">' + OpenLayers.i18n('onSelection') + '</b>');
-        if (GeoNetwork.Settings.nodeType!='agiv') {
+        if (GeoNetwork.Settings.nodeType.toLowerCase()!='agiv') {
         	this.actionMenu.add(mefExportAction);
         }
         this.actionMenu.add(csvExportAction, 

@@ -25,6 +25,8 @@
 <!-- Revisie 11: 22/09/2013 alle childs van featureCatalogueCitation verwijderd en enkel uuidref attribuut toegevoegd
 			    verwijderen child gco:Date xsi:nil="true" en nilreason terug aan gmd:dateTime toegevoegd wegens validatiefout -->
 <!-- Revisie 12: 27/09/2013 het lege referentieSystemInfo weggehaald, want dat geeft schematron validatie fout indien dit niet verwijderd wordt -->
+<!-- Revisie 13: 27/09/2013 default waardes aangepast van gmd:denominator, gco:Distance en gmd:transferSize/gco:Real -->
+
 <gmd:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
 	<gmd:fileIdentifier>
 		<gco:CharacterString/>
@@ -493,7 +495,7 @@
 					<gmd:spatialResolution>
 					<gmd:MD_Resolution>
 					<gmd:distance>
-						<gco:Distance uom="m">10</gco:Distance>
+						<gco:Distance uom="m">0</gco:Distance>
 					</gmd:distance>
 				</gmd:MD_Resolution>
 			</gmd:spatialResolution>
@@ -665,7 +667,7 @@
 						<gco:CharacterString/>
 					</gmd:unitsOfDistribution>
 					<gmd:transferSize>
-						<gco:Real>0.5</gco:Real>
+						<gco:Real>0</gco:Real>
 					</gmd:transferSize>
 					<gmd:onLine>
 						<gmd:CI_OnlineResource>
