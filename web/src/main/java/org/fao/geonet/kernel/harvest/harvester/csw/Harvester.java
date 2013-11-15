@@ -277,7 +277,7 @@ class Harvester
     private void configRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, String preferredMethod)
             throws Exception {
         // Use the preferred HTTP method and check one exist.
-//    	boolean isCSWGetRecords = oper.name!=null && oper.name.equalsIgnoreCase("GetRecords");
+    	boolean isCSWGetRecords = oper.name!=null && oper.name.equalsIgnoreCase("GetRecords");
 		if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
 			request.setUrl(oper.getUrl);
             request.setServerVersion(server.getPreferredServerVersion());
@@ -286,11 +286,11 @@ class Harvester
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getCqlConstraint(s));
 			request.setMethod(CatalogRequest.Method.GET);
-//			if (!isCSWGetRecords) {
+			if (!isCSWGetRecords) {
 	            for(String typeName: oper.typeNamesList) {
 	                request.addTypeName(TypeName.getTypeName(typeName));
 	            }
-//			}
+			}
             request.setOutputFormat(oper.preferredOutputFormat) ;
 
 		} else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
@@ -301,11 +301,11 @@ class Harvester
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getFilterConstraint(s));
 			request.setMethod(CatalogRequest.Method.POST);
-//			if (!isCSWGetRecords) {
+			if (!isCSWGetRecords) {
 	            for(String typeName: oper.typeNamesList) {
 	                request.addTypeName(TypeName.getTypeName(typeName));
 	            }
-//			}
+			}
             request.setOutputFormat(oper.preferredOutputFormat) ;
 
 		} else {
@@ -317,11 +317,11 @@ class Harvester
                 request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
                 request.setConstraint(getCqlConstraint(s));
                 request.setMethod(CatalogRequest.Method.GET);
- //   			if (!isCSWGetRecords) {
+                if (!isCSWGetRecords) {
 	                for(String typeName: oper.typeNamesList) {
 	                    request.addTypeName(TypeName.getTypeName(typeName));
 	                }
- //   			}
+    			}
                 request.setOutputFormat(oper.preferredOutputFormat) ;
 
             } else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
@@ -332,11 +332,11 @@ class Harvester
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getFilterConstraint(s));
 				request.setMethod(CatalogRequest.Method.POST);
-	//			if (!isCSWGetRecords) {
+				if (!isCSWGetRecords) {
 			        for(String typeName: oper.typeNamesList) {
 			            request.addTypeName(TypeName.getTypeName(typeName));
 			        }
-	//			}
+				}
                 request.setOutputFormat(oper.preferredOutputFormat) ;
 
 			} else {
@@ -344,11 +344,11 @@ class Harvester
 				throw new OperationAbortedEx("No GET (using CQL) or POST (using FE) DCP available in this service.");
 			}
 		}
-/*
+
 		if (isCSWGetRecords) {
 			request.addTypeName(TypeName.getTypeName("gmd:MD_Metadata"));
 		}
-*/
+
 	}
 
 	//---------------------------------------------------------------------------

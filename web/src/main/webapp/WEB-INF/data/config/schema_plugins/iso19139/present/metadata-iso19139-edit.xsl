@@ -3335,7 +3335,8 @@
 
 		<xsl:if test="$edit=true()">
 	        <xsl:choose>
-	            <xsl:when test="string(gmd:protocol[1]/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download'
+
+	            <xsl:when test="false() and string(gmd:protocol[1]/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download'
 	            and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
 	                <xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
 	                    <xsl:with-param name="access" select="'private'"/>

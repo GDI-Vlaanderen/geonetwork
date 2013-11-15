@@ -962,13 +962,13 @@
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
                        context="//gmd:MD_DataIdentification[       ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']       |       //*[@gco:isoType='gmd:MD_DataIdentification' and (       ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'       or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]    "/>
       <xsl:variable name="west"
-                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text())"/>
+                    select="number(gmd:extent/*/gmd:geographicElement[position()=1]/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text())"/>
       <xsl:variable name="east"
-                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text())"/>
+                    select="number(gmd:extent/*/gmd:geographicElement[position()=1]/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text())"/>
       <xsl:variable name="north"
-                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text())"/>
+                    select="number(gmd:extent/*/gmd:geographicElement[position()=1]/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text())"/>
       <xsl:variable name="south"
-                    select="number(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text())"/>
+                    select="number(gmd:extent/*/gmd:geographicElement[position()=1]/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text())"/>
 
 		    <!--ASSERT -->
 <xsl:choose>
@@ -1117,11 +1117,11 @@
    </xsl:template>
 
 	  <!--RULE -->
-<xsl:template match="//srv:SV_ServiceIdentification[    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'service']    /srv:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox"
+<xsl:template match="//srv:SV_ServiceIdentification[    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'service']    /srv:extent/*/gmd:geographicElement[position()=1]/gmd:EX_GeographicBoundingBox"
                  priority="1000"
                  mode="M13">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="//srv:SV_ServiceIdentification[    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'service']    /srv:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
+                       context="//srv:SV_ServiceIdentification[    ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'service']    /srv:extent/*/gmd:geographicElement[position()=1]/gmd:EX_GeographicBoundingBox"/>
       <xsl:variable name="west" select="number(gmd:westBoundLongitude/gco:Decimal/text())"/>
       <xsl:variable name="east" select="number(gmd:eastBoundLongitude/gco:Decimal/text())"/>
       <xsl:variable name="north" select="number(gmd:northBoundLatitude/gco:Decimal/text())"/>

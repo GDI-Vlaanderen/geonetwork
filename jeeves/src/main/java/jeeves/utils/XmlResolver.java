@@ -80,7 +80,20 @@ public class XmlResolver extends XMLCatalogResolver {
 			} else if (systemId != null && baseURI != null) {
 				if (baseURI.startsWith("http://")) {
 					URL ref = new URL(baseURI);
-					String thePath = new File(ref.getPath()).getParent();
+					String thePath = ref.getPath();
+					int iPos = thePath.lastIndexOf("/");
+					if (iPos > -1) {
+						thePath = thePath.substring(0,iPos);
+					}
+					while (systemId.startsWith("../")) {
+						iPos = thePath.lastIndexOf("/");
+						if (iPos > -1) {
+							thePath = thePath.substring(0,iPos);
+							systemId = systemId.substring(3);
+						} else {
+							break;
+						}
+					}
 					externalRef = new URL(ref.getProtocol(), ref.getHost(), ref.getPort(), thePath + "/" + systemId);
 				}
 			}

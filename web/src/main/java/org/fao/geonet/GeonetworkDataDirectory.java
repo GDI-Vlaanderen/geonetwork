@@ -249,7 +249,6 @@ public class GeonetworkDataDirectory {
 		setResourceDir(webappName, handlerConfig, systemDataDir,
 				".resources" + KEY_SUFFIX, "data" + File.separator + "resources",
 				Geonet.Config.RESOURCES_DIR);
-
 		handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR,
 				handlerConfig.getValue(Geonet.Config.RESOURCES_DIR)
 						+ File.separator + "htmlcache");
@@ -354,6 +353,9 @@ public class GeonetworkDataDirectory {
 			dir = systemDataDir + folder;
 			System.setProperty(envKey, dir);
 		} else {
+			if (envKey.endsWith(".resources.dir")) {
+				System.setProperty(envKey, dir);
+			}
 			if (!new File(dir).isAbsolute()) {
 				Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey
 						+ " for directory " + dir

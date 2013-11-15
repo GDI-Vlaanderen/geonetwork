@@ -690,7 +690,7 @@ public class DefaultStatusActions implements StatusActions {
 				Geonet.Settings.SERVER_HOST);
 		String port = gc.getSettingManager().getValue(
 				Geonet.Settings.SERVER_PORT);
-		return protocol + "://" + host + (port == "80" ? "" : ":" + port)
+		return /*protocol + */"https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port)
 				+ this.context.getBaseUrl()
 				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
 	}

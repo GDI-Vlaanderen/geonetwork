@@ -260,65 +260,17 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
-	<!-- online resources: download -->
+	<!-- replace gmx:MimeFileType by gmd:CharacterString -->
 	<!-- ================================================================= -->
 
-	<xsl:template match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(gmd:protocol/gco:CharacterString,'http--download') and gmd:name]">
-		<xsl:variable name="fname" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType"/>
-		<xsl:variable name="mimeType">
-			<xsl:call-template name="getMimeTypeFile">
-				<xsl:with-param name="datadir" select="/root/env/datadir"/>
-				<xsl:with-param name="fname" select="$fname"/>
-			</xsl:call-template>
-		</xsl:variable>
-
-		<xsl:copy>
-			<xsl:copy-of select="@*"/>
-			<gmd:linkage>
-				<gmd:URL>
-					<xsl:choose>
-						<xsl:when test="/root/env/config/downloadservice/simple='true'">
-							<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',$fname,'&amp;access=private')"/>
-						</xsl:when>
-						<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
-							<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?id=',/root/env/id,'&amp;fname=',$fname,'&amp;access=private')"/>
-						</xsl:when>
-						<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
-							<xsl:value-of select="gmd:linkage/gmd:URL"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</gmd:URL>
-			</gmd:linkage>
-			<xsl:copy-of select="gmd:protocol"/>
-			<xsl:copy-of select="gmd:applicationProfile"/>
-			<gmd:name>
-				<gmx:MimeFileType type="{$mimeType}">
-					<xsl:value-of select="$fname"/>
-				</gmx:MimeFileType>
-			</gmd:name>
-			<xsl:copy-of select="gmd:description"/>
-			<xsl:copy-of select="gmd:function"/>
-		</xsl:copy>
-	</xsl:template>
-
-	<!-- ================================================================= -->
-	<!-- online resources: link-to-downloadable data etc -->
-	<!-- ================================================================= -->
-
-	<xsl:template match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:LINK-') and contains(gmd:protocol/gco:CharacterString,'http--download')]">
-		<xsl:variable name="mimeType">
-			<xsl:call-template name="getMimeTypeUrl">
-				<xsl:with-param name="linkage" select="gmd:linkage/gmd:URL"/>
-			</xsl:call-template>
-		</xsl:variable>
-
+	<xsl:template match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(gmd:protocol/gco:CharacterString,'http--download') and gmd:name/gmx:MimeFileType]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:copy-of select="gmd:linkage"/>
 			<xsl:copy-of select="gmd:protocol"/>
 			<xsl:copy-of select="gmd:applicationProfile"/>
 			<gmd:name>
-				<gmx:MimeFileType type="{$mimeType}"/>
+				<gco:CharacterString><xsl:value-of select="gmd:name/gmx:MimeFileType"/></gco:CharacterString>
 			</gmd:name>
 			<xsl:copy-of select="gmd:description"/>
 			<xsl:copy-of select="gmd:function"/>

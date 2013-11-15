@@ -1095,7 +1095,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      *
      */
-    metadataXMLSave: function(uuid, schema){
+    metadataXMLSave: function(uuid, schema, fromWorkspace){
         var save = "_save";
         // Default GeoNetwork XML service
         var service = this.services.mdXMLGet;
@@ -1111,7 +1111,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             service = this.services.mdXMLGet19115 + save; // Force ISO19115 record to 19139
         }
 
-        var url = service + '?uuid=' + escape(uuid);
+        var url = service + '?uuid=' + escape(uuid) + '&fromWorkspace=' + fromWorkspace;
         location.replace(url);
     },
 

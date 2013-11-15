@@ -300,7 +300,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 var schema = this.record.get('schema');
                 // change for AGIV: save xml directly, do not open in new window
                 //this.catalogue.metadataXMLShow(id, schema);
-                this.catalogue.metadataXMLSave(id, schema);
+                this.catalogue.metadataXMLSave(id, schema, this.record.get('workspace') === 'true');
             },
             scope: this
         });
@@ -310,7 +310,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 text: OpenLayers.i18n('printSel'),
                 iconCls: 'md-mn-pdf',
                 handler: function(){
-                    this.catalogue.metadataPrint(this.record.get('uuid'), false);
+                    this.catalogue.metadataPrint(this.record.get('uuid'), this.record.get('workspace') === 'true');
                 },
                 scope: this
             });

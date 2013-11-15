@@ -181,7 +181,7 @@
         -->  
         <init-param>
             <param-name>zoekdienst.drivemapping</param-name>
-            <param-value>net use z: \\PCPB359\zoekdienst_data_shared</param-value>
+            <param-value>net use z: \\PCPB359\zoekdienst_data_shared /PERSISTENT:NO</param-value>
         </init-param>
         <init-param>
             <param-name>zoekdienst.dir</param-name>
@@ -203,6 +203,10 @@
         <init-param>
             <param-name>zoekdienst.clusterconfig.dir</param-name>
             <param-value>C:\zoekdienst_data\cluster</param-value>
+        </init-param>
+        <init-param>
+            <param-name>zoekdienst.resources.dir</param-name>
+            <param-value>z:</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

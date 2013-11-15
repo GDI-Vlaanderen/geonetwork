@@ -77,7 +77,7 @@ table.related * li {
   text-align : center;
 }
 .md-view ul li * .md-logo img {
-  max-width : 30px;
+  max-width : 125px;
 }
 .md-view ul li * .md-logo-type img {
   max-width : 125px;

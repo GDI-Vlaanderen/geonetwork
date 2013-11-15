@@ -151,9 +151,10 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<tpl for=".">',
             '<li class="md md-simple" title="{abstract}" style="{featurecolorCSS}">',
             '<table><tr>',  // FIXME
-            '<td style="width:30px;">',
-            showHarvesterLogo ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>' : '',
-            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{[catalogue.URL]}/apps/tabsearch/images/' + (isAgiv ? '{type}' : 'geopunt') + '.png"/></div>' : '',
+            '<td style="width:75px;">',
+//            isAgiv ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>' + '<tpl if="isharvested==\'n\'">' + GeoNetwork.Templates.GEOPUNT_LOGO + '</tpl>' : '',
+            !isAgiv ? GeoNetwork.Templates.LOGO : '',
+            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{[catalogue.URL]}/apps/tabsearch/images/{type}.png"/></div>' : '',
 			'</td>',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
@@ -227,8 +228,9 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<li class="md md-full" style="{featurecolorCSS}">',
             '<table><tr>',
             '<td class="left">',
-        	showHarvesterLogo ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>': '',
-            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{[catalogue.URL]}/apps/tabsearch/images/' + (isAgiv ? '{type}' : 'geopunt') + '.png"/></div>' : '',
+//        	isAgiv ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>' + '<tpl if="isharvested==\'n\'">' + GeoNetwork.Templates.GEOPUNT_LOGO + '</tpl>' : '',
+        	!isAgiv ? GeoNetwork.Templates.LOGO : '',
+            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{[catalogue.URL]}/apps/tabsearch/images/{type}.png"/></div>' : '',
             '</td>',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
@@ -391,6 +393,7 @@ GeoNetwork.Templates.RATING_TPL = '<tpl if="isharvested==\'n\' || harvestertype=
                                            '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'5\'">checked="true"</tpl> value="5"/>' + 
                                        '</div></tpl>'; 
 GeoNetwork.Templates.LOGO = '<div class="md-logo"><img src="{[catalogue.URL]}/images/logos/{source}.gif"/></div>';
+//GeoNetwork.Templates.GEOPUNT_LOGO = '<div><img src="{[catalogue.URL]}/images/logos/geopunt.png"/></div>';
 /** api: constructor 
  *  .. class:: GeoNetwork.Templates.SIMPLE()
  * 

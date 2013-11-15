@@ -559,7 +559,7 @@ public class Geonetwork implements ApplicationHandler {
 	        List<Element> versions = dbConfiguration.getChild("migrate").getChildren();
             for(Element version : versions) {
                 int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
-//                if ((versionNumber > from && versionNumber <= to) || (to==281 && from==290)) {
+//                if (versionNumber > from && versionNumber <= to) {
                 if (versionNumber==281 && from==290) {
                     logger.info("       - running tasks for " + versionNumber + "...");
                     @SuppressWarnings(value = "unchecked")

@@ -196,6 +196,23 @@ public abstract class CatalogRequest
 	}
 
 	//---------------------------------------------------------------------------
+	/**
+	 * Set request redirectBaseUrl host, port, address and path.
+	 */
+	public void setRedirectBaseUrl(URL url)
+	{
+		this.host    = url.getHost();
+		this.port    = url.getPort();
+        this.protocol= url.getProtocol();
+		this.address = url.toString();
+		this.path = url.getPath();
+
+		if (this.port == -1) {
+			this.port = url.getDefaultPort();
+		}
+	}
+
+	//---------------------------------------------------------------------------
 
 	public void setMethod(Method m)
 	{
@@ -460,6 +477,7 @@ public abstract class CatalogRequest
 		client.getHostConfiguration().setHost(host, port, protocol);
 
 		byte[] data = null;
+		boolean bRedirect = false;
 
 		try
 		{
@@ -471,6 +489,19 @@ public abstract class CatalogRequest
 			if (httpMethod.getStatusCode() == 500) {
                 Log.warning(Geonet.CSW, "  Status code: " + httpMethod.getStatusCode());
 				return null;
+			} else if (httpMethod.getStatusCode() == 302) {
+                Log.warning(Geonet.CSW, "  Status code: " + httpMethod.getStatusCode());
+				Header locationHeader = httpMethod.getResponseHeader("Location");
+				if (locationHeader!=null && StringUtils.isNotBlank(locationHeader.getValue())) {
+					String oldAddress = this.address;
+					setRedirectBaseUrl(new URL(locationHeader.getValue()));
+					if (!this.address.equals(oldAddress)) {
+						bRedirect = true;
+					}
+				}
+				if (!bRedirect) {
+					return null;
+				}
 			} else {
 				return Xml.loadStream(httpMethod.getResponseBodyAsStream());
 			}
@@ -485,6 +516,15 @@ public abstract class CatalogRequest
 			    Log.warning(Geonet.HARVESTER, "Exception was raised during cleanup of a CSW request : "+ Util.getStackTrace(e));
 			}
 		}
+		if (bRedirect) {
+			try {
+				return execute();
+			} catch (Exception e) {
+			    Log.warning(Geonet.HARVESTER, "Exception was raised during redirect : "+ Util.getStackTrace(e));
+				return null;
+			}
+		}
+		return null;
 	}
 
 	//---------------------------------------------------------------------------
