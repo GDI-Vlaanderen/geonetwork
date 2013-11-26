@@ -32,10 +32,10 @@ import org.jdom.Element;
 import java.util.Iterator;
 
 /**
- * 
+ *
  * Get default params info from session and/or request
  * and process text parameters.
- * 
+ *
  * @author fxprunayre
  *
  */
@@ -45,7 +45,7 @@ public class SearchDefaults {
 	 * Usually, default variable for search parameters
 	 * could be set up in xml/search/lucene.xsl (e.g. template parameter
 	 * default value is "n").
-	 * 
+	 *
 	 * TODO : All DEFAULT_PARAMS should be set by lucene.xsl file to have
 	 * all default values in the same place.
 	 */
@@ -66,7 +66,7 @@ public class SearchDefaults {
 	 * Returns default values for the search parameters. If request params are
 	 * set, they're used. If parameters have changed in the user session, they
 	 * are read out here.
-	 * 
+	 *
 	 * @param srvContext
 	 * @param request
 	 * @return

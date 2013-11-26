@@ -29,10 +29,10 @@
 	</xsl:template>
 
 	<xsl:template match="//gmd:MD_Metadata/gmd:characterSet">
-	    <xsl:copy>
+	    <gmd:characterSet>
 			<xsl:copy-of select="@*"/>
 			<xsl:apply-templates select="*"/>
-		</xsl:copy>
+		</gmd:characterSet>
 		<xsl:if test="count(../gmd:parentIdentifier)=0">
 			<gmd:parentIdentifier gco:nilReason="missing">
 				<gco:CharacterString/>
@@ -40,7 +40,7 @@
 		</xsl:if>
 	</xsl:template>
 	<xsl:template match="gmd:parentIdentifier">
-	    <xsl:copy>
+	    <gmd:parentIdentifier>
 			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
 			<xsl:if test="normalize-space(gco:CharacterString)=''">
 				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
@@ -49,6 +49,23 @@
 			<xsl:if test="not(normalize-space(gco:CharacterString)='')">
 				<xsl:apply-templates select="*"/>
 			</xsl:if>
-		</xsl:copy>
+		</gmd:parentIdentifier>
 	</xsl:template>
+    <xsl:template match="gmd:useLimitation">
+<!--
+			<xsl:if test="normalize-space(gco:CharacterString)=''">
+				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+			    <gmd:useLimitation>
+					<gco:CharacterString/>
+			    </gmd:useLimitation>
+			</xsl:if>
+-->
+			<xsl:if test="gco:CharacterString and not(normalize-space(gco:CharacterString)='')">
+				<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			    <gmd:useLimitation>
+					<xsl:apply-templates select="*"/>
+			    </gmd:useLimitation>
+			</xsl:if>
+	</xsl:template>
+
 </xsl:stylesheet>

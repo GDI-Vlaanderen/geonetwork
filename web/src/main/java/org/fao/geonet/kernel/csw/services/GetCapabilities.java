@@ -272,7 +272,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         vars.put("$PROTOCOL", sm.getValue(Geonet.Settings.SERVER_PROTOCOL));
 		vars.put("$HOST",    sm.getValue(Geonet.Settings.SERVER_HOST));
 		String port = sm.getValue(Geonet.Settings.SERVER_PORT);
-		vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
+		vars.put("$PORT", "80".equals(port) || "443".equals(port) ? "" : ":" + port);
         vars.put("$END-POINT", context.getService());
 
         String providerName = sm.getValue("system/site/organization");

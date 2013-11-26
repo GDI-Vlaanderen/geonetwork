@@ -4,7 +4,9 @@
 
     
     <service name="view">
-      <class name=".services.metadata.View"/>
+      <class name=".services.metadata.View">
+		<param name="skipPopularity" value="y" />
+      </class>
       <output sheet="metadata/view/view.xsl">
         <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
         <call name="isoLang" class=".guiservices.isolanguages.Get"/>

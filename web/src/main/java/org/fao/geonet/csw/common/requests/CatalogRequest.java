@@ -489,12 +489,12 @@ public abstract class CatalogRequest
 			if (httpMethod.getStatusCode() == 500) {
                 Log.warning(Geonet.CSW, "  Status code: " + httpMethod.getStatusCode());
 				return null;
-			} else if (httpMethod.getStatusCode() == 302) {
+			} else if (httpMethod.getStatusCode() == 301 || httpMethod.getStatusCode() == 302) {
                 Log.warning(Geonet.CSW, "  Status code: " + httpMethod.getStatusCode());
 				Header locationHeader = httpMethod.getResponseHeader("Location");
 				if (locationHeader!=null && StringUtils.isNotBlank(locationHeader.getValue())) {
 					String oldAddress = this.address;
-					setRedirectBaseUrl(new URL(locationHeader.getValue()));
+					setRedirectBaseUrl(new URL(locationHeader.getValue().replaceAll("&amp", "&")));
 					if (!this.address.equals(oldAddress)) {
 						bRedirect = true;
 					}

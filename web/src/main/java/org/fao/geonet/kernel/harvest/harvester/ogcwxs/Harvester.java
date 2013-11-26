@@ -23,6 +23,20 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -30,6 +44,7 @@ import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -37,6 +52,9 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.requests.CatalogRequest;
+import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -54,20 +72,6 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 
 //=============================================================================
@@ -610,7 +614,17 @@ class Harvester
 				if (href != null) {	// No metadataUrl attribute for that layer
 					mdXml = href.getValue ();
 					try {
-						xml = Xml.loadFile (new URL(mdXml));
+
+						GetRecordByIdRequest request = new GetRecordByIdRequest(this.context);
+						request.setElementSetName(ElementSetName.FULL);
+						request.setUrl(new URL(mdXml));
+						request.setMethod(CatalogRequest.Method.GET);
+						if (params.useAccount) {
+							request.setCredentials(params.username, params.password);
+						}	
+//						xml = Xml.loadFile (new URL(mdXml));
+//						xml = new XmlRequest(new URL(mdXml)).execute();
+						xml = request.execute();
 
                         // If url is CSW GetRecordById remove envelope
                         if (xml.getName().equals("GetRecordByIdResponse")) {
@@ -648,7 +662,7 @@ class Harvester
 						}
 					// TODO : catch other exception
 					}catch (Exception e) {
-						log.warning("  - Failed to load layer using metadataUrl attribute : " + e.getMessage());
+						log.error("  - Failed to load layer using metadataUrl attribute : " + e.getMessage());
 						loaded = false;
 					}
 				} else {

@@ -23,11 +23,6 @@
 
 package jeeves.resources.dbms;
 
-import jeeves.constants.Jeeves;
-import jeeves.utils.Log;
-import org.jdom.Element;
-
-import javax.sql.DataSource;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.Date;
@@ -43,276 +38,293 @@ import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.sql.DataSource;
+
+import jeeves.constants.Jeeves;
+import jeeves.utils.Log;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.jdom.Element;
+
 //=============================================================================
 
-/** Represents a database connection
-  */
+/**
+ * Represents a database connection
+ */
 
-public class Dbms
-{
-	public static final String DEFAULT_DATE_FORMAT      = "dd-MM-yyyy";
-	public static final String DEFAULT_TIME_FORMAT      = "HH:mm:ss";
+public class Dbms {
+	public static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
+	public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 	public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 	private DataSource dataSource;
 	private String url;
 	private Connection conn;
-	private long       lastConnTime;
+	private long lastConnTime;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Constructor
+	// ---
+	// --------------------------------------------------------------------------
 
 	/** Constructs a DBMS object that contains a jdbc connection */
 
-	public Dbms(DataSource dataSource, String url) throws ClassNotFoundException
-	{
+	public Dbms(DataSource dataSource, String url)
+			throws ClassNotFoundException {
 		this.dataSource = dataSource;
 		this.url = url;
 	}
-	
-	//--------------------------------------------------------------------------
-	//---
-	//--- Connection methods
-	//---
-	//--------------------------------------------------------------------------
+
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Connection methods
+	// ---
+	// --------------------------------------------------------------------------
 
 	/** connects to a DBMS */
 
-	public void connect(String username, String password) throws SQLException
-	{
-
-		// ignore username and password
+	public void connect(String username, String password) throws SQLException {
+		if (Log.isDebugEnabled(Log.RESOURCES)) {
+			Log.debug(Log.RESOURCES, "Connections before open : "
+					+ ((BasicDataSource) dataSource).getNumIdle() + " idle, " + ((BasicDataSource) dataSource).getNumActive() + " active");
+		}
 		conn = dataSource.getConnection();
-
+		if (Log.isDebugEnabled(Log.RESOURCES)) {
+			Log.debug(Log.RESOURCES, "Connection opened with hashcode : " + conn.hashCode());
+		}
 		lastConnTime = System.currentTimeMillis();
-
-        if(Log.isDebugEnabled(Log.RESOURCES))
-            Log.debug(Log.RESOURCES, "Open connection: "+ conn.hashCode());
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	/** disconnects from the DBMS */
 
-	public void disconnect()
-	{
-
-        if(Log.isDebugEnabled(Log.RESOURCES))
-            Log.debug(Log.RESOURCES, "Close connection: "+ conn.hashCode());
+	public void disconnect() {
+		if (Log.isDebugEnabled(Log.RESOURCES)) {
+			Log.debug(Log.RESOURCES, "Closing connection with hashcode : " + conn.hashCode());
+		}
 		try {
-			if (!conn.isClosed())
+			if (!conn.isClosed()) {
 				conn.close();
-		} catch(SQLException e) { e.printStackTrace(); }
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			if (Log.isDebugEnabled(Log.RESOURCES)) {
+				Log.debug(Log.RESOURCES, "Closing connection is failed");
+			}
+		}
+		if (Log.isDebugEnabled(Log.RESOURCES)) {
+			Log.debug(Log.RESOURCES, "Connections after close : "
+					+ ((BasicDataSource) dataSource).getNumIdle() + " idle, " + ((BasicDataSource) dataSource).getNumActive() + " active");
+		}
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	/** Returns the jdbc connection to the DBMS */
 
-	public Connection getConnection() { return conn; }
+	public Connection getConnection() {
+		if (Log.isDebugEnabled(Log.RESOURCES)) {
+			Log.debug(Log.RESOURCES, "Get existing connection: " + conn.hashCode());
+		}
+		return conn;
+	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	/** Returns the time since last connection in milliseconds */
 
-	public long getLastConnTime() { return lastConnTime; }
+	public long getLastConnTime() {
+		return lastConnTime;
+	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	public String getURL() { return url; }
+	public String getURL() {
+		return url;
+	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	public boolean isClosed()
-	{
-		try
-		{
+	public boolean isClosed() {
+		try {
 			return conn.isClosed();
-		}
-		catch(SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return true;
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Transaction methods
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Transaction methods
+	// ---
+	// --------------------------------------------------------------------------
 
 	/** commits the current transaction */
 
-	public void commit() throws SQLException
-	{
+	public void commit() throws SQLException {
 		conn.commit();
+		if (Log.isDebugEnabled(Log.RESOURCES)) {
+			Log.debug(Log.RESOURCES,
+					"Connection committed: " + conn.hashCode());
+		}
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	/** aborts the current transaction */
 
-	public boolean abort()
-	{
-		try
-		{
+	public boolean abort() {
+		try {
 			conn.rollback();
+			if (Log.isDebugEnabled(Log.RESOURCES)) {
+				Log.debug(Log.RESOURCES,
+						"Connection rolled back: " + conn.hashCode());
+			}
 			return true;
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Select methods
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Select methods
+	// ---
+	// --------------------------------------------------------------------------
 
-	public Element select(String query) throws SQLException
-	{
-		return selectFull(query, new Hashtable<String, String>(), (Object[]) null);
+	public Element select(String query) throws SQLException {
+		return selectFull(query, new Hashtable<String, String>(),
+				(Object[]) null);
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	public Element select(String query, Object... args) throws SQLException
-	{
+	public Element select(String query, Object... args) throws SQLException {
 		return selectFull(query, new Hashtable<String, String>(), args);
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	public Element select(String query, Hashtable<String, String> formats) throws SQLException
-	{
+	public Element select(String query, Hashtable<String, String> formats)
+			throws SQLException {
 		return selectFull(query, formats, (Object[]) null);
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	public Element selectFull(String query, Hashtable<String, String> formats, Object... args) throws SQLException
-	{
-        if(Log.isDebugEnabled(Log.Dbms.SELECT)) {
-            Log.debug(Log.Dbms.SELECT, "Query: "+ query);
-		    Log.debug(Log.Dbms.SELECT, "Connection: "+ conn.hashCode());
-            if (args != null)
-                Log.debug(Log.Dbms.SELECT, "Args  : "+ getArgs(args));
-        }
+	public Element selectFull(String query, Hashtable<String, String> formats,
+			Object... args) throws SQLException {
+		if (Log.isDebugEnabled(Log.Dbms.SELECT)) {
+			Log.debug(Log.Dbms.SELECT, "Query: " + query);
+			Log.debug(Log.Dbms.SELECT, "Connection: " + conn.hashCode());
+			if (args != null)
+				Log.debug(Log.Dbms.SELECT, "Args  : " + getArgs(args));
+		}
 
 		PreparedStatement stmt = conn.prepareStatement(query);
 
 		if (args != null)
-			for(int i=0; i<args.length; i++)
+			for (int i = 0; i < args.length; i++)
 				setObject(stmt, i, args[i]);
 
-		try
-		{
+		try {
 			long start = System.currentTimeMillis();
 			Element result = buildResponse(stmt.executeQuery(), formats);
 			long end = System.currentTimeMillis();
 
 			float time = end - start;
 
-            if(Log.isDebugEnabled(Log.Dbms.SELECT))
-                Log.debug(Log.Dbms.SELECT, "Found "+ result.getContentSize() +" records in "+time/1000+" secs");
+			if (Log.isDebugEnabled(Log.Dbms.SELECT))
+				Log.debug(Log.Dbms.SELECT, "Found " + result.getContentSize()
+						+ " records in " + time / 1000 + " secs");
 
 			return result;
-		}
-		finally
-		{
+		} finally {
 			stmt.close();
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Execute methods
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Execute methods
+	// ---
+	// --------------------------------------------------------------------------
 
 	/** A simple wrapper to the other execute method */
 
-	public int execute(String query) throws SQLException
-	{
+	public int execute(String query) throws SQLException {
 		return execute(query, (Object[]) null);
 	}
 
-	//--------------------------------------------------------------------------
-	/** Executes a database statement. It can be an INSERT, an UPDATE, a DELETE
-	  * or a generic data manipulation language query
-	  */
+	// --------------------------------------------------------------------------
+	/**
+	 * Executes a database statement. It can be an INSERT, an UPDATE, a DELETE
+	 * or a generic data manipulation language query
+	 */
 
-	public int execute(String query, Object... args) throws SQLException
-	{
-        if(Log.isDebugEnabled(Log.Dbms.EXECUTE)) {
-            Log.debug(Log.Dbms.EXECUTE, "Query    : "+ query);
+	public int execute(String query, Object... args) throws SQLException {
+		if (Log.isDebugEnabled(Log.Dbms.EXECUTE)) {
+			Log.debug(Log.Dbms.EXECUTE, "Query    : " + query);
 
-            if (args != null)
-                Log.debug(Log.Dbms.EXECUTE, "Args     : "+ getArgs(args));
-        }
+			if (args != null)
+				Log.debug(Log.Dbms.EXECUTE, "Args     : " + getArgs(args));
+		}
 
 		PreparedStatement stmt = conn.prepareStatement(query);
 
 		if (args != null)
-			for(int i=0; i<args.length; i++)
+			for (int i = 0; i < args.length; i++)
 				setObject(stmt, i, args[i]);
 
-		try
-		{
+		try {
 			long start = System.currentTimeMillis();
 			int result = stmt.executeUpdate();
 			long end = System.currentTimeMillis();
 
 			float time = end - start;
 
-            if(Log.isDebugEnabled(Log.Dbms.EXECUTE))
-                Log.debug(Log.Dbms.EXECUTE, "Affected "+ result +" records in "+ time/1000 +" secs");
+			if (Log.isDebugEnabled(Log.Dbms.EXECUTE))
+				Log.debug(Log.Dbms.EXECUTE, "Affected " + result
+						+ " records in " + time / 1000 + " secs");
 
 			return result;
-		}
-		finally
-		{
+		} finally {
 			stmt.close();
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Private methods
+	// ---
+	// --------------------------------------------------------------------------
 
-	private Element buildResponse(ResultSet rs, Hashtable<String, String> formats) throws SQLException
-	{
+	private Element buildResponse(ResultSet rs,
+			Hashtable<String, String> formats) throws SQLException {
 		ResultSetMetaData md = rs.getMetaData();
 
 		int colNum = md.getColumnCount();
 
-		//--- retrieve name and type of fields
+		// --- retrieve name and type of fields
 
 		Vector<String> vHeaders = new Vector<String>();
-		Vector<Integer> vTypes   = new Vector<Integer>();
+		Vector<Integer> vTypes = new Vector<Integer>();
 
-		for (int i = 0; i < colNum; i++)
-		{
+		for (int i = 0; i < colNum; i++) {
 			vHeaders.add(md.getColumnLabel(i + 1).toLowerCase());
 			vTypes.add(new Integer(md.getColumnType(i + 1)));
 		}
 
-		//--- build the jdom tree
+		// --- build the jdom tree
 
 		Element root = new Element(Jeeves.Elem.RESPONSE);
 
-		while (rs.next())
-		{
+		while (rs.next()) {
 			Element record = new Element(Jeeves.Elem.RECORD);
 
-			for(int i = 0; i < colNum; i++)
-			{
+			for (int i = 0; i < colNum; i++) {
 				String name = vHeaders.get(i).toString();
-				int    type = ((Integer)vTypes.get(i)).intValue();
+				int type = ((Integer) vTypes.get(i)).intValue();
 				record.addContent(buildElement(rs, i, name, type, formats));
 			}
 			root.addContent(record);
@@ -320,43 +332,46 @@ public class Dbms
 		return root;
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	private Element buildElement(ResultSet rs, int col, String name, int type, Hashtable<String, String> formats) throws SQLException
-	{
+	private Element buildElement(ResultSet rs, int col, String name, int type,
+			Hashtable<String, String> formats) throws SQLException {
 		String value = null;
 
-		switch (type)
-		{
+		switch (type) {
 		case Types.DATE:
-			Date date = rs.getDate(col +1);
-			if (date == null) value = null;
-			else
-			{
+			Date date = rs.getDate(col + 1);
+			if (date == null)
+				value = null;
+			else {
 				String format = formats.get(name);
-				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_DATE_FORMAT) : new SimpleDateFormat(format);
+				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(
+						DEFAULT_DATE_FORMAT) : new SimpleDateFormat(format);
 				value = df.format(date);
 			}
 			break;
 
 		case Types.TIME:
-			Time time = rs.getTime(col +1);
-			if (time == null) value = null;
-			else
-			{
+			Time time = rs.getTime(col + 1);
+			if (time == null)
+				value = null;
+			else {
 				String format = formats.get(name);
-				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_TIME_FORMAT) : new SimpleDateFormat(format);
+				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(
+						DEFAULT_TIME_FORMAT) : new SimpleDateFormat(format);
 				value = df.format(time);
 			}
 			break;
 
 		case Types.TIMESTAMP:
-			Timestamp timestamp = rs.getTimestamp(col +1);
-			if (timestamp == null) value = null;
-			else
-			{
+			Timestamp timestamp = rs.getTimestamp(col + 1);
+			if (timestamp == null)
+				value = null;
+			else {
 				String format = formats.get(name);
-				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_TIMESTAMP_FORMAT) : new SimpleDateFormat(format);
+				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(
+						DEFAULT_TIMESTAMP_FORMAT)
+						: new SimpleDateFormat(format);
 				value = df.format(timestamp);
 			}
 			break;
@@ -365,14 +380,14 @@ public class Dbms
 		case Types.SMALLINT:
 		case Types.INTEGER:
 		case Types.BIGINT:
-			long l = rs.getLong(col +1);
-			if (rs.wasNull()) value = null;
-			else
-			{
+			long l = rs.getLong(col + 1);
+			if (rs.wasNull())
+				value = null;
+			else {
 				String format = formats.get(name);
-				if (format == null) value = l+"";
-				else
-				{
+				if (format == null)
+					value = l + "";
+				else {
 					DecimalFormat df = new DecimalFormat(format);
 					value = df.format(l);
 				}
@@ -384,26 +399,22 @@ public class Dbms
 		case Types.DOUBLE:
 		case Types.REAL:
 		case Types.NUMERIC:
-			double n = rs.getDouble(col +1);
+			double n = rs.getDouble(col + 1);
 
 			if (rs.wasNull())
 				value = null;
-			else
-			{
+			else {
 				String format = formats.get(name);
 
-				if (format == null)
-				{
-					value = n+"";
+				if (format == null) {
+					value = n + "";
 
-					//--- this fix is mandatory for oracle
-					//--- that shit returns integers like xxx.0
+					// --- this fix is mandatory for oracle
+					// --- that shit returns integers like xxx.0
 
 					if (value.endsWith(".0"))
-						value = value.substring(0, value.length() -2);
-				}
-				else
-				{
+						value = value.substring(0, value.length() - 2);
+				} else {
 					DecimalFormat df = new DecimalFormat(format);
 					value = df.format(n);
 				}
@@ -411,77 +422,78 @@ public class Dbms
 			break;
 
 		default:
-			value = rs.getString(col +1);
-			if (value != null) { value = stripIllegalChars(value); }
+			value = rs.getString(col + 1);
+			if (value != null) {
+				value = stripIllegalChars(value);
+			}
 
 			break;
 		}
 		return new Element(name).setText(value);
 	}
 
-//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	private String stripIllegalChars(String input) {
 		String output = input;
-		for (int i=127; i<160; i++) {
-			String c = String.valueOf((char)i);
+		for (int i = 127; i < 160; i++) {
+			String c = String.valueOf((char) i);
 			if (output.contains(c)) {
-                output = output.replaceAll(c, "");
-            }
+				output = output.replaceAll(c, "");
+			}
 		}
-		
+
 		return output;
 	}
 
+	// --------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-
-	private void setObject(PreparedStatement stmt, int i, Object obj) throws SQLException
-	{
-		if (obj instanceof String)
-		{
+	private void setObject(PreparedStatement stmt, int i, Object obj)
+			throws SQLException {
+		if (obj instanceof String) {
 			String s = (String) obj;
 
-			if (s.length() < 4000)	stmt.setString(i+1, s);
-				else						stmt.setCharacterStream(i+1, new StringReader(s), s.length());
-		}
-		else
-			stmt.setObject(i+1, obj);
+			if (s.length() < 4000)
+				stmt.setString(i + 1, s);
+			else
+				stmt.setCharacterStream(i + 1, new StringReader(s), s.length());
+		} else
+			stmt.setObject(i + 1, obj);
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	private String getArgs(Object[] args)
-	{
+	private String getArgs(Object[] args) {
 		StringBuffer sb = new StringBuffer();
 
-		for (int i=0; i<args.length; i++)
-		{
+		for (int i = 0; i < args.length; i++) {
 			sb.append(args[i]);
 
-			if (i < args.length -1)
+			if (i < args.length - 1)
 				sb.append(", ");
 		}
 
 		return sb.toString();
 	}
-	
+
 	/**
-	 * In case DBMS connection was not closed
-	 * due to some error, close connection on 
-	 * finalize.
+	 * In case DBMS connection was not closed due to some error, close
+	 * connection on finalize.
 	 */
 	protected void finalize() {
 		try {
 			if (!conn.isClosed()) {
-		        if(Log.isDebugEnabled(Log.RESOURCES)) {
-		            Log.debug(Log.RESOURCES, "Close connection in finalize: "+ conn.hashCode());
-		        }
+				if (Log.isDebugEnabled(Log.RESOURCES)) {
+					Log.debug(Log.RESOURCES, "Close connection in finalize: "
+							+ conn.hashCode());
+				}
 				conn.close();
 			}
-		} catch(SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 }
 
-//=============================================================================
+// =============================================================================
 
