@@ -528,7 +528,10 @@ GeoNetwork.Lang.fr = {
     'where': 'Where',
     'Advanced': 'Advanced',
     'About': 'About',
-    'List': 'List'
+    'List': 'List',
+    'statusChangeFailed': 'De statuswijziging is niet gelukt aangezien u niet de rechten hebt of het metadatarecord niet gevalideerd kon worden. Editeer het metadatarecord om de validatiefouten te zien.',
+    'userSessionEnded': 'De sessie is vervallen en u moet opnieuw inloggen.',
+    'noReordsFound': 'Er werden geen metadatasets gevonden.'
 
 
 };

@@ -410,7 +410,7 @@ public class Importer {
 					addPrivileges(context, dm, dbms, id.get(index), privileges);
 				else
 					addOperations(context, dm, dbms, privileges, id.get(index), groupId);
-
+				dbms.commit();
                 boolean workspace = false;
                 if (indexGroup) {
 					dm.indexMetadataGroup(dbms, id.get(index), workspace, true);

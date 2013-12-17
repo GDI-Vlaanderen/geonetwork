@@ -338,6 +338,9 @@ public class AccessManager {
      */
 	public boolean isOwner(ServiceContext context, String id) throws Exception {
 		UserSession us = context.getUserSession();
+		if (us==null) {  // is harvester
+			return true;
+		}
 		if (!us.isAuthenticated()) {
 			return false;
 		}

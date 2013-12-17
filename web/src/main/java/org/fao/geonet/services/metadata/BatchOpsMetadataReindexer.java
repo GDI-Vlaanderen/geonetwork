@@ -19,6 +19,9 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
@@ -85,7 +88,9 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 		if (ids.length < threadCount) perThread = ids.length;
 		else perThread = ids.length / threadCount;
 		int index = 0;
-
+        if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
+            Log.debug(Geonet.THREADPOOL, "BatchOperation on " + ids.length + " records and a threadCount of " + threadCount);
+        }
 		List<Future<Void>> submitList = new ArrayList<Future<Void>>();
 		while(index < ids.length) {
 			int start = index;
@@ -93,6 +98,9 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 			// create threads to process this chunk of ids
 			Callable<Void> worker = new BatchOpsCallable(ids, start, count, dm, dbms);
 			Future<Void> submit = executor.submit(worker);
+	        if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
+	            Log.debug(Geonet.THREADPOOL, "Worker with for processing " + count + " ids");
+	        }
 			submitList.add(submit);
 			index += count;
 		}

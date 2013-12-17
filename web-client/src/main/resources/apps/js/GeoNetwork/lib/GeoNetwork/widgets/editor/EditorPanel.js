@@ -803,17 +803,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Save current editing session and close the editor.
      */
     finish: function(){
-        this.loadUrl('metadata.update.finish', undefined, this.closeCallback);
+        this.loadUrl('metadata.update.finish', false, this.closeCallback);
     },
     /** api: method[save]
      * 
      *  Save current editing session.
      */
     save: function(){
-        this.loadUrl('metadata.update.new', undefined, this.loadCallback);
+        this.loadUrl('metadata.update.new', false, this.loadCallback);
     },
     callAction: function(action){
-        this.loadUrl(action, undefined, this.loadCallback);
+        this.loadUrl(action, false, this.loadCallback);
     },
     /** api: method[validate]
      * 
@@ -821,8 +821,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  
      */
     validate: function(){
-        this.loadUrl('metadata.update.new', 'validate', this.validatorLoadCallback);
         this.validationPanel.expand(true);
+        this.loadUrl('metadata.update.new', true, this.loadCallback);
     },
     /** api: method[validate]
      * 
@@ -830,7 +830,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  
      */
     saveBeforeUploadThumbnail: function(){
-        this.loadUrl('metadata.update.new', undefined, this.thumbnailLoadCallback);
+        this.loadUrl('metadata.update.new', false, this.thumbnailLoadCallback);
     },
     /** api: method[validate]
      * 
@@ -838,15 +838,15 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  
      */
     saveBeforeRemoveThumbnail: function(filedescription){
-        this.loadUrl('metadata.update.new', undefined, this.thumbnailRemoveCallback);
-        this.validationPanel.expand(true);
+        this.loadUrl('metadata.update.new', false, this.thumbnailRemoveCallback);
+//        this.validationPanel.expand(true);
     },
     /** api: method[reset]
      * 
      *  Reset current editing session calling 'metadata.update.forget.new' service.
      */
     reset: function(){
-        this.loadUrl('metadata.update.forget.new', undefined, this.loadCallback);
+        this.loadUrl('metadata.update.forget.new', false, this.loadCallback);
     },
     /** api: method[cancel]
      * 
@@ -854,7 +854,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      */
     cancel: function(){
         // TODO : check lost changes 
-        this.loadUrl('metadata.update.forgetandfinish', undefined, this.closeCallback);
+        this.loadUrl('metadata.update.forgetandfinish', false, this.closeCallback);
     },
     /** api: method[process]
      * 
@@ -863,7 +863,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Use for XslProcessing task
      */
     process: function(action) {
-        this.loadUrl(action, undefined,  this.loadCallback, true);
+        this.loadUrl(action, false,  this.loadCallback, true);
     },
     /** api: method[init]
      * 
@@ -895,7 +895,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }
         url += '&currTab=' + (document.mainForm ? document.mainForm.currTab.value : this.defaultViewMode);
         
-        this.loadUrl(url, undefined, this.loadCallback);
+        this.loadUrl(url, false, this.loadCallback);
         
         if (this.disabled) {
             this.setDisabled(false);
@@ -915,11 +915,14 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     loadUrl: function(action, validate, cb, noPostParams){
         
         if (document.mainForm) {
+            document.mainForm.showvalidationerrors.value = validate;
+/*
             if (typeof validate !== 'undefined') {
                 document.mainForm.showvalidationerrors.value = "true";
             } else {
                 document.mainForm.showvalidationerrors.value = "false";
             }
+*/
         }
         
         var mgr = this.editorMainPanel.getUpdater();
@@ -951,21 +954,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (success) {
             this.metadataLoaded();
         } else {
-            this.getError(response);
-        }
-    },
-    /**
-     * After metadata load, use this callback to check for error and display
-     * alert on failure.
-     *  
-     */
-    validatorLoadCallback: function(el, success, response, options){
-        if (success) {
-            this.loadUrl(this.editUrl + '?id=' + this.metadataId + '&currTab=' + (document.mainForm ? document.mainForm.currTab.value : this.defaultViewMode), undefined, this.loadCallback);
-        } else {
-            if (!this.managerInitialized) {
-                this.initManager();
-            }
             this.getError(response);
         }
     },
@@ -1080,12 +1068,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         // Register event to form element to display help information 
         var formElements = Ext.query('th[id]', this.body.dom);
+        formElements = Ext.query('label[id]', this.body.dom);
         //formElements = formElements.concat(Ext.query('legend[id]', this.body.dom));
         formElements = formElements.concat(Ext.query('legend[id]', this.body.dom));
         Ext.each(formElements, function(item, index, allItems){
             var e = Ext.get(item);
             var id = e.getAttribute('id');
-            if (e.is('TH')) {
+            if (e.is('TH') || e.is('LABEL')) {
                 var section = e.up('FIELDSET');
                 // TODO : register event on custom widgets like Bbox
                 e.parent().on('mouseover', function(){

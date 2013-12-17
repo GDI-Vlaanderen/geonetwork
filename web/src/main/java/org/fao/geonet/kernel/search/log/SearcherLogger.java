@@ -82,9 +82,16 @@ public class SearcherLogger {
 			return;
 		}
 		Dbms dbms = null;
+		boolean bException = false;
 		try{
             if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
 				Log.debug(Geonet.SEARCH_LOGGER,"Opening dbms...");
+    		if (query == null) {
+                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                    Log.debug(Geonet.SEARCH_LOGGER, "Null Query object. cannot log search operation");
+    			return;
+    		}
+    	
     		dbms = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
     		if (dbms == null) {
                 if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
@@ -93,12 +100,6 @@ public class SearcherLogger {
     			return;
     		}
     
-    		if (query == null) {
-                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-                    Log.debug(Geonet.SEARCH_LOGGER, "Null Query object. cannot log search operation");
-    			return;
-    		}
-    	
     		QueryRequest queryRequest = new QueryRequest(srvContext.getIpAddress(), (new java.util.Date()).getTime());
     		Vector<QueryInfo> queryInfos = extractQueryTerms(query);
     		// type is also set when doing this.
@@ -132,18 +133,26 @@ public class SearcherLogger {
     			}
     		}
     		*/
-		}
-        catch (Exception e) {
+        } catch (Exception e) {
+        	bException = true;
             // I dont want the log to cause an exception and hide the real problem.
 		    Log.error(Geonet.SEARCH_LOGGER, "Error logging search: "+e.getMessage());
             e.printStackTrace(); //fixme should be removed after control.
-		}
-        finally {
+            if (dbms!=null) {
+    			try {
+    	        	srvContext.getResourceManager().abort(Geonet.Res.MAIN_DB, dbms);
+    			}
+                catch (Exception ex) {
+    		        Log.error(Geonet.SEARCH_LOGGER, "Raised exception while attempting to ABORT logging the search: "+e.getMessage());
+    				ex.printStackTrace();
+    			}
+            }
+        } finally {
 			try {
-				if (dbms != null) srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+				if (!bException && dbms != null) srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
 			}
             catch (Exception e) {
-		        Log.error(Geonet.SEARCH_LOGGER, "There may have been an error logging the search: "+e.getMessage());
+		        Log.error(Geonet.SEARCH_LOGGER, "Raised exception while attempting to close logging the search: "+e.getMessage());
 				e.printStackTrace();
 			}
 		}

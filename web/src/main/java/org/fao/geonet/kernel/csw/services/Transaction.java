@@ -263,12 +263,12 @@ public class Transaction extends AbstractOperation implements CatalogService
             dataMan.setOperation(context, dbms, id, "1", AccessManager.OPER_VIEW);
         }
 
+		dbms.commit();
         boolean workspace = false;
         dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		
 		fileIds.add( uuid );
 		
-		dbms.commit();
         toIndex.add(id);
 		return true;
 	}

@@ -91,7 +91,8 @@ public class Dbms {
 		}
 		conn = dataSource.getConnection();
 		if (Log.isDebugEnabled(Log.RESOURCES)) {
-			Log.debug(Log.RESOURCES, "Connection opened with hashcode : " + conn.hashCode());
+			Log.debug(Log.RESOURCES, "Connections after open connection with hashcode : " + conn.hashCode() + ": "
+				+ ((BasicDataSource) dataSource).getNumIdle() + " idle, " + ((BasicDataSource) dataSource).getNumActive() + " active");
 		}
 		lastConnTime = System.currentTimeMillis();
 	}
@@ -100,9 +101,7 @@ public class Dbms {
 	/** disconnects from the DBMS */
 
 	public void disconnect() {
-		if (Log.isDebugEnabled(Log.RESOURCES)) {
-			Log.debug(Log.RESOURCES, "Closing connection with hashcode : " + conn.hashCode());
-		}
+		int hashCode = conn.hashCode();
 		try {
 			if (!conn.isClosed()) {
 				conn.close();
@@ -110,12 +109,12 @@ public class Dbms {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			if (Log.isDebugEnabled(Log.RESOURCES)) {
-				Log.debug(Log.RESOURCES, "Closing connection is failed");
+				Log.error(Log.RESOURCES, "Closing connection is failed");
 			}
 		}
 		if (Log.isDebugEnabled(Log.RESOURCES)) {
-			Log.debug(Log.RESOURCES, "Connections after close : "
-					+ ((BasicDataSource) dataSource).getNumIdle() + " idle, " + ((BasicDataSource) dataSource).getNumActive() + " active");
+			Log.debug(Log.RESOURCES, "Connections after close connection with hashcode : " + hashCode + ": " + 
+				+ ((BasicDataSource) dataSource).getNumIdle() + " idle, " + ((BasicDataSource) dataSource).getNumActive() + " active");
 		}
 	}
 
@@ -481,6 +480,10 @@ public class Dbms {
 	 */
 	protected void finalize() {
 		try {
+			if (Log.isDebugEnabled(Log.RESOURCES)) {
+				Log.debug(Log.RESOURCES, "Connections before close : "
+						+ ((BasicDataSource) dataSource).getNumIdle() + " idle, " + ((BasicDataSource) dataSource).getNumActive() + " active");
+			}
 			if (!conn.isClosed()) {
 				if (Log.isDebugEnabled(Log.RESOURCES)) {
 					Log.debug(Log.RESOURCES, "Close connection in finalize: "

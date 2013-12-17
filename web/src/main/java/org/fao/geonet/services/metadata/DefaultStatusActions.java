@@ -202,7 +202,7 @@ public class DefaultStatusActions implements StatusActions {
 
 			Set<String> unchanged = new HashSet<String>();
 			Set<String> changedMmetadataIdsToInformEditors = new HashSet<String>();
-			Set<String> changedMmetadataIdsToInformReveiwers = new HashSet<String>();
+			Set<String> changedMmetadataIdsToInformReviewers = new HashSet<String>();
 			Set<String> changedMmetadataIdsToInformAdministrators = new HashSet<String>();
 
 			// -- process the metadata records to set status
@@ -255,18 +255,18 @@ public class DefaultStatusActions implements StatusActions {
 						if (status.equals(Params.Status.DRAFT)) {
 							changedMmetadataIdsToInformEditors.add(mid);
 						} else if (status.equals(Params.Status.SUBMITTED)) {
-							changedMmetadataIdsToInformReveiwers.add(mid);
+							changedMmetadataIdsToInformReviewers.add(mid);
 						} else if (status.equals(Params.Status.REJECTED)) {
 							changedMmetadataIdsToInformEditors.add(mid);
 						} else if (status.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
 							changedMmetadataIdsToInformAdministrators.add(mid);
 						} else if (status.equals(Params.Status.REJECTED_BY_AGIV)) {
 							changedMmetadataIdsToInformEditors.add(mid);
-							changedMmetadataIdsToInformReveiwers.add(mid);
+							changedMmetadataIdsToInformReviewers.add(mid);
 						} else if (status.equals(Params.Status.APPROVED)) {
 							changedMmetadataIdsToInformEditors.add(mid);
 							if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
-								changedMmetadataIdsToInformReveiwers.add(mid);
+								changedMmetadataIdsToInformReviewers.add(mid);
 							}
 						}
 					}
@@ -286,8 +286,8 @@ public class DefaultStatusActions implements StatusActions {
 				informContentUsers(changedMmetadataIdsToInformEditors, changeDate,
 						changeMessage, Geonet.Profile.EDITOR, status);
 			}
-			if (changedMmetadataIdsToInformReveiwers.size()>0) {
-				informContentUsers(changedMmetadataIdsToInformReveiwers, changeDate,
+			if (changedMmetadataIdsToInformReviewers.size()>0) {
+				informContentUsers(changedMmetadataIdsToInformReviewers, changeDate,
 						changeMessage, Geonet.Profile.REVIEWER, status);
 			}
 			if (changedMmetadataIdsToInformAdministrators.size()>0) {
@@ -412,7 +412,7 @@ public class DefaultStatusActions implements StatusActions {
 		// the md schema
 		String schema = dm.getMetadataSchema(dbms, mid);
 		// validate
-		boolean valid = dm.doValidate(dbms, schema, mid, doc,
+		boolean valid = dm.doValidate(context, dbms, schema, mid, doc,
 				context.getLanguage(), workspace);
 
 		boolean statusChangeAllowed = true;
@@ -692,7 +692,8 @@ public class DefaultStatusActions implements StatusActions {
 				Geonet.Settings.SERVER_PORT);
 		return /*protocol + */"https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port)
 				+ this.context.getBaseUrl()
-				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
+//				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
+				+ "/apps/tabsearch/index.html?id=" + metadataId + "&external=true";
 	}
 
 	/**

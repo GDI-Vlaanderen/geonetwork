@@ -1399,7 +1399,7 @@
         <xsl:attribute name="style"> display:none; </xsl:attribute>
       </xsl:if>
       
-      <th id="stip.{$forcedHelpLink}">
+      <th>
         <xsl:attribute name="class">
           <xsl:text>main </xsl:text>
           <xsl:value-of select="geonet:clear-string-for-css(name(.))"/>
@@ -1415,7 +1415,7 @@
 	       	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
 	      </xsl:call-template>
         </xsl:attribute>
-        <label
+        <label id="stip.{$forcedHelpLink}"
           for="_{if (gco:CharacterString) then gco:CharacterString/geonet:element/@ref else if (gmd:file) then '' else ''}">
           <xsl:attribute name="class">
           	<xsl:call-template name="getMandatoryType">

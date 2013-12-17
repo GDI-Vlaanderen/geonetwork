@@ -67,6 +67,10 @@ public class ThreadPool {
 	}
     public void runTask( Runnable task, int delayBeforeStart, TimeUnit unit ) {
         if (Boolean.parseBoolean(System.getProperty(SEQUENTIAL_EXECUTION, "true"))) {
+            if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
+                Log.debug(Geonet.THREADPOOL,
+                        "Scheduling task to be executed in threadpool in "+delayBeforeStart+" "+unit+": "+toString(task));
+            }
             task.run();
         } else {
             this.task = task;
@@ -91,7 +95,7 @@ public class ThreadPool {
 		threadPool.shutdown();
 	}
 
-	public String toString() {
+	public String toString(Runnable task) {
 		StringBuffer sb = new StringBuffer("ThreadPool tasks | ");
 		sb.append(task.getClass().getName());
 		sb.append(" \t| total: ").append(threadPool.getTaskCount());
@@ -103,6 +107,10 @@ public class ThreadPool {
 				.append(queue.remainingCapacity());
 
 		return sb.toString();
+	}
+
+	public String toString() {
+		return this.toString(this.task);
 	}
 
 	private class ScheduledTask implements Runnable {

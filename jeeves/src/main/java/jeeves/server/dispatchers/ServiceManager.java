@@ -419,7 +419,9 @@ public class ServiceManager
 
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
                 try{
-				response = srvInfo.execServices(req.getParams(), context);
+//            		System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-Start executing service:" + context.getService());
+                	response = srvInfo.execServices(req.getParams(), context);
+//            		System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-End executing service:" + context.getService());
                 } finally {
                     timerContext.stop();
                 }

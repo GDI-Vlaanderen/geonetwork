@@ -125,10 +125,10 @@
                                 <td align="center" colspan="2">
                                     <xsl:choose>
                                         <xsl:when test="contains(/root/gui/reqService,'metadata.batch')">
-                                            <button class="content" onclick="radioModalUpdate('status','metadata.batch.update.status','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/batchUpdateStatusTitle)}');"><xsl:value-of select="/root/gui/strings/submit"/></button>
+                                            <button class="content" onclick="radioModalUpdate('status','metadata.batch.update.status','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/batchUpdateStatusTitle)}',this);this.disabled = true;"><xsl:value-of select="/root/gui/strings/submit"/></button>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <button class="content" onclick="radioModalUpdate('status','metadata.status','true','{/root/gui/strings/status}');"><xsl:value-of select="/root/gui/strings/submit"/></button>
+                                            <button class="content" onclick="radioModalUpdate('status','metadata.status','true','{/root/gui/strings/status}',this);this.disabled = true;"><xsl:value-of select="/root/gui/strings/submit"/></button>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </td>

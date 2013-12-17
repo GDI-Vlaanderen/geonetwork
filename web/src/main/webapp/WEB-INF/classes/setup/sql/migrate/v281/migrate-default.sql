@@ -1,5 +1,4 @@
 DELETE FROM dbo.MetadataGroupRelations;
-delete from dbo.MetadataGroupRelations;
 INSERT INTO dbo.MetadataGroupRelations (metadatauuid, groupname) VALUES('00DBC8C1-FD24-47F0-8CF8-66D50C181B16','3');
 INSERT INTO dbo.MetadataGroupRelations (metadatauuid, groupname) VALUES('00FE2FDB-452E-41D8-B27D-FB5568C4CB89','3');
 INSERT INTO dbo.MetadataGroupRelations (metadatauuid, groupname) VALUES('01C424BD-3225-4324-8E66-65AA878349F3','3');

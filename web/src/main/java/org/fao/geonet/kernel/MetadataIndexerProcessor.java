@@ -33,12 +33,16 @@ public abstract class MetadataIndexerProcessor {
 	
     public abstract void process() throws Exception;
 
-    public void processWithFastIndexing() throws Exception {
-        dm.startIndexGroup();
-        try {
-            process();
-        } finally {
-            dm.endIndexGroup();
-        }
+    public synchronized void processWithFastIndexing() throws Exception {
+//		synchronized (dm.getSearchMan().getIndexWriter()) {
+//            System.out.println("===>START SYNCHRONIZE INDEXWRITER");
+//			dm.getSearchMan().startIndexGroup();
+//	        try {
+	            process();
+//	        } finally {
+//	        	dm.getSearchMan().endIndexGroup();
+//	            System.out.println("===>STOP SYNCHRONIZE INDEXWRITER");
+//	        }
+//		}
     }
 }

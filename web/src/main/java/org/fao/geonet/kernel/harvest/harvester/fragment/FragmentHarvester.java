@@ -340,10 +340,10 @@ public class FragmentHarvester {
 
 		dataMan.setTemplateExt(dbms, id, "s", null);
 		dataMan.setHarvestedExt(dbms, id, params.uuid, harvestUri);
+        dbms.commit();
         boolean workspace = false;
         dataMan.indexMetadataGroup(dbms, id, workspace, true);
 
-        dbms.commit();
 
 		harvestSummary.updatedMetadata.add(uuid);
 		harvestSummary.fragmentsUpdated++;
@@ -380,10 +380,10 @@ public class FragmentHarvester {
 	
 		dataMan.setTemplateExt(dbms, id, "s", null);
 		dataMan.setHarvestedExt(dbms, id, params.uuid, harvestUri);
+		dbms.commit();
         boolean workspace = false;
         dataMan.indexMetadataGroup(dbms, id, workspace, true);
 
-		dbms.commit();
 		harvestSummary.fragmentsAdded ++;
     }
 
@@ -509,10 +509,10 @@ public class FragmentHarvester {
         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
         addCategories(id);
 
+        dbms.commit();
         boolean workspace = false;
         dataMan.indexMetadataGroup(dbms, id, workspace, true);
 
-        dbms.commit();
 		harvestSummary.recordsUpdated++;
 		harvestSummary.updatedMetadata.add(recUuid);
 	}
@@ -549,12 +549,11 @@ public class FragmentHarvester {
 		
 		dataMan.setTemplateExt(dbms, id, "n", null); 
 		dataMan.setHarvestedExt(dbms, id, params.uuid, harvestUri);
-        boolean workspace = false;
-        dataMan.indexMetadataGroup(dbms, id, workspace, true);
-		
         if(log.isDebugEnabled())
 		log.debug("	- Commit "+id);
 		dbms.commit();
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		harvestSummary.recordsBuilt++;
 	}
 

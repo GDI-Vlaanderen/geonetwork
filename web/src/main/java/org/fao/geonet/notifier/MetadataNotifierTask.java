@@ -39,20 +39,28 @@ public class MetadataNotifierTask implements Runnable {
 
     public void run() {
         Dbms dbms = null;
+        boolean bException = false;
         try {
             dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
             gc.getMetadataNotifier().updateMetadataBatch(dbms, gc);
-        } catch (Exception x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-        } finally {
+        } catch (Exception e) {
+        	bException = true;
+            e.printStackTrace();
             if (dbms != null) {
+                try {
+                	rm.abort(Geonet.Res.MAIN_DB, dbms);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (!bException && dbms != null) {
                 try {
                     rm.close(Geonet.Res.MAIN_DB, dbms);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }
+		}
     }
 }

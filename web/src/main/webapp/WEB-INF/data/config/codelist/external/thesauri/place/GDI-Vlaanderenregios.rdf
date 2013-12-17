@@ -79,6 +79,7 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://mir.geopunt.be/cl/Geopunt/VlaamseAdminRegios/Vlaanderen" />
   </skos:Concept>
+<skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/VlaamseAdminRegios/Vlaams Gewest"><skos:prefLabel xml:lang="nl">Vlaams Gewest</skos:prefLabel></skos:Concept>
 <skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/VlaamseAdminRegios/Brussels Hoofdstedelijk Gewest"><skos:prefLabel xml:lang="nl">Brussels Hoofdstedelijk Gewest</skos:prefLabel></skos:Concept>
 <skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/VlaamseAdminRegios/Boutersem"><skos:prefLabel xml:lang="nl">Gemeente Boutersem</skos:prefLabel></skos:Concept>
 <skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/VlaamseAdminRegios/Bonheiden"><skos:prefLabel xml:lang="nl">Gemeente Bonheiden</skos:prefLabel></skos:Concept>

@@ -58,7 +58,7 @@ function clearAll(id){
  *  Modal box with checkbox validation
  *
  */
-function checkBoxModalUpdate(div, service, modalbox, title){
+function checkBoxModalUpdate(div, service, modalbox, title,button){
     var boxes = Ext.DomQuery.select('input[type="checkbox"]');
     var pars = "?";
     if (service === 'metadata.admin' || service === 'metadata.category') {
@@ -72,14 +72,37 @@ function checkBoxModalUpdate(div, service, modalbox, title){
     
     // FIXME : title is not an error message title
     catalogue.doAction(service + pars, null, null, title, function(response){
-        Ext.getDom(div).innerHTML = response.responseText;
+        if(Ext.getDom(div)) {
+	        Ext.getDom(div).innerHTML = response.responseText;
+        }
         if (service === 'metadata.admin' || service === 'metadata.category') {
             Ext.getCmp('modalWindow').close();
+        } else {
+        	if (response.status==408 || response.status==504) {
+		    	Ext.MessageBox.alert(OpenLayers.i18n('error'), "Request timeout");
+		        Ext.getCmp('modalWindow').close();
+        	} else {
+		        if(response.responseXML && response.responseXML.getElementsByTagName("error").length > 0) {
+		            var errorst = "";
+		            Ext.each(response.responseXML.getElementsByTagName("error"), 
+		                    function(e) {
+		            	errorst += e.textContent || e.innerText || e.text;});
+		            Ext.MessageBox.alert(OpenLayers.i18n('error'), OpenLayers.i18n(errorst));
+			        Ext.getCmp('modalWindow').close();
+		        }
+	        }
         }
-    }, null);
+    }, function(response){
+    	if (response.status==408 || response.status==504) {
+	    	Ext.MessageBox.alert(OpenLayers.i18n('error'), "Request timeout");
+    	} else {
+	    	getError(response);
+    	}
+    	button.disabled=false;
+    });
 }
 
-function radioModalUpdate(div, service, modalbox, title) {
+function radioModalUpdate(div, service, modalbox, title,button) {
     var pars = '?';
     var inputs = Ext.DomQuery.select('input[type="hidden"],textarea,select', div);
     Ext.each(inputs, function(s) {
@@ -98,17 +121,28 @@ function radioModalUpdate(div, service, modalbox, title) {
         }
         if ((service === 'metadata.status') || (service === 'metadata.grab.lock')) {
             Ext.getCmp('modalWindow').close();
-        }
-        if(response.responseXML.getElementsByTagName("error").length > 0) {
-            var errorst = "";
-            Ext.each(response.responseXML.getElementsByTagName("error"), 
-                    function(e) {
-            	errorst += e.textContent || e.innerText || e.text;});
-            Ext.MessageBox.alert(OpenLayers.i18n('error'), OpenLayers.i18n(errorst));
+        } else {
+        	if (response.status==408 || response.status==504) {
+		    	Ext.MessageBox.alert(OpenLayers.i18n('error'), "Request timeout");
+		        Ext.getCmp('modalWindow').close();
+        	} else {
+		        if(response.responseXML && response.responseXML.getElementsByTagName("error").length > 0) {
+		            var errorst = "";
+		            Ext.each(response.responseXML.getElementsByTagName("error"), 
+		                    function(e) {
+		            	errorst += e.textContent || e.innerText || e.text;});
+		            Ext.MessageBox.alert(OpenLayers.i18n('error'), OpenLayers.i18n(errorst));
+			        Ext.getCmp('modalWindow').close();
+		        }
+	        }
         }
     }, function(response){
-    	getError(response);
-    	//Ext.MessageBox.alert(OpenLayers.i18n('error'), "Fout tijdens updaten van de status");
+    	if (response.status==408 || response.status==504) {
+	    	Ext.MessageBox.alert(OpenLayers.i18n('error'), "Request timeout");
+    	} else {
+	    	getError(response);
+    	}
+    	button.disabled=false;
     });
 }
 
@@ -248,9 +282,7 @@ function getError(response){
         }
         
         if (errorTitle1) {
-            Ext.Msg.alert(errorTitle1[1], (errorMsg ? errorMsg : ''), function(){
-                this.ownerCt.hide();
-            }, this);
+            Ext.Msg.alert(errorTitle1[1], (errorMsg ? errorMsg : ''));
         }
     } 
 }

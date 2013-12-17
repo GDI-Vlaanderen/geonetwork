@@ -274,7 +274,7 @@ GeoNetwork.Lang.nl = {
     'agiv_status_5': 'Afgekeurd door Hoofdeditor',
     'agiv_status_6': 'Pas gecreëerd',
     'agiv_status_7': 'Intern goedgekeurd en ingediend bij AGIV',
-    'agiv_status_8': 'Klaar voor publicatie',
+    'agiv_status_8': 'Klaar voor publicatie door AGIV',
     'agiv_status_9': 'Afgekeurd door AGIV-validator',
     'updateVersion': 'Start versionering (via SVN)',
     'statusTT': 'Verander de status van een metadatarecord overeenkomstig zijn levenscyclus fase',
@@ -555,7 +555,8 @@ GeoNetwork.Lang.nl = {
     'error-login': 'Je moet eerst inloggen om deze pagina te bekijken.',
 
     'statusChangeFailed': 'De statuswijziging is niet gelukt aangezien u niet de rechten hebt of het metadatarecord niet gevalideerd kon worden. Editeer het metadatarecord om de validatiefouten te zien.',
-    'userSessionEnded': 'De sessie is vervallen en u moet opnieuw inloggen.'
+    'userSessionEnded': 'De sessie is vervallen en u moet opnieuw inloggen.',
+    'noReordsFound': 'Er werden geen metadatasets gevonden.'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

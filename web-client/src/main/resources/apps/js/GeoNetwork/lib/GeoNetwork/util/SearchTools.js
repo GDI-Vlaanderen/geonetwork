@@ -68,11 +68,12 @@ GeoNetwork.util.SearchTools = {
      *    to not update them. If false, usually a onSuccess function is used to retrieve
      *    search results.
      *  :param async: ``Boolean``   false to run in synchrone mode. Default is true.
+     *  :param noShowMessage: ``Boolean``   false to not show message of no records found.
      *  
      *  Send a GET query to server url. A query is a KVP string.
      *
      */
-    doQuery: function(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async){
+    doQuery: function(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async, noShowMessage){
 /*
     	Ext.Msg.prompt("Query to execute",
     			cat.services.rootUrl + metadataStore.service + "?" + query,
@@ -85,6 +86,8 @@ GeoNetwork.util.SearchTools = {
 	            scope.loadingMask = new Ext.LoadMask(scope.getEl(), {
 	                msg: OpenLayers.i18n('searching')
 	            });
+            } else {
+            	scope.loadingMask.msg = OpenLayers.i18n('searching');
             }
 	        scope.loadingMask.show();
         }
@@ -151,7 +154,9 @@ GeoNetwork.util.SearchTools = {
 
 
                     } else {
-        	            Ext.Msg.alert("Zoeken", 'Er werden geen metadatasets gevonden.');
+                    	if (!noShowMessage) {
+                    	 	Ext.Msg.alert("Zoeken", OpenLayers.i18n('noReordsFound'));
+                	 	}
                     }                    
                     
                     if (isCatalogueSStore) {

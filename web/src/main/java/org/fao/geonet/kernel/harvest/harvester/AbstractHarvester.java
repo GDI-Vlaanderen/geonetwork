@@ -317,19 +317,31 @@ public abstract class AbstractHarvester
                  */
                 ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
                 Dbms dbms2 = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-
+                boolean bException = false;
                 try {
 
                     settingMan.setValue(dbms2, "harvesting/id:"+id+"/info/clusterRunning", "true") ;
 
-                }  finally {
-                    //-- commit Dbms resource (which makes it available to pool again)
-                    //-- to avoid exhausting Dbms pool
-                    rm.close(Geonet.Res.MAIN_DB, dbms2);
-                }
+                } catch (Exception e) {
+                	bException = true;
+                    e.printStackTrace();
+                    if (dbms2 != null) {
+                        try {
+                        	rm.abort(Geonet.Res.MAIN_DB, dbms2);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                } finally {
+                    if (!bException && dbms2 != null) {
+                        try {
+                            rm.close(Geonet.Res.MAIN_DB, dbms2);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+        		}
             }
-
-
         }
 
         getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
@@ -495,16 +507,19 @@ public abstract class AbstractHarvester
                      *
                      */
                     Dbms dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+            		boolean bException = false;
 
                     try {
                         settingMan.setValue(dbms, "harvesting/id:"+id+"/info/clusterRunning", "false") ;
-
                     } catch (Exception ex) {
+                    	bException = true;
                         ex.printStackTrace();
-                    }  finally {
-                        //-- commit Dbms resource (which makes it available to pool again)
-                        //-- to avoid exhausting Dbms pool
-                        rm.close(Geonet.Res.MAIN_DB, dbms);
+                        if (dbms != null) {
+                        	rm.abort(Geonet.Res.MAIN_DB, dbms);
+                        }
+                    } finally {
+                        if (!bException && dbms != null)
+                        	rm.close(Geonet.Res.MAIN_DB, dbms);
                     }
                 }
             }
@@ -517,77 +532,90 @@ public abstract class AbstractHarvester
 	void harvest() {
 	    running = true;
 	    try {
-		ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
-
-		Logger logger = Log.createLogger(Geonet.HARVESTER);
-
-		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
-
-		error = null;
-
-		String lastRun = new ISODate(System.currentTimeMillis()).toString();
-
-		try
-		{
-			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-
-			//--- update lastRun
-
-			settingMan.setValue(dbms, "harvesting/id:"+ id +"/info/lastRun", lastRun);
-
-			//--- proper harvesting
-
-			logger.info("Started harvesting from node : "+ nodeName);
-			HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
-			h.processWithFastIndexing();
-			logger.info("Ended harvesting from node : "+ nodeName);
-
-			if (getParams().oneRunOnly)
-				stop(dbms);
-
-			rm.close();
-		}
-		catch(Throwable t)
-		{
-
-			logger.warning("Raised exception while harvesting from : "+ nodeName);
-			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
-			logger.warning(" (C) Message : "+ t.getMessage());
-
-			error = t;
-			t.printStackTrace();
-
+			ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
+	
+			Logger logger = Log.createLogger(Geonet.HARVESTER);
+	
+			String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
+	
+			error = null;
+	
+			String lastRun = new ISODate(System.currentTimeMillis()).toString();
+	
 			try
 			{
-				rm.abort();
+				Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
+	
+				//--- update lastRun
+	
+				settingMan.setValue(dbms, "harvesting/id:"+ id +"/info/lastRun", lastRun);
+	
+				//--- proper harvesting
+	
+				logger.info("Started harvesting from node : "+ nodeName);
+				HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
+				h.processWithFastIndexing();
+				logger.info("Ended harvesting from node : "+ nodeName);
+	
+				if (getParams().oneRunOnly)
+					stop(dbms);
+	
+				rm.close();
 			}
-			catch (Exception ex)
+			catch(Throwable t)
 			{
-				logger.warning("CANNOT ABORT EXCEPTION");
-				logger.warning(" (C) Exc : "+ ex);
+	
+				logger.warning("Raised exception while harvesting from : "+ nodeName);
+				logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
+				logger.warning(" (C) Message : "+ t.getMessage());
+	
+				error = t;
+				t.printStackTrace();
+	
+				try
+				{
+					rm.abort();
+				}
+				catch (Exception ex)
+				{
+					logger.warning("CANNOT ABORT EXCEPTION");
+					logger.warning(" (C) Exc : "+ ex);
+				}
 			}
-		}
-
-		// record the results/errors for this harvest in the database
-		Dbms dbms = null;
-		try {
-			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-			Element result = getResult();
-			if (error != null) result = JeevesException.toElement(error);
-			HarvesterHistoryDao.write(dbms, getType(), getParams().name, getParams().uuid, lastRun, getParams().node, result);
-		} catch (Exception e) {
-			logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
-			e.printStackTrace();
-			logger.warning(" (C) Exc   : "+ e);
-		} finally {
+	
+			// record the results/errors for this harvest in the database
+			Dbms dbms = null;
+			boolean bException = false;
 			try {
-				if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
-			} catch (Exception dbe) {
-				dbe.printStackTrace();
-				logger.error("Raised exception while attempting to close dbms connection to harvest history table");
-				logger.error(" (C) Exc   : "+ dbe);
-			}
-		}
+				dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+				Element result = getResult();
+				if (error != null) result = JeevesException.toElement(error);
+				HarvesterHistoryDao.write(dbms, getType(), getParams().name, getParams().uuid, lastRun, getParams().node, result);
+	        } catch (Exception e) {
+	        	bException = true;
+				logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
+				e.printStackTrace();
+				logger.warning(" (C) Exc   : "+ e);
+	            if (dbms != null) {
+	            	try {
+		            	context.getResourceManager().abort(Geonet.Res.MAIN_DB, dbms);
+					} catch (Exception dbe) {
+						dbe.printStackTrace();
+						logger.error("Raised exception while attempting to ABORT dbms connection to harvest history table");
+						logger.error(" (C) Exc   : "+ dbe);
+					}
+	            }
+	        } finally {
+	            if (!bException && dbms != null) {
+					try {
+		            	context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+					} catch (Exception dbe) {
+						dbe.printStackTrace();
+						logger.error("Raised exception while attempting to close dbms connection to harvest history table");
+						logger.error(" (C) Exc   : "+ dbe);
+					}
+	            }
+	        }
 	    } finally {
 	        running  = false;
 	    }

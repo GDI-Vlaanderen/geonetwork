@@ -167,7 +167,7 @@ class EditUtils {
             Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges);
             if(updatedMetada != null) {
                 //result = dataManager.updateMetadata(context, dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
-                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
             }
    		}
         else {

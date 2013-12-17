@@ -261,20 +261,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         // Load all keyword for the current thesaurus
         this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
         this.keywordStore.baseParams.maxResults = this.maxKeywords;
-        this.keywordStore.on('load', function () {
-            
-            // Custom callback which load response to the selected set
-            // and set the dataview values.
-            var cb = function (response) {
-                self.selectedKeywordStore.loadData(response.responseXML, true);
-            };
-
-            // Get initial keyword in the data view and select them
-            Ext.each(self.initialKeyword, function (initKeyword) {
-                dv.select(self.keywordStore.find('value', initKeyword), true);
-                self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
-            });
-        });
         this.keywordStore.reload();
 
         return [search, dv];
@@ -329,18 +315,12 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         	'afterrender' : function(component) {
         		this.toMultiselect.view.on('dblclick',scope.doNothing,this.toMultiselect);
         		this.fromMultiselect.view.on('dblclick',scope.doNothing,this.fromMultiselect);
-//        		console.log("Selector rendered whth id " + this.fromMultiselect.id);
+/*
                 scope.keywordStore.baseParams.pThesauri = scope.thesaurusIdentifier;
                 scope.keywordStore.baseParams.maxResults = scope.maxKeywords;
                 scope.keywordStore.baseParams.pKeyword = '*';
-//                scope.keywordStore.removeAll();
-/*
-                scope.keywordStore.on('load', function () {
-//            		console.log("Refreshing view whth id " + this.fromMultiselect.id);
-                	this.itemSelector.fromMultiselect.view.refresh();
-                });
-*/
                 scope.keywordStore.reload();
+*/
         	},
             'change': function (component) {
                 //Ext.getCmp('keywordSearchValidateButton').setDisabled(component.toStore.getCount() < 1);
@@ -395,31 +375,34 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      */
     generateXML: function (cb) {
         var xml = "", ids = [], self = this, 
-            serviceUrl = this.catalogue.services.getKeyword,
-            transfo = (this.transformation ? "&transformation=" + this.transformation : "");
+            serviceUrl = this.catalogue.services.getKeyword;
         
         // Encode "#" as "%23"
         self.selectedKeywordStore.each(function (item) {
             ids.push(item.id.replace("#", "%23"));
         });
         
-        var url = serviceUrl + 
-                            '?thesaurus=' + this.thesaurusIdentifier + 
-                            '&id=' + ids.join(',') +
-                            '&multiple=' + (ids.length > 1 ? true : false) +
-                            transfo;
+        var params = {
+        	thesaurus:this.thesaurusIdentifier,
+         	id: ids.join(','),
+         	multiple: (ids.length > 1) ? true : false
+     	};
+     	if (!Ext.isEmpty(this.transformation)) {
+     		params["transformation"] = this.transformation;
+     	}
         
-//    	console.log("XML generated for thesaurus " + this.thesaurusIdentifier);
-        // Call transformation service
         Ext.Ajax.request({
-            url: url,
-            method: 'GET',
+            url: serviceUrl,
+            method: 'POST', 
+            params: params,
             scope: this,
             success: cb || function (response) {
                 // Populate formField
                 document.getElementById(this.xmlField).value = response.responseText;
+            },
+            failure: function (response) {
+                Ext.MessageBox.alert('Keywords', "De xml kon niet gecreeerd worden voor de geslecteerde trefwoorden.  Annuleer en probeer de metadata opnieuw te editeren");
             }
-            // TODO : Error
         });
     },
     /** private: method[getLimitInput]
@@ -520,8 +503,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 pNewSearch: true,
                 pTypeSearch: 1,
                 pThesauri: '',
-                pMode: 'searchBox'
-            },
+                pMode: 'searchBox',
+                pThesauri: self.thesaurusIdentifier,
+                maxResults: self.maxKeywords,
+                pKeyword: '*'            },
             reader: new Ext.data.XmlReader({
                 record: 'keyword',
                 id: 'uri'
@@ -533,8 +518,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             autoLoad: true,
             listeners: {
                 exception: function (misc) {
-                    // TODO : improve error
-//                    console.log(misc);
+                	Ext.MessageBox.alert("Keywords", misc);
                 },
                 'beforeload': function (store, options) {
                     if (this.nbResultsField !== null) {
@@ -551,7 +535,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         });
         
         var cb = function () {
-            this.generateXML();
+            self.generateXML();
         };
         
         // One store for current selection
@@ -561,8 +545,21 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 id: 'uri'
             }, this.KeywordRecord),
             fields: ["value", "thesaurus", "uri"],
+            autoLoad: false,
             listeners: {
-                load: cb,
+//                load: cb,
+				load: function(store, records) {
+					if (store.getCount()==0) {
+						cb();
+					}
+/*
+		            var recordsToRemove = [];
+		            store.each(function (record) {
+		                recordsToRemove.push(self.keywordStore.getById(record.id));
+		            });
+		            self.keywordStore.remove(recordsToRemove);
+*/
+				},
                 add: cb,
                 remove: cb,
                 scope: this
@@ -571,6 +568,19 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         var bKeywordsFound = false;
         // Check if current keywords are available in the thesaurus
         // Search by name to get list of identifiers.
+        if (this.initialKeyword.length>0) {
+        	var keywordsList = new Array();
+        	for (var i=0;i<this.initialKeyword.length;i++) {
+        		if (!Ext.isEmpty(this.initialKeyword[i])) {
+        			keywordsList.push(this.initialKeyword[i]);
+    			}
+        	}
+        	if (keywordsList.length > 0) {
+	            this.keywordSearch(this.thesaurusIdentifier, keywordsList.join(","), null, keywordsList.length>1);
+	            bKeywordsFound = true;
+            }
+        }
+/*
         Ext.each(this.initialKeyword, function (item) {
             // Search for that keyword and add it to the current selection if found
             if (item !== "") {
@@ -578,7 +588,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 bKeywordsFound = true;
             }
         }, this);
-
+*/
         if (!bKeywordsFound) {
 //        	console.log("Geen keywords for " + this.thesaurusIdentifier)
             this.generateXML();        	
@@ -590,13 +600,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      *  Search for the keyword by exact match on the name
      *  to populate the selected keyword store.
      */
-    keywordSearch: function (thesaurus, value, cb) {
+    keywordSearch: function (thesaurus, value, cb, multiple) {
         // Call transformation service
         Ext.Ajax.request({
             url: this.catalogue.services.searchKeyword,
             method: 'POST', 
             params: {
                 pNewSearch: true,
+                multiple: multiple ? multiple : false,
                 pTypeSearch: 2, // Exact match
                 pMode: 'searchBox',
                 pKeyword: value,
@@ -606,6 +617,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             success: cb || function (response) {
                 this.selectedKeywordStore.loadData(response.responseXML, true);
                 // TODO : if current keyword is not found - avoid error
+            },
+            failure: function (response) {
+                Ext.MessageBox.alert('Keywords', "De geslecteerde trefwoorden konden niet geladen worden.  Annuleer en probeer de metadata opnieuw te editeren");
             }
         });
     },

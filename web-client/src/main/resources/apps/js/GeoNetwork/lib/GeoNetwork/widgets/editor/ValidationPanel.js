@@ -153,7 +153,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         
         this.editor.on('editorClosed', this.clear, this);
         this.editor.on('metadataUpdated', this.reload, this);
-        this.on('expand', this.reload);
+//        this.on('expand', this.reload);
     }
 });
 

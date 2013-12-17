@@ -46,6 +46,8 @@ import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
 
+import com.yammer.metrics.core.HealthCheck.Result;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -232,7 +234,7 @@ public class ThesaurusManager {
 
 
 		Dbms dbms = null;
-
+		boolean bException = false;
 		try {
 			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
 
@@ -248,9 +250,16 @@ public class ThesaurusManager {
 	
 			String styleSheet = dm.getSchemaDir("iso19135") + "convert/" + Geonet.File.EXTRACT_SKOS_FROM_ISO19135;
 			Xml.transform(root, styleSheet, os);
-		} finally {
-			if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
-		}
+        } catch (Exception e) {
+        	bException = true;
+            if (dbms != null) {
+            	rm.abort(Geonet.Res.MAIN_DB, dbms);
+            }
+			throw e;
+        } finally {
+            if (!bException && dbms != null)
+            	rm.close(Geonet.Res.MAIN_DB, dbms);
+        }
 	}
 
 	/**

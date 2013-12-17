@@ -665,13 +665,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *   not default value is used.
      *  :param updateStore: ``Boolean``	true to update catalogue attached stores.
      *  :param async: ``Boolean``   false to run in synchrone mode. Default is true.
-     *  
+     *  :param noShowMessage: ``Boolean``   false to not show message of no records found.
      *  Run a search operation based on KVP query using GeoNetwork
      *  xml.search service. Initialize results and summary stores.
      *  KVP search could be used in fast mode in order to quickly
      *  populate a summary store (for a TagCloud for example).
      */
-    kvpSearch: function(query, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore, async){
+    kvpSearch: function(query, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore, async, noShowMessage){
     
         if (updateStore !== false) {
             updateStore = true;
@@ -694,7 +694,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (updateStore) {
             metadataStore.removeAll();
         }
-        GeoNetwork.util.SearchTools.doQuery(query, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
+        GeoNetwork.util.SearchTools.doQuery(query, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async, noShowMessage);
     },
     /** api: method[cswSearch]
      *  :param formId: ``String`` An Ext.Form identifier
@@ -733,11 +733,15 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var app = this;
         var i = 0;
         
-        for (i = 0; i < uuids.length; i++) {
-            OpenLayers.Request.GET({
+//        for (i = 0; i < uuids.length; i++) {
+		if (uuids.length>0) {
+	        Ext.Ajax.request({
+                url: this.services.mdSelect,
+	            method: 'POST', 
+//            OpenLayers.Request.GET({
                 url: this.services.mdSelect,
                 params: {
-                    id: uuids[i],
+                    id: uuids.join(",")/*[i]*/,
                     selected: type
                 },
                 success: function(response){
@@ -864,30 +868,42 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var bd = Ext.getBody();
         
         if (this.resultsView) {
-            var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid));
-            
-            // No current search available with this record information
+            var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid.toUpperCase()));
             if (!record) {
-                // Retrieve information in synchrone mode
-                var store = GeoNetwork.data.MetadataResultsFastStore();
-                this.kvpSearch("fast=index&_uuid=" + escape(uuid), null, null, null, true, store, null, false);
-                record = store.getAt(store.find('uuid', uuid));
+	            var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid.toLowerCase()));
+	            if (!record) {
+	                // Retrieve information in synchrone mode
+	                var store = GeoNetwork.data.MetadataResultsFastStore();
+	                this.kvpSearch("fast=index&_uuid=" + escape(uuid.toUpperCase()), null, null, null, true, store, null, false, false);
+	                record = store.getAt(store.find('uuid', uuid.toUpperCase()));
+		            if (!record) {
+		                // Retrieve information in synchrone mode
+		                var store = GeoNetwork.data.MetadataResultsFastStore();
+		                this.kvpSearch("fast=index&_uuid=" + escape(uuid.toLowerCase()), null, null, null, true, store, null, false, true);
+		                record = store.getAt(store.find('uuid', uuid.toLowerCase()));
+		            }
+	            }
             }
-            
-            var win = new GeoNetwork.view.ViewWindow({
-                serviceUrl: url,
-                lang: this.lang,
-                currTab: GeoNetwork.defaultViewMode || 'simple',
-                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
-                catalogue: this,
-                maximized: maximized || false,
-                metadataUuid: uuid,
-                record: record,
-                resultsView: this.resultsView,
-                workspaceCopy: record.get('workspace') == "true" ? true : false
-                });
-            win.show(this.resultsView);
-            win.alignTo(bd, 'tr-tr');
+            if (record) {
+            	uuid = record.get('uuid');
+            	url = this.services.mdView + '?uuid=' + escape(uuid);
+	            var win = new GeoNetwork.view.ViewWindow({
+	                serviceUrl: url,
+	                lang: this.lang,
+	                currTab: GeoNetwork.defaultViewMode || 'simple',
+	                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+	                catalogue: this,
+	                maximized: maximized || false,
+	                metadataUuid: uuid,
+	                record: record,
+	                resultsView: this.resultsView,
+	                workspaceCopy: record.get('workspace') == "true" ? true : false
+	                });
+	            win.show(this.resultsView);
+	            win.alignTo(bd, 'tr-tr');
+            } else {
+        	 	Ext.Msg.alert("Zoeken", OpenLayers.i18n('noReordsFound'));
+            }
         } else {
             // Not really used - use old service
             window.open(this.services.mdShow + '?uuid=' + escape(uuid),
@@ -1227,10 +1243,25 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             url = this.services.rootUrl + url;
         }
         
+		var scope = Ext.getCmp("GNtabs");
+
+        if (scope!=null) {
+        	if (!scope.loadingMask) {
+	            scope.loadingMask = new Ext.LoadMask(scope.getEl(), {
+	                msg: "Even geduld ..."
+	            });
+            } else {
+            	scope.loadingMask.msg="Even geduld ...";
+            }
+	        scope.loadingMask.show();
+        }
         OpenLayers.Request.GET({
             url: url,
             params: params,
             success: function(response){
+		        if (scope!=null && scope.loadingMask !== null) {
+		            scope.loadingMask.hide();
+		        }
                 if (msgSuccess) {
                     Ext.Msg.alert(msgSuccess, response.responseText);
                 }
@@ -1240,6 +1271,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             },
             failure: function(response){
+		        if (scope!=null && scope.loadingMask !== null) {
+		            scope.loadingMask.hide();
+		        }
                 if (msgFailure) {
                     Ext.Msg.alert(msgFailure, response.responseText);
                 }

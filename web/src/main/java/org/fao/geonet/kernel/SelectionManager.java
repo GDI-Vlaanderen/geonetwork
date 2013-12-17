@@ -4,6 +4,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -163,14 +164,32 @@ public class SelectionManager {
 			this.selections.put(type, Collections.synchronizedSet(new HashSet<String>()));
 		}
 		if (selected != null) {
-			if (selected.equals(ADD_ALL_SELECTED))
+			if (selected.equals(ADD_ALL_SELECTED)) {
 				this.selectAll(type, context);
-			else if (selected.equals(REMOVE_ALL_SELECTED))
+			}
+			else if (selected.equals(REMOVE_ALL_SELECTED)) {
 				this.close(type);
-			else if (selected.equals(ADD_SELECTED) && (paramid != null))
-				selection.add(paramid);
-			else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
-				selection.remove(paramid);
+			}
+			else if (selected.equals(ADD_SELECTED) && (paramid != null)) {
+				if (StringUtils.isNotBlank(paramid)) {
+					String[] paramIdList = paramid.split(",");
+					for (String id : paramIdList) {
+						if (StringUtils.isNotBlank(id) && !selection.contains(id)) {
+							selection.add(id);
+						}
+					}
+				}
+			}
+			else if (selected.equals(REMOVE_SELECTED) && (paramid != null)) {
+				if (StringUtils.isNotBlank(paramid)) {
+					String[] paramIdList = paramid.split(",");
+					for (String id : paramIdList) {
+						if (StringUtils.isNotBlank(id)) {
+							selection.remove(id);
+						}
+					}
+				}
+			}
 			else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
 				this.close(type);
 				selection.add(paramid);

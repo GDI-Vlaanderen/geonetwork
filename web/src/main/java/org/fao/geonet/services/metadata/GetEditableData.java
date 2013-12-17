@@ -64,7 +64,7 @@ public class GetEditableData implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception {
 
 		String id = Utils.getIdentifierFromParameters(params, context);
-		boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
+		boolean showValidationErrors = /*Util.getParam(params, Params.SHOWVALIDATIONERRORS, false)*/ false;
         String justCreated = Util.getParam(params, Geonet.Elem.JUSTCREATED, null);
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

@@ -18,6 +18,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import com.yammer.metrics.core.HealthCheck.Result;
+
 /**
  * Records validation result inside the metadata itself.
  *
@@ -32,17 +34,20 @@ import org.jdom.Namespace;
  * @author heikki doeleman
  */
 public class AGIVValidation {
-    protected ServiceContext context;
+/*
+	protected ServiceContext context;
     protected AccessManager am;
-    protected DataManager dm;
-    protected Dbms dbms;
-    private String metadataId;
+*/
+	protected DataManager dm;
+/*
+	protected Dbms dbms;
+    private Element metadataId;
     private String timestamp;
     private Map<String, Integer[]> valTypeAndStatus;
     private boolean workspace;
-
-    private static final String XSD_KEY = "xsd";
-    private static final String ISO_SCHEMATRON_KEY = "schematron-rules-iso";
+*/
+//    private static final String XSD_KEY = "xsd";
+//    private static final String ISO_SCHEMATRON_KEY = "schematron-rules-iso";
     private static final String INSPIRE_SCHEMATRON_KEY = "schematron-rules-inspire";
     private static final String AGIV_SCHEMATRON_KEY = "schematron-rules-GDI-Vlaanderen";
 
@@ -60,19 +65,20 @@ public class AGIVValidation {
     private static final String ADD_AGIV_KEYWORD = "agiv-add-agiv-keyword.xsl";
     private static final String REMOVE_AGIV_KEYWORD = "agiv-remove-agiv-keyword.xsl";
 
-    public AGIVValidation(ServiceContext context, Dbms dbms) {
-        System.out.println("AbstractValidationHook init");
-        this.context = context;
+    public AGIVValidation(ServiceContext context/*, Dbms dbms*/) {
+//        System.out.println("AbstractValidationHook init");
+/*
+    	this.context = context;
         this.dbms = dbms;
-
+*/
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        am = gc.getAccessManager();
+//        am = gc.getAccessManager();
         dm = gc.getDataManager();
     }
 
     /**
      * Invoked when validation has finished. The arguments should be :
-     * - the metadata id (a String)
+     * - the metadata (a Element)
      * - the validation results summary (a Map<String, Integer[]>)
      * - the timestamp of the validation (a String)
      * - whether this is workspace metadata or not (a boolean)
@@ -80,51 +86,61 @@ public class AGIVValidation {
      * @param args zero or more implementation-dependent arguments
      * @throws ValidationHookException hmm
      */
-    public void getValidatedMetadata(Object... args) throws ValidationHookException {
+    public Element addConformKeywords(Object... args) throws ValidationHookException {
         try {
 
             for(Object o : args) {
-                System.out.println("AGIVValidationHook onValidate arg: " + o.toString());
+//                System.out.println("AGIVValidationHook onValidate arg: " + o.toString());
             }
-            if(args.length != 4) {
-                throw new IllegalArgumentException("AGIVValidationHook onValidate expects #4 arguments but received # " + args.length);
+            if(args.length != 3) {
+                throw new IllegalArgumentException("AGIVValidationHook onValidate expects #3 arguments but received # " + args.length);
             }
-            metadataId = (String)args[0];
-            valTypeAndStatus = (Map<String, Integer[]>) args[1];
+//            System.out.println("AGIVValidation started");
+//            String metadataId = (Element)args[0];
+            Element metadata = (Element)args[0];
+            Map<String, Integer[]> valTypeAndStatus = (Map<String, Integer[]>) args[1];
+            String schema = (String) args[2];
+/*            
             timestamp = (String) args[2];
             workspace = (Boolean) args[3];
+*/
+//            boolean bException = false;
+//            Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+//            try {
+//                String schema = dm.getMetadataSchema(dbms, metadataId);
 
-            for(Iterator<String> i = valTypeAndStatus.keySet().iterator(); i.hasNext();) {
-                String key = i.next();
-                Integer[] values = valTypeAndStatus.get(key);
-                for(int j = 0;j < values.length; j++) {
-                    System.out.println("AGIVValidationHook key: " + key + " value # " + j + ": " + values[j]);
-                }
+//              metadata = logISO19115Compliance(metadata, schema, valTypeAndStatus.get(XSD_KEY), valTypeAndStatus.get(ISO_SCHEMATRON_KEY));
+              metadata = logINSPIRECompliance(metadata, schema, valTypeAndStatus.get(INSPIRE_SCHEMATRON_KEY));
+              metadata = logAGIVCompliance(metadata, schema, valTypeAndStatus.get(AGIV_SCHEMATRON_KEY));
+              return metadata;
+              //
+              // save & index
+              //
+/*
+              if(workspace) {
+                  dm.updateMetadataWorkspace(context, dbms, metadataId, metadata, false, false, false, context.getLanguage(), null, false);
+              }
+              else {
+                  dm.updateMetadata(context, dbms, metadataId, metadata, false, false, false, context.getLanguage(), null, false);
+              }
+              dm.indexInThreadPoolIfPossible(dbms, metadataId, workspace);
+*/
+//              System.out.println("AGIVValidation OK");
+/*
+            } catch (Exception e) {
+            	bException = true;
+            	if (dbms != null) {
+	            	context.getResourceManager().abort(Geonet.Res.MAIN_DB, dbms);
+	            }
+    			throw e;
+            } finally {
+                if (!bException && dbms != null)
+                	context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
             }
-
-            Element metadata = getMetadata(workspace);
-
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            String schema = dm.getMetadataSchema(dbms, metadataId);
-
-//            metadata = logISO19115Compliance(metadata, schema, valTypeAndStatus.get(XSD_KEY), valTypeAndStatus.get(ISO_SCHEMATRON_KEY));
-            metadata = logINSPIRECompliance(metadata, schema, valTypeAndStatus.get(INSPIRE_SCHEMATRON_KEY));
-            metadata = logAGIVCompliance(metadata, schema, valTypeAndStatus.get(AGIV_SCHEMATRON_KEY));
-
-            //
-            // save & index
-            //
-
-            if(workspace) {
-                dm.updateMetadataWorkspace(context, dbms, metadataId, metadata, false, false, true, context.getLanguage(), null, false);
-            }
-            else {
-                dm.updateMetadata(context, dbms, metadataId, metadata, false, false, true, context.getLanguage(), null, false);
-            }
-            dm.indexInThreadPoolIfPossible(dbms, metadataId, workspace);
-
+*/
         }
         catch(Exception x) {
+            System.out.println("AGIVValidation NOK");
             throw new ValidationHookException(x.getMessage(), x);
         }
     }
@@ -155,13 +171,14 @@ public class AGIVValidation {
      * @param schematronResults
      * @throws ValidationHookException
      */
+/*
     private Element logISO19115Compliance(Element metadata, String schema, Integer[] xsdResults, Integer[] schematronResults) throws ValidationHookException {
         if(xsdResults == null) {
-            System.out.println("WARNING logISO19115Compliance received null xsdResults results - skipping it.");
+//            System.out.println("WARNING logISO19115Compliance received null xsdResults results - skipping it.");
             return metadata;
         }
         if(schematronResults == null) {
-            System.out.println("WARNING logISO19115Compliance received null schematron results - skipping it.");
+//            System.out.println("WARNING logISO19115Compliance received null schematron results - skipping it.");
             return metadata;
         }
         try {
@@ -183,17 +200,15 @@ public class AGIVValidation {
                 // empty metadataStandardname and metadataStandardVersion
                 transformMd(metadata, schema, EMPTY_MDSTANDARDNAME_AND_MDSTANDARDVERSION);
             }
-/*
-            System.out.println("***** result of logISO19115Compliance:\n" + Xml.getString(metadata));
-            System.out.println("***** end result of logISO19115Compliance..\n");
-*/
+//            System.out.println("***** result of logISO19115Compliance:\n" + Xml.getString(metadata));
+//            System.out.println("***** end result of logISO19115Compliance..\n");
             return metadata;
         }
         catch(Exception x) {
             throw new ValidationHookException(x.getMessage(), x);
         }
     }
-
+*/
     /**
      * Adds or removes keyword to indicate INSPIRE compliance.
      *
@@ -216,12 +231,12 @@ public class AGIVValidation {
      */
     private Element logINSPIRECompliance(Element metadata, String schema, Integer[] schematronResults) throws ValidationHookException {
         if(schematronResults == null) {
-            System.out.println("WARNING logINSPIRECompliance received null schematron results - skipping it.");
+//            System.out.println("WARNING logINSPIRECompliance received null schematron results - skipping it.");
             return metadata;
         }
         try {
             boolean inspireValid = schematronResults[0] == 1;
-            System.out.println("INSPIRE validation hook: INSPIRE compliant? " + inspireValid);
+//            System.out.println("INSPIRE validation hook: INSPIRE compliant? " + inspireValid);
             if(inspireValid) {
                 metadata = transformMd(metadata, schema, ADD_INSPIRE_KEYWORD);
             }
@@ -262,12 +277,12 @@ public class AGIVValidation {
      */
     private Element logAGIVCompliance(Element metadata, String schema, Integer[] schematronResults) throws ValidationHookException {
         if(schematronResults == null) {
-            System.out.println("WARNING logAGIVCompliance received null schematron results - skipping it.");
+//            System.out.println("WARNING logAGIVCompliance received null schematron results - skipping it.");
             return metadata;
         }
         try {
             boolean agivValid = schematronResults[0] == 1;
-            System.out.println("INSPIRE validation hook: INSPIRE compliant? " + agivValid);
+//            System.out.println("INSPIRE validation hook: INSPIRE compliant? " + agivValid);
             if(agivValid) {
                 metadata = transformMd(metadata, schema, ADD_AGIV_KEYWORD);
             }
@@ -291,6 +306,7 @@ public class AGIVValidation {
      * @return
      * @throws Exception
      */
+/*
     private Element getMetadata(boolean workspace) throws ValidationHookException {
         try {
             Element md;
@@ -311,7 +327,7 @@ public class AGIVValidation {
             throw new ValidationHookException(x.getMessage(), x);
         }
     }
-
+*/
     /**
      * @param md
      * @param schema
@@ -319,7 +335,7 @@ public class AGIVValidation {
      * @throws Exception
      */
     private Element transformMd(Element md, String schema, String styleSheet) throws Exception {
-        System.out.println("AVH transforming with stylesheet " + styleSheet);
+//        System.out.println("AVH transforming with stylesheet " + styleSheet);
         //--- do an XSL  transformation
         styleSheet = dm.getSchemaDir(schema) + styleSheet;
         return Xml.transform(md, styleSheet);
@@ -337,7 +353,7 @@ public class AGIVValidation {
         nsList.add(Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd"));
         nsList.add(Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco"));
         String level = Xml.selectString(metadata, "//gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue", nsList);
-        System.out.println("getHierarchyLevel: " + level);
+//        System.out.println("getHierarchyLevel: " + level);
         return level;
     }
 }

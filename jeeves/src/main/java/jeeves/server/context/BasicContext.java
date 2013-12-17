@@ -27,6 +27,7 @@ import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 
 import java.util.Hashtable;
 
@@ -102,6 +103,17 @@ public class BasicContext
     public MonitorManager getMonitorManager() {
         return monitorManager;
     }
+
+	@Override
+	protected void finalize() throws Throwable {
+		if (Log.isDebugEnabled(Log.RESOURCES)) {
+			Log.debug(Log.RESOURCES, this.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-Executing finalize of BasicContext");
+        }
+        if (resMan!=null) {
+    		resMan.close();
+        }
+		super.finalize();
+	}
 
 	//--------------------------------------------------------------------------
 

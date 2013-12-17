@@ -22,8 +22,30 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.servlet.ServletContext;
+
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
@@ -31,6 +53,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -82,28 +105,8 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
  * Indexes metadata using Lucene.
@@ -664,26 +667,29 @@ public class SearchManager {
 	 */
 	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                       String title, boolean workspace) throws Exception {
-        System.out.println("** index. Workspace? " + workspace + ", title: " + title);
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
+        synchronized(_indexWriter.MUTEX) {
+            System.out.println("** START SYNCHRONIZED index. Workspace? " + workspace + ", title: " + title);
+	        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+	            Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
+	        }
+	        List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, workspace, false);
+			_indexWriter.openWriter();
+			try {
+	            for( Pair<String, Document> document : docs ) {
+	                _indexWriter.addDocument(document.one(), document.two());
+	                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+	                    Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
+	                }
+	            }
+			}
+	        finally {
+	            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+	                Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
+	            }
+				_indexWriter.closeWriter();
+	            System.out.println("** END SYNCHRONIZED index. Workspace? " + workspace);
+			}
         }
-		_indexWriter.openWriter();
-		try {
-            List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, workspace, false);
-            for( Pair<String, Document> document : docs ) {
-                _indexWriter.addDocument(document.one(), document.two());
-                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                    Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
-                }
-            }
-		}
-        finally {
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
-            }
-			_indexWriter.closeWriter();
-		}
 		_spatial.writer().index(schemaDir, id, metadata);
 	}
 
@@ -694,8 +700,9 @@ public class SearchManager {
      */
 	public void startIndexGroup() throws Exception {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from startIndexGroup");
-		_indexWriter.openWriter();
+        	Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from startIndexGroup");
+//        System.out.println("===>VOOR OPENWRITER IN START INDEXGROUP");
+    	_indexWriter.openWriter();
 	}
 
     /**
@@ -712,10 +719,10 @@ public class SearchManager {
      */
 	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                            String title, boolean workspace) throws Exception {
-        System.out.println("** indexGroup. Workspace? " + workspace);
         List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, workspace, true);
+		System.out.println("** indexGroup. Workspace? " + workspace);
         for( Pair<String, Document> document : docs ) {
-            _indexWriter.addDocument(document.one(), document.two());
+        	_indexWriter.addDocument(document.one(), document.two());
         }
         _spatial.writer().index(schemaDir, id, metadata);
 	}
@@ -727,8 +734,9 @@ public class SearchManager {
      */
 	public void endIndexGroup() throws Exception {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-		Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from endIndexGroup");
+        	Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from endIndexGroup");
 		_indexWriter.closeWriter();
+//        System.out.println("===>NA CLOSEWRITER IN END INDEXGROUP");
 	}
 
     /**
@@ -745,8 +753,6 @@ public class SearchManager {
 		    Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
         }
 		_indexWriter.deleteDocuments(new Term(fld, txt), workspace);
-
-		_spatial.writer().delete(txt);
 	}
 
     /**
@@ -924,20 +930,20 @@ public class SearchManager {
      * @throws Exception hmm
      */
 	public void delete(String fld, String txt, boolean workspace) throws Exception {
-		// possibly remove old document
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-		    Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from delete");
+        synchronized(_indexWriter.MUTEX) {
+            System.out.println("** START SYNCHRONIZED delete. Workspace? " + workspace);
+    		_indexWriter.openWriter();
+    		try {
+    			_indexWriter.deleteDocuments(new Term(fld, txt), workspace);
+    		}
+            finally {
+                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+    			    Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
+                }
+    			_indexWriter.closeWriter();
+                System.out.println("** END SYNCHRONIZED delete. Workspace? " + workspace);
+    		}
         }
-		_indexWriter.openWriter();
-		try {
-			_indexWriter.deleteDocuments(new Term(fld, txt), workspace);
-		}
-        finally {
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-			    Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
-            }
-			_indexWriter.closeWriter();
-		}
 		_spatial.writer().delete(txt);
 	}
 
@@ -1358,16 +1364,13 @@ public class SearchManager {
 	}
 
     public boolean optimizeIndexWithoutSendingTopic() {
-        try {
-            _indexWriter.openWriter();
-            _indexWriter.optimize();
-            _indexWriter.closeWriter();
+		try {
+			_indexWriter.optimize();
             return true;
-        }
-        catch (Exception e) {
+		} catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE, "Exception while optimizing lucene index: " + e.getMessage());
             return false;
-        }
+		}
     }
 
 	/**
@@ -1784,7 +1787,7 @@ public class SearchManager {
                 SpatialIndex.class);
     }
 
-	LuceneIndexWriterFactory getIndexWriter() {
+	public LuceneIndexWriterFactory getIndexWriter() {
 		return _indexWriter;
 	}
 }

@@ -11,6 +11,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.services.metadata.validation.agiv.AGIVValidation;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -618,9 +619,10 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public Element validateMetadataEmbedded(UserSession session, Dbms dbms, String id, String lang) throws Exception {
+	public Element validateMetadataEmbedded(ServiceContext context/*UserSession session*/, Dbms dbms, String id/*, String lang*/) throws Exception {
 		String schema = dataManager.getMetadataSchema(dbms, id);
-
+		UserSession session = context.getUserSession();
+		String lang = context.getLanguage();
 		//--- get metadata from session and clone it for validation
 		Element realMd = getMetadataFromSession(session, id);
 		Element md = (Element)realMd.clone();
@@ -634,8 +636,8 @@ public class AjaxEditUtils extends EditUtils {
 
         boolean workspace = true;
 		//--- do the validation on the metadata
-		return dataManager.doValidate(session, dbms, schema, id, md, lang, false, workspace).one();
-
+	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+	    return dataManager.doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, workspace, valTypeAndStatus).one();
 	}
 
     /**

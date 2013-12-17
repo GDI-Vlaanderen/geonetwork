@@ -92,15 +92,16 @@ public class ResourceManager
         }
 
 		Object resource = htResources.get(resourceId);
-
+		boolean bExisting = true;
 		if (resource == null) {
-            if(Log.isDebugEnabled(Log.RESOURCES)){
-                Log.debug  (Log.RESOURCES, "No resource in cache, opening a new one from the resource provider: " + resourceId  + " RESOURCEMANAGER: " + this.hashCode());
-            }
+			bExisting = false;
 			ResourceProvider provider = provManager.getProvider(name);
 
             TimerContext timingContext = resourceManagerWaitForResourceTimer.time();
             try {
+            	if(Log.isDebugEnabled(Log.RESOURCES)) {
+                    Log.debug(Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-");
+            	}
 			    resource = provider.open();
             } finally {
                 timingContext.stop();
@@ -108,9 +109,6 @@ public class ResourceManager
 
 			if (resource != null) {
 				htResources.put(resourceId, resource);
-	            if(Log.isDebugEnabled(Log.RESOURCES)){
-	                Log.debug  (Log.RESOURCES, "Resource putted in cache " + resourceId + " " + resource.hashCode() + " RESOURCEMANAGER: " + this.hashCode());
-	            }
 				//htResources.put(provider.getName(), resource);
                 openMetrics(resource);
             }
@@ -120,6 +118,9 @@ public class ResourceManager
         }
 
         resourceTracker.openResource(resource);
+        if(Log.isDebugEnabled(Log.RESOURCES)) {
+            Log.debug(Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + (bExisting ? "Cached" : "New and cached") + " resource opened");
+        }
         return resource;
 	}
 
@@ -137,27 +138,41 @@ public class ResourceManager
 	{
 		String resourceId = name + ":" + Thread.currentThread().getId();
         if(Log.isDebugEnabled(Log.RESOURCES)) {
-            Log.debug (Log.RESOURCES, "Connection (open direct) ; " + resourceId + " RESOURCEMANAGER: " + this.hashCode());
+            Log.debug (Log.RESOURCES, "Opening direct ; " + resourceId + " RESOURCEMANAGER: " + this.hashCode());
         }
 		ResourceProvider provider = provManager.getProvider(name);
 
 		Object resource;
         TimerContext timingContext = resourceManagerWaitForResourceTimer.time();
         try {
+        	if(Log.isDebugEnabled(Log.RESOURCES)) {
+                Log.debug  (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-");
+        	}
             resource = provider.open();
         } finally {
             timingContext.stop();
         }
 
-        if(resource != null)
-            openMetrics(resource);
+        if(resource != null) {
+/*
+        	if (!htResources.containsKey(resourceId)) {
+    			htResources.put(resourceId, resource);
+        	}
+*/
+        	if(Log.isDebugEnabled(Log.RESOURCES)) {
+                Log.debug  (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + "Begin open");
+        	}
+            openMetrics(resource);        	
+        }
 
         if(Log.isDebugEnabled(Log.RESOURCES)) {
             Log.debug  (Log.RESOURCES, "Connection (open direct) ready to use: " + resourceId + " " + resource.hashCode() + " RESOURCEMANAGER: " + this.hashCode());
         }
 
         resourceTracker.openDirectResource(resource);
-
+        if(Log.isDebugEnabled(Log.RESOURCES)) {
+            Log.debug  (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-New resource direct opened");
+        }
         return resource;
 	}
 
@@ -235,8 +250,10 @@ public class ResourceManager
         if(Log.isDebugEnabled(Log.RESOURCES)) {
             Log.debug (Log.RESOURCES, "Closing: " + resourceId + " " + resource.hashCode());
         }
+        boolean bExisting = false;
 		Object cachedResource = htResources.get(resourceId);
 		if (cachedResource != null && cachedResource == resource) {
+			bExisting = true;
 			htResources.remove(resourceId);
 		} else {
             if(Log.isDebugEnabled(Log.RESOURCES)) {
@@ -247,7 +264,7 @@ public class ResourceManager
 		int hashCode = resource.hashCode();
 		provider.close(resource);
         if(Log.isDebugEnabled(Log.RESOURCES)) {
-            Log.debug (Log.RESOURCES, "Connection closed by provider: " + resourceId + " " + hashCode + " RESOURCEMANAGER: " + this.hashCode());
+            Log.debug (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + (bExisting ? "Cached" : "Uncached") + " resource closed");
         }
 	}
 
@@ -263,7 +280,9 @@ public class ResourceManager
             Log.debug (Log.RESOURCES, "Aborting connection : " + resourceId + " " + resource.hashCode() + " RESOURCEMANAGER: " + this.hashCode());
         }
 		Object cachedResource = htResources.get(resourceId);
+		boolean bExisting = false;
 		if (cachedResource != null && cachedResource == resource) {
+			bExisting = true;
 			htResources.remove(resourceId);
 		} else {
             if(Log.isDebugEnabled(Log.RESOURCES)) {
@@ -274,7 +293,7 @@ public class ResourceManager
 		int hashCode = resource.hashCode();
 		provider.abort(resource);
         if(Log.isDebugEnabled(Log.RESOURCES)) {
-            Log.debug (Log.RESOURCES, "Connection abored by provider: " + resourceId + " " + hashCode + " RESOURCEMANAGER: " + this.hashCode());
+            Log.debug (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + (bExisting ? "Cached" : "Uncached") + " resource aborted");
         }
 	}
 
@@ -307,33 +326,43 @@ public class ResourceManager
 
 	private void release(boolean commit) throws Exception
 	{
-        if(Log.isDebugEnabled(Log.RESOURCES)) {
-            Log.debug (Log.RESOURCES, "Begin release of " + htResources.size() + " resources in RESOURCEMANAGER: " + this.hashCode());
+		if(Log.isDebugEnabled(Log.RESOURCES)) {
+            Log.debug (Log.RESOURCES, "Releasing of " + htResources.size() + " resources in RESOURCEMANAGER: " + this.hashCode());
         }
+        
 		Exception errorExc = null;
 		int closed = 0;
 		int aborted = 0;
 		
+		String threadId = "" + Thread.currentThread().getId();
+		int iCount = 1;
 		for (Map.Entry<String, Object> entry : htResources.entrySet()) {
             closeMetrics(entry.getValue()); // This must be done before removing from htResource
-
-			ResourceProvider provider = provManager.getProvider(entry.getKey().split(":")[0]);
-
+            String resourceId = entry.getKey();
+            String providerName = resourceId.split(":")[0];
+            if(Log.isDebugEnabled(Log.RESOURCES)) {
+                Log.debug (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-Releasing resource " + iCount++ + "/" + htResources.size());
+            }
+            if (!resourceId.equals(providerName + ":" + threadId)) {
+    			System.out.println(this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-IMPOSSIBLE CASE");
+            }
+			ResourceProvider provider = provManager.getProvider(providerName);
 			try
 			{
 				if (commit)	{
 					provider.close(entry.getValue());
+					if(Log.isDebugEnabled(Log.RESOURCES)) {
+			            Log.debug (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-Cached resource released by close");
+					}
 					closed++;
-			        if(Log.isDebugEnabled(Log.RESOURCES)) {
-			        	Log.debug (Log.RESOURCES, "Connection closed: " + entry.getKey() + " " + entry.getValue() + " RESOURCEMANAGER: " + this.hashCode());
-			        }
 				} else {
 					provider.abort(entry.getValue());
+					if(Log.isDebugEnabled(Log.RESOURCES)) {
+			            Log.debug (Log.RESOURCES, this.hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-Cached resource released by abort");
+					}
 					aborted++;
-			        if(Log.isDebugEnabled(Log.RESOURCES)) {
-			        	Log.debug (Log.RESOURCES, "Connection aborted: " + entry.getKey() + " " + entry.getValue() + " RESOURCEMANAGER: " + this.hashCode());
-			        }
 				}
+//    				htResources.remove(resourceId);
 			}
 			catch (Exception ex)
 			{

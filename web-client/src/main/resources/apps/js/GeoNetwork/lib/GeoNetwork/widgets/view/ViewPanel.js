@@ -324,11 +324,12 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
      */
     registerTooltip: function(){
         var formElements = Ext.query('th[id]', this.body.dom);
+        formElements = formElements.concat(Ext.query('label[id]', this.body.dom));
         formElements = formElements.concat(Ext.query('legend[id]', this.body.dom));
         Ext.each(formElements, function(item, index, allItems){
             var e = Ext.get(item);
             var id = e.getAttribute('id');
-            if (e.is('TH')) {
+            if (e.is('TH') || e.is('LABEL')) {
                 var section = e.up('FIELDSET');
                 var f = function(){
                     if (this.displayTooltip) {

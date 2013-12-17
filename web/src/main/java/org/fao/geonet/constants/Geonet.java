@@ -35,7 +35,7 @@ import org.jdom.Namespace;
 public class Geonet {
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
-	public static final String DEFAULT_LANGUAGE = "eng";
+	public static final String DEFAULT_LANGUAGE = "dut";
 	public static final Namespace XSD_NAMESPACE = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	public static final Namespace XSI_NAMESPACE = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 	public static final Namespace OASIS_CATALOG_NAMESPACE = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");

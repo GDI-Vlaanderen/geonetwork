@@ -1119,12 +1119,14 @@ GeoNetwork.app = function(){
                 catalogue.metadataEdit(urlParameters.edit);
             }
             if (urlParameters.create !== undefined) {
-                resultPanel.getTopToolbar().createMetadataAction.fireEvent('click');
+            	if (resultPanel.getTopToolbar().createMetadataAction) {
+	                resultPanel.getTopToolbar().createMetadataAction.fireEvent('click');
+                }
             }
             if (urlParameters.uuid !== undefined) {
                 catalogue.metadataShow(urlParameters.uuid, true);
             } else if (urlParameters.id !== undefined) {
-            	if (window.location.href.indexOf("index_login.html")>-1) {
+            	if (urlParameters.external !== undefined || window.location.href.indexOf("index_login.html")>-1) {
                 	app.metadataShowByIdInTab(urlParameters.id, true);
             	} else {
                 	catalogue.metadataShowById(urlParameters.id, true);
@@ -1359,6 +1361,19 @@ Ext.onReady(function () {
         var tabs = tabPanel.find( 'id', uuid );
 		if (tabPanel.activeTab && tabPanel.activeTab.title=="Home") {
 			location.replace(location.pathname + '?uuid=' + escape(uuid) + '&hl=dut');
+/*
+            var store = GeoNetwork.data.MetadataResultsFastStore();
+            this.kvpSearch("fast=index&_uuid=" + escape(uuid), null, null, null, true, store, null, false, true);
+            var record = store.getAt(store.find('uuid', uuid));
+            if (!record) {
+                this.kvpSearch("fast=index&_uuid=" + escape(uuid.toLowerCase()), null, null, null, true, store, null, false, false);
+                record = store.getAt(store.find('uuid', uuid.toLowerCase()));
+			}                
+            if (record) {
+            	alert("Load replacing url");
+				location.replace(location.pathname + '?uuid=' + escape(record.get('uuid')) + '&hl=dut');
+			}
+*/
 		} else if (tabs[0]) {
             tabPanel.setActiveTab( tabs[ 0 ] );
 		} else {

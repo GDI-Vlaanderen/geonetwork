@@ -132,10 +132,9 @@ public class KeywordsSearcher {
      * @param params params
      * @throws Exception hmm
      */
-    public void search(ServiceContext srvContext, Element params) throws Exception {
+    public void search(ServiceContext srvContext, Element params, String keyword) throws Exception {
         //System.out.println("KeywordsSearcher search");
         // Get params from request and set default
-        String sKeyword = Util.getParam(params, "pKeyword");
 
         // Get max results number or set default one.
         _maxResults = Util.getParam(params, "maxResults", _maxResults);
@@ -196,18 +195,18 @@ public class KeywordsSearcher {
                 }
             }
             // Keyword to look for
-            if (!sKeyword.equals("")) {
+            if (!keyword.equals("")) {
                 String lang = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(srvContext.getLanguage());
-                createQuery(lang, sKeyword, pTypeSearch);
+                createQuery(lang, keyword, pTypeSearch);
             }
             search(listThesauri);
             List<KeywordBean> resultsWithLanguage = _results;
 
             // repeat search for language = "#default"
             // #default doesn't work in sesame search -- replaced it by 00
-            if (!sKeyword.equals("")) {
+            if (!keyword.equals("")) {
                 String lang = "00";
-                createQuery(lang, sKeyword, pTypeSearch);
+                createQuery(lang, keyword, pTypeSearch);
             }
             search(listThesauri);
             List<KeywordBean> resultsWithoutLanguage = _results;

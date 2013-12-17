@@ -92,11 +92,11 @@ public class Update implements Service {
 			StatusActions sa = saf.createStatusActions(context, dbms);
 			saf.onEdit(sa, id, minor.equals("true"));
 
+            boolean validate = showValidationErrors.equals("true");
 			if (data != null) {
 				Element md = Xml.loadString(data, false);
 
                 String changeDate = null;
-                boolean validate = showValidationErrors.equals("true");
                 boolean updateDateStamp = !minor.equals("true");
                 boolean ufo = true;
                 boolean index = true;
@@ -105,7 +105,7 @@ public class Update implements Service {
 				}
 			}
             else {
-                ajaxEditUtils.updateContent(params, false, true);
+                ajaxEditUtils.updateContent(params, validate, true);
 			}
 		}
 

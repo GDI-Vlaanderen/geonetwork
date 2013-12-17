@@ -88,24 +88,33 @@ public class AGIVValidationHook extends AbstractValidationHook {
             Element metadata = getMetadata(workspace);
 
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            String schema = dm.getMetadataSchema(dbms, metadataId);
+            boolean bException = false;
+            try {
+            	String schema = dm.getMetadataSchema(dbms, metadataId);
 
 //            metadata = logISO19115Compliance(metadata, schema, valTypeAndStatus.get(XSD_KEY), valTypeAndStatus.get(ISO_SCHEMATRON_KEY));
-            metadata = logINSPIRECompliance(metadata, schema, valTypeAndStatus.get(INSPIRE_SCHEMATRON_KEY));
-            metadata = logAGIVCompliance(metadata, schema, valTypeAndStatus.get(AGIV_SCHEMATRON_KEY));
-
-            //
-            // save & index
-            //
-
-            if(workspace) {
-                dm.updateMetadataWorkspace(context, dbms, metadataId, metadata, false, false, true, context.getLanguage(), null, false);
+	            metadata = logINSPIRECompliance(metadata, schema, valTypeAndStatus.get(INSPIRE_SCHEMATRON_KEY));
+	            metadata = logAGIVCompliance(metadata, schema, valTypeAndStatus.get(AGIV_SCHEMATRON_KEY));
+	
+	            //
+	            // save & index
+	            //
+	
+	            if(workspace) {
+	                dm.updateMetadataWorkspace(context, dbms, metadataId, metadata, false, false, false, context.getLanguage(), null, false);
+	            }
+	            else {
+	                dm.updateMetadata(context, dbms, metadataId, metadata, false, false, false, context.getLanguage(), null, false);
+	            }
+	            dm.indexInThreadPoolIfPossible(dbms, metadataId, workspace);
+            } catch (Exception e) {
+            	bException = true;
+            	context.getResourceManager().abort(Geonet.Res.MAIN_DB, dbms);
+    			throw e;
+            } finally {
+                if (!bException && dbms != null)
+                	context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
             }
-            else {
-                dm.updateMetadata(context, dbms, metadataId, metadata, false, false, true, context.getLanguage(), null, false);
-            }
-            dm.indexInThreadPoolIfPossible(dbms, metadataId, workspace);
-
         }
         catch(Exception x) {
             throw new ValidationHookException(x.getMessage(), x);

@@ -30,6 +30,8 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -55,34 +57,23 @@ public class GetKeywords implements Service {
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		UserSession session = context.getUserSession();
 
-		KeywordsSearcher searcher = null;
-		
 		int maxResults = Util.getParam(params, "maxResults", 100000);
 		params.removeChild("maxResults");
+        boolean multiple = Util.getParam(params, "multiple", false);
+		params.removeChild("multiple");
 		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
-		if (newSearch) {			
-			// perform the search and save search result into session
-			GeonetContext gc = (GeonetContext) context
-					.getHandlerContext(Geonet.CONTEXT_NAME);
-			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
-			
-            if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-			searcher = new KeywordsSearcher(thesaurusMan);
-			searcher.search(context, params);
-			searcher.sortResults("label");
-			session
-					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
-							searcher);
-		} else {
-			searcher = (KeywordsSearcher) session
-					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
+		String pKeyword = Util.getParam(params, "pKeyword",null);
+		if (!StringUtils.isBlank(pKeyword)) {
+			if (!multiple) {
+				search(params, context, pKeyword, newSearch, session, maxResults, response);
+			} else {
+				String[] keywords = pKeyword.split(",");
+				for (String keyword : keywords) {
+					search(params, context, keyword, newSearch, session, maxResults, response);
+				}
+			}
 		}
 
-		// get the results
-		response.addContent(searcher.getResults(searcher.getNbResults()<=maxResults?searcher.getNbResults():maxResults));
-
-		
-		
 		// If editing
 		if (params.getChild("pMode") != null) {
 			String mode = Util.getParam(params, "pMode");
@@ -97,6 +88,30 @@ public class GetKeywords implements Service {
 		}
 
 		return response;
+	}
+	private void search(Element params, ServiceContext context, String keyword, boolean newSearch, UserSession session, int maxResults, Element response) throws Exception {
+		KeywordsSearcher searcher = null;
+		
+		if (newSearch) {			
+			// perform the search and save search result into session
+			GeonetContext gc = (GeonetContext) context
+					.getHandlerContext(Geonet.CONTEXT_NAME);
+			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
+			
+            if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
+			searcher = new KeywordsSearcher(thesaurusMan);
+			searcher.search(context, params, keyword);
+			searcher.sortResults("label");
+			session
+					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
+							searcher);
+		} else {
+			searcher = (KeywordsSearcher) session
+					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
+		}
+
+		// get the results
+		response.addContent(searcher.getResults(searcher.getNbResults()<=maxResults?searcher.getNbResults():maxResults));
 	}
 }
 

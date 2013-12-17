@@ -337,14 +337,13 @@ class Harvester {
 					}
 
                     boolean workspace = false;
-					if (!dataMan.doValidate(dbms, schema, id, docVal, context.getLanguage(), workspace)) {
+					if (!dataMan.doValidate(context, dbms, schema, id, docVal, context.getLanguage(), workspace)) {
 						result.doesNotValidate++;
 					} 
 				}
 			
-				boolean indexGroup = false;
                 boolean workspace = false;
-                dataMan.indexMetadata(dbms, id, indexGroup, workspace, true);
+                dataMan.indexMetadata(dbms, id, false, workspace, true);
 
 				result.addedMetadata++;
 			}

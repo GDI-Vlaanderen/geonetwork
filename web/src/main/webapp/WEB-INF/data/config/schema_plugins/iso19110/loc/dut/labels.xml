@@ -252,4 +252,43 @@
         <label>Toepassingsgebied</label>
         <description>Toepassingsgebied</description>
     </element>
+	<element name="gmd:organisationName">
+		<label>Organisatie</label>
+		<description>Naam van de verantwoordelijke organisatie.</description>
+	</element>
+	<element name="gmd:voice">
+		<label>Telefoon</label>
+		<description>Telefoonnummer van de verantwoordelijke persoon of organisatie.</description>
+	</element>
+	<element name="gmd:facsimile">
+		<label>Fax</label>
+		<description>Faxnummer van de verantwoordelijke persoon of organisatie.</description>
+	</element>
+	<element name="gmd:deliveryPoint">
+		<label>Adres</label>
+		<description>Contactadres van de organisatie.</description>
+	</element>
+	<element name="gmd:city">
+		<label>Plaats</label>
+		<description>Plaatsnaam behorende bij het contactadres van de organisatie.</description>
+	</element>
+	<element name="gmd:postalCode">
+		<label>Postcode</label>
+		<description>Postcode</description>
+	</element>
+	<element name="gmd:Country">
+		<label>Land</label>
+		<description>Land</description>
+	</element>
+	<element name="gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+	</element>
+	<element name="gmd:role">
+		<label>Rol</label>
+		<description>Functie die wordt uitgevoerd door de verantwoordelijke organisatie.</description>
+	</element>
+	<element name="gco:aName" context="gco:TypeName">
+		<label>Type</label>
+	</element>
 </labels>

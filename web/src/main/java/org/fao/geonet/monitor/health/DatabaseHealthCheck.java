@@ -18,6 +18,7 @@ public class DatabaseHealthCheck implements HealthCheckFactory {
         return new HealthCheck("Database Connection") {
             @Override
             protected Result check() throws Exception {
+            	boolean bException = false;
                 Dbms dbms = null;
                 try {
                     // TODO add timeout
@@ -25,9 +26,13 @@ public class DatabaseHealthCheck implements HealthCheckFactory {
                     dbms.select("SELECT id from Metadata LIMIT 1");
                     return Result.healthy();
                 } catch (Throwable e) {
+                	bException = true;
+    	            if (dbms != null) {
+    	            	context.getResourceManager().abort(Geonet.Res.MAIN_DB, dbms);
+    	            }
                     return Result.unhealthy(e);
                 } finally {
-                    if (dbms != null)
+                    if (!bException && dbms != null)
                         context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
                 }
 

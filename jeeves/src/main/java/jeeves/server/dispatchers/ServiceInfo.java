@@ -235,7 +235,8 @@ public class ServiceInfo
 			//--- commit resources and return response
 
 			context.getResourceManager().close();
-
+//    		System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + "After close");
+//			context = null;
 			return response;
 		}
 		catch(Exception e)
@@ -243,7 +244,8 @@ public class ServiceInfo
 			//--- in case of exception we have to abort all resources
 
 			context.getResourceManager().abort();
-			ServiceManager.error("Exception when executing service");
+//    		System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + "After abort");
+			ServiceManager.error(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-Exception when executing service " + context.getService());
 			ServiceManager.error(" (C) Exc : " + e);
 
 			throw e;

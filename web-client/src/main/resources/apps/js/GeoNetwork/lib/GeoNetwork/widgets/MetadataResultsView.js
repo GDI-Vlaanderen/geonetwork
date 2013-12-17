@@ -664,14 +664,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     },
     selectAllInPage: function(){
         var checkboxes = Ext.DomQuery.select('input.selector'), idx;
-        for (idx = 0; idx < checkboxes.length; ++idx) {
-            checkboxes[idx].checked = true;
-            Ext.each(this.getRecords(this.getNodes()), function(r){
-                var uuid = r.get('uuid');
-                this.catalogue.metadataSelect('add', [uuid]);
-            }, this);
-            // FIXME : selection calls may not end in call order
-            // then selection indicator may be wrong
+        var uuidList = [];
+        Ext.each(this.getRecords(this.getNodes()), function(r){
+            uuidList.push(r.get('uuid'));
+        }, this);
+        if (uuidList.length>0) {
+            this.catalogue.metadataSelect('add', uuidList);
+	        for (idx = 0; idx < checkboxes.length; ++idx) {
+	            checkboxes[idx].checked = true;
+	        }
         }
     },
     selectNone: function(){

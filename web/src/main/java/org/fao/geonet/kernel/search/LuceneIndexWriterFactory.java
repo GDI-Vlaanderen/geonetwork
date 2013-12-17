@@ -10,6 +10,7 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.FSDirectory;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.spatial.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class LuceneIndexWriterFactory {
     private final File _luceneDir;
     private final PerFieldAnalyzerWrapper _analyzer;
     private final LuceneConfig _luceneConfig;
+    public static Object MUTEX = new Object();
 
     private final Lock optimizingLock = new ReentrantLock();
 
@@ -78,7 +80,15 @@ public class LuceneIndexWriterFactory {
     }
 
     public synchronized void addDocument( String locale, Document doc ) throws Exception {
-        getWriter(locale).addDocument(doc);
+    	IndexWriter writer = getWriter(locale);
+//    	synchronized (writer){
+//    		System.out.println("===>START SYNCHRONIZE WRITER");
+//		  	try {
+    			writer.addDocument(doc);
+//  			} finally {
+//  	            System.out.println("===>STOP SYNCHRONIZE WRITER");
+//  			}
+//    	}
     }
 
     public synchronized void deleteDocuments( Term term, boolean workspace ) throws Exception {
@@ -91,25 +101,42 @@ public class LuceneIndexWriterFactory {
             else {
                 query.add(new TermQuery(new Term(LuceneIndexField._IS_WORKSPACE, "true")), BooleanClause.Occur.MUST_NOT);
             }
-            writer.deleteDocuments(query);
+//        	synchronized(writer) {
+//        		System.out.println("===>START SYNCHRONIZE WRITER");
+//			  	try {
+		            writer.deleteDocuments(query);
+//      			} finally {
+//      	            System.out.println("===>STOP SYNCHRONIZE WRITER");
+//      			}
+//            }
         }
     }
 
-    public void optimize() throws Exception {
+    public synchronized void optimize() throws Exception {
+        System.out.println("Optimizing the Lucene Index started...");
         if (optimizingLock.tryLock()) {
-            try {
-                openWriter();
-                Log.info(Geonet.INDEX_ENGINE, "Optimizing the Lucene Index...");
-                for( IndexWriter writer : allExistingWriters() ) {
-                    writer.optimize();
-                }
-                Log.info(Geonet.INDEX_ENGINE, "Optimizing Done.");
-            } finally {
-                closeWriter();
-                optimizingLock.unlock();
-
+            System.out.println("Lock successfully");
+            synchronized(MUTEX) {
+                System.out.println("** START SYNCHRONIZED optimize.");
+	            try {
+	                openWriter();
+	                try{
+		                Log.info(Geonet.INDEX_ENGINE, "Optimizing the Lucene Index...");
+		                for( IndexWriter writer : allExistingWriters() ) {
+			                	writer.optimize();
+		                }
+		                Log.info(Geonet.INDEX_ENGINE, "Optimizing Done.");
+		            } finally {
+		                closeWriter();
+		                System.out.println("** END SYNCHRONIZED optimize.");
+		            }
+	            } finally {
+	                optimizingLock.unlock();
+	                System.out.println("Unlock successfully");
+	            }
             }
         }
+        System.out.println("Optimizing the Lucene Index successfully ended...");
     }
     public synchronized void createDefaultLocale() throws IOException {
         File enLocale = new File(_luceneDir, Geonet.DEFAULT_LANGUAGE);

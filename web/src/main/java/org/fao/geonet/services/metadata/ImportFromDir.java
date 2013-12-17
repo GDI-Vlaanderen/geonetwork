@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -296,7 +297,9 @@ public class ImportFromDir implements Service {
                 perThread = files.length / threadCount;
             }
 			int index = 0;
-
+	        if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
+	            Log.debug(Geonet.THREADPOOL, "ImportMetadataReindexer on " + files.length + " files and a threadCount of " + threadCount);
+	        }
 			List<Future<List<Exception>>> submitList = new ArrayList<Future<List<Exception>>>();
 			while(index < files.length) {
 				int start = index;
@@ -304,6 +307,9 @@ public class ImportFromDir implements Service {
 				// create threads to process this chunk of files
 				Callable<List<Exception>> worker = new ImportCallable(files, start, count, params, schemaSchematronMap, context, stylePath, failOnError);
 				Future<List<Exception>> submit = executor.submit(worker);
+		        if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
+		            Log.debug(Geonet.THREADPOOL, "Worker with for processing " + count + " files");
+		        }
 				submitList.add(submit);
 				index += count;
 			}
