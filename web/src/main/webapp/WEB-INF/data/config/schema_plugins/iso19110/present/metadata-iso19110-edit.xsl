@@ -499,7 +499,7 @@
 		        </xsl:apply-templates>        
 		    </xsl:when>
 		    <xsl:otherwise>
-		        <xsl:if test="gfc:listedValue">
+		        <xsl:if test="count(gfc:listedValue/gfc:FC_ListedValue/gfc:code[gco:CharacterString!=''])>0 or count(gfc:listedValue/gfc:FC_ListedValue/gfc:label[gco:CharacterString!=''])>0 or count(gfc:listedValue/gfc:FC_ListedValue/gfc:definition[gco:CharacterString!=''])>0">
 <!--
 		            <xsl:call-template name="complexElementGui">
 		                <xsl:with-param name="title">
@@ -531,14 +531,12 @@
 							</xsl:call-template>
 						</xsl:with-param>
 						<xsl:with-param name="content">
-							<table class="gn">
-	                        <tbody>
 								<tr>
 									<th class="main"><label class="" for="_"><xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:code']/label"/></label></th>
 									<th class="main"><label class="" for="_"><xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:label']/label"/></label></th>
 									<th class="main"><label class="" for="_"><xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:definition']/label"/></label></th>
 								</tr>
-			                    <xsl:for-each select="gfc:listedValue/gfc:FC_ListedValue">
+			                    <xsl:for-each select="gfc:listedValue/gfc:FC_ListedValue[gfc:code/gco:CharacterString!='' or gfc:label/gco:CharacterString!='' or gfc:definition/gco:CharacterString!='']">
 			                    	<tr>
 				                        <td>
 				                            <xsl:value-of select="gfc:code/gco:CharacterString"/>
@@ -551,27 +549,17 @@
 		                            	</td>
 			                    	</tr>
 			                    </xsl:for-each>
-		                    </tbody>
-							</table>
 						</xsl:with-param>
 					</xsl:call-template>
 		        </xsl:if>
 		    </xsl:otherwise>
 		</xsl:choose>
         </xsl:variable>
+<!--
 	    <xsl:variable name="carrierOfCharacteristicsElementName" select="name(..)" />
 	    <xsl:variable name="previousCarrierOfCharacteristicsSiblingsCount" select="count(../preceding-sibling::*[name(.) = $carrierOfCharacteristicsElementName])" />
        	<xsl:if test="$previousCarrierOfCharacteristicsSiblingsCount=0 and $edit=true()">
 			<xsl:apply-templates mode="addCarrierOfCharacteristicsElement" select="..">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
-       	</xsl:if>
-<!--
-	    <xsl:variable name="featureAttributeElementName" select="name(..)" />
-	    <xsl:variable name="previousFeatureAttributeSiblingsCount" select="count(preceding-sibling::*[name(.) = $featureAttributeElementName])" />
-       	<xsl:if test="$previousFeatureAttributeSiblingsCount=0 and $edit=true()">
-			<xsl:apply-templates mode="addFeatureAttributeElement" select="..">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
 			</xsl:apply-templates>

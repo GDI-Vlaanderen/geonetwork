@@ -10,6 +10,7 @@
 			<gfc:FC_FeatureCatalogue/>
 			<gfc:FC_FeatureAttribute />
 			<gfc:carrierOfCharacteristics />
+			<gfc:featureType />			
 		</elements>
 	</autodetect>
 </schema>

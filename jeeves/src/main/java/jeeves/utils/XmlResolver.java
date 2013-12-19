@@ -58,7 +58,9 @@ public class XmlResolver extends XMLCatalogResolver {
 
        if(Log.isDebugEnabled(Log.XML_RESOLVER))
 		Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: Before resolution: Type: "+type+" NamespaceURI :"+namespaceURI+" PublicId :"+publicId+" SystemId :"+systemId+" BaseURI:"+baseURI);
-
+       if (baseURI!=null) {
+           baseURI = baseURI.replaceAll("gco/gco/", "gco/").replaceAll("gmd/gmd/", "gmd/");
+       }
 		LSInput result = super.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
 
 		if (result != null) { // some changes made so update

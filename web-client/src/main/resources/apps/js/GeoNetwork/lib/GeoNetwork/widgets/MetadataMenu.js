@@ -118,6 +118,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+/*        
         this.createChildAction = new Ext.Action({
             text: OpenLayers.i18n('createChild'),
             iconCls: 'childIcon',
@@ -127,6 +128,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+*/
         // FIXME : tooltip for actions does not work
         this.adminAction = new Ext.Action({
             text: OpenLayers.i18n('privileges'),
@@ -196,9 +198,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.otherActions = new Ext.menu.Item({
             text: OpenLayers.i18n('otherActions'),
             menu: {
-                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.cancelEditSessionAction, this.changeEditSessionOwnerAction, this.statusAction]
-                // AGIV disabled versioning and categories
-                //items: [this.duplicateAction, this.createChildAction, this.adminAction, this.cancelEditSessionAction, this.changeEditSessionOwnerAction, this.statusAction, this.versioningAction, this.categoryAction]
+                items: [this.duplicateAction, /*this.createChildAction,*/ this.adminAction, this.cancelEditSessionAction, this.changeEditSessionOwnerAction, this.statusAction]
             }
         });
         this.add(this.otherActions);

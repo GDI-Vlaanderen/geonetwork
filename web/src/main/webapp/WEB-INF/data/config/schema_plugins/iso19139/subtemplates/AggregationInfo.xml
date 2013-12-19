@@ -19,17 +19,24 @@
 						</gmd:dateType>
 					</gmd:CI_Date>
 				</gmd:date>
+				<gmd:edition>
+					<gco:CharacterString/>
+				</gmd:edition>
+				<gmd:identifier>
+					<gmd:MD_Identifier>
+						<gmd:code>
+							<gco:CharacterString/>
+						</gmd:code>
+					</gmd:MD_Identifier>
+				</gmd:identifier>
 			</gmd:CI_Citation>
 		</gmd:aggregateDataSetName>
 		<gmd:aggregateDataSetIdentifier>
-			<gmd:RS_Identifier>
+			<gmd:MD_Identifier>
 				<gmd:code>
 					<gco:CharacterString/>
 				</gmd:code>
-				<gmd:codeSpace>
-					<gco:CharacterString/>
-				</gmd:codeSpace>
-			</gmd:RS_Identifier>
+			</gmd:MD_Identifier>
 		</gmd:aggregateDataSetIdentifier>
 		<gmd:associationType>
 			<gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#DS_AssociationTypeCode" codeListValue=""/>

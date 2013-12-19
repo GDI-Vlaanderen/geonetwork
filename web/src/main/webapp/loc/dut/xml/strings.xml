@@ -567,6 +567,7 @@
 	<imZoomToLayer>Laat de geselecteerde layer van de map zien</imZoomToLayer>
 	<infoTitle>Info</infoTitle>
 	<insert>Invoegen</insert>
+	<existingUpdate>Update</existingUpdate>
 	<insertFileMode js="true">Bestand Toevoegen</insertFileMode>
 	<insertMode>Insert mode:</insertMode>
 	<insertPasteMode>Kopieër/Plak</insertPasteMode>
@@ -674,6 +675,7 @@
     <metadataAdded>Metadata met ID: %1 is opgenomen in de database</metadataAdded>
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
+	<metadataUpdateResults>Results of Metadata Update</metadataUpdateResults>
 	<metadataJSForm>Metadata van JS Form</metadataJSForm>
 	<metadataRecordsAdded>Totaal aantal metadata toegevoegd:</metadataRecordsAdded>
   <failOnError>Fail on error</failOnError>
@@ -689,6 +691,7 @@
 	<newGroup>Voeg een nieuwe groep toe</newGroup>
 	<newMdDes>Voeg een nieuwe metadatarecord toe als kopie van een bestaande template</newMdDes>
 	<newMdInsert>Nieuwe metadata toegevoegd:</newMdInsert>
+	<existingMdUpdate>Bestaande metadata geupdate</existingMdUpdate>
 	<newMetadata>Nieuwe metadata</newMetadata>
 	<newOwner>Nieuwe gebruiker</newOwner>
 	<newPassword>Nieuw Wachtwoord</newPassword>
@@ -913,6 +916,7 @@
 	<winInfo2>Het (?) icoontje geeft u toegang tot hulp. De output zal worden getoond in het bronvenster van GeoNetwork.</winInfo2>
 	<wwwlink>Web link</wwwlink>
 	<xmlInsert>Importeer XML metadata</xmlInsert>
+	<xmlUpdate>Update XML metadata</xmlUpdate>
 	<xmlInsertTitle>XML Metadata Invoegen</xmlInsertTitle>
 	<xmlTab>XML weergave</xmlTab>
 	<inspireTab>INSPIRE weergave</inspireTab>

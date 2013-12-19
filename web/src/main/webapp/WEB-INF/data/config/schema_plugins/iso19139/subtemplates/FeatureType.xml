@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gfc:featureType xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco">
+	<gfc:FC_FeatureType>
+		<gfc:typeName>
+			<gco:LocalName></gco:LocalName>
+		</gfc:typeName>
+		<gfc:definition>
+			<gco:CharacterString></gco:CharacterString>
+		</gfc:definition>
+		<gfc:code>
+			<gco:CharacterString></gco:CharacterString>
+		</gfc:code>
+		<gfc:isAbstract>
+			<gco:Boolean>false</gco:Boolean>
+		</gfc:isAbstract>
+		<gfc:aliases><gco:LocalName></gco:LocalName></gfc:aliases>
+		<gfc:featureCatalogue uuidref=""/>
+		<gfc:carrierOfCharacteristics>
+			<gfc:FC_FeatureAttribute>
+				<gfc:memberName>
+					<gco:LocalName/>
+				</gfc:memberName>
+				<gfc:definition>
+					<gco:CharacterString/>
+				</gfc:definition>
+				<gfc:cardinality>
+					<gco:Multiplicity>
+						<gco:range>
+							<gco:MultiplicityRange>
+								<gco:lower>
+									<gco:Integer>1</gco:Integer>
+								</gco:lower>
+								<gco:upper>
+									<gco:UnlimitedInteger isInfinite="false" xsi:nil="false">1</gco:UnlimitedInteger>
+								</gco:upper>
+							</gco:MultiplicityRange>
+						</gco:range>
+					</gco:Multiplicity>
+				</gfc:cardinality>
+				<gfc:code>
+					<gco:CharacterString/>
+				</gfc:code>
+				<gfc:valueType>
+					<gco:TypeName>
+						<gco:aName>
+							<gco:CharacterString/>
+						</gco:aName>
+					</gco:TypeName>
+				</gfc:valueType>
+				<gfc:listedValue>
+					<gfc:FC_ListedValue>
+						<gfc:label>
+							<gco:CharacterString/>
+						</gfc:label>
+						<gfc:code>
+							<gco:CharacterString/>
+						</gfc:code>
+						<gfc:definition>
+							<gco:CharacterString/>
+						</gfc:definition>
+					</gfc:FC_ListedValue>
+				</gfc:listedValue>
+			</gfc:FC_FeatureAttribute>
+		</gfc:carrierOfCharacteristics>
+	</gfc:FC_FeatureType>
+</gfc:featureType>

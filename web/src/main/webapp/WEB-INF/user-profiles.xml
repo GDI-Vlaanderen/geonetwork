@@ -145,6 +145,8 @@
 		<allow service="logo.set"/>
 
         <allow service="debug.openconnection.accessors"/>
+		<allow service="metadata.xmlupdate.form"/>
+		<allow service="metadata.xmlupdate"/>
 	</profile>
 
 	<!-- ====================================================================== -->

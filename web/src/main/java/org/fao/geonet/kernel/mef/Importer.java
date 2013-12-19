@@ -251,7 +251,7 @@ public class Importer {
 				String schema = dm.autodetectSchema(metadata);
 				if (style.equals("_none_")) {
 					if (schema.equals("iso19139")) {
-						md.add(index, Xml.transform(md.get(index), dm.getSchemaDir(schema) + Geonet.File.UPDATE_IMPORT_INFO));
+//						md.add(index, Xml.transform(md.get(index), dm.getSchemaDir(schema) + Geonet.File.UPDATE_IMPORT_INFO));
 					}
 				} else {
 					md.add(index, Xml.transform(md.get(index), stylePath

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * // --------------------------------------------------------------------------
@@ -398,8 +399,31 @@ public class AjaxEditUtils extends EditUtils {
 		Element child = null;
 		MetadataSchema mds = dataManager.getSchema(schema);
 
-		el.addContent(subtemplate);
+//		el.addContent(subtemplate);
 
+		Vector<Element> children = new Vector<Element>();
+
+    	boolean bChildFound = false;
+    	boolean bSubtemplateAdded = false;
+        for (Object element : el.getChildren()) {
+            Element childElement = (Element) element;
+            if (!bSubtemplateAdded && childElement.getQualifiedName().equals(name)) {
+            	bChildFound = true;
+            } else {
+            	if (!bSubtemplateAdded && bChildFound && !childElement.getQualifiedName().equals(name)) {
+                	children.add(subtemplate);
+            		bSubtemplateAdded = true;
+            	}
+            }
+        	children.add(childElement);
+		}
+		//--- remove everything and then add all collected children to the element to assure a correct position for the
+		// new one
+
+		el.removeContent();
+        for (Element element : children) {
+            el.addContent(element);
+        }
         el.addContent(refEl);
 
 		int iRef = editLib.findMaximumRef(md);

@@ -401,7 +401,7 @@ public class Aligner
                     dataMan.validateMetadata(schema, params.getSchemaSchematronMap(), response, context);
 
                 } catch (Exception ex) {
-                    log.info("Ignoring invalid metadata with uuid " + uuid);
+                    log.error("Ignoring invalid metadata with uuid " + uuid /*+ " : " + ex*/);
                     result.doesNotValidate++;
                     return null;
                 }
@@ -410,7 +410,7 @@ public class Aligner
 		}
 		catch(Exception e)
 		{
-			log.warning("Raised exception while getting record : "+ e);
+			log.error("Raised exception while getting record with uuid " + uuid + " : " + e);
 			e.printStackTrace();
 			result.unretrievable++;
 

@@ -142,6 +142,7 @@ public class Geonet {
 		public static final String STYLESHEETS        = "/xsl";
 		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
+		public static final String UPDATE_STYLESHEETS = CONV_STYLESHEETS + "/update";
 		public static final String WFS_STYLESHEETS    = "/convert/WFSToFragments";
 		public static final String DIF_STYLESHEETS    = "/convert/ThreddsDIFToISO";
 		public static final String TDS_STYLESHEETS    = "/convert/ThreddsToFragments";

@@ -140,7 +140,7 @@
 	<!-- Only set metadataStandardName and metadataStandardVersion
 	if not set. -->
 	<xsl:template match="gmd:metadataStandardName[@gco:nilReason='missing' or gco:CharacterString='']" priority="10">
-        <xsl:variable name="service" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
+        <xsl:variable name="service" select="../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
 		<xsl:copy>
 			<xsl:if test="$service">
 				<gco:CharacterString>ISO 19119:2005/Amd 1:2008</gco:CharacterString>
@@ -376,6 +376,23 @@
 				<gmd:codeSpace gco:nilReason="missing">
 					<gco:CharacterString/>
 				</gmd:codeSpace>
+			</xsl:if>
+			<xsl:if test="/root/env/createdFromTemplate='n'">
+				<xsl:apply-templates select="*"/>
+			</xsl:if>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ================================================================= -->
+	<!-- Initialize dataset MD_Identifier if created from template -->
+	<!-- ================================================================= -->
+	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier">
+		<xsl:copy>
+			<xsl:copy-of select="@*" />
+			<xsl:if test="/root/env/createdFromTemplate='y'">
+				<gmd:code>
+					<gco:CharacterString><xsl:value-of select="/root/env/mduuid"/></gco:CharacterString>
+				</gmd:code>
 			</xsl:if>
 			<xsl:if test="/root/env/createdFromTemplate='n'">
 				<xsl:apply-templates select="*"/>

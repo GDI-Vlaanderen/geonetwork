@@ -125,16 +125,14 @@ function radioModalUpdate(div, service, modalbox, title,button) {
         	if (response.status==408 || response.status==504) {
 		    	Ext.MessageBox.alert(OpenLayers.i18n('error'), "Request timeout");
 		        Ext.getCmp('modalWindow').close();
-        	} else {
-		        if(response.responseXML && response.responseXML.getElementsByTagName("error").length > 0) {
-		            var errorst = "";
-		            Ext.each(response.responseXML.getElementsByTagName("error"), 
-		                    function(e) {
-		            	errorst += e.textContent || e.innerText || e.text;});
-		            Ext.MessageBox.alert(OpenLayers.i18n('error'), OpenLayers.i18n(errorst));
-			        Ext.getCmp('modalWindow').close();
-		        }
-	        }
+        	}
+        }
+        if(response.responseXML && response.responseXML.getElementsByTagName("error").length > 0) {
+            var errorst = "";
+            Ext.each(response.responseXML.getElementsByTagName("error"), 
+                    function(e) {
+            	errorst += e.textContent || e.innerText || e.text;});
+            Ext.MessageBox.alert(OpenLayers.i18n('error'), OpenLayers.i18n(errorst));
         }
     }, function(response){
     	if (response.status==408 || response.status==504) {

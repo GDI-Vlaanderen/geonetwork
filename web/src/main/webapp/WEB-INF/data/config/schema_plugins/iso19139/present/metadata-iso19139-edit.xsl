@@ -334,7 +334,8 @@
     a privileges exception.
     -->
 <!--    <xsl:template mode="iso19139" match="srv:operatesOn|gmd:featureCatalogueCitation|gmd:source[name(parent::node())='gmd:LI_ProcessStep' or name(parent::node())='gmd:LI_Lineage']" priority="99">-->
-    <xsl:template mode="iso19139" match="srv:operatesOn|gmd:featureCatalogueCitation|gmd:source[name(parent::node())='gmd:LI_ProcessStep']" priority="99">
+<!--    <xsl:template mode="iso19139" match="srv:operatesOn|gmd:featureCatalogueCitation|gmd:source[name(parent::node())='gmd:LI_ProcessStep']" priority="99">-->
+	<xsl:template mode="iso19139" match="srv:operatesOn|gmd:featureCatalogueCitation" priority="99">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 		<xsl:variable name="mduuidValue" select="./@uuidref"/>
@@ -1876,10 +1877,14 @@
 
             </xsl:when>
             <xsl:otherwise>
-                <xsl:call-template name="iso19139String">
+                <xsl:apply-templates mode="simpleElement" select="gmd:date">
                     <xsl:with-param name="schema" select="$schema"/>
-                    <xsl:with-param name="edit"   select="$edit"/>
-                </xsl:call-template>
+                    <xsl:with-param name="edit"   select="false()"/>
+                </xsl:apply-templates>
+                <xsl:apply-templates mode="iso19139" select="gmd:dateType">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="false()"/>
+                </xsl:apply-templates>
             </xsl:otherwise>
         </xsl:choose>
 
@@ -3097,6 +3102,10 @@
                 <xsl:with-param name="realname"   select="name(.)"/>
             </xsl:call-template>
 		</xsl:for-each>
+        <xsl:apply-templates mode="elementEP" select="gmd:source">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
 	</xsl:template>
 
     <!-- ============================================================================= -->

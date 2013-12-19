@@ -668,7 +668,7 @@ public class SearchManager {
 	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                       String title, boolean workspace) throws Exception {
         synchronized(_indexWriter.MUTEX) {
-            System.out.println("** START SYNCHRONIZED index. Workspace? " + workspace + ", title: " + title);
+//            System.out.println("** START SYNCHRONIZED index. Workspace? " + workspace + ", title: " + title);
 	        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
 	            Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
 	        }
@@ -687,7 +687,7 @@ public class SearchManager {
 	                Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
 	            }
 				_indexWriter.closeWriter();
-	            System.out.println("** END SYNCHRONIZED index. Workspace? " + workspace);
+//	            System.out.println("** END SYNCHRONIZED index. Workspace? " + workspace);
 			}
         }
 		_spatial.writer().index(schemaDir, id, metadata);
