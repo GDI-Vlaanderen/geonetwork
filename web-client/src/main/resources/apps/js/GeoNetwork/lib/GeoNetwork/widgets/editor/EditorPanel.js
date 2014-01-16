@@ -837,8 +837,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Save metadata and remove thumbnail.
      *  
      */
-    saveBeforeRemoveThumbnail: function(filedescription){
-        this.loadUrl('metadata.update.new', false, this.thumbnailRemoveCallback);
+    saveBeforeRemoveThumbnail: function(fileName, fileDescription){
+        this.loadUrl('metadata.update.new', false, function () {this.removeThumbnail(fileName, fileDescription)});
 //        this.validationPanel.expand(true);
     },
     /** api: method[reset]
@@ -963,21 +963,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  
      */
     thumbnailLoadCallback: function(el, success, response, options){
-        if (success) {
-            this.uploadThumbnail();
-        } else {
-            if (!this.managerInitialized) {
-                this.initManager();
-            }
-            this.getError(response);
-        }
-    },
-    /**
-     * After metadata load, use this callback to remove thumbnail
-     * alert on failure.
-     *  
-     */
-    thumbnailRemoveCallback: function(el, success, response, options){
         if (success) {
             this.uploadThumbnail();
         } else {
@@ -1516,11 +1501,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.thumbnailUploadWindow.show();
     },
-    removeThumbnail: function(description){
+    removeThumbnail: function(fileName, fileDescription){
         var panel = this,
             url = this.catalogue.services.mdUnsetThumbnail + '?id=' + this.metadataId + 
-                                            '&version=' + this.versionId + 
-                                            '&type=' + (description === 'thumbnail' ? 'small' : 'large');
+                                            '&version=' + this.versionId + '&fileName=' + encodeURIComponent(fileName) +  
+                                            '&type=' + (fileDescription === 'thumbnail' ? 'small' : 'large');
         
         OpenLayers.Request.GET({
             url: url,

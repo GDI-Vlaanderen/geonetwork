@@ -182,6 +182,14 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
     }
     
+    function getIsTemplate(v, record){
+        if (record.isTemplate) {
+            return record.isTemplate[0].value;
+        } else {
+            return 'n';
+        }
+    }
+
     function getIsHarvested(v, record){
         if (record.isHarvested) {
             return record.isHarvested[0].value;
@@ -359,6 +367,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             name: 'uri',
             mapping: 'uri',
             defaultValue: ''
+        }, {
+            name: 'istemplate',
+            convert: getIsTemplate
         }, {
             name: 'isharvested',
             convert: getIsHarvested

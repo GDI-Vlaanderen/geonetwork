@@ -273,6 +273,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdXMLGetDC: serviceUrl + 'xml_dublin-core',
             mdXMLGetFGDC: serviceUrl + 'xml_fgdc-std',
             mdXMLGet19115: serviceUrl + 'xml_iso19115to19139',
+            mdXMLGet19110: serviceUrl + 'xml_iso19110',
             mdDuplicate: serviceUrl + 'metadata.duplicate.form',
             mdDelete: serviceUrl + 'metadata.delete',
             mdPrint: serviceUrl + 'pdf',
@@ -1099,6 +1100,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             service = this.services.mdXMLGetFGDC;
         } else if (schema === 'iso19115') {
             service = this.services.mdXMLGet19115; // Force ISO19115 record to 19139
+        } else if (schema === 'iso19110') {
+            service = this.services.mdXMLGet19110;
         }
         
         var url = service + '?uuid=' + escape(uuid);
@@ -1125,6 +1128,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             service = this.services.mdXMLGetFGDC + save;
         } else if (schema === 'iso19115') {
             service = this.services.mdXMLGet19115 + save; // Force ISO19115 record to 19139
+        } else if (schema === 'iso19110') {
+            service = this.services.mdXMLGet19110 + save;
         }
 
         var url = service + '?uuid=' + escape(uuid) + '&fromWorkspace=' + fromWorkspace;

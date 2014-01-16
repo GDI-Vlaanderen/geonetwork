@@ -113,9 +113,10 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
     },
     removeThumbnail: function(description){
     	var type = this.thumbnail ? this.thumbnail : description;
+		var fileName = this.thumbnailFileName ? encodeURIComponent(this.thumbnailFileName) : "";
         var panel = this,
             url = this.unsetThumbnail + '?id=' + this.metadataId + 
-                                            '&version=' + this.versionId + 
+                                            '&version=' + this.versionId + '&fileName' + fileName +
                                             '&type=' + (type === 'thumbnail' ? 'small' : 'large');
         
         OpenLayers.Request.GET({
@@ -145,6 +146,7 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
 */
         if (records[0]) {
             this.thumbnail = records[0].get('desc');
+            this.thumbnailFileName = records[0].get('href');
             // Only manage GeoNetwork internal thumbnails. Other thumbnail set using URL MUST be removed from the editor
             if (this.thumbnail === 'thumbnail' || this.thumbnail === 'large_thumbnail') {
                 this.addButton.setDisabled(false);

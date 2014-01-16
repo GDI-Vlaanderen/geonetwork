@@ -42,17 +42,20 @@
 
 						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>
+<!--							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
+							<xsl:with-param name="disabled" select="true()"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>
+<!--							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
+							<xsl:with-param name="disabled" select="true()"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>
+<!--							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
+							<xsl:with-param name="disabled" select="true()"/>
 						</xsl:apply-templates>
 
 						<tr>
@@ -170,7 +173,8 @@
 
 	<xsl:template match="*" mode="group">
 		<xsl:param name="lang"/>
-		<xsl:param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor') and (/root/response/owner='false')"/>
+<!--		<xsl:param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor') and (/root/response/owner='false')"/>-->
+		<xsl:param name="disabled" select="true()"/>
 
 		<xsl:variable name="groupId"  select="id"/>
 		

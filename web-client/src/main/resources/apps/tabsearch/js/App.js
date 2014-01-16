@@ -1355,7 +1355,7 @@ Ext.onReady(function () {
     catalogue = app.getCatalogue();
 
     //overwrite default detail-click action
-    catalogue.metadataShow = function (uuid) {
+    catalogue.metadataShow = function (uuid, isTemplate) {
         //console.log(uuid);
         tabPanel = Ext.getCmp("GNtabs");
         var tabs = tabPanel.find( 'id', uuid );
@@ -1381,7 +1381,7 @@ Ext.onReady(function () {
             var store = GeoNetwork.data.MetadataResultsFastStore();
             var record = store.getAt(store.find('uuid', uuid));
             if (record==null) {
-                catalogue.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                catalogue.kvpSearch("fast=index&_uuid=" + uuid + "&template=" + (Ext.isEmpty(isTemplate)?"n":isTemplate), null, null, null, true, store, null, false);
                 record = store.getAt(store.find('uuid', uuid));
             }
 

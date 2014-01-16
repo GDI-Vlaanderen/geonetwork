@@ -100,9 +100,7 @@ public class    Set implements Service {
         String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
         new File(dataDir).mkdirs();
 
-        removeOldThumbnail(context, id, "large");
-        removeOldThumbnail(context, id, "small");
-        Double scalingFactor = shouldScale(context.getUploadDir() + "/" + file);
+        Double scalingFactor = shouldScale(context.getUploadDir() + file);
 
         if (Math.abs(scalingFactor) > 1) { // We need to make it smaller
             String inFile = context.getUploadDir() + file;
@@ -111,9 +109,6 @@ public class    Set implements Service {
             if(outFile_.exists()) {
                 outFile_.delete();
             }
-/*
-            removeOldThumbnail(context, id, "large");
-*/
             String scalingDir = "width";
             if (scalingFactor < 0) {
                 scalingDir = "height";
@@ -127,14 +122,6 @@ public class    Set implements Service {
             dataMan.setThumbnail(context, id, /*false*/true, file);
         } else {// Image of exactly 120x120. Big thumbnail, no scale
             // or image too small, just upload as it is (small thumbnail)
-/*
-        	String type = "large";
-            if (Math.abs(scalingFactor) < 1) {
-                type = "small";
-            }
-            
-            removeOldThumbnail(context, id, type);
-*/            
             File inFile = new File(context.getUploadDir() + file);
             File outFile = new File(dataDir, file);
             
@@ -282,55 +269,6 @@ public class    Set implements Service {
 	//--- Private methods
 	//---
 	//--------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param context
-     * @param id
-     * @param type
-     * @throws Exception
-     */
-	private void removeOldThumbnail(ServiceContext context, String id, String type) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		DataManager dataMan = gc.getDataManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		Element result = dataMan.getThumbnails(dbms, id);
-
-		if (result == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
-
-		result = result.getChild(type);
-
-		//--- if there is no thumbnail, we return
-
-		if (result == null)
-			return;
-
-		//-----------------------------------------------------------------------
-		//--- remove thumbnail
-
-		dataMan.unsetThumbnail(context, id, type.equals("small"));
-
-		//--- remove file
-		String fileName = result.getText();
-		if (StringUtils.isNotBlank(fileName)) {
-			if (fileName.startsWith("http")) {
-				int iPos = fileName.indexOf(Params.FNAME + "=");
-				if (iPos>-1) {
-					fileName = fileName.substring(iPos + Params.FNAME.length() + 1);
-				}
-			}
-			String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + fileName;
-			File oldFile = new File(file); 
-			if (oldFile.exists() && !oldFile.delete()) {
-				context.error("Error while deleting thumbnail : "+file);
-			}
-		}
-	}
 
     /**
      * TODO javadoc.

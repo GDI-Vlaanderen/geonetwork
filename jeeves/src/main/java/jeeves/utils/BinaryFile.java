@@ -503,6 +503,7 @@ public final class BinaryFile
 
 	private static String getContentType(String fName)
 	{
+		fName = fName.toLowerCase();
 		// standard graphical formats
 		if (fName.endsWith(".gif"))
 			return "image/gif";

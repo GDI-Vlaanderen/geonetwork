@@ -465,6 +465,7 @@
       
       
         <allow service="xml_iso19139_save"/>
+        <allow service="xml_iso19110_save"/>
         <allow service="xml_dublin-core_save"/>
         <allow service="xml_fgdc-std_save"/>
         <allow service="xml_iso19115to19139_save"/>

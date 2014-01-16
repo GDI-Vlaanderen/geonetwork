@@ -30,7 +30,7 @@
     </skos:Concept>
   <!-- Concept list -->
   <skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/VlaamseAdminRegios/Antwerpen">
-    <skos:prefLabel xml:lang="nl">Rrovincie Antwerpen</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Provincie Antwerpen</skos:prefLabel>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
         <gml:lowerCorner>4.1722929999999998 50.9901275</gml:lowerCorner>

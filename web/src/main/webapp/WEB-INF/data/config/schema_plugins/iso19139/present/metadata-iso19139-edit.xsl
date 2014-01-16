@@ -31,11 +31,10 @@
 
 
     <!-- main template - the way into processing iso19139 -->
-    <xsl:template name="metadata-iso19139">
-        <xsl:param name="schema"/>
-        <xsl:param name="edit" select="false()"/>
-        <xsl:param name="embedded"/>
-
+	<xsl:template name="metadata-iso19139">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit" select="false()"/>
+		<xsl:param name="embedded"/>
         <xsl:if test="name(.)!='gmd:MD_BrowseGraphic'">
 	        <xsl:apply-templates mode="iso19139" select="." >
 	            <xsl:with-param name="schema" select="$schema"/>
@@ -43,76 +42,68 @@
 	            <xsl:with-param name="embedded" select="$embedded" />
 	        </xsl:apply-templates>
         </xsl:if>
-        
         <xsl:if test="name(.)='gmd:MD_BrowseGraphic'">
-        
-    	    <xsl:variable name="previousGraphicOverviewSiblingsCount" select="count(../../preceding-sibling::*[name(.) = 'gmd:graphicOverview'])" />
-            <xsl:variable name="uploadedThumbsCount" select="count(../../*/gmd:MD_BrowseGraphic/gmd:fileDescription[gco:CharacterString='large_thumbnail' or gco:CharacterString='thumbnail'])"/>
+    	    <xsl:variable name="previousGraphicOverviewSiblingsCount" select="count(../preceding-sibling::*[name(.) = 'gmd:graphicOverview'])" />
+    	    <xsl:variable name="followingGraphicOverviewSiblingsCount" select="count(../following-sibling::*[name(.) = 'gmd:graphicOverview'])" />
             <xsl:variable name="fileName" select="gmd:fileName/gco:CharacterString"/>
 			<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
             <xsl:variable name="url" select="if (contains($fileName, '://') or not(string(normalize-space($fileName))))
                                                 then $fileName
                                                 else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
-			<xsl:variable name="isUploadedThumb" select="string($fileDescr)='large_thumbnail' or string($fileDescr)='thumbnail'"/>
+			<xsl:variable name="isUploadedThumb" select="(string($fileDescr)='large_thumbnail' or string($fileDescr)='thumbnail') and contains($fileName,concat('http://',/root/gui/env/server/host))"/>
 
 	        <xsl:apply-templates mode="iso19139" select="." >
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="not($isUploadedThumb)"/>
 	            <xsl:with-param name="embedded" select="$embedded" />
 	        </xsl:apply-templates>
-            <tr><td>
-	             <xsl:choose>
-	                 <xsl:when test="string($fileName)">
-	                     <xsl:variable name="langId">
-	                         <xsl:call-template name="getLangId">
-	                             <xsl:with-param name="langGui" select="/root/gui/language" />
-	                             <xsl:with-param name="md"
-	                                             select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
-	                         </xsl:call-template>
-	                     </xsl:variable>
-	
-	                     <xsl:variable name="imageTitle">
-	                         <xsl:choose>
-	                             <xsl:when test="gmd:fileDescription/gco:CharacterString and not(gmd:fileDescription/@gco:nilReason)">
-	                                 <xsl:for-each select="gmd:fileDescription">
-	                                     <xsl:call-template name="localised">
-	                                         <xsl:with-param name="langId" select="$langId"/>
-	                                     </xsl:call-template>
-	                                 </xsl:for-each>
-	                             </xsl:when>
-	                             <xsl:otherwise>
-	                                 <!-- Filename is not multilingual -->
-	                                 <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
-	                             </xsl:otherwise>
-	                         </xsl:choose>
-	                     </xsl:variable>
-	
-	
-                         <div class="md-view">
-                             <a rel="lightbox-viewset" href="{$url}" target="_blank">
-                                 <img class="logo" src="{$url}">
-                                     <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-                                     <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-                                 </img>
-                             </a>
-                         </div>
+			<xsl:if test="string($fileName)">
+	            <tr>
+	            	<td>
+						<xsl:variable name="langId">
+						    <xsl:call-template name="getLangId">
+						        <xsl:with-param name="langGui" select="/root/gui/language" />
+						        <xsl:with-param name="md"
+						                        select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
+						    </xsl:call-template>
+						</xsl:variable>
+						
+						<xsl:variable name="imageTitle">
+							<xsl:choose>
+							    <xsl:when test="gmd:fileDescription/gco:CharacterString and not(gmd:fileDescription/@gco:nilReason)">
+							        <xsl:for-each select="gmd:fileDescription">
+							            <xsl:call-template name="localised">
+							                <xsl:with-param name="langId" select="$langId"/>
+							            </xsl:call-template>
+							        </xsl:for-each>
+							    </xsl:when>
+							    <xsl:otherwise>
+							        <!-- Filename is not multilingual -->
+							        <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
+							    </xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						<div class="md-view">
+						    <a rel="lightbox-viewset" href="{$url}" target="_blank">
+						        <img class="logo" src="{$url}">
+						            <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+						            <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+						        </img>
+						    </a>
+						</div>
 						<xsl:if test="$isUploadedThumb">
-							<a href="#" onclick="javascript:Ext.getCmp('editorPanel').removeThumbnail('{string($fileDescr)}');">Voorbeeld verwijderen</a>
+							<a href="#" onclick="javascript:Ext.getCmp('editorPanel').saveBeforeRemoveThumbnail('{string($fileName)}','{string($fileDescr)}');">Voorbeeldweergave verwijderen</a>
 						</xsl:if>
-	
-	                     <xsl:if test="$uploadedThumbsCount=0 and $previousGraphicOverviewSiblingsCount=0">
-	                         <a href="#" onclick="javascript:Ext.getCmp('editorPanel').uploadThumbnail();">Voorbeeld toevoegen</a>
-	                     </xsl:if>
-	                 </xsl:when>
-	
-	                 <xsl:otherwise>
-	                     <xsl:if test="$uploadedThumbsCount=0 and $previousGraphicOverviewSiblingsCount=0">
-		                     <a href="#" onclick="javascript:Ext.getCmp('editorPanel').uploadThumbnail();">Voorbeeld toevoegen</a>
-	                     </xsl:if>
-	                 </xsl:otherwise>
-	             </xsl:choose>
-	
-	         </td></tr>
+					</td>
+				</tr>
+			</xsl:if>
+			<xsl:if test="$followingGraphicOverviewSiblingsCount=0">
+	            <tr>
+	            	<td>
+						<a href="#" onclick="javascript:Ext.getCmp('editorPanel').saveBeforeUploadThumbnail();">Voorbeeldweergave toevoegen</a>
+					</td>
+				</tr>
+			</xsl:if>
         </xsl:if>
     </xsl:template>
 
@@ -160,11 +151,14 @@
       are managed in then thumbnail popup. Others could be valid URL pointing to
       an image available on the Internet.
     -->
-    <!--=====================================================================
 
- <xsl:template mode="iso19139"
-   match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"
-   priority="20" />-->
+ 	<xsl:template mode="iso19139" match="gmd:fileDescription[gco:CharacterString='thumbnail' or gco:CharacterString='large_thumbnail']" priority="20">
+		<xsl:apply-templates mode="simpleElement" select=".">
+		    <xsl:with-param name="schema" select="$schema"/>
+		    <xsl:with-param name="edit"   select="true()"/>
+		    <xsl:with-param name="text"   select="'voorbeeldweergave'"/>
+		</xsl:apply-templates>
+ 	</xsl:template>
 
 
 	<xsl:template mode="iso19139" match="gmd:report">
@@ -4370,56 +4364,65 @@
             </xsl:when>
 
             <xsl:otherwise>
-                <xsl:apply-templates mode="simpleElement"
-                                     select=".">
-                    <xsl:with-param name="schema" select="$schema" />
-                    <xsl:with-param name="text">&#160;
-
-
-                        <xsl:variable name="langId">
-                            <xsl:call-template name="getLangId">
-                                <xsl:with-param name="langGui" select="/root/gui/language" />
-                                <xsl:with-param name="md"
-                                                select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
-                            </xsl:call-template>
-                        </xsl:variable>
-
-                        <xsl:variable name="imageTitle">
-                            <xsl:choose>
-                                <xsl:when test="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString
-                      and not(gmd:MD_BrowseGraphic/gmd:fileDescription/@gco:nilReason)">
-                                    <xsl:for-each select="gmd:MD_BrowseGraphic/gmd:fileDescription">
-                                        <xsl:call-template name="localised">
-                                            <xsl:with-param name="langId" select="$langId"/>
-                                        </xsl:call-template>
-                                    </xsl:for-each>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <!-- Filename is not multilingual -->
-                                    <xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:variable>
-
-                        <xsl:variable name="fileName" select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
-                        <xsl:variable name="url" select="if (contains($fileName, '://') or not(string(normalize-space($fileName))))
-                                                then $fileName
-                                                else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
-
-                       	<xsl:if test="not($url='')">
-	                        <div class="md-view">
-		                            <a rel="lightbox-viewset" href="{$url}" target="thumbnail-view">
-		                                <img class="logo" src="{$url}">
-		                                    <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-		                                    <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-		                                </img>
-		                            </a>
-		                            <br/>
-		                            <span class="thumbnail"><a href="{$url}" target="thumbnail-view"><xsl:value-of select="$imageTitle"/></a></span>
-	                        </div>
-                        </xsl:if>
-                    </xsl:with-param>
-                </xsl:apply-templates>
+		        <xsl:if test="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString and not(gmd:MD_BrowseGraphic/gmd:fileName/@gco:nilReason)">
+	                <xsl:apply-templates mode="simpleElement"
+	                                     select=".">
+	                    <xsl:with-param name="schema" select="$schema" />
+	                    <xsl:with-param name="text">&#160;
+	
+	
+	                        <xsl:variable name="langId">
+	                            <xsl:call-template name="getLangId">
+	                                <xsl:with-param name="langGui" select="/root/gui/language" />
+	                                <xsl:with-param name="md"
+	                                                select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
+	                            </xsl:call-template>
+	                        </xsl:variable>
+	
+	                        <xsl:variable name="imageTitle">
+	                            <xsl:choose>
+	                                <xsl:when test="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString
+	                      and not(gmd:MD_BrowseGraphic/gmd:fileDescription/@gco:nilReason)">
+	                                    <xsl:for-each select="gmd:MD_BrowseGraphic/gmd:fileDescription">
+	                                    	<xsl:choose>
+										 		<xsl:when test="gco:CharacterString='thumbnail' or gco:CharacterString='large_thumbnail'">
+												    <xsl:value-of select="'voorbeeldweergave'"/>
+												</xsl:when>
+				                                <xsl:otherwise>
+			                                        <xsl:call-template name="localised">
+			                                            <xsl:with-param name="langId" select="$langId"/>
+			                                        </xsl:call-template>
+			                                    </xsl:otherwise>
+	                                    	</xsl:choose>
+	                                    </xsl:for-each>
+	                                </xsl:when>
+	                                <xsl:otherwise>
+	                                    <!-- Filename is not multilingual -->
+	                                    <xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+	                                </xsl:otherwise>
+	                            </xsl:choose>
+	                        </xsl:variable>
+	
+	                        <xsl:variable name="fileName" select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+	                        <xsl:variable name="url" select="if (contains($fileName, '://') or not(string(normalize-space($fileName))))
+	                                                then $fileName
+	                                                else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
+	
+	                       	<xsl:if test="not($url='')">
+		                        <div class="md-view">
+			                            <a rel="lightbox-viewset" href="{$url}" target="thumbnail-view">
+			                                <img class="logo" src="{$url}">
+			                                    <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+			                                    <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+			                                </img>
+			                            </a>
+			                            <br/>
+			                            <span class="thumbnail"><a href="{$url}" target="thumbnail-view"><xsl:value-of select="$imageTitle"/></a></span>
+		                        </div>
+	                        </xsl:if>
+	                    </xsl:with-param>
+	                </xsl:apply-templates>
+	            </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

@@ -566,10 +566,10 @@ public class LuceneSearcher extends MetaSearcher {
                     if (userSession.isAuthenticated()) {
                         if (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
                             request.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
-}
+                        }
                         else if (userSession.getProfile().equals(Geonet.Profile.REVIEWER)) {
                             request.addContent(new Element(SearchParameter.ISREVIEWER).addContent("true"));
-}
+                        }	
                     }
                 }
             }

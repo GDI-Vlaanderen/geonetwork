@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -40,6 +41,7 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
@@ -234,8 +236,23 @@ public class SearchController {
 	try	{
 		//--- get metadata from DB
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        AccessManager accessMan = gc.getAccessManager();
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        Element res = null;
+        boolean getWorkspaceCopy = accessMan.canEdit(context, id) && gc.getDataManager().isLocked(dbms, id);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element res = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+        if(getWorkspaceCopy) {
+        	if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+            	Log.debug(Geonet.CSW_SEARCH, "SEARCH RESULT FROM WORKSPACE: " + id);
+        	}
+            res = gc.getDataManager().getMetadataFromWorkspace(context, id, forEditing, withValidationErrors, keepXlinkAttributes, true);
+        }
+        else {
+            res = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+            	Log.debug(Geonet.CSW_SEARCH, "SEARCH RESULT FROM METADATA: " + id);
+            }
+        }
 		SchemaManager scm = gc.getSchemamanager();
 		if (res==null) {
             return null;

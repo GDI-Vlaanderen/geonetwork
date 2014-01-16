@@ -63,6 +63,7 @@ public class Geonet {
 		public static final String EXTRACT_DATE_MODIFIED = "extract-date-modified.xsl";
 		public static final String SET_UUID            = "set-uuid.xsl";
 		public static final String EXTRACT_THUMBNAILS  = "extract-thumbnails.xsl";
+		public static final String EXTRACT_THUMBNAIL  = "extract-thumbnail.xsl";
 		public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
 		public static final String SET_DATACOMMONS     = "set-datacommons.xsl";
 		public static final String SET_THUMBNAIL       = "set-thumbnail.xsl";

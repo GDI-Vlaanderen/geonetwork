@@ -29,6 +29,8 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -37,6 +39,7 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.io.File;
+import java.net.URLDecoder;
 
 /**
  * TODO Javadoc.
@@ -67,11 +70,14 @@ public class Unset implements Service {
      */
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		String id      = Util.getParam(params, Params.ID);
+		String fileName = Util.getParam(params, Params.FILENAME);
 		String type    = Util.getParam(params, Params.TYPE);
 
+		if (StringUtils.isNotBlank(fileName)) {
+			fileName = URLDecoder.decode(fileName,"UTF-8");
+		}
 		Lib.resource.checkEditPrivilege(context, id);
 
-        String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
 		//-----------------------------------------------------------------------
 		//--- extract thumbnail filename
 
@@ -79,23 +85,23 @@ public class Unset implements Service {
 		DataManager dataMan = gc.getDataManager();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Element result = dataMan.getThumbnails(dbms, id);
+		Element result = dataMan.getThumbnail(dbms, id, fileName, type.equals("small"));
 
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);
 		
-		result = result.getChild(type);
+		result = result.getChild("fileName");
 
 		if (result == null)
 			throw new OperationAbortedEx("Metadata has no thumbnail", id);
 
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
+		dataMan.unsetThumbnail(context, id, fileName, type.equals("small"));
 
-		//-----------------------------------------------------------------------
-		//--- remove thumbnail
+//		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
 
-		dataMan.unsetThumbnail(context, id, type.equals("small"));
-		
+
+/*		
+        String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
 		if(file.contains("fname")){
 		    file = file.substring(file.indexOf("fname") + 6);
 		    file = dataDir + "/" + file;
@@ -109,63 +115,11 @@ public class Unset implements Service {
             if(context.isDebug())
 			context.debug("Thumbnail does not exist: " + file);
 		}
-
+*/
 		Element response = new Element("a");
 		response.addContent(new Element("id").setText(id));
 
 		return response;
 	}
 
-    /**
-     * Remove thumbnail images.
-     * (Useful for harvester which can not edit metadata but could have set up a thumbnail on harvesting).
-     * @param id
-     * @param type
-     * @param context
-     * @throws Exception
-     */
-	public void removeThumbnailFile (String id,  String type, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		DataManager dataMan = gc.getDataManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		Element result = dataMan.getThumbnails(dbms, id);
-		
-		if (result == null)
-			throw new OperationAbortedEx("Metadata not found", id);
-		
-		if (type == null) {
-			remove (result, "thumbnail", id, context);
-			remove (result, "large_thumbnail", id, context);
-		} else {
-			remove (result, type, id, context);
-		}
-		
-	}
-
-    /**
-     * TODO Javadoc.
-     *
-     * @param result
-     * @param type
-     * @param id
-     * @param context
-     * @throws Exception
-     */
-	private void remove (Element result, String type, String id, ServiceContext context) throws Exception {
-		
-		result = result.getChild(type);
-		
-		if (result == null)
-			throw new OperationAbortedEx("Metadata has no thumbnail", id);
-
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
-		
-		if (!new File(file).delete())
-			context.error("Error while deleting thumbnail : "+file);
-
-	} 
-
-}
+ }

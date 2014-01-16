@@ -71,7 +71,8 @@
             <xsl:apply-templates select="gmd:status"/>
             <xsl:apply-templates select="gmd:pointOfContact"/>
             <xsl:apply-templates select="gmd:resourceMaintenance"/>
-            <xsl:apply-templates select="gmd:graphicOverview[not(gmd:MD_BrowseGraphic/gmd:fileDescription) or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString != /root/env/type]"/>
+<!--            <xsl:apply-templates select="gmd:graphicOverview[not(gmd:MD_BrowseGraphic/gmd:fileDescription) or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString != /root/env/type]"/>-->
+            <xsl:apply-templates select="gmd:graphicOverview"/>
 
             <xsl:call-template name="fill"/>
 
@@ -101,7 +102,8 @@
             <xsl:apply-templates select="gmd:status"/>
             <xsl:apply-templates select="gmd:pointOfContact"/>
             <xsl:apply-templates select="gmd:resourceMaintenance"/>
-            <xsl:apply-templates select="gmd:graphicOverview[not(gmd:MD_BrowseGraphic/gmd:fileDescription) or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString != /root/env/type]"/>
+<!--            <xsl:apply-templates select="gmd:graphicOverview[not(gmd:MD_BrowseGraphic/gmd:fileDescription) or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString != /root/env/type]"/>-->
+            <xsl:apply-templates select="gmd:graphicOverview"/>
 
             <xsl:call-template name="fill"/>
 

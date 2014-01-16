@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Revision 1.0.1 op 17/12/2013
+	Onder gmd:aggregateDataSetName/gmd:CI_Citation gmd:edition en gmd:identifier toegevoegd
+	Onder gmd:aggregateDataSetIdentifier RS_Identifier vervangen door MD_Identifier en codespace child verwijderd
+-->
 <gmd:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
 	<gmd:fileIdentifier>
 		<gco:CharacterString/>
@@ -99,7 +104,7 @@
 			<gmd:citation>
 				<gmd:CI_Citation>
 					<gmd:title>
-						<gco:CharacterString>Metadata-sjabloon voor &lt;b&gt; datasets &lt;/b&gt; v1.0, conform GDI-Vlaanderen Best Practices v1.0</gco:CharacterString>
+						<gco:CharacterString>Metadata-sjabloon voor &lt;b&gt; datasets &lt;/b&gt; v1.0.1, conform GDI-Vlaanderen Best Practices v1.0</gco:CharacterString>
 					</gmd:title>
 					<gmd:alternateTitle>
 						<gco:CharacterString/>
@@ -433,17 +438,24 @@
 									</gmd:dateType>
 								</gmd:CI_Date>
 							</gmd:date>
+							<gmd:edition>
+								<gco:CharacterString/>
+							</gmd:edition>
+							<gmd:identifier>
+								<gmd:MD_Identifier>
+									<gmd:code>
+										<gco:CharacterString/>
+									</gmd:code>
+								</gmd:MD_Identifier>
+							</gmd:identifier>
 						</gmd:CI_Citation>
 					</gmd:aggregateDataSetName>
 					<gmd:aggregateDataSetIdentifier>
-						<gmd:RS_Identifier>
+						<gmd:MD_Identifier>
 							<gmd:code>
 								<gco:CharacterString/>
 							</gmd:code>
-							<gmd:codeSpace>
-								<gco:CharacterString/>
-							</gmd:codeSpace>
-						</gmd:RS_Identifier>
+						</gmd:MD_Identifier>
 					</gmd:aggregateDataSetIdentifier>
 					<gmd:associationType>
 						<gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#DS_AssociationTypeCode" codeListValue=""/>

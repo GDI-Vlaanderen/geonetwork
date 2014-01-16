@@ -13,7 +13,7 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString = /root/env/type]"/>
+	<xsl:template match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString = /root/env/fileName and gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString = /root/env/type]"/>
 
 	<!-- ================================================================= -->
 

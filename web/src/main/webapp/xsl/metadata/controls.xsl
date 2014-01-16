@@ -93,8 +93,11 @@
 
 
       <!-- remove button -->
+	<xsl:variable name="fileName" select="gmd:fileName/gco:CharacterString"/>
+	<xsl:variable name="fileDescr" select="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString"/>
+	<xsl:variable name="isUploadedThumb" select="(string($fileDescr)='large_thumbnail' or string($fileDescr)='thumbnail') and contains($fileName,concat('http://',/root/gui/env/server/host))"/>
       <xsl:choose>
-        <xsl:when test="normalize-space($removeLink) and (name(.)!='gmd:graphicOverview' or not(gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail'))">
+        <xsl:when test="normalize-space($removeLink) and (name(.)!='gmd:graphicOverview' or not($isUploadedThumb))">
           <xsl:variable name="linkTokens" select="tokenize($removeLink,'!')"/>
           <xsl:text> </xsl:text>
           <xsl:choose>

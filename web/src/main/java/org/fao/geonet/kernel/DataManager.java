@@ -1246,6 +1246,7 @@ public class DataManager {
      * @throws Exception
      */
 	private synchronized Element getXSDXmlReport(String schema, Element md) {
+        System.out.println("** At begin of synchronized method getXSDXmlReport.");
 		// NOTE: this method assumes that enumerateTree has NOT been run on the metadata
 		ErrorHandler errorHandler = new ErrorHandler();
 		errorHandler.setNs(Edit.NAMESPACE);
@@ -1289,6 +1290,7 @@ public class DataManager {
 				}
 			}
 		}
+        System.out.println("** At end of synchronized method getXSDXmlReport.");
 		return xsdErrors;
 	}
 
@@ -2282,7 +2284,9 @@ public class DataManager {
 	//	dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", owner, groupOwner, id);
 	//}
     public synchronized void updateMetadataOwner(Dbms dbms, String id, String owner) throws Exception {
+        System.out.println("** At begin of synchronized method updateMetadataOwner.");
         dbms.execute("UPDATE Metadata SET owner=? WHERE id=?", owner, id);
+        System.out.println("** At end of synchronized method updateMetadataOwner.");
     }
 
     /**
@@ -2304,6 +2308,7 @@ public class DataManager {
 	public synchronized boolean updateMetadata(ServiceContext context, Dbms dbms, String id, Element md,
                                                boolean validate, boolean ufo, boolean index, String lang,
                                                String changeDate, boolean updateDateStamp) throws Exception {
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At begin of synchronized method updateMetadata.");
         Log.debug(Geonet.DATA_MANAGER, "updating metadata");
         //System.out.println("updateMetadata");
 
@@ -2347,6 +2352,7 @@ public class DataManager {
                 indexMetadata(dbms, id, false, workspace, true);
             }
 		}
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At end of synchronized method updateMetadata.");
 		return true;
 	}
 
@@ -2360,6 +2366,7 @@ public class DataManager {
      */
     public synchronized void moveFromWorkspaceToMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
 
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At begin of synchronized method moveFromWorkspaceToMetadata.");
         Log.debug(Geonet.DATA_MANAGER, "moving metadata from workspace to metadata");
         Element md = getMetadataFromWorkspace(context, id, false, false, false, false);
         // this is OK, because this method could be invoked e.g. when status is set to APPROVED but earlier status was
@@ -2377,6 +2384,7 @@ public class DataManager {
         unLockMetadata(dbms, id);
         updateMetadata(context, dbms, id, md, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
         deleteFromWorkspace(dbms, id);
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At end of synchronized method moveFromWorkspaceToMetadata.");
     }
 
     /**
@@ -2387,10 +2395,12 @@ public class DataManager {
      * @throws Exception hmm
      */
     public synchronized void deleteFromWorkspace(Dbms dbms, String id) throws Exception{
+        System.out.println("** At begin of synchronized method deleteFromWorkspace.");
         Log.debug(Geonet.DATA_MANAGER, "deleting metadata from workspace");
         xmlSerializer.deleteFromWorkspace(dbms, id);
         boolean workspace = true;
         searchMan.delete(LuceneIndexField._ID, id, workspace);
+        System.out.println("** At end of synchronized method deleteFromWorkspace.");
     }
 
     /**
@@ -2411,6 +2421,7 @@ public class DataManager {
     public synchronized boolean updateMetadataWorkspace(ServiceContext context, Dbms dbms, String id, Element md,
                                                boolean validate, boolean ufo, boolean index, String lang,
                                                String changeDate, boolean updateDateStamp) throws Exception {
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At begin of synchronized method updateMetadataWorkspace.");
         //System.out.println("updateMetadataWorkspace");
         // when invoked from harvesters, session is null?
         UserSession session = context.getUserSession();
@@ -2445,6 +2456,7 @@ public class DataManager {
                 indexMetadata(dbms, id, false, workspace, true);
             }
 		}
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At end of synchronized method updateMetadataWorkspace.");
         return true;
     }
 
@@ -2841,6 +2853,7 @@ public class DataManager {
      * @throws Exception
      */
 	public synchronized void deleteMetadataGroup(ServiceContext context, Dbms dbms, String id) throws Exception {
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At begin of synchronized method deleteMetadataGroup.");
 		//--- remove operations
 		deleteMetadataOper(dbms, id, false);
 
@@ -2860,6 +2873,7 @@ public class DataManager {
 		searchMan.deleteGroup(LuceneIndexField._ID, id, workspace);
         workspace = true;
         searchMan.deleteGroup(LuceneIndexField._ID, id, workspace);
+        System.out.println(context.getResourceManager().hashCode() + "-THREAD-" + Thread.currentThread().getId() + "-" + Thread.currentThread().getName() + "-" + context.getService() + ":** At end of synchronized method deleteMetadataGroup.");
     }
 
     /**
@@ -2929,6 +2943,44 @@ public class DataManager {
 	}
 
     /**
+    *
+    * @param dbms
+    * @param id
+    * @return
+    * @throws Exception
+    */
+	public Element getThumbnail(Dbms dbms, String id, String fileName, boolean small) throws Exception {
+
+	    Element md = xmlSerializer.select(dbms, "Workspace", id);
+
+	    if (md == null) {
+	      md = xmlSerializer.select(dbms, "Metadata", id);
+	    }
+
+		if (md == null)
+			return null;
+
+		md.detach();
+
+		String schema = getMetadataSchema(dbms, id);
+
+		//--- do an XSL  transformation
+		String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_THUMBNAIL;
+
+		Element env = new Element("env");
+        env.addContent(new Element("type").setText(small ? "thumbnail" : "large_thumbnail"));
+        env.addContent(new Element("fileName").setText(fileName));
+		//--- setup root element
+		Element root = new Element("root");
+		root.addContent(md);
+		root.addContent(env);
+		Element result = Xml.transform(root, styleSheet);
+		result.addContent(new Element("id").setText(id));
+
+		return result;
+	}
+
+    /**
      *
      * @param context
      * @param id
@@ -2963,8 +3015,9 @@ public class DataManager {
      * @param small
      * @throws Exception
      */
-	public void unsetThumbnail(ServiceContext context, String id, boolean small) throws Exception {
+	public void unsetThumbnail(ServiceContext context, String id, String fileName, boolean small) throws Exception {
 		Element env = new Element("env");
+        env.addContent(new Element("fileName").setText(fileName));
 
 		manageThumbnail(context, id, small, env, Geonet.File.UNSET_THUMBNAIL);
 	}

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Revision 1.0.1 op 17/12/2013
+	Onder gmd:aggregateDataSetName/gmd:CI_Citation gmd:edition en gmd:identifier toegevoegd
+	Onder gmd:aggregateDataSetIdentifier RS_Identifier vervangen door MD_Identifier en codespace child verwijderd
+-->
 <gmd:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
 	<gmd:fileIdentifier>
 		<gco:CharacterString/>
@@ -9,14 +14,12 @@
 	<gmd:characterSet>
 		<gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8">utf8</gmd:MD_CharacterSetCode>
 	</gmd:characterSet>
-	<gmd:parentIdentifier>
-		<gco:CharacterString/>
-	</gmd:parentIdentifier>
+	<gmd:parentIdentifier><gco:CharacterString></gco:CharacterString></gmd:parentIdentifier>
 	<gmd:hierarchyLevel>
-		<gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+		<gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="series">series</gmd:MD_ScopeCode>
 	</gmd:hierarchyLevel>
 	<gmd:hierarchyLevelName>
-		<gco:CharacterString>dataset</gco:CharacterString>
+		<gco:CharacterString>datasetserie</gco:CharacterString>
 	</gmd:hierarchyLevelName>
 	<gmd:contact>
 		<gmd:CI_ResponsibleParty>
@@ -99,7 +102,7 @@
 			<gmd:citation>
 				<gmd:CI_Citation>
 					<gmd:title>
-						<gco:CharacterString>Metadata-sjabloon voor &lt;b&gt; datasets &lt;/b&gt; v1.0, conform GDI-Vlaanderen Best Practices v1.0</gco:CharacterString>
+						<gco:CharacterString>Metadata-sjabloon voor &lt;b&gt; datasetseries &lt;/b&gt; v1.0.1, conform GDI-Vlaanderen Best Practices v1.0</gco:CharacterString>
 					</gmd:title>
 					<gmd:alternateTitle>
 						<gco:CharacterString/>
@@ -111,7 +114,7 @@
 							</gmd:date>
 							<gmd:dateType>
 								<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue=""/>
-							</gmd:dateType>
+							</gmd:dateType>	
 						</gmd:CI_Date>
 					</gmd:date>
 					<gmd:edition>
@@ -129,7 +132,9 @@
 					</gmd:identifier>
 					<gmd:series>
 						<gmd:CI_Series>
-							<gmd:name><gco:CharacterString></gco:CharacterString></gmd:name>
+							<gmd:name>
+								<gco:CharacterString/>
+							</gmd:name>
 						</gmd:CI_Series>
 					</gmd:series>
 				</gmd:CI_Citation>
@@ -219,6 +224,9 @@
 					<gmd:keyword>
 						<gco:CharacterString/>
 					</gmd:keyword>
+					<gmd:type>
+						<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme">theme</gmd:MD_KeywordTypeCode>
+					</gmd:type>
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
 							<gmd:title>
@@ -246,6 +254,9 @@
 					<gmd:keyword>
 						<gco:CharacterString/>
 					</gmd:keyword>
+					<gmd:type>
+						<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue=""/>
+					</gmd:type>
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
 							<gmd:title>
@@ -257,7 +268,7 @@
 										<gco:Date>2010-01-13</gco:Date>
 									</gmd:date>
 									<gmd:dateType>
-										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/cCodelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
 									</gmd:dateType>
 								</gmd:CI_Date>
 							</gmd:date>
@@ -289,30 +300,24 @@
 					</gmd:thesaurusName>
 				</gmd:MD_Keywords>
 			</gmd:descriptiveKeywords>
-			<gmd:descriptiveKeywords>
-				<gmd:MD_Keywords>
-					<gmd:keyword>
-						<gco:CharacterString/>
-					</gmd:keyword>
-					<gmd:thesaurusName>
-						<gmd:CI_Citation>
-							<gmd:title>
-								<gco:CharacterString>GDI-Vlaanderen Trefwoorden</gco:CharacterString>
-							</gmd:title>
-							<gmd:date>
-								<gmd:CI_Date>
-									<gmd:date>
-										<gco:Date>2013-09-16</gco:Date>
-									</gmd:date>
-									<gmd:dateType>
-										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
-									</gmd:dateType>
-								</gmd:CI_Date>
-							</gmd:date>
-						</gmd:CI_Citation>
-					</gmd:thesaurusName>
-				</gmd:MD_Keywords>
-			</gmd:descriptiveKeywords>
+			<gmd:descriptiveKeywords><gmd:MD_Keywords>
+				<gmd:keyword><gco:CharacterString></gco:CharacterString></gmd:keyword>
+				<gmd:thesaurusName>
+					<gmd:CI_Citation>
+						<gmd:title><gco:CharacterString>GDI-Vlaanderen Trefwoorden</gco:CharacterString></gmd:title>
+						<gmd:date>
+							<gmd:CI_Date>
+								<gmd:date>
+									<gco:Date>2013-09-16</gco:Date>
+								</gmd:date>
+								<gmd:dateType>
+									<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+								</gmd:dateType>
+							</gmd:CI_Date>
+						</gmd:date>
+					</gmd:CI_Citation>
+				</gmd:thesaurusName>
+			</gmd:MD_Keywords></gmd:descriptiveKeywords>
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
 					<gmd:keyword>
@@ -396,7 +401,7 @@
 						<gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="copyright">copyright</gmd:MD_RestrictionCode>
 					</gmd:accessConstraints>
 					<gmd:useConstraints>
-						<gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue=""/>
+						<gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue=""></gmd:MD_RestrictionCode>
 					</gmd:useConstraints>
 					<gmd:otherConstraints>
 						<gco:CharacterString/>
@@ -433,17 +438,24 @@
 									</gmd:dateType>
 								</gmd:CI_Date>
 							</gmd:date>
+							<gmd:edition>
+								<gco:CharacterString/>
+							</gmd:edition>
+							<gmd:identifier>
+								<gmd:MD_Identifier>
+									<gmd:code>
+										<gco:CharacterString/>
+									</gmd:code>
+								</gmd:MD_Identifier>
+							</gmd:identifier>
 						</gmd:CI_Citation>
 					</gmd:aggregateDataSetName>
 					<gmd:aggregateDataSetIdentifier>
-						<gmd:RS_Identifier>
+						<gmd:MD_Identifier>
 							<gmd:code>
 								<gco:CharacterString/>
 							</gmd:code>
-							<gmd:codeSpace>
-								<gco:CharacterString/>
-							</gmd:codeSpace>
-						</gmd:RS_Identifier>
+						</gmd:MD_Identifier>
 					</gmd:aggregateDataSetIdentifier>
 					<gmd:associationType>
 						<gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#DS_AssociationTypeCode" codeListValue=""/>
@@ -457,13 +469,15 @@
 				<gmd:MD_Resolution>
 					<gmd:equivalentScale>
 						<gmd:MD_RepresentativeFraction>
-							<gmd:denominator><gco:Integer>0</gco:Integer></gmd:denominator>
+							<gmd:denominator>
+								<gco:Integer>0</gco:Integer>
+							</gmd:denominator>
 						</gmd:MD_RepresentativeFraction>
 					</gmd:equivalentScale>
-				</gmd:MD_Resolution>
-			</gmd:spatialResolution>
-			<gmd:spatialResolution>
-				<gmd:MD_Resolution>
+					</gmd:MD_Resolution>
+					</gmd:spatialResolution>
+					<gmd:spatialResolution>
+					<gmd:MD_Resolution>
 					<gmd:distance>
 						<gco:Distance uom="m">0</gco:Distance>
 					</gmd:distance>
@@ -522,8 +536,8 @@
 					</gmd:temporalElement>
 					<gmd:verticalElement>
 						<gmd:EX_VerticalExtent>
-							<gmd:minimumValue/>
-							<gmd:maximumValue/>
+							<gmd:minimumValue></gmd:minimumValue>
+							<gmd:maximumValue></gmd:maximumValue>
 							<gmd:verticalCRS>
 								<gml:VerticalCRS gml:id="VCRS_01">
 									<gml:identifier codeSpace=""/>
@@ -531,7 +545,7 @@
 									<gml:verticalCS nilReason="missing"/>
 									<gml:verticalDatum nilReason="missing"/>
 								</gml:VerticalCRS>
-							</gmd:verticalCRS>
+							</gmd:verticalCRS>							
 						</gmd:EX_VerticalExtent>
 					</gmd:verticalElement>
 				</gmd:EX_Extent>
@@ -657,9 +671,7 @@
 					</gmd:onLine>
 					<gmd:offLine>
 						<gmd:MD_Medium>
-							<gmd:name>
-								<gmd:MD_MediumNameCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_MediumNameCode" codeListValue=""/>
-							</gmd:name>
+							<gmd:name><gmd:MD_MediumNameCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_MediumNameCode" codeListValue=""></gmd:MD_MediumNameCode></gmd:name>
 						</gmd:MD_Medium>
 					</gmd:offLine>
 				</gmd:MD_DigitalTransferOptions>
@@ -722,7 +734,7 @@
 					</gmd:result>
 				</gmd:DQ_DomainConsistency>
 			</gmd:report>
-			<gmd:lineage>
+						<gmd:lineage>
 				<gmd:LI_Lineage>
 					<gmd:statement>
 						<gco:CharacterString/>
@@ -795,9 +807,7 @@
 							</gmd:description>
 							<gmd:sourceStep>
 								<gmd:LI_ProcessStep>
-									<gmd:description>
-										<gco:CharacterString/>
-									</gmd:description>
+									<gmd:description><gco:CharacterString></gco:CharacterString></gmd:description>
 									<gmd:dateTime gco:nilReason="missing"/>
 									<gmd:processor>
 										<gmd:CI_ResponsibleParty>
@@ -865,19 +875,15 @@
 			<gmd:name>
 				<gmd:CI_Citation>
 					<gmd:title>
-						<gco:CharacterString/>
+					<gco:CharacterString></gco:CharacterString>
 					</gmd:title>
 					<gmd:alternateTitle>
-						<gco:CharacterString/>
+					<gco:CharacterString></gco:CharacterString>
 					</gmd:alternateTitle>
 					<gmd:date>
 						<gmd:CI_Date>
-							<gmd:date>
-								<gco:Date xsi:nil="true"/>
-							</gmd:date>
-							<gmd:dateType>
-								<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue=""/>
-							</gmd:dateType>
+							<gmd:date><gco:Date xsi:nil="true"/></gmd:date>
+							<gmd:dateType><gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue=""></gmd:CI_DateTypeCode></gmd:dateType>
 						</gmd:CI_Date>
 					</gmd:date>
 				</gmd:CI_Citation>

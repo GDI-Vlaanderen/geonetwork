@@ -114,7 +114,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
     },
 
     refreshTemplates: function() {
-        GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>' +
+        GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\',\'{istemplate}\');return false;">{title}</a>' +
             '<span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span></h1>';
 
         GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
@@ -422,7 +422,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate('');
 
 GeoNetwork.Templates.Relation = {
         SHORT: ['<div class="{type}">',
-                   '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
+                   '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\',\'{istemplate}\');return false;" title="{abstract}">{title}</a>',
                  '</div>']
 };
 

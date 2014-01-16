@@ -87,6 +87,7 @@ public class Params {
 	public static final String VALIDATE     = "validate";
 	public static final String SELECTED     = "selected";
 	public static final String TYPE         = "type";
+	public static final String FILENAME     = "fileName";
 	public static final String ADDRESS      = "address";
 	public static final String CITY         = "city";
 	public static final String STATE        = "state";
