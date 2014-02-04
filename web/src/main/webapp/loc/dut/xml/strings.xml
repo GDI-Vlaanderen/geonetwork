@@ -301,6 +301,7 @@
 	<linkedDatasetMetadata> Related datasets:</linkedDatasetMetadata>
 	<serviceCreate>Create new service metadata</serviceCreate>
 	<parentSearch js="true">Search for a metadata record to set as parent of current record.</parentSearch>
+	<aggregateSearch js="true">Zoek een verwante dataset(serie)s.</aggregateSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Related metadata selection</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>

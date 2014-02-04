@@ -79,6 +79,7 @@ public class PrepareBatchUpdateStatus implements Service
 
 		//-----------------------------------------------------------------------
 		//--- run through the selected set of metadata records 
+/*
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = iter.next();
@@ -91,7 +92,7 @@ public class PrepareBatchUpdateStatus implements Service
 			}
 		}
 		}
-
+*/
 		//-----------------------------------------------------------------------
 		//--- retrieve status values
 		Element elStatus = Lib.local.retrieve(dbms, "StatusValues");

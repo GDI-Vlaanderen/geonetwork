@@ -157,6 +157,11 @@ public class Params {
         public static final String SUBMITTED_FOR_AGIV  = "7";
         public static final String APPROVED_BY_AGIV  = "8";
         public static final String REJECTED_BY_AGIV  = "9";
+        public static final String RETIRED_FOR_AGIV  = "10";
+        public static final String REMOVED_FOR_AGIV  = "11";
+        public static final String REMOVED  = "12";
+        public static final String REJECTED_FOR_RETIRE  = "13";
+        public static final String REJECTED_FOR_REMOVE  = "14";
 	}
 
     /**

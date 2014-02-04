@@ -23,15 +23,23 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
+import jeeves.utils.Xml;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -40,7 +48,10 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Document;
@@ -58,6 +69,8 @@ public class DefaultStatusActions implements StatusActions {
 	private boolean emailNotes = true;
 
 	private String allGroup = "1";
+	private String stylePath;
+	private static String FS = File.separator;
 
 	/**
 	 * Constructor.
@@ -113,6 +126,7 @@ public class DefaultStatusActions implements StatusActions {
 
 		dm = gc.getDataManager();
 		siteUrl = dm.getSiteURL();
+		stylePath = context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
 	/**
@@ -201,9 +215,9 @@ public class DefaultStatusActions implements StatusActions {
 		try {
 
 			Set<String> unchanged = new HashSet<String>();
-			Set<String> changedMmetadataIdsToInformEditors = new HashSet<String>();
-			Set<String> changedMmetadataIdsToInformReviewers = new HashSet<String>();
-			Set<String> changedMmetadataIdsToInformAdministrators = new HashSet<String>();
+			Map<String, Map> changedMmetadataIdsToInformEditors = new HashMap<String,Map>();
+			Map<String, Map> changedMmetadataIdsToInformReviewers = new HashMap<String,Map>();
+			Map<String, Map> changedMmetadataIdsToInformAdministrators = new HashMap<String,Map>();
 
 			// -- process the metadata records to set status
 			for (String mid : metadataIds) {
@@ -220,13 +234,14 @@ public class DefaultStatusActions implements StatusActions {
 
 				// check if this is a template
 				MdInfo mdInfo = dm.getMetadataInfo(dbms, mid);
+				boolean isWorkspace = dm.existsMetadataInWorkspace(dbms, mid);
 				boolean isTemplate = mdInfo.template
 						.equals(MdInfo.Template.TEMPLATE)
 						|| mdInfo.template.equals(MdInfo.Template.SUBTEMPLATE);
 
 				// templates need not be valid, other md must be valid to change
 				// status to approved
-				if (!currentStatus.equals(status) && statusChangeAllowedByUser(currentStatus, status, mid) && (isTemplate || 
+				if (!currentStatus.equals(status) && statusChangeAllowedByUser(currentStatus, status, mid, isWorkspace) && (isTemplate || 
 					!(status.equals(Params.Status.SUBMITTED_FOR_AGIV) || status.equals(Params.Status.APPROVED_BY_AGIV) ||
 					 status.equals(Params.Status.APPROVED)) || statusChangeAllowed(currentStatus, status, mid))) {
 					System.out.println("Change status of metadata " + mid
@@ -244,30 +259,95 @@ public class DefaultStatusActions implements StatusActions {
 							|| status.equals(Params.Status.REJECTED_BY_AGIV)) {
 						unsetAllOperations(mid);
 					}
-
-					// --- set status, indexing is assumed to take place later
-					// heikki: why later ?!
-					// dm.setStatusExt(context, dbms, mid, new Integer(status),
-					// changeDate, changeMessage);
-					dm.setStatus(context, dbms, mid, new Integer(status),
-							new ISODate().toString(), changeMessage);
+					if (status.equals(Params.Status.REJECTED_FOR_RETIRE) || status.equals(Params.Status.REJECTED_FOR_REMOVE)) {
+						dm.setStatus(context, dbms, mid, new Integer("2"),
+								new ISODate().toString(), changeMessage);
+					} else {
+						// --- set status, indexing is assumed to take place later
+						// heikki: why later ?!
+						// dm.setStatusExt(context, dbms, mid, new Integer(status),
+						// changeDate, changeMessage);
+						dm.setStatus(context, dbms, mid, new Integer(status),
+								new ISODate().toString(), changeMessage);
+					}
 					if (!(currentStatus.equals(Params.Status.UNKNOWN) && status.equals(Params.Status.APPROVED))) {
-						if (status.equals(Params.Status.DRAFT)) {
-							changedMmetadataIdsToInformEditors.add(mid);
-						} else if (status.equals(Params.Status.SUBMITTED)) {
-							changedMmetadataIdsToInformReviewers.add(mid);
-						} else if (status.equals(Params.Status.REJECTED)) {
-							changedMmetadataIdsToInformEditors.add(mid);
-						} else if (status.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
-							changedMmetadataIdsToInformAdministrators.add(mid);
-						} else if (status.equals(Params.Status.REJECTED_BY_AGIV)) {
-							changedMmetadataIdsToInformEditors.add(mid);
-							changedMmetadataIdsToInformReviewers.add(mid);
-						} else if (status.equals(Params.Status.APPROVED)) {
-							changedMmetadataIdsToInformEditors.add(mid);
-							if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
-								changedMmetadataIdsToInformReviewers.add(mid);
-							}
+						Map<String,String> properties = new HashMap<String,String>();
+						properties.put("title", dm.extractTitle(context, mdInfo.schemaId, mid));
+						properties.put("currentStatus", currentStatus);
+						switch(Integer.parseInt(status)) {
+							case 0: //UNKNOWN
+								break;
+							case 1: //DRAFT
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								break;
+							case 2: //APPROVED
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							case 3: //RETIRED
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+									changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								}
+								break;
+							case 4: //SUBMITTED
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								break;
+							case 5: //REJECTED
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								break;
+							case 6: //JUSTCREATED
+								break;
+							case 7: //SUBMITTED_FOR_AGIV
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							case 8: //APPROVED_BY_AGIV
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							case 9: //REJECTED_BY_AGIV
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							case 10: //RETIRED_FOR_AGIV
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							case 11: //REMOVED_FOR_AGIV
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							case 12: //REMOVED
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+									changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								}
+								backupFile(context, mid, mdInfo.uuid, MEFLib.doExport(context, mdInfo.uuid, "full", false, true, false));
+								File pb = new File(Lib.resource.getMetadataDir(context, mid));
+								FileCopyMgr.removeDirectoryOrFile(pb);
+								dm.deleteMetadata(context, dbms, mid);
+								break;
+							case 13: //REJECTED_FOR_RETIRE
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							case 14: //REJECTED_FOR_REMOVE
+								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								break;
+							default:
+								break;
 						}
 					}
 				} else {
@@ -311,38 +391,187 @@ public class DefaultStatusActions implements StatusActions {
 	 * @throws Exception
 	 */
 	private boolean statusChangeAllowedByUser(String currentStatus, String status,
-			String mid) throws Exception {
+			String mid, boolean isWorkspace) throws Exception {
 		boolean changeAllowed = am.canEdit(context, mid);
 		if (changeAllowed) {
 			if (session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-				if (status.equals(Params.Status.REJECTED) || status.equals(Params.Status.SUBMITTED)) {
-					changeAllowed = false;
+				switch(Integer.parseInt(status)) {
+					case 0: //UNKNOWN
+						break;
+					case 1: //DRAFT
+						break;
+					case 2: //APPROVED
+						break;
+					case 3: //RETIRED
+						if (context.getServlet().getNodeType().equalsIgnoreCase("agiv") && !currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
+							changeAllowed = false;
+						}
+						break;
+					case 4: //SUBMITTED
+						changeAllowed = false;
+						break;
+					case 5: //REJECTED
+						changeAllowed = false;
+						break;
+					case 6: //JUSTCREATED
+						break;
+					case 7: //SUBMITTED_FOR_AGIV
+						break;
+					case 8: //APPROVED_BY_AGIV
+						break;
+					case 9: //REJECTED_BY_AGIV
+						break;
+					case 10: //RETIRED_FOR_AGIV
+						if (isWorkspace) {
+							changeAllowed = false;
+						}
+						break;
+					case 11: //REMOVED_FOR_AGIV
+						if (isWorkspace) {
+							changeAllowed = false;
+						}
+						break;
+					case 12: //REMOVED
+						if (context.getServlet().getNodeType().equalsIgnoreCase("agiv") && !currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
+							changeAllowed = false;
+						}
+						break;
+					case 13: //REJECTED_FOR_RETIRE
+						if (!currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
+							changeAllowed = false;
+						}
+						break;
+					case 14: //REJECTED_FOR_REMOVE
+						if (!currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
+							changeAllowed = false;
+						}
+						break;
+					default:
+						break;
 				}
-/*
-				if (status.equals(Params.Status.APPROVED) && !context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+			} else if (session.getProfile().equals(Geonet.Profile.REVIEWER)) {
+				if (currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
 					changeAllowed = false;
-*/
-			}
-			if (changeAllowed && session.getProfile().equals(Geonet.Profile.REVIEWER) || session.getProfile().equals(Geonet.Profile.EDITOR)) {
-				if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.UNKNOWN) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
-					changeAllowed = false;
-				}
-			}
-			if (changeAllowed && session.getProfile().equals(Geonet.Profile.REVIEWER)) {
-				if (status.equals(Params.Status.SUBMITTED)) {
-					changeAllowed = false;
-				}
-			}
-			if (changeAllowed && session.getProfile().equals(Geonet.Profile.REVIEWER) && context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
-				if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.RETIRED) ||
-					status.equals(Params.Status.APPROVED_BY_AGIV) || status.equals(Params.Status.REJECTED_BY_AGIV)) {
-					changeAllowed = false;
+				} else {
+					switch(Integer.parseInt(status)) {
+						case 0: //UNKNOWN
+							changeAllowed = false;
+							break;
+						case 1: //DRAFT
+							changeAllowed = false;
+							break;
+						case 2: //APPROVED
+							changeAllowed = false;
+							break;
+						case 3: //RETIRED
+							changeAllowed = false;
+							break;
+						case 4: //SUBMITTED
+							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
+								changeAllowed = false;
+							}
+							break;
+						case 5: //REJECTED
+							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
+								changeAllowed = false;
+							}
+							break;
+						case 6: //JUSTCREATED
+							changeAllowed = false;
+							break;
+						case 7: //SUBMITTED_FOR_AGIV
+							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
+								changeAllowed = false;
+							}
+							break;
+						case 8: //APPROVED_BY_AGIV
+							changeAllowed = false;
+							break;
+						case 9: //REJECTED_BY_AGIV
+							changeAllowed = false;
+							break;
+						case 10: //RETIRED_FOR_AGIV
+							if (isWorkspace) {
+								changeAllowed = false;
+							}
+							break;
+						case 11: //REMOVED_FOR_AGIV
+							if (isWorkspace) {
+								changeAllowed = false;
+							}
+							break;
+						case 12: //REMOVED
+							changeAllowed = false;
+							break;
+						case 13: //REJECTED_FOR_RETIRE
+							changeAllowed = false;
+							break;
+						case 14: //REJECTED_FOR_REMOVE
+							changeAllowed = false;
+							break;
+						default:
+							break;
+					}
 				}
 			} else if (session.getProfile().equals(Geonet.Profile.EDITOR)) {
-				if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.RETIRED) ||
-					status.equals(Params.Status.REJECTED) || status.equals(Params.Status.SUBMITTED_FOR_AGIV) ||
-					status.equals(Params.Status.APPROVED_BY_AGIV) || status.equals(Params.Status.REJECTED_BY_AGIV)) {
+				if (!am.isOwner(context, mid) || currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
 					changeAllowed = false;
+				} else {
+					switch(Integer.parseInt(status)) {
+						case 0: //UNKNOWN
+							changeAllowed = false;
+							break;
+						case 1: //DRAFT
+							changeAllowed = false;
+							break;
+						case 2: //APPROVED
+							changeAllowed = false;
+							break;
+						case 3: //RETIRED
+							changeAllowed = false;
+							break;
+						case 4: //SUBMITTED
+							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
+								changeAllowed = false;
+							}
+							break;
+						case 5: //REJECTED
+							changeAllowed = false;
+							break;
+						case 6: //JUSTCREATED
+							changeAllowed = false;
+							break;
+						case 7: //SUBMITTED_FOR_AGIV
+							changeAllowed = false;
+							break;
+						case 8: //APPROVED_BY_AGIV
+							changeAllowed = false;
+							break;
+						case 9: //REJECTED_BY_AGIV
+							changeAllowed = false;
+							break;
+						case 10: //RETIRED_FOR_AGIV
+							if (isWorkspace) {
+								changeAllowed = false;
+							}
+							break;
+						case 11: //REMOVED_FOR_AGIV
+							if (isWorkspace) {
+								changeAllowed = false;
+							}
+							break;
+						case 12: //REMOVED
+							changeAllowed = false;
+							break;
+						case 13: //REJECTED_FOR_RETIRE
+							changeAllowed = false;
+							break;
+						case 14: //REJECTED_FOR_REMOVE
+							changeAllowed = false;
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		}
@@ -415,7 +644,7 @@ public class DefaultStatusActions implements StatusActions {
 		boolean valid = dm.doValidate(context, dbms, schema, mid, doc,
 				context.getLanguage(), workspace);
 
-		boolean statusChangeAllowed = true;
+//		boolean statusChangeAllowed = true;
 
 		// if the md is not valid, analyze why not and allow or disallow status
 		// change depending on what exactly was not valid and which logical node
@@ -577,16 +806,16 @@ public class DefaultStatusActions implements StatusActions {
 	 * @param profile
 	 *            Profile of users to be informed
 	 */
-	private void informContentUsers(Set<String> metadataIds,
+	private void informContentUsers(Map<String,Map> metadataMap,
 			String changeDate, String changeMessage, String profile, String status) throws Exception {
 
 		// --- get content reviewers (sorted on content reviewer userid)
-		Element contentUsers = am.getContentUsers(dbms, metadataIds, profile);
+		Element contentUsers = am.getContentUsers(dbms, metadataMap.keySet(), profile);
 
 		String subject = "Status metadata record(s) gewijzigd naar '" + dm.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
 					+ replyToDescr + ") op " + changeDate;
 
-		processList(contentUsers, subject, status, changeDate, changeMessage);
+		processList(contentUsers, subject, status, changeDate, changeMessage, metadataMap);
 	}
 
 	/**
@@ -603,15 +832,18 @@ public class DefaultStatusActions implements StatusActions {
 	 */
 	@SuppressWarnings("unchecked")
 	private void processList(Element contentUsers, String subject, String status,
-			String changeDate, String changeMessage)
+			String changeDate, String changeMessage, Map<String,Map> metadataMap)
 			throws Exception {
 
+		String styleSheet = stylePath + Geonet.File.STATUS_CHANGE_EMAIL;
 		Set<String> metadataIds = new HashSet<String>();
 		String currentUserId = null;
 		String userId = null;
 		String currentEmail = null;
 		List<Element> records = contentUsers.getChildren();
 		Iterator<Element> recordsIterator = records.iterator();
+		Element root = null;
+		Element metadata = null;
 		while(recordsIterator.hasNext()) {
 			Element record = recordsIterator.next();
 			String metadataId = record.getChildText("metadataid");
@@ -619,22 +851,49 @@ public class DefaultStatusActions implements StatusActions {
 			if (currentUserId==null) {
 				currentUserId = userId;
 				currentEmail = record.getChildText("email");
+				root = getNewRootElement(status, changeMessage, currentUserId);
 			} else if (!currentUserId.equals(userId)) {
 				if (StringUtils.isNotBlank(currentEmail)) {
-					sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
+					sendEmail(currentEmail, Xml.transform(root, styleSheet));
+//					sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
 				}
 				metadataIds.clear();
 				currentUserId = userId;
 				currentEmail = record.getChildText("email");
+				root = getNewRootElement(status, changeMessage, currentUserId);
 			}
 			metadataIds.add(metadataId);
+			metadata = new Element("metadata");
+			root.addContent(metadata);
+			metadata.addContent(new Element("url").setText(buildMetadataLink(metadataId)));
+			metadata.addContent(new Element("title").setText(metadataMap.get(metadataId).get("title").toString()));
+			metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataId).get("currentStatus").toString()));
 		}
 
 		if (records.size() > 0) { // send out the last one
-			sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
+			sendEmail(currentEmail, Xml.transform(root, styleSheet));
+//			sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
 		}
 	}
 
+	private Element getNewRootElement(String status, String changeMessage, String userId) throws SQLException {
+		Element root = new Element("root");
+		List<Element> userList = dbms.select("SELECT surname, name FROM Users WHERE id = '" + userId + "'").getChildren();
+		Element user = (Element) userList.get(0);
+		user.detach();
+		user.setName("user");
+		root.addContent(user);
+		List<Element> groupList = dbms.select("SELECT description FROM groups as g, usergroups as ug WHERE ug.userid = '" + userId + "' AND ug.groupid = g.id").getChildren();
+		for (Element group : groupList) {
+			root.addContent(new Element("group").setText(group.getChildText("description")));
+		}
+		root.addContent(new Element("node").setText(context.getServlet().getNodeType().toLowerCase()));
+		root.addContent(new Element("siteUrl").setText(getContextUrl()));
+		root.addContent(new Element("metadatacenter").setText(context.getServlet().getFromDescription()));
+		root.addContent(new Element("status").setText(status));
+		root.addContent(new Element("changeMessage").setText(changeMessage));
+		return root;
+	}
 	/**
 	 * Send the email message about change of status on a group of metadata
 	 * records.
@@ -673,6 +932,13 @@ public class DefaultStatusActions implements StatusActions {
 		}
 	}
 
+	private void sendEmail(String sendTo, Element emailElement)
+			throws Exception {
+		MailSender sender = new MailSender(context);
+		sender.sendWithReplyTo(host, Integer.parseInt(port), from,
+				fromDescr, sendTo, null, replyTo, replyToDescr, emailElement.getChildText("subject"),
+				emailElement.getChildText("message"));
+	}
 	/**
 	 * Build search link to metadata that has had a change of status.
 	 * 
@@ -682,7 +948,13 @@ public class DefaultStatusActions implements StatusActions {
 	 */
 	private String buildMetadataLink(String metadataId) {
 		// TODO: hack voor AGIV
-		GeonetContext gc = (GeonetContext) this.context
+		return getContextUrl()
+//				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
+				+ "/apps/tabsearch/index.html?id=" + metadataId + "&external=true";
+	}
+
+	private String getContextUrl() {
+		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		String protocol = gc.getSettingManager().getValue(
 				Geonet.Settings.SERVER_PROTOCOL);
@@ -691,9 +963,7 @@ public class DefaultStatusActions implements StatusActions {
 		String port = gc.getSettingManager().getValue(
 				Geonet.Settings.SERVER_PORT);
 		return /*protocol + */"https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port)
-				+ this.context.getBaseUrl()
-//				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
-				+ "/apps/tabsearch/index.html?id=" + metadataId + "&external=true";
+				+ context.getBaseUrl();
 	}
 
 	/**
@@ -712,4 +982,26 @@ public class DefaultStatusActions implements StatusActions {
 				+ "&_statusChangeDate=" + changeDate;
 	}
 
+	private void backupFile(ServiceContext context, String id, String uuid, String file)
+	{
+		String outDir = Lib.resource.getRemovedDir(context, id);
+		String outFile= outDir + uuid +".mef";
+
+		new File(outDir).mkdirs();
+
+		try
+		{
+			FileInputStream  is = new FileInputStream(file);
+			FileOutputStream os = new FileOutputStream(outFile);
+
+			BinaryFile.copy(is, os, true, true);
+		}
+		catch(Exception e)
+		{
+			context.warning("Cannot backup mef file : "+e.getMessage());
+			e.printStackTrace();
+		}
+
+		new File(file).delete();
+	}
 }

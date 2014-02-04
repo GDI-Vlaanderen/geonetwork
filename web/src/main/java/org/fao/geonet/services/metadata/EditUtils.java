@@ -84,9 +84,9 @@ class EditUtils {
      * @param context
      * @throws Exception
      */
-	public void preprocessUpdate(Element params, ServiceContext context) throws Exception {
+	public void preprocessUpdate(Element params, Dbms dbms) throws Exception {
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+//		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id = Util.getParam(params, Params.ID);
 
 		//-----------------------------------------------------------------------
@@ -118,8 +118,8 @@ class EditUtils {
      * @param validate
      * @throws Exception
      */
-	public void updateContent(Element params, boolean validate) throws Exception {
-		 updateContent(params, validate, false);
+	public void updateContentWorkspace(Element params, boolean validate, Dbms dbms, String isTemplate, boolean updateIsTemplate) throws Exception {
+		 updateContentWorkspace(params, validate, false, dbms, isTemplate, updateIsTemplate);
 	}
 
     /**
@@ -130,8 +130,8 @@ class EditUtils {
      * @param embedded
      * @throws Exception
      */
-	public void updateContent(Element params, boolean validate, boolean embedded) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+	public void updateContentWorkspace(Element params, boolean validate, boolean embedded, Dbms dbms, String isTemplate, boolean updateIsTemplate) throws Exception {
+//		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id      = Util.getParam(params, Params.ID);
         String minor      = Util.getParam(params, Params.MINOREDIT, "false");
 
@@ -167,78 +167,20 @@ class EditUtils {
             Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges);
             if(updatedMetada != null) {
                 //result = dataManager.updateMetadata(context, dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
-                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, isTemplate, updateIsTemplate);
             }
    		}
         else {
             Element updatedMetada = applyChanges(dbms, id, htChanges);
             if(updatedMetada != null) {
                 //result = dataManager.updateMetadata(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
-                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, isTemplate, updateIsTemplate);
             }
 		}
 		if (!result) {
 			throw new ConcurrentUpdateEx(id);
         }
 	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param params
-     * @param validate
-     * @param embedded
-     * @throws Exception
-     */
-    public void updateContentWorkspace(Element params, boolean validate, boolean embedded) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        String id      = Util.getParam(params, Params.ID);
-        String minor      = Util.getParam(params, Params.MINOREDIT, "false");
-
-        //--- build hashtable with changes
-        //--- each change is a couple (pos, value)
-
-        Hashtable htChanges = new Hashtable(100);
-        List list = params.getChildren();
-        for(int i=0; i<list.size(); i++) {
-            Element el = (Element) list.get(i);
-
-            String sPos = el.getName();
-            String sVal = el.getText();
-
-            if (sPos.startsWith("_")) {
-                htChanges.put(sPos.substring(1), sVal);
-            }
-        }
-
-        //
-        // update element and return status
-        //
-
-        boolean result = false;
-        // whether to request automatic changes (update-fixed-info)
-        boolean ufo = true;
-        // whether to index on update
-        boolean index = true;
-
-        boolean updateDateStamp = !minor.equals("true");
-        String changeDate = null;
-        if (embedded) {
-            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges);
-            if(updatedMetada != null) {
-                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
-            }
-        }
-        else {
-            Element updatedMetada = applyChanges(dbms, id, htChanges);
-            if(updatedMetada != null) {
-                result = dataManager.updateMetadataWorkspace(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
-            }
-        }
-        if (!result) {
-            throw new ConcurrentUpdateEx(id);
-        }
-    }
 
     /**
      * TODO javadoc.
@@ -417,8 +359,8 @@ class EditUtils {
      * @param params
      * @throws Exception
      */
-	public void updateContent(Element params) throws Exception {
-		updateContent(params, false);
+	public void updateContentWorkspace(Element params, Dbms dbms) throws Exception {
+		updateContentWorkspace(params, false, dbms, null, false);
 	}
 
     /**

@@ -4273,7 +4273,7 @@
         Open a popup to select a parent and set the parent identifier field.
         In view mode display an hyperlink to the parent metadata record.
     -->
-    <xsl:template mode="iso19139" match="gmd:parentIdentifier"
+    <xsl:template mode="iso19139" match="gmd:parentIdentifier|gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code"
                   priority="2">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
@@ -4285,8 +4285,14 @@
                                   select="gco:CharacterString/geonet:element/@ref" />
                     <input onfocus="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '', '', true);"
                            class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
-                    <img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" title="{/root/gui/strings/parentSearch}"
-                         onclick="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '', '', true);"/>
+					<xsl:if test="name(.)='gmd:parentIdentifier'">
+	                    <img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" title="{/root/gui/strings/parentSearch}"
+	                         onclick="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '', '', true);"/>
+	                </xsl:if>
+					<xsl:if test="name(.)='gmd:code'">
+	                    <img src="../../images/find.png" alt="{/root/gui/strings/aggregateSearch}" title="{/root/gui/strings/aggregateSearch}"
+	                         onclick="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '', '', true,'title={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title/gco:CharacterString/geonet:element/@ref},alternateTitle={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString/geonet:element/@ref},edition={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:edition/gco:CharacterString/geonet:element/@ref},mduuid={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/geonet:element/@ref},date={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date/geonet:element/@ref},dateType={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/geonet:element/@ref}_codeListValue');"/>
+                    </xsl:if>
                 </xsl:variable>
 
                 <xsl:apply-templates mode="simpleElement"
@@ -4303,12 +4309,19 @@
                     <xsl:with-param name="text">
 
                         <xsl:variable name="metadataTitle">
-                            <xsl:call-template name="getMetadataTitle">
-                                <xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
-                            </xsl:call-template>
+                        	<xsl:if test="name(.)='gmd:parentIdentifier'">
+	                            <xsl:call-template name="getMetadataTitle">
+	                                <xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
+	                            </xsl:call-template>
+                            </xsl:if>
                         </xsl:variable>
                         <a href="#" onclick="javascript:catalogue.metadataShow('{gco:CharacterString}');return false;">
-                            <xsl:value-of select="$metadataTitle"/>
+                        	<xsl:if test="name(.)='gmd:parentIdentifier'">
+	                            <xsl:value-of select="$metadataTitle"/>
+                            </xsl:if>
+                        	<xsl:if test="name(.)='gmd:code'">
+	                            <xsl:value-of select="gco:CharacterString"/>
+                        	</xsl:if>
                         </a>
                     </xsl:with-param>
                 </xsl:apply-templates>

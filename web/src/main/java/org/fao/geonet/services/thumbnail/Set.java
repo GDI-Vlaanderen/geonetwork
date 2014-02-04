@@ -100,7 +100,7 @@ public class    Set implements Service {
         String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
         new File(dataDir).mkdirs();
 
-        Double scalingFactor = shouldScale(context.getUploadDir() + file);
+        Double scalingFactor = -1d;//shouldScale(context.getUploadDir() + file);
 
         if (Math.abs(scalingFactor) > 1) { // We need to make it smaller
             String inFile = context.getUploadDir() + file;
@@ -155,7 +155,7 @@ public class    Set implements Service {
      */
     private Double shouldScale(String inFile) {
         BufferedImage origImg;
-        double maxSize = 120d;
+        double maxSize = 200d;
         double scale = -1d;
         try {
             origImg = getImage(inFile);

@@ -40,9 +40,10 @@
 						var params = '';
 						$$('#harvesterHistoryContainer input[type=checkbox]').each(function(check) {
 							if (check.checked) {
+								var iPos = check.name.indexOf('_');
 								var toks = check.name.split('_');
 								if (toks[1] != 'all') {
-									params += '&amp;id='+toks[1];	
+									params += '&amp;id='+check.name.substring(iPos+1);	
 								}
 							}
 						});

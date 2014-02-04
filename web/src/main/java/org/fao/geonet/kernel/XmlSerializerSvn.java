@@ -167,11 +167,11 @@ public class XmlSerializerSvn extends XmlSerializer {
 	}
 
     @Override
-    public void updateWorkspace(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws Exception {
+    public void updateWorkspace(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context, String isTemplate, boolean updateIsTemplate) throws Exception {
         // old XML comes from the database
         Element oldXml = super.internalSelect(dbms, "workspace", id);
 
-        updateDbWorkspace(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
+        updateDbWorkspace(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, isTemplate, updateIsTemplate);
 
         if (svnMan == null) { // do nothing
             Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");

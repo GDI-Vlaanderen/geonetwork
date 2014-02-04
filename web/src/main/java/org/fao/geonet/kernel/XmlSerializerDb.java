@@ -123,8 +123,8 @@ public class XmlSerializerDb extends XmlSerializer {
         updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
 	}
 
-    public void updateWorkspace(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws SQLException {
-        updateDbWorkspace(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
+    public void updateWorkspace(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context, String isTemplate, boolean updateIsTemplate) throws SQLException {
+        updateDbWorkspace(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, isTemplate, updateIsTemplate);
     }
 
     @Override

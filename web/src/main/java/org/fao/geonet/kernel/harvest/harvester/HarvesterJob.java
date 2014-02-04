@@ -33,19 +33,17 @@ public class HarvesterJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
 
-            if(ClusterConfig.isEnabled()) {
-                if (harvester.getNodeId().equals(ClusterConfig.getClientID())) {
-                    try {
-                        Log.info(Geonet.HARVESTER, "clustering enabled, creating harvest message");
-                        HarvestMessage message = new HarvestMessage();
-                        message.setId(harvester.getID());
-                        Producer harvestProducer = ClusterConfig.get(Geonet.ClusterMessageQueue.HARVEST);
-                        harvestProducer.produce(message);
-                    }
-                    catch (ClusterException x) {
-                        Log.error(Geonet.HARVESTER, x.getMessage());
-                        x.printStackTrace();
-                    }
+            if(ClusterConfig.isEnabled() && harvester.getNodeId().equals(ClusterConfig.getClientID())) {
+                try {
+                    Log.info(Geonet.HARVESTER, "clustering enabled, creating harvest message");
+                    HarvestMessage message = new HarvestMessage();
+                    message.setId(harvester.getID());
+                    Producer harvestProducer = ClusterConfig.get(Geonet.ClusterMessageQueue.HARVEST);
+                    harvestProducer.produce(message);
+                }
+                catch (ClusterException x) {
+                    Log.error(Geonet.HARVESTER, x.getMessage());
+                    x.printStackTrace();
                 }
             } else {
                 harvester.harvest();

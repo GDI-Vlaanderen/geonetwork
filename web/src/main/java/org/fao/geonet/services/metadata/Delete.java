@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.NotAllowedToDeleteEx;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -33,6 +34,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
@@ -45,6 +47,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.List;
 
 //=============================================================================
 
@@ -82,12 +85,22 @@ public class Delete implements Service
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
         boolean canEdit = accessMan.canEdit(context, id);
-
         if(!canEdit) {
             throw new OperationNotAllowedEx("You can not delete this because you are not authorized to edit this metadata.");
-        }
-        else if(info.isLocked && !info.lockedBy.equals(userId)) {
+        } else if(info.isLocked && !info.lockedBy.equals(userId)) {
             throw new OperationNotAllowedEx("You can not delete this because this metadata is locked and you do not own the lock.");
+        } else if (context.getServlet().getNodeType().equalsIgnoreCase("agiv") && Geonet.Profile.EDITOR.equals(session.getProfile())){
+            boolean isAlreadyApproved = false; 
+    		List<Element> kids = dataMan.getStatus(dbms, id).getChildren();
+    		for (Element kid : kids) {
+    			if (kid.getChildText("statusid").equals(Params.Status.APPROVED)) {
+    				isAlreadyApproved = true;
+    				break;
+    			}
+    		}
+    		if (isAlreadyApproved) {
+                throw new NotAllowedToDeleteEx();
+    		}
         }
 		//-----------------------------------------------------------------------
 		//--- backup metadata in 'removed' folder

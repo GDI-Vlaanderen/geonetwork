@@ -75,5 +75,9 @@
       <file path="WEB-INF/classes/setup/sql/migrate/v281" filePrefix="migrate-"/>
       <java class="org.fao.geonet.MigrationTask"/>
     </version>
+    <version id="282">
+      <file path="WEB-INF/classes/setup/sql/migrate/v282" filePrefix="migrate-"/>
+      <java class="org.fao.geonet.MigrationTask"/>
+    </version>
   </migrate>
 </db>

@@ -33,6 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -85,6 +86,7 @@ public class GetStatus implements Service {
 			throw new IllegalArgumentException(
 					"You are not the owner of metadata --> " + id);
 
+		boolean isWorkspace = dataMan.existsMetadataInWorkspace(dbms, id);
 		// -----------------------------------------------------------------------
 		// --- retrieve metadata status
 
@@ -135,7 +137,7 @@ public class GetStatus implements Service {
 
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
 				.addContent(new Element(Geonet.Elem.ID).setText(id))
-				.addContent(elStatus).addContent(cRevs).addContent(new Element(Geonet.Elem.NODE_TYPE).setText(context.getServlet().getNodeType())).addContent(new Element(Geonet.Elem.STATUS).setText(status));
+				.addContent(elStatus).addContent(cRevs).addContent(new Element(Geonet.Elem.NODE_TYPE).setText(context.getServlet().getNodeType())).addContent(new Element(Geonet.Elem.STATUS).setText(status)).addContent(new Element(Geonet.Elem.IS_WORKSPACE).setText("" + isWorkspace));
 
 		return elRes;
 	}

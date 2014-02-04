@@ -15,7 +15,7 @@
                     <xsl:if test="/root/response/statusvalues/*">
 
 							<input name="id" type="hidden" value="{/root/response/id}"/>
-                        <table>
+	                        <table>
                             <tr>
                                 <th class="padded" align="center" colspan="2"><xsl:value-of select="/root/gui/strings/status"/></th>
                             </tr>
@@ -24,6 +24,8 @@
                             <xsl:variable name="profile" select="/root/gui/session/profile"/>
                             <xsl:variable name="nodeType" select="/root/response/nodeType"/>                                            
                             <xsl:variable name="currentStatus" select="/root/response/status"/>                                            
+                            <xsl:variable name="isWorkspace" select="/root/response/isWorkspace"/>                                            
+                            <xsl:variable name="disabled" select="false"/>                                            
 
 
                             <!-- loop on all status -->
@@ -31,84 +33,120 @@
                             <xsl:for-each select="/root/response/statusvalues/status[label/child::*[name() = $lang]]">
 <!--                                <xsl:sort select="[label/child::*[name() = $lang]]"/>-->
                                 <!-- do not display status JUSTCREATED -->
-                                <xsl:if test="id != 0 and id != 6">
+                                <xsl:if test="id != '0' and id != '6'">
                                     <tr>
                                         <td class="padded" align="left" colspan="2">
                                             <input type="radio" name="status" value="{id}" id="st{id}">
                                                 <xsl:if test="$currentStatus=id">
                                                     <xsl:attribute name="checked"/>
                                                 </xsl:if>
-                                                <!-- status value draft and unknown is reserved for administrators  -->
                                                 <xsl:if test="contains($profile,'Admin')">
-                                                    <xsl:if test="name='submitted' or name='rejected'">
-                                                        <xsl:attribute name="disabled"/>
+                                                	<xsl:choose>
+                                                		<xsl:when test="id='3'">
+															<xsl:if test="lower-case($nodeType)='agiv' and $currentStatus!='10'">
+		                                                        <xsl:attribute name="disabled"/>
+									                            <xsl:variable name="disabled" select="true"/>                                            
+															</xsl:if>
+                                                		</xsl:when>
+                                                		<xsl:when test="id='4' or id='5'">
+	                                                        <xsl:attribute name="disabled"/>
+								                            <xsl:variable name="disabled" select="true"/>                                            
+                                                		</xsl:when>
+                                                		<xsl:when test="id='10' or id='11'">
+															<xsl:if test="$isWorkspace='true'">
+		                                                        <xsl:attribute name="disabled"/>
+									                            <xsl:variable name="disabled" select="true"/>                                            
+															</xsl:if>
+                                                		</xsl:when>
+                                                		<xsl:when test="id='12'">
+															<xsl:if test="lower-case($nodeType)='agiv' and $currentStatus!='11'">
+		                                                        <xsl:attribute name="disabled"/>
+									                            <xsl:variable name="disabled" select="true"/>                                            
+															</xsl:if>
+                                                		</xsl:when>
+                                                		<xsl:when test="id='13'">
+															<xsl:if test="$currentStatus!='10'">
+		                                                        <xsl:attribute name="disabled"/>
+									                            <xsl:variable name="disabled" select="true"/>                                            
+															</xsl:if>
+                                                		</xsl:when>
+                                                		<xsl:when test="id='14'">
+															<xsl:if test="$currentStatus!='11'">
+		                                                        <xsl:attribute name="disabled"/>
+									                            <xsl:variable name="disabled" select="true"/>                                            
+															</xsl:if>
+                                                		</xsl:when>
+                                                		<xsl:otherwise>
+                                                		</xsl:otherwise>
+                                                	</xsl:choose>
+                                               	</xsl:if>
+                                                <xsl:if test="contains($profile,'Hoofdeditor')">
+                                                	<xsl:choose>
+                                                		<xsl:when test="$currentStatus='7'">
+	                                                        <xsl:attribute name="disabled"/>
+								                            <xsl:variable name="disabled" select="true"/>                                            
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+		                                                	<xsl:choose>
+		                                                		<xsl:when test="id='0' or id='1' or id='2' or id='3' or id='6' or id='8' or id='9' or id='12' or id='13' or id='14'">
+			                                                        <xsl:attribute name="disabled"/>
+										                            <xsl:variable name="disabled" select="true"/>                                            
+		                                                		</xsl:when>
+		                                                		<xsl:when test="id='4' or id='5' or id='7'">
+			                                                		<xsl:if test="$currentStatus='2' or $currentStatus='3'">
+				                                                        <xsl:attribute name="disabled"/>
+											                            <xsl:variable name="disabled" select="true"/>                                            
+			                                                        </xsl:if>
+		                                                		</xsl:when>
+		                                                		<xsl:when test="id='10' or id='11'">
+																	<xsl:if test="$isWorkspace='true'">
+				                                                        <xsl:attribute name="disabled"/>
+											                            <xsl:variable name="disabled" select="true"/>                                            
+																	</xsl:if>
+		                                                		</xsl:when>
+		                                                		<xsl:otherwise>
+		                                                		</xsl:otherwise>
+		                                                	</xsl:choose>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                               	</xsl:if>
+                                                <xsl:if test="contains($profile,'Editor')">
+                                                	<xsl:choose>
+                                                		<xsl:when test="$currentStatus='4' or $currentStatus='7'">
+	                                                        <xsl:attribute name="disabled"/>
+															<xsl:variable name="disabled" select="true"/>                                            
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+		                                                	<xsl:choose>
+		                                                		<xsl:when test="id='0' or id='1' or id='2' or id='3' or id='5' or id='6' or id='7' or id='8' or id='9' or id='12' or id='13' or id='14'">
+			                                                        <xsl:attribute name="disabled"/>
+																	<xsl:variable name="disabled" select="true"/>                                            
+		                                                		</xsl:when>
+		                                                		<xsl:when test="id='4'">
+			                                                		<xsl:if test="$currentStatus='2' or $currentStatus='3'">
+				                                                        <xsl:attribute name="disabled"/>
+											                            <xsl:variable name="disabled" select="true"/>                                            
+			                                                        </xsl:if>
+		                                                		</xsl:when>
+		                                                		<xsl:when test="id='10' or id='11'">
+																	<xsl:if test="$isWorkspace='true'">
+				                                                        <xsl:attribute name="disabled"/>
+											                            <xsl:variable name="disabled" select="true"/>                                            
+																	</xsl:if>
+		                                                		</xsl:when>
+		                                                		<xsl:otherwise>
+		                                                		</xsl:otherwise>
+		                                                	</xsl:choose>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                               	</xsl:if>
+                                               <label for="st{id}">
+                                                    <xsl:if test="$disabled">
+                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
                                                     </xsl:if>
-<!-- 
-                                                    <xsl:if test="name='approved' and not(lower-case($nodeType)='agiv')">
-                                                        <xsl:attribute name="disabled"/>
-                                                    </xsl:if>
--->
-                                                </xsl:if>
-                                                <xsl:if test="not(contains($profile,'Admin'))">
-                                                    <xsl:if test="name='draft' or name='unknown'">
-                                                        <xsl:attribute name="disabled"/>
-                                                    </xsl:if>
-                                                </xsl:if>
-                                                <xsl:if test="$profile='Hoofdeditor'">
-                                                    <xsl:if test="name='submitted'">
-                                                        <xsl:attribute name="disabled"/>
-                                                    </xsl:if>
-                                                </xsl:if>
-                                                <xsl:if test="$profile='Hoofdeditor' and lower-case($nodeType)='agiv'">
-                                                    <xsl:if test="name='approved' or name='retired' or name='approvedbyagiv' or name='rejectedbyagiv'">
-                                                        <xsl:attribute name="disabled"/>
-                                                    </xsl:if>
-                                                </xsl:if>
-                                                <xsl:if test="$profile='Editor'">
-                                                    <xsl:if test="name='approved' or name='retired' or name='rejected' or name='submittedforagiv' or name='approvedbyagiv' or name='rejectedbyagiv'">
-                                                        <xsl:attribute name="disabled"/>
-                                                    </xsl:if>
-                                                </xsl:if>
-                                                <label for="st{id}">
-	                                                <xsl:if test="contains($profile,'Admin')">
-	                                                    <xsl:if test="name='submitted' or name='rejected'">
-	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-	                                                    </xsl:if>
-<!-- 
-	                                                    <xsl:if test="name='approved' and not(lower-case($nodeType)='agiv')">
-	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-	                                                    </xsl:if>
--->
- 	                                                </xsl:if>
-                                                    <xsl:if test="not(contains($profile,'Admin'))">
-	                                                    <xsl:if test="name='draft' or name='unknown'">
-	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-	                                                    </xsl:if>
-	                                                </xsl:if>
-                                                   <xsl:if test="$profile='Hoofdeditor'">
-	                                                    <xsl:if test="name='submitted'">
-	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-	                                                    </xsl:if>
-	                                                </xsl:if>
-                                                   <xsl:if test="$profile='Hoofdeditor' and lower-case($nodeType)='agiv'">
-	                                                    <xsl:if test="name='approved' or name='retired' or name='approvedbyagiv' or name='rejectedbyagiv'">
-	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-	                                                    </xsl:if>
-	                                                </xsl:if>
-                                                   <xsl:if test="$profile='Editor'">
-	                                                    <xsl:if test="name='approved' or name='retired' or name='rejected' or name='submittedforagiv' or name='approvedbyagiv' or name='rejectedbyagiv'">
-	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-	                                                    </xsl:if>
-	                                                </xsl:if>
-                                                <!-- status value draft and unknown is reserved for administrators  -->
-                                                    <xsl:if test="not(contains($profile,'Admin'))">
-	                                                    <xsl:if test="name='draft' or name='unknown'">
-	                                                        <xsl:attribute name="class">status_disabled</xsl:attribute>
-	                                                    </xsl:if>
-	                                                </xsl:if>
                                                     <xsl:value-of select="label/child::*[name() = $lang]"/>
                                                 </label>
-                                            </input>
+                                             </input>
                                         </td>
                                     </tr>
                                 </xsl:if>

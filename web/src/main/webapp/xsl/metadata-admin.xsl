@@ -69,7 +69,7 @@
 			
 						<!-- loop on other groups except -->
 						<xsl:for-each select="/root/response/groups/group">
-							<xsl:sort select="label/child::*[name() = $lang]"/>
+							<xsl:sort select="lower-case(label/child::*[name() = $lang])"/>
 							
 							<xsl:variable name="userGroup" select="@userGroup"/>
 							<xsl:if test="(/root/gui/env/metadataprivs/usergrouponly='false' and $userGroup!='true') or $userGroup='true'">

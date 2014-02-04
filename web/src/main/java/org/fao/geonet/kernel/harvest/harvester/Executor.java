@@ -85,8 +85,7 @@ class Executor extends Thread
                 // notify peers if clustered : harvest job message is placed on point-to-point queue, the first
                 // GN node in the cluster to pick it up will run it (and cause it to be removed from the queue)
                 //
-                if(ClusterConfig.isEnabled()) {
-                    if (harvester.getNodeId().equals(ClusterConfig.getClientID())) {
+                if(ClusterConfig.isEnabled() && harvester.getNodeId().equals(ClusterConfig.getClientID())) {
                     try {
                         Log.info(Geonet.HARVESTER, "clustering enabled, creating harvest message");
                         HarvestMessage message = new HarvestMessage();
@@ -98,8 +97,6 @@ class Executor extends Thread
                         Log.error(Geonet.HARVESTER, x.getMessage());
                         x.printStackTrace();
                     }
-                }
-
                 }
                 //
                 // if not clustered, just run the harvest job in this GN node

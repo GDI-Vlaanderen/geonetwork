@@ -306,7 +306,7 @@ public final class ServiceRequestFactory
             		file = simplifyName(file);
             		String ext = (pos == -1) ? "" : file.substring(pos+1);
             		String fileName = (pos == -1) ? file : file.substring(0, pos);
-					file = fileName + "_" + (new Date()).getTime() + "." + ext;
+					file = fileName + (req.getPathInfo().endsWith("metadata.thumbnail.set.new") ? "_" + (new Date()).getTime() : "") + "." + ext;
                     if(Log.isDebugEnabled(Log.REQUEST))
 					Log.debug(Log.REQUEST, "File is called "+file+" after simplification");
 

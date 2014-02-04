@@ -527,7 +527,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  The window in which we can select linked metadata
      *
      */
-    showLinkedMetadataSelectionPanel: function(ref, name, mode, useUuid){
+    showLinkedMetadataSelectionPanel: function(ref, name, mode, useUuid, otherRefs){
         // Add extra parameters according to selection panel
         var mode = mode || name;
         var single = ((mode === 'uuidref' || mode === 'iso19110' || mode === '') ? true : false);
@@ -543,27 +543,48 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     if (single) {
                     	var scope = this;
                         if (this.ref !== null) {
-                        	if (useUuid || this.mode=='iso19110') {
-                        		Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = metadata[0].data.uuid;
-                        	} else {
+                        	var uuidValue = null;
+                        	if (useUuid || this.mode=='iso19110' || otherRefs!=null) {
+                        		uuidValue = metadata[0].data.uuid;
+                        	}
+                        	if (!(useUuid || this.mode=='iso19110')) {
                             	panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
                                 	if (mduuid) {
-                                        Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
+		                                Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
                                 	}
                             	});
                         	}
-                            var xlinkHref = Ext.get('_' + scope.ref + '_xlinkCOLONhref');
-                            if (xlinkHref) {
-                            	if (Ext.isEmpty(xlinkHref.dom.value)) {
-                            		xlinkHref.dom.value = panel.catalogue.rootUrl + 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + metadata[0].data.uuid;
-                            	} else {
-                                	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
-                                	var id = parameters["id"];
-                                	if (Ext.isEmpty(id)) {
-                                		id = parameters["ID"];
+                        	if (useUuid || this.mode=='iso19110' || otherRefs!=null) {
+                        		Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = uuidValue;
+                        	}
+                        	if (otherRefs!=null) {
+                            	panel.catalogue.getMdAggegatedInfo(metadata[0].data.uuid, function(mdAggregatedInfo){
+                                	if (mdAggregatedInfo) {
+                                		var otherRefsArray = otherRefs.split(",");
+                                		for (var i = 0;i<otherRefsArray.length;i++) {
+                                			var otherRefsPropertyArray = otherRefsArray[i].split("=");
+                                			var xmlLocalName = otherRefsPropertyArray[0];
+                                			var cmpRef = '_' + otherRefsPropertyArray[1]; 
+                                			if (Ext.get(cmpRef)!=null && mdAggregatedInfo[xmlLocalName]!=null) {
+				                                Ext.get(cmpRef).dom.value = mdAggregatedInfo[xmlLocalName];
+                                			}
+                                		}
                                 	}
-                                	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, metadata[0].data.uuid);
-                            	}
+                            	});
+                        	} else {
+	                            var xlinkHref = Ext.get('_' + this.ref + '_xlinkCOLONhref');
+	                            if (xlinkHref) {
+	                            	if (Ext.isEmpty(xlinkHref.dom.value)) {
+	                            		xlinkHref.dom.value = panel.catalogue.rootUrl + 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + uuidValue;
+	                            	} else {
+	                                	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
+	                                	var id = parameters["id"];
+	                                	if (Ext.isEmpty(id)) {
+	                                		id = parameters["ID"];
+	                                	}
+	                                	xlinkHref.dom.value = xlinkHref.dom.value.replace(id, uuidValue);
+	                            	}
+	                            }
                             }
                         } else {
                             // Create relation between current record and selected one

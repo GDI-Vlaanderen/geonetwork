@@ -64,18 +64,18 @@ public class Update implements Service {
 	public Element exec(Element params, ServiceContext context) throws Exception {
 
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
-        ajaxEditUtils.preprocessUpdate(params, context);
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        ajaxEditUtils.preprocessUpdate(params, dbms);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan = gc.getDataManager();
 		UserSession		session = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id         = Util.getParam(params, Params.ID);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
-		String title      = params.getChildText(Params.TITLE);
+//		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
         String minor      = Util.getParam(params, Params.MINOREDIT, "false");
 
@@ -84,7 +84,7 @@ public class Update implements Service {
 
 
 		if (!forget) {
-			dataMan.setTemplateExtWorkspace(dbms, id, isTemplate, title);
+//			dataMan.setTemplateExtWorkspace(dbms, id, isTemplate, title);
 
 			//--- use StatusActionsFactory and StatusActions class to possibly
 			//--- change status as a result of this edit (use onEdit method)
@@ -100,12 +100,12 @@ public class Update implements Service {
                 boolean updateDateStamp = !minor.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				if (!dataMan.updateMetadataWorkspace(context, dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
+				if (!dataMan.updateMetadataWorkspace(context, dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, isTemplate, true)) {
 					throw new ConcurrentUpdateEx(id);
 				}
 			}
             else {
-                ajaxEditUtils.updateContent(params, validate, true);
+                ajaxEditUtils.updateContentWorkspace(params, validate, true, dbms, isTemplate, true);
 			}
 		}
 

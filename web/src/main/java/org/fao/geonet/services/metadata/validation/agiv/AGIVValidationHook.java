@@ -101,7 +101,7 @@ public class AGIVValidationHook extends AbstractValidationHook {
 	            //
 	
 	            if(workspace) {
-	                dm.updateMetadataWorkspace(context, dbms, metadataId, metadata, false, false, false, context.getLanguage(), null, false);
+	                dm.updateMetadataWorkspace(context, dbms, metadataId, metadata, false, false, false, context.getLanguage(), null, false, null, false);
 	            }
 	            else {
 	                dm.updateMetadata(context, dbms, metadataId, metadata, false, false, false, context.getLanguage(), null, false);

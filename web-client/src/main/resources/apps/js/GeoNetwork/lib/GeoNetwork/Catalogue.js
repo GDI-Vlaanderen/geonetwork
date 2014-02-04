@@ -270,6 +270,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdXMLGet: serviceUrl + 'xml.metadata.get',
             mdXMLGet19139: serviceUrl + 'xml_iso19139',
             mdXMLGetMdUuid: serviceUrl + 'xml_md_uuid',
+            mdXMLGetMdAggegatedInfo: serviceUrl + 'xml_md_aggregated_info',
             mdXMLGetDC: serviceUrl + 'xml_dublin-core',
             mdXMLGetFGDC: serviceUrl + 'xml_fgdc-std',
             mdXMLGet19115: serviceUrl + 'xml_iso19115to19139',
@@ -1520,7 +1521,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 id: 'modalWindow',
                 layout: 'fit',
                 width: 700,
-                height: 400,
+                height: 500,
                 closeAction: 'destroy',
                 plain: true,
                 modal: true,
@@ -1529,8 +1530,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 items: new Ext.Panel({
                     autoLoad: {
                         url: url,
-                        callback: cb,
-                        scope: win
+                        callback: function(el,success, response, options) {
+                        	if (!success) {
+								el.dom.innerHTML = OpenLayers.i18n('NotOwnerError');
+							}
+                        	if (cb!=null) {
+                        		cb(el,success, response, options);
+                        	}
+                        }
                     },
                     autoScroll:true,
                     border: false,
@@ -1623,6 +1630,64 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 	            } else {
 		            Ext.Msg.alert('Fout','Geen metadata identificatoruuid voor record met uuid ', uuid);
 	            } 
+	        },
+	        failure: function(response){
+	            Ext.Msg.alert('Fout','Geen metadata record gevonden met uuid ', uuid);
+	        }
+	    });
+    },
+
+    getMdAggegatedInfo: function(uuid,successCb){
+    	var mduuid
+    	OpenLayers.Request.GET({
+	        url: this.services.mdXMLGetMdAggegatedInfo,
+	        params: {
+	            uuid: uuid
+	        },
+	        success: function(response){
+	        	var mdAggregatedInfo = {};
+	            var node = response.responseXML.getElementsByTagName("mduuid");
+	            if (node && node[0] && node[0].childNodes[0]) {
+	            	mdAggregatedInfo["mduuid"] = node[0].childNodes[0].nodeValue;
+                }
+	            node = response.responseXML.getElementsByTagName("title");
+	            if (node && node[0] && node[0].childNodes[0]) {
+	            	mdAggregatedInfo["title"] = node[0].childNodes[0].nodeValue;
+                }
+	            node = response.responseXML.getElementsByTagName("alternateTitle");
+	            if (node && node[0] && node[0].childNodes[0]) {
+	            	mdAggregatedInfo["alternateTitle"] = node[0].childNodes[0].nodeValue;
+                }
+	            node = response.responseXML.getElementsByTagName("edition");
+	            if (node && node[0] && node[0].childNodes[0]) {
+	            	mdAggregatedInfo["edition"] = node[0].childNodes[0].nodeValue;
+                }
+                var dateValue = null;
+                var dateTypeValue = null;
+	            node = response.responseXML.getElementsByTagName("creationDate");
+	            if (node && node[0] && node[0].childNodes[0]) {
+	            	dateValue = node[0].childNodes[0].nodeValue;
+	            	dateTypeValue = "creation";
+                } else {
+		            node = response.responseXML.getElementsByTagName("revisionDate");
+		            if (node && node[0] && node[0].childNodes[0]) {
+		            	dateValue = node[0].childNodes[0].nodeValue;
+		            	dateTypeValue = "revision";
+	                } else {
+			            node = response.responseXML.getElementsByTagName("publicationDate");
+			            if (node && node[0] && node[0].childNodes[0]) {
+			            	dateValue = node[0].childNodes[0].nodeValue;
+			            	dateTypeValue = "publication";
+		                }
+		            }
+	            }
+	            if (dateValue!=null) {
+	            	mdAggregatedInfo["date"] = dateValue;
+	            	mdAggregatedInfo["dateType"] = dateTypeValue;
+	            }
+                if (successCb) {
+                    successCb(mdAggregatedInfo);
+                }
 	        },
 	        failure: function(response){
 	            Ext.Msg.alert('Fout','Geen metadata record gevonden met uuid ', uuid);

@@ -115,7 +115,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     initComponent: function(){
         var cmp = [];
         cmp.push(this.createSelectionToolBar());
-        
+//        cmp.push(this.createDuplicateButton());
         cmp.push(['->']);
         
         var sortOption = this.getSortByCombo();
@@ -247,11 +247,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this
         });
 
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction,
+        this.selectionActions.push(this.deleteAction, /*this.ownerAction,*/ this.updateCategoriesAction,
             this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction, this.diffAction);
 
         this.actionMenu.addItem(this.deleteAction);
-        this.actionMenu.addItem(this.ownerAction);
+//        this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);
         this.actionMenu.addItem(this.updateStatusAction);
@@ -481,6 +481,17 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             ];
         }
     },
+    createDuplicateButton: function() {
+		var scope = this;
+        return new Ext.Action({
+            text: OpenLayers.i18n('duplicate'),
+            iconCls: 'addIcon',
+            handler: function(){
+                scope.catalogue.metadataEdit('g8334f6c_0264_4ed5_a39e_dc1fa968d711', true, 'a2e15d8b_220b_4dc3_b3af_b7b0da7a7fb9', false, false);
+            }
+        });
+    },
+    
     /** api: method[updateSelectionInfo] 
      *  Update selection and selection information
      */
@@ -539,7 +550,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     updatePrivileges: function(catalogue, user){
         // TODO : this.ownerAction visible to userAdmin only #781
         // AGIV: hide options
-        var actions = [this.deleteAction, this.ownerAction, this.updatePrivilegesAction, this.diffAction,
+        var actions = [this.deleteAction, /*this.ownerAction, */this.updatePrivilegesAction, this.diffAction,
                         this.updateStatusAction/*, this.createMetadataAction, this.mdImportAction,
                         this.mdImportAction, this.adminAction, this.otherItem*/];
         //var actions = [this.deleteAction, this.ownerAction, this.updateCategoriesAction,

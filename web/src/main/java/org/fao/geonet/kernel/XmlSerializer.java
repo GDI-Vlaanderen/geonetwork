@@ -291,33 +291,31 @@ public abstract class XmlSerializer {
         }
 	}
 
-    protected void updateDbWorkspace(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp) throws SQLException {
+    protected void updateDbWorkspace(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp, String isTemplate, boolean updateIsTemplate) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(xml);
-
-        String query = "UPDATE Workspace SET data=?, changeDate=?, root=? WHERE id=?";
-        String queryMinor = "UPDATE Workspace SET data=?, root=? WHERE id=?";
-
+        String setFields = "data=?, root=?";
         Vector<Serializable> args = new Vector<Serializable>();
 
         fixCR(xml);
         args.add(Xml.getString(xml));
+        args.add(root);
 
         if (updateDateStamp) {
+            setFields += ", changeDate=?"; 
             if (changeDate == null)	{
                 args.add(new ISODate().toString());
             } else {
                 args.add(changeDate);
             }
-        }
+		}
 
-        args.add(root);
+        if (isTemplate!=null && updateIsTemplate) {
+            setFields += ", isTemplate=?"; 
+            args.add(isTemplate);
+		}
+
         args.add(id);
-
-        if (updateDateStamp)  {
-            dbms.execute(query, args.toArray());
-        } else {
-            dbms.execute(queryMinor, args.toArray());
-        }
+        dbms.execute("UPDATE Workspace SET " + setFields + " WHERE id=?", args.toArray());
     }
 
     /**
@@ -377,7 +375,7 @@ public abstract class XmlSerializer {
 		 throws Exception;
 
     public abstract void updateWorkspace(Dbms dbms, String id, Element xml,
-                                String changeDate, boolean updateDateStamp, ServiceContext context)
+                                String changeDate, boolean updateDateStamp, ServiceContext context, String isTemplate, boolean updateIsTemplate)
             throws Exception;
 
     public abstract void deleteFromWorkspace(Dbms dbms, String id)

@@ -55,12 +55,12 @@ public class AddAttribute implements Service
 	{
 		AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
 
-        ajaxEditUtils.preprocessUpdate(params, context);
+		Dbms dbms   = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        ajaxEditUtils.preprocessUpdate(params, dbms);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
 
-		Dbms dbms   = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id      = Util.getParam(params, Params.ID);
 		String ref     = Util.getParam(params, Params.REF);
@@ -69,7 +69,7 @@ public class AddAttribute implements Service
 		//-----------------------------------------------------------------------
 		//--- add element and return status
 
-		ajaxEditUtils.updateContent(params);
+		ajaxEditUtils.updateContentWorkspace(params, dbms);
 
 		// version already checked in updateContent
 		if (! ajaxEditUtils.addAttribute(dbms, id, ref, name, null))

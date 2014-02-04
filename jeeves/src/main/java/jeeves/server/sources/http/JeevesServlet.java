@@ -47,6 +47,7 @@ import jeeves.server.sources.ServiceRequestFactory;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.fediz.core.Claim;
 import org.apache.cxf.fediz.core.FederationPrincipal;
 import org.jdom.Element;
@@ -257,8 +258,10 @@ public class JeevesServlet extends HttpServlet
 	                session.authenticate(contactid,contactid + "_" + Util.getClaimValue(fp,"name"), Util.getClaimValue(fp,"givenname"), Util.getClaimValue(fp,"surname"), profile!=null ? profile : "RegisteredUser", Util.getClaimValue(fp,"emailaddress"));
 	                List<Map<String,String>> groups = new ArrayList<Map<String,String>>();
 	                Map<String,String> group = new HashMap<String,String>();
-	                group.put("name", Util.getClaimValue(fp,"organisationid")/* + "_" + Util.getClaimValue(fp,"organisationpublicid")*/);
-	                group.put("description", Util.getClaimValue(fp,"organisationdisplayname"));
+	                String parentorganisationid = Util.getClaimValue(fp,"parentorganisationid");
+	                String parentorganisationdisplayname = Util.getClaimValue(fp,"parentorganisationdisplayname");
+	                group.put("name", StringUtils.isBlank(parentorganisationid) ? Util.getClaimValue(fp,"organisationid") : parentorganisationid);
+	                group.put("description", StringUtils.isBlank(parentorganisationdisplayname) ? (StringUtils.isBlank(parentorganisationid) ? Util.getClaimValue(fp,"organisationdisplayname") : parentorganisationid) : parentorganisationdisplayname);
 	                groups.add(group);                		
 	                session.setProperty("groups", groups);
 		        } else {

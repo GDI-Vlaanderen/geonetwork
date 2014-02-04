@@ -5,7 +5,7 @@
 	<general>
 		<profiles>../../../web/geonetwork/WEB-INF/user-profiles.xml</profiles>
 		<uploadDir>../../../data/tmp</uploadDir>
-		<maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer) -->
+		<maxUploadSize>5</maxUploadSize> <!-- Size must be in megabyte (integer) -->
 		<debug>true</debug>
 	</general>
 
