@@ -11,6 +11,7 @@
 			<gfc:FC_FeatureAttribute />
 			<gfc:carrierOfCharacteristics />
 			<gfc:featureType />			
+			<gfc:listedValue />
 		</elements>
 	</autodetect>
 </schema>

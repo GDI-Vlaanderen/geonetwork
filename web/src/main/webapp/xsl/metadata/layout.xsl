@@ -867,7 +867,8 @@
     <xsl:variable name="removeLink">
       <xsl:value-of
         select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
-        <xsl:if test="not(geonet:element/@del='true') or (($currTab = 'simple') and (geonet:element/@del='true') and ($siblingsCount = 0))">
+<!--         <xsl:if test="not(geonet:element/@del='true') or (($currTab = 'simple') and (geonet:element/@del='true') and ($siblingsCount = 0))"> -->
+		<xsl:if test="not(geonet:element/@del='true')">
         	<xsl:text>!OPTIONAL</xsl:text>
       	</xsl:if>
     </xsl:variable>
@@ -2355,6 +2356,7 @@
       </div>
     </div>
   </xsl:template>
+  
   <xsl:template mode="addCarrierOfCharacteristicsElement" match="*">
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="true"/>
@@ -2409,6 +2411,125 @@
 			</xsl:call-template>
   </xsl:template>
 
+  <xsl:template mode="addElement" match="*">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit" select="true"/>
+		<xsl:param name="visible" select="false()"/>
+		<xsl:param name="embedded"/>
+		<xsl:param name="ommitNameTag" select="true()"/>
+		<xsl:variable name="name" select="concat(@prefix,':',@name)"/>
+		<xsl:variable name="qname"><xsl:value-of select="concat(@prefix,'COLON',@name)"/></xsl:variable>
+	    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
+	    <xsl:variable name="max" select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
+		<xsl:variable name="isXLinked" select="false()"/>
+		<xsl:variable name="text">
+			<xsl:variable name="options">
+				<options>
+				    <xsl:choose>
+						<xsl:when test="$name='gmd:resourceConstraints'">
+							<xsl:if test="count(../gmd:resourceConstraints/gmd:MD_Constraints)=0">
+								<option name="gmd:MD_Constraints">
+								  <xsl:call-template name="getTitle">
+								    <xsl:with-param name="name">gmd:MD_Constraints</xsl:with-param>
+								    <xsl:with-param name="schema" select="$schema"/>
+								  </xsl:call-template>
+								</option>
+								</xsl:if>
+				              <option name="gmd:MD_LegalConstraints">
+				                <xsl:attribute name="selected">selected</xsl:attribute>
+				                <xsl:call-template name="getTitle">
+				                  <xsl:with-param name="name">gmd:MD_LegalConstraints</xsl:with-param>
+				                  <xsl:with-param name="schema" select="$schema"/>
+				                </xsl:call-template>
+				              </option>
+				              <option name="gmd:MD_SecurityConstraints">
+				                <xsl:call-template name="getTitle">
+				                  <xsl:with-param name="name">gmd:MD_SecurityConstraints</xsl:with-param>
+				                  <xsl:with-param name="schema" select="$schema"/>
+				                </xsl:call-template>
+				              </option>
+						</xsl:when>
+						<xsl:when test="$name='gmd:report'">
+				        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
+					          	<xsl:if test="$service=false()">
+					              <option name="gmd:DQ_CompletenessOmission">
+					                <xsl:attribute name="selected">selected</xsl:attribute>
+					                <xsl:call-template name="getTitle">
+					                  <xsl:with-param name="name">gmd:DQ_CompletenessOmission</xsl:with-param>
+					                  <xsl:with-param name="schema" select="$schema"/>
+					                </xsl:call-template>
+					              </option>
+					              <option name="gmd:DQ_AbsoluteExternalPositionalAccuracy">
+					                <xsl:call-template name="getTitle">
+					                  <xsl:with-param name="name">gmd:DQ_AbsoluteExternalPositionalAccuracy</xsl:with-param>
+					                  <xsl:with-param name="schema" select="$schema"/>
+					                </xsl:call-template>
+					              </option>
+					              <option name="gmd:DQ_ThematicClassificationCorrectness">
+					                <xsl:call-template name="getTitle">
+					                  <xsl:with-param name="name">gmd:DQ_ThematicClassificationCorrectness</xsl:with-param>
+					                  <xsl:with-param name="schema" select="$schema"/>
+					                </xsl:call-template>
+					              </option>
+					          	</xsl:if>
+					              <option name="gmd:DQ_DomainConsistency">
+						          	<xsl:if test="$service=true()">
+						                <xsl:attribute name="selected">selected</xsl:attribute>
+					                </xsl:if>
+					                <xsl:call-template name="getTitle">
+					                  <xsl:with-param name="name">gmd:DQ_DomainConsistency</xsl:with-param>
+					                  <xsl:with-param name="schema" select="$schema"/>
+					                </xsl:call-template>
+					              </option>
+						</xsl:when>
+						<xsl:otherwise>
+						    <option name="{$name}">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+								<xsl:call-template name="getTitle">
+									<xsl:with-param name="name" select="$name" />
+									<xsl:with-param name="schema" select="$schema"/>
+								</xsl:call-template>
+							</option>
+						</xsl:otherwise>
+					</xsl:choose>
+				</options>
+			</xsl:variable>
+			<select class="md" name="_{$parentName}_{$qname}_subtemplate" size="1">
+				<xsl:if test="count(exslt:node-set($options)//option)=1">
+					<xsl:attribute name="style">visibility:hidden</xsl:attribute>
+				</xsl:if>
+				<xsl:for-each select="exslt:node-set($options)//option">
+					<xsl:sort select="."/>
+					<option value="{@name}"><xsl:value-of select="."/></option>
+				</xsl:for-each>
+			</select>
+		</xsl:variable>
+		<xsl:variable name="addLink">
+			<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
+			<xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value,',$ommitNameTag,');')"/>
+		</xsl:variable>
+		<xsl:variable name="helpLink">
+			<xsl:call-template name="getHelpLink">
+				<xsl:with-param name="name" select="$name"/>
+				<xsl:with-param name="schema" select="$schema"/>
+			</xsl:call-template>
+		</xsl:variable>
+	    <xsl:call-template name="simpleElementGui">
+			<xsl:with-param name="id" select="concat('_',$parentName,'_',$name,'_subtemplate_row')"/>
+			<xsl:with-param name="title">
+				<xsl:call-template name="getTitle">
+					<xsl:with-param name="name" select="$name"/>
+					<xsl:with-param name="schema" select="$schema"/>
+				</xsl:call-template>
+			</xsl:with-param>
+			<xsl:with-param name="text" select="$text"/>
+			<xsl:with-param name="addLink" select="$addLink"/>
+			<xsl:with-param name="helpLink" select="$helpLink"/>
+			<xsl:with-param name="edit" select="$edit"/>
+			<xsl:with-param name="visible" select="$visible"/>
+		</xsl:call-template>
+  </xsl:template>
+<!-- 
   <xsl:template mode="addReportElement" match="*">
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="true"/>
@@ -2418,7 +2539,6 @@
 		    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
 		    <xsl:variable name="max"
 		      select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
-<!-- 		    <xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/> -->
 		    <xsl:variable name="isXLinked" select="false()"/>
 			<xsl:variable name="text">
 	        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
@@ -2490,7 +2610,7 @@
 		      <xsl:with-param name="edit" select="$edit"/>
 			</xsl:call-template>
   </xsl:template>
-
+-->
   <xsl:template mode="addSpatialResolutionElement" match="gmd:spatialResolution">
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="true"/>

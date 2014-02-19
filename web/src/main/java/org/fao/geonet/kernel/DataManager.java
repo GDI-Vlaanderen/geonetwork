@@ -2478,7 +2478,7 @@ public class DataManager {
             if (session != null && validate) {
         	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
                 doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, workspace, valTypeAndStatus).two();
-        		if (context.getServlet().getNodeType().toLowerCase().equals("agiv")) {
+        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
         			md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
         		}
     		}
@@ -3531,7 +3531,7 @@ public class DataManager {
                 env.addContent(new Element("id").setText(id));
                 env.addContent(new Element("uuid").setText(uuid));
                 env.addContent(new Element("createdFromTemplate").setText(createdFromTemplate ? "y" : "n"));
-                if (createdFromTemplate && servContext.getServlet().getNodeType().toLowerCase().equals("agiv")) {
+                if (createdFromTemplate && (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt"))) {
                     env.addContent(new Element("mduuid").setText(UUID.randomUUID().toString()));
                 }
                 

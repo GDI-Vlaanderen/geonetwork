@@ -150,6 +150,10 @@ OpenLayers.Request = {
         
         request.onreadystatechange = function() {
             if(request.readyState == OpenLayers.Request.XMLHttpRequest.DONE) {
+		        var contentType = request.getResponseHeader("Content-Type");
+		        if (request.responseXML==null && contentType!=null && (contentType.startsWith("text/xml") || contentType.startsWith("application/xml"))) {
+			        request.responseXML = new DOMParser().parseFromString(request.responseText,"text/xml");
+		        }
                 var proceed = events.triggerEvent(
                     "complete",
                     {request: request, config: config, requestUrl: url}

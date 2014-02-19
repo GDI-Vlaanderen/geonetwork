@@ -89,7 +89,7 @@ public class ServiceManager
 	private String  appPath;
 	private String  baseUrl;
 	private String  uploadDir;
-    private int     maxUploadSize;
+    private double     maxUploadSize;
 	private String  defaultLang;
 	private String  defaultContType;
 	private boolean defaultLocal;
@@ -107,7 +107,7 @@ public class ServiceManager
 	public void setDefaultLang    (String  lang)  { defaultLang    = lang;  }
 	public void setDefaultContType(String  type)  { defaultContType= type;  }
 	public void setUploadDir      (String  dir)   { uploadDir      = dir;   }
-    public void setMaxUploadSize  (int  size)     { maxUploadSize  = size;  }
+    public void setMaxUploadSize  (double  size)     { maxUploadSize  = size;  }
 	public void setDefaultLocal   (boolean yesno) { defaultLocal   = yesno; }
 
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }

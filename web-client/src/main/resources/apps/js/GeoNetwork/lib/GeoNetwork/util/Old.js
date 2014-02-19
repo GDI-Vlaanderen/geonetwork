@@ -61,17 +61,21 @@ function clearAll(id){
 function checkBoxModalUpdate(div, service, modalbox, title,button){
     var boxes = Ext.DomQuery.select('input[type="checkbox"]');
     var pars = "?";
+    var params = {};
+
     if (service === 'metadata.admin' || service === 'metadata.category') {
-        pars += "id=" + Ext.getDom('metadataid').value;
+//        pars += "id=" + Ext.getDom('metadataid').value;
+        params["id"] = Ext.getDom('metadataid').value;
     }
     Ext.each(boxes, function(s){
         if (s.checked && s.name != "") {
-            pars += "&" + s.name + "=on";
+//            pars += "&" + s.name + "=on";
+			params[s.name] = "on";
         }
     });
     
     // FIXME : title is not an error message title
-    catalogue.doAction(service + pars, null, null, title, function(response){
+    catalogue.doAction(service/* + pars*/, /*null*/params, null, title, function(response){
         if(Ext.getDom(div)) {
 	        Ext.getDom(div).innerHTML = response.responseText;
         }

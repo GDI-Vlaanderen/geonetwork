@@ -2735,8 +2735,8 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
     </element>
 
     <element name="uuidref" context="srv:operatesOn">
-		<label>Metadata identificator</label>
-		<description>Metadata identifier gebruikt in de operatesOn associatie </description>
+		<label>Identificator van de dataset waarop de service werkt</label>
+		<description>Identificator van de dataset waarop de service werkt</description>
 	</element>      
 
     <element name="uuidref" context="gmd:featureCatalogueCitation">

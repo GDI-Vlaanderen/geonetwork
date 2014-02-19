@@ -19,7 +19,7 @@
 				</xsl:if>
 			</subject>	
 			<message>
-				<xsl:text>&#10;&#13;Beste </xsl:text><xsl:call-template name="aanspreking"/><xsl:text>,&#10;&#13;</xsl:text>
+				<xsl:text>Beste </xsl:text><xsl:call-template name="aanspreking"/><xsl:text>,&#10;&#13;</xsl:text>
 				<xsl:if test="$metadataCount=1">
 					<xsl:call-template name="changeinfo">
 						<xsl:with-param name="title" select="/root/metadata/title"/>
@@ -48,7 +48,7 @@
 				<xsl:if test="$status='2' or $status='9'">
 						<xsl:text>&#10;&#13;Voor meer informatie kan je steeds terecht op onze website </xsl:text><xsl:value-of select="/root/siteUrl"/><xsl:text>, of mail naar contactpunt@agiv.be.</xsl:text>
 				</xsl:if>
-				<xsl:text>&#10;&#13;&#10;&#13;Met vriendelijke groeten,&#10;&#13;&#10;&#13;Het Metadata-team</xsl:text>
+				<xsl:text>&#10;&#13;&#10;&#13;Met vriendelijke groeten,&#10;&#13;Het Metadata-team</xsl:text>
 			</message>
 		</email>
 	</xsl:template>
@@ -56,7 +56,7 @@
 	<xsl:template name="aanspreking">
 		<xsl:variable name="status" select="/root/status"/>
 		<xsl:choose>
-			<xsl:when test="$status='2' or $status='3' or $status='9' or $status='10' or $status='12'">
+			<xsl:when test="$status='2' or $status='3' or $status='9' or $status='13' or $status='14'">
 				<xsl:text>metadata-editor/-hoofdeditor</xsl:text>
 			</xsl:when>
 			<xsl:when test="$status='4'">
@@ -100,7 +100,7 @@
 			</xsl:choose>
 		</xsl:if>
 		<xsl:if test="$currentStatus='10' or $currentStatus='11'">
-			<xsl:text>Het </xsl:text><xsl:if test="$currentStatus='10'">archiveren</xsl:if><xsl:if test="$currentStatus='11'">verwijderen</xsl:if><xsl:text> van </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:if test="$status='2'"><xsl:text> kon</xsl:text><xsl:if test="$metadataCount>1">den</xsl:if> niet gevalideerd worden</xsl:if><xsl:if test="$status!='2'"><xsl:text> </xsl:text>werd<xsl:if test="$metadataCount>1">en</xsl:if> gevalideerd</xsl:if><xsl:text> door het AGIV.</xsl:text>
+			<xsl:text>Het </xsl:text><xsl:if test="$currentStatus='10'">depubliceren</xsl:if><xsl:if test="$currentStatus='11'">verwijderen</xsl:if><xsl:text> van </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:if test="$status='2'"><xsl:text> kon</xsl:text><xsl:if test="$metadataCount>1">den</xsl:if> niet gevalideerd worden</xsl:if><xsl:if test="$status!='2'"><xsl:text> </xsl:text>werd<xsl:if test="$metadataCount>1">en</xsl:if> gevalideerd</xsl:if><xsl:text> door het AGIV.</xsl:text>
 			<xsl:if test="$status='2'">
 				<xsl:text>&#10;&#13;&#10;&#13;De reden hiervoor is:</xsl:text>
 				<xsl:text>&#10;&#13;&#10;&#13;</xsl:text><xsl:value-of select="/root/changeMessage"/>
@@ -136,7 +136,7 @@
 					<xsl:when test="$status='0'">onbekend</xsl:when>
 					<xsl:when test="$status='1'">ontwerp</xsl:when>
 					<xsl:when test="$status='2'">intern goedgekeurd en gepubliceerd</xsl:when>
-					<xsl:when test="$status='3'">gearchiveerd</xsl:when>
+					<xsl:when test="$status='3'">gedepubliceerd</xsl:when>
 					<xsl:when test="$status='4'">intern ingediend ter validatie</xsl:when>
 					<xsl:when test="$status='5'">afgekeurd door Hoofdeditor</xsl:when>
 					<xsl:when test="$status='6'">pas gecreëerd</xsl:when>
@@ -151,7 +151,7 @@
 		<xsl:variable name="status" select="/root/status"/>
 		<xsl:choose>
 			<xsl:when test="$status='10'">
-				<xsl:text>gearchiveerd</xsl:text>
+				<xsl:text>gedepubliceerd</xsl:text>
 			</xsl:when>
 			<xsl:when test="$status='11' or $status='12'">
 				<xsl:text>verwijderd</xsl:text>

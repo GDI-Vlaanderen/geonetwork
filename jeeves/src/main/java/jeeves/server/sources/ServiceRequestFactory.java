@@ -65,7 +65,7 @@ public final class ServiceRequestFactory
 	  */
 
 	public static ServiceRequest create(HttpServletRequest req, HttpServletResponse res,
-													String uploadDir, int maxUploadSize) throws Exception
+													String uploadDir, double maxUploadSize) throws Exception
 	{
 		String url = req.getPathInfo();
 
@@ -247,7 +247,7 @@ public final class ServiceRequestFactory
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private static Element extractParameters(HttpServletRequest req, String uploadDir, int maxUploadSize) throws Exception
+	private static Element extractParameters(HttpServletRequest req, String uploadDir, double maxUploadSize) throws Exception
 	{
 		//--- set parameters from multipart request
 
@@ -276,14 +276,14 @@ public final class ServiceRequestFactory
 
 	//---------------------------------------------------------------------------
 
-	private static Element getMultipartParams(HttpServletRequest req, String uploadDir, int maxUploadSize) throws Exception
+	private static Element getMultipartParams(HttpServletRequest req, String uploadDir, double maxUploadSize) throws Exception
 	{
 		Element params = new Element("params");
 
 		DiskFileItemFactory fif = new DiskFileItemFactory();
 		ServletFileUpload   sfu = new ServletFileUpload(fif);
 
-    sfu.setSizeMax(maxUploadSize * 1024 * 1024);
+		sfu.setSizeMax(Math.round(maxUploadSize * 1024 * 1024));
 
 		try {
 			for (Object i : sfu.parseRequest(req)) {
@@ -302,8 +302,8 @@ public final class ServiceRequestFactory
                     if(Log.isDebugEnabled(Log.REQUEST))
 					Log.debug(Log.REQUEST, "Uploading file "+file+" type: "+type+" size: "+size);
 					//--- remove path information from file (some browsers put it, like IE)
-            		int    pos = file.lastIndexOf('.');
             		file = simplifyName(file);
+            		int    pos = file.lastIndexOf('.');
             		String ext = (pos == -1) ? "" : file.substring(pos+1);
             		String fileName = (pos == -1) ? file : file.substring(0, pos);
 					file = fileName + (req.getPathInfo().endsWith("metadata.thumbnail.set.new") ? "_" + (new Date()).getTime() : "") + "." + ext;

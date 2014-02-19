@@ -75,7 +75,7 @@ public class JeevesEngine
 	private String  defaultLang;
 	private String  defaultContType;
 	private String  uploadDir;
-	private int     maxUploadSize;
+	private double     maxUploadSize;
 	private String  appPath;
 	private boolean defaultLocal;
 	private boolean debugFlag;
@@ -346,10 +346,10 @@ public class JeevesEngine
 		profilesFile = Util.getParam(general, ConfigFile.General.Child.PROFILES);
 		uploadDir    = Util.getParam(general, ConfigFile.General.Child.UPLOAD_DIR);
 		try {
-		    maxUploadSize = Integer.parseInt(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
+		    maxUploadSize = Double.parseDouble(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
 		} 
 		catch(Exception e){
-		    maxUploadSize = 50;
+		    maxUploadSize = 1.0;
 		    error("Maximum upload size not properly configured in config.xml. Using default size of 50MB");
             error("   Exception : " +e);
             error("   Message   : " +e.getMessage());
@@ -718,7 +718,7 @@ public class JeevesEngine
 
 	//---------------------------------------------------------------------------
 
-  public int getMaxUploadSize() { return maxUploadSize; }
+  public double getMaxUploadSize() { return maxUploadSize; }
 
   //---------------------------------------------------------------------------
 

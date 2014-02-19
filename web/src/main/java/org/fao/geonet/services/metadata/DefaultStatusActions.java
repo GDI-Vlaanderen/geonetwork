@@ -80,7 +80,7 @@ public class DefaultStatusActions implements StatusActions {
 
 	/**
 	 * Initializes the StatusActions class with external info from GeoNetwork.
-	 * 
+	 *
 	 * @param context
 	 * @param dbms
 	 */
@@ -131,7 +131,7 @@ public class DefaultStatusActions implements StatusActions {
 
 	/**
 	 * Called when a metadata is created.
-	 * 
+	 *
 	 * @param id
 	 *            the id of the metadata
 	 */
@@ -145,7 +145,7 @@ public class DefaultStatusActions implements StatusActions {
 
 	/**
 	 * Called when a record is edited to set/reset status.
-	 * 
+	 *
 	 * @param id
 	 *            The metadata id that has been edited.
 	 * @param minorEdit
@@ -198,7 +198,7 @@ public class DefaultStatusActions implements StatusActions {
 
 	/**
 	 * Called when need to set status on a set of metadata records.
-	 * 
+	 *
 	 * @param status
 	 *            The status to set.
 	 * @param metadataIds
@@ -241,22 +241,23 @@ public class DefaultStatusActions implements StatusActions {
 
 				// templates need not be valid, other md must be valid to change
 				// status to approved
-				if (!currentStatus.equals(status) && statusChangeAllowedByUser(currentStatus, status, mid, isWorkspace) && (isTemplate || 
+				if (!currentStatus.equals(status) && statusChangeAllowedByUser(currentStatus, status, mid, isWorkspace) && (isTemplate ||
 					!(status.equals(Params.Status.SUBMITTED_FOR_AGIV) || status.equals(Params.Status.APPROVED_BY_AGIV) ||
 					 status.equals(Params.Status.APPROVED)) || statusChangeAllowed(currentStatus, status, mid))) {
 					System.out.println("Change status of metadata " + mid
 							+ " from " + currentStatus + " to " + status);
 					if (status.equals(Params.Status.APPROVED)) {
 						if (isTemplate && (session.getProfile().equals(Geonet.Profile.REVIEWER) || session.getProfile().equals(Geonet.Profile.ADMINISTRATOR))) {
-							setAllOperationsForUserGroup(mid);
+//							setAllOperationsForUserGroup(mid);
+							setAllOperations(mid);
 						} else {
 							setAllOperations(mid);
 						}
 						dm.moveFromWorkspaceToMetadata(context, dbms, mid);
-					} else if (status.equals(Params.Status.DRAFT)
-							|| status.equals(Params.Status.RETIRED)
+					} else if (/*status.equals(Params.Status.DRAFT)
+							|| */status.equals(Params.Status.RETIRED)/*
 							|| status.equals(Params.Status.REJECTED)
-							|| status.equals(Params.Status.REJECTED_BY_AGIV)) {
+							|| status.equals(Params.Status.REJECTED_BY_AGIV)*/) {
 						unsetAllOperations(mid);
 					}
 					if (status.equals(Params.Status.REJECTED_FOR_RETIRE) || status.equals(Params.Status.REJECTED_FOR_REMOVE)) {
@@ -362,17 +363,18 @@ public class DefaultStatusActions implements StatusActions {
 									+ status);
 				}
 			}
-			if (changedMmetadataIdsToInformEditors.size()>0) {
-				informContentUsers(changedMmetadataIdsToInformEditors, changeDate,
-						changeMessage, Geonet.Profile.EDITOR, status);
+			List<String> emailMetadataIdList = new ArrayList<String>();
+			if (changedMmetadataIdsToInformAdministrators.size()>0) {
+				informContentUsers(changedMmetadataIdsToInformAdministrators, changeDate,
+						changeMessage, Geonet.Profile.ADMINISTRATOR, status, emailMetadataIdList);
 			}
 			if (changedMmetadataIdsToInformReviewers.size()>0) {
 				informContentUsers(changedMmetadataIdsToInformReviewers, changeDate,
-						changeMessage, Geonet.Profile.REVIEWER, status);
+						changeMessage, Geonet.Profile.REVIEWER, status, emailMetadataIdList);
 			}
-			if (changedMmetadataIdsToInformAdministrators.size()>0) {
-				informContentUsers(changedMmetadataIdsToInformAdministrators, changeDate,
-						changeMessage, Geonet.Profile.ADMINISTRATOR, status);
+			if (changedMmetadataIdsToInformEditors.size()>0) {
+				informContentUsers(changedMmetadataIdsToInformEditors, changeDate,
+						changeMessage, Geonet.Profile.EDITOR, status, emailMetadataIdList);
 			}
 			return unchanged;
 		} catch (Throwable x) {
@@ -383,7 +385,7 @@ public class DefaultStatusActions implements StatusActions {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param currentStatus
 	 * @param status
 	 * @param mid
@@ -408,7 +410,9 @@ public class DefaultStatusActions implements StatusActions {
 						}
 						break;
 					case 4: //SUBMITTED
-						changeAllowed = false;
+//						if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+							changeAllowed = false;
+//						}
 						break;
 					case 5: //REJECTED
 						changeAllowed = false;
@@ -422,12 +426,12 @@ public class DefaultStatusActions implements StatusActions {
 					case 9: //REJECTED_BY_AGIV
 						break;
 					case 10: //RETIRED_FOR_AGIV
-						if (isWorkspace) {
+						if (isWorkspace || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
 						break;
 					case 11: //REMOVED_FOR_AGIV
-						if (isWorkspace) {
+						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
 						break;
@@ -461,7 +465,9 @@ public class DefaultStatusActions implements StatusActions {
 							changeAllowed = false;
 							break;
 						case 2: //APPROVED
-							changeAllowed = false;
+							if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
+								changeAllowed = false;
+							}
 							break;
 						case 3: //RETIRED
 							changeAllowed = false;
@@ -491,12 +497,12 @@ public class DefaultStatusActions implements StatusActions {
 							changeAllowed = false;
 							break;
 						case 10: //RETIRED_FOR_AGIV
-							if (isWorkspace) {
+							if (isWorkspace || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 								changeAllowed = false;
 							}
 							break;
 						case 11: //REMOVED_FOR_AGIV
-							if (isWorkspace) {
+							if (isWorkspace || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
 								changeAllowed = false;
 							}
 							break;
@@ -551,14 +557,10 @@ public class DefaultStatusActions implements StatusActions {
 							changeAllowed = false;
 							break;
 						case 10: //RETIRED_FOR_AGIV
-							if (isWorkspace) {
-								changeAllowed = false;
-							}
+							changeAllowed = false;
 							break;
 						case 11: //REMOVED_FOR_AGIV
-							if (isWorkspace) {
-								changeAllowed = false;
-							}
+							changeAllowed = false;
 							break;
 						case 12: //REMOVED
 							changeAllowed = false;
@@ -579,7 +581,7 @@ public class DefaultStatusActions implements StatusActions {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param currentStatus
 	 * @param status
 	 * @param mid
@@ -618,7 +620,7 @@ public class DefaultStatusActions implements StatusActions {
 		} else {
 			workspace = false;
 		}
-*/		
+*/
 		if (!(currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.JUSTCREATED) || currentStatus.equals(Params.Status.UNKNOWN))) {
 			workspace = true;
 		} else {
@@ -733,7 +735,7 @@ public class DefaultStatusActions implements StatusActions {
 	/**
 	 * Set all operations on 'All' Group. Used when status changes from
 	 * submitted to approved.
-	 * 
+	 *
 	 * @param mdId
 	 *            The metadata id to set privileges on
 	 */
@@ -753,7 +755,7 @@ public class DefaultStatusActions implements StatusActions {
 	/**
 	 * Set all operations on 'All' Group. Used when status changes from
 	 * submitted to approved.
-	 * 
+	 *
 	 * @param mdId
 	 *            The metadata id to set privileges on
 	 */
@@ -779,7 +781,7 @@ public class DefaultStatusActions implements StatusActions {
 	/**
 	 * Unset all operations on 'All' Group. Used when status changes from
 	 * approved to something else.
-	 * 
+	 *
 	 * @param mdId
 	 *            The metadata id to unset privileges on
 	 */
@@ -789,12 +791,12 @@ public class DefaultStatusActions implements StatusActions {
 		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
 		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
 		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);		 
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
 	}
 
 	/**
 	 * Inform content users of metadata records in list
-	 * 
+	 *
 	 * @param metadata
 	 *            The selected set of metadata records
 	 * @param changeDate
@@ -807,7 +809,7 @@ public class DefaultStatusActions implements StatusActions {
 	 *            Profile of users to be informed
 	 */
 	private void informContentUsers(Map<String,Map> metadataMap,
-			String changeDate, String changeMessage, String profile, String status) throws Exception {
+			String changeDate, String changeMessage, String profile, String status, List<String> emailMetadataIdList) throws Exception {
 
 		// --- get content reviewers (sorted on content reviewer userid)
 		Element contentUsers = am.getContentUsers(dbms, metadataMap.keySet(), profile);
@@ -815,12 +817,12 @@ public class DefaultStatusActions implements StatusActions {
 		String subject = "Status metadata record(s) gewijzigd naar '" + dm.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
 					+ replyToDescr + ") op " + changeDate;
 
-		processList(contentUsers, subject, status, changeDate, changeMessage, metadataMap);
+		processList(contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
 	}
 
 	/**
 	 * Process the users and metadata records for emailing notices.
-	 * 
+	 *
 	 * @param records
 	 *            The selected set of records
 	 * @param subject
@@ -832,7 +834,7 @@ public class DefaultStatusActions implements StatusActions {
 	 */
 	@SuppressWarnings("unchecked")
 	private void processList(Element contentUsers, String subject, String status,
-			String changeDate, String changeMessage, Map<String,Map> metadataMap)
+			String changeDate, String changeMessage, Map<String,Map> metadataMap, List<String> emailMetadataIdList)
 			throws Exception {
 
 		String styleSheet = stylePath + Geonet.File.STATUS_CHANGE_EMAIL;
@@ -851,26 +853,32 @@ public class DefaultStatusActions implements StatusActions {
 			if (currentUserId==null) {
 				currentUserId = userId;
 				currentEmail = record.getChildText("email");
-				root = getNewRootElement(status, changeMessage, currentUserId);
+				if (currentEmail!=null) {
+					currentEmail = currentEmail.toLowerCase();
+				}
+				root = getNewRootElement(status, changeMessage, context.getUserSession().getUserId());
 			} else if (!currentUserId.equals(userId)) {
-				if (StringUtils.isNotBlank(currentEmail)) {
+				if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
 					sendEmail(currentEmail, Xml.transform(root, styleSheet));
 //					sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
+					metadataIds.clear();
 				}
-				metadataIds.clear();
 				currentUserId = userId;
 				currentEmail = record.getChildText("email");
-				root = getNewRootElement(status, changeMessage, currentUserId);
+				root = getNewRootElement(status, changeMessage, context.getUserSession().getUserId());
 			}
-			metadataIds.add(metadataId);
-			metadata = new Element("metadata");
-			root.addContent(metadata);
-			metadata.addContent(new Element("url").setText(buildMetadataLink(metadataId)));
-			metadata.addContent(new Element("title").setText(metadataMap.get(metadataId).get("title").toString()));
-			metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataId).get("currentStatus").toString()));
+			if (StringUtils.isNotBlank(currentEmail) && !emailMetadataIdList.contains(currentEmail + "_" + metadataId)) {
+				emailMetadataIdList.add(currentEmail + "_" + metadataId);
+				metadataIds.add(metadataId);
+				metadata = new Element("metadata");
+				root.addContent(metadata);
+				metadata.addContent(new Element("url").setText(buildMetadataLink(metadataId)));
+				metadata.addContent(new Element("title").setText(metadataMap.get(metadataId).get("title").toString()));
+				metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataId).get("currentStatus").toString()));
+			}
 		}
 
-		if (records.size() > 0) { // send out the last one
+		if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
 			sendEmail(currentEmail, Xml.transform(root, styleSheet));
 //			sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
 		}
@@ -897,7 +905,7 @@ public class DefaultStatusActions implements StatusActions {
 	/**
 	 * Send the email message about change of status on a group of metadata
 	 * records.
-	 * 
+	 *
 	 * @param sendTo
 	 *            The recipient email address
 	 * @param subject
@@ -941,7 +949,7 @@ public class DefaultStatusActions implements StatusActions {
 	}
 	/**
 	 * Build search link to metadata that has had a change of status.
-	 * 
+	 *
 	 * @param metadataId
 	 *            The id of the metadata
 	 * @return string Search link to metadata
@@ -968,7 +976,7 @@ public class DefaultStatusActions implements StatusActions {
 
 	/**
 	 * Build search link to metadata that has had a change of status.
-	 * 
+	 *
 	 * @param status
 	 *            The status of the metadata
 	 * @param changeDate

@@ -266,6 +266,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                     
                                     // Hide window
                                     panel.fileUploadWindow.hide();
+                                },
+                                failure: function(fileUploadPanel, o){
+                                    	panel.getError2(o.response);
                                 }
                                 // TODO : improve error message
                                 // Currently return  Unexpected token < from ext doDecode
@@ -575,7 +578,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
 	                            var xlinkHref = Ext.get('_' + this.ref + '_xlinkCOLONhref');
 	                            if (xlinkHref) {
 	                            	if (Ext.isEmpty(xlinkHref.dom.value)) {
-	                            		xlinkHref.dom.value = panel.catalogue.rootUrl + 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + uuidValue;
+	                            		xlinkHref.dom.value = panel.catalogue.services.rootUrl + 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + uuidValue;
 	                            	} else {
 	                                	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
 	                                	var id = parameters["id"];
@@ -1029,6 +1032,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
 //            // Do something else
 //        }
     },
+    
+    getError2: function(response){
+        if (response && response.responseText) {
+            var errorPage = response.responseText
+            errorMsg = errorPage.match(/message<\/b\>[ ]<u\>(.*)/);
+            if (errorMsg) {
+                Ext.Msg.alert("Fout",errorMsg[1]);
+            }
+        } 
+    },
+    
     /** api: method[updateEditor]
      * 
      *  :param html: ``String``  HTML to use for panel update
@@ -1393,8 +1407,10 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                     url: this.catalogue.services.mdSetThumbnail,
                                     waitMsg: OpenLayers.i18n('uploading'),
                                     success: function(fp, o){
-                                          scope.init(scope.metadataId);
                                           scope.thumbnailUploadWindow.hide();
+                                    },
+                                    failure: function(fp, o){
+                                    	scope.getError2(o.response);
                                     }
                                 });
                             }
@@ -1504,6 +1520,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     },
 
     uploadThumbnail: function(){
+    	var scope = this;
         if (!this.thumbnailUploadWindow) {
             // TODO : before uploading thumbnails, save the current metadata
             // record if ongoing updates
@@ -1516,7 +1533,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 items: this.uploadForm,
                 closeAction: 'hide',
                 constrain: true,
-                iconCls: 'thumbnailAddIcon'
+                iconCls: 'thumbnailAddIcon',
+                listeners: {
+	                beforehide: function() {
+	                    scope.init(scope.metadataId);
+	                    return true;
+	                }
+                }
             });
         }
         

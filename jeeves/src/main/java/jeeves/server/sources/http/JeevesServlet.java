@@ -205,7 +205,7 @@ public class JeevesServlet extends HttpServlet
 			srvReq = ServiceRequestFactory.create(req, res, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
 		} catch (FileUploadTooBigEx e) {
 			StringBuffer sb = new StringBuffer();
-			sb.append("File upload too big - exceeds "+jeeves.getMaxUploadSize()+" Mb\n");
+			sb.append("Opgeladen bestand overschrijdt de maximaal toegelaten grootte van "+jeeves.getMaxUploadSize()+" Mb\n");
 			sb.append("Error : " +e.getClass().getName() +"\n");
 			res.sendError(400, sb.toString());
 

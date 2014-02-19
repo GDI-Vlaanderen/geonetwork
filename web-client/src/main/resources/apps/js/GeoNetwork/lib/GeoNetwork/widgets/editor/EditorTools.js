@@ -303,6 +303,7 @@ function doRemoveElementAction(action, ref, parentref, id, min){
     var thisElement = Ext.get(id);
     var nextElement = thisElement.next();
     var prevElement = thisElement.prev();
+    var addSubtemplateRow = "_" + parentref + "_" + id.substring(0,id.indexOf('_')) + "_subtemplate_row";
     Ext.Ajax.request({
         url: catalogue.services.rootUrl + action, // TODO : catalogue.url
         method: 'GET',
@@ -322,6 +323,13 @@ function doRemoveElementAction(action, ref, parentref, id, min){
                 var prevElementType = ((prevElement == null)?"":prevElement.id.split("_")[0]);
                 var nextElementType = ((nextElement == null)?"":nextElement.id.split("_")[0]);
 
+                if (id.indexOf("resourceConstraints")==-1 && originalElementType!=prevElementType && originalElementType!=nextElementType) {
+	            	var addSubtemplateRowCmp = document.getElementById(addSubtemplateRow);
+	            	if (addSubtemplateRowCmp) {
+	            		addSubtemplateRowCmp.style.display = "block";
+	            	}
+                }
+
                 if (bottomElement(thisElement)) {
                     var doSwapControls = true;
 
@@ -331,23 +339,23 @@ function doRemoveElementAction(action, ref, parentref, id, min){
                     }
 
                     if (doSwapControls) {
-                    swapControls(thisElement, prevElement);
-                    thisElement.remove();
-                    thisElement = prevElement;
-
-                        // only call topControls if same type for originalElement and prevElement
-                        if (originalElementType === prevElementType) {
-                            if (topElement(thisElement)) topControls(thisElement, min);
-                        }
-                } else {
-                    thisElement.remove();
-                    thisElement = nextElement;
-
-                        // only call topControls if same type for originalElement and nextElement
-                        if (originalElementType === nextElementType) {
-                            if (topElement(thisElement)) topControls(thisElement, min);
-                        }
-                }
+	                    swapControls(thisElement, prevElement);
+	                    thisElement.remove();
+	                    thisElement = prevElement;
+	
+	                    // only call topControls if same type for originalElement and prevElement
+	                    if (originalElementType === prevElementType) {
+	                        if (topElement(thisElement)) topControls(thisElement, min);
+	                    }
+	                } else {
+	                    thisElement.remove();
+	                    thisElement = nextElement;
+	
+	                    // only call topControls if same type for originalElement and nextElement
+	                    if (originalElementType === nextElementType) {
+	                        if (topElement(thisElement)) topControls(thisElement, min);
+	                    }
+	                }
 
                 } else {
                     thisElement.remove();
@@ -355,7 +363,7 @@ function doRemoveElementAction(action, ref, parentref, id, min){
 
                     // only  call topControls if same type for originalElement and nextElement
                     if (originalElementType === nextElementType) {
-                if (topElement(thisElement)) topControls(thisElement, min);
+		                if (topElement(thisElement)) topControls(thisElement, min);
                     }
                 }
               

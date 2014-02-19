@@ -75,7 +75,7 @@ public class ServiceContext extends BasicContext
 	private String service;
 	private String ipAddress;
 	private String uploadDir;
-	private int    maxUploadSize;
+	private double    maxUploadSize;
 	private JeevesServlet servlet;
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
@@ -104,7 +104,7 @@ public class ServiceContext extends BasicContext
 	public String getService()   { return service;   }
 	public String getIpAddress() { return ipAddress; }
 	public String getUploadDir() { return uploadDir; }
-    public int getMaxUploadSize() { return maxUploadSize; }
+    public double getMaxUploadSize() { return maxUploadSize; }
 
 	public UserSession    getUserSession()    { return userSession; }
 	public ProfileManager getProfileManager() { return profilMan;   }
@@ -124,7 +124,7 @@ public class ServiceContext extends BasicContext
 	public void setServlet (JeevesServlet serv)    { servlet  = serv;    }
 	public void setIpAddress(String address) { ipAddress = address; }
 	public void setUploadDir(String dir)     { uploadDir = dir;     }
-    public void setMaxUploadSize(int size)   { maxUploadSize = size;}
+    public void setMaxUploadSize(double size)   { maxUploadSize = size;}
     public void setStartupErrors(Map<String,String> errs)   { startupErrors = errs; startupError = true; }
 
 	public void setInputMethod (InputMethod m)  { input  = m; }

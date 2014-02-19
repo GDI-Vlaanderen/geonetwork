@@ -47,9 +47,12 @@
     	    <xsl:variable name="followingGraphicOverviewSiblingsCount" select="count(../following-sibling::*[name(.) = 'gmd:graphicOverview'])" />
             <xsl:variable name="fileName" select="gmd:fileName/gco:CharacterString"/>
 			<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
+            <xsl:variable name="url" select="$fileName"/>
+<!-- 
             <xsl:variable name="url" select="if (contains($fileName, '://') or not(string(normalize-space($fileName))))
                                                 then $fileName
                                                 else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
+-->                                                
 			<xsl:variable name="isUploadedThumb" select="(string($fileDescr)='large_thumbnail' or string($fileDescr)='thumbnail') and contains($fileName,concat('http://',/root/gui/env/server/host))"/>
 
 	        <xsl:apply-templates mode="iso19139" select="." >
@@ -84,12 +87,14 @@
 							</xsl:choose>
 						</xsl:variable>
 						<div class="md-view">
-						    <a rel="lightbox-viewset" href="{$url}" target="_blank">
-						        <img class="logo" src="{$url}">
-						            <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-						            <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-						        </img>
-						    </a>
+                        	<xsl:if test="contains($url, '://')">
+							    <a rel="lightbox-viewset" href="{$url}" target="_blank">
+							        <img class="logo" src="{$url}">
+							            <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+							            <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+							        </img>
+							    </a>
+						    </xsl:if>
 						</div>
 						<xsl:if test="$isUploadedThumb">
 							<a href="#" onclick="javascript:Ext.getCmp('editorPanel').saveBeforeRemoveThumbnail('{string($fileName)}','{string($fileDescr)}');">Voorbeeldweergave verwijderen</a>
@@ -174,7 +179,7 @@
 			</xsl:apply-templates>
        	</xsl:if>
  -->
- 	<xsl:for-each select="*">
+ 		<xsl:for-each select="*">
 	        <xsl:apply-templates mode="iso19139" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
@@ -191,10 +196,18 @@
         </xsl:apply-templates>
 <!-- 		<xsl:if test="not($currTab='dataQuality')"> -->
 			<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='report' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="ommitNameTag" select="false()"/>
+	            <xsl:with-param name="visible"   select="true()"/>	            
+			</xsl:apply-templates>
+<!--
 			<xsl:apply-templates mode="addReportElement" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
 			</xsl:apply-templates>
+-->			
 			</xsl:if>
 <!-- 	</xsl:if> -->
 	</xsl:template>
@@ -397,12 +410,14 @@
 				            <xsl:with-param name="edit"   select="$edit"/>
 				            <xsl:with-param name="text"   select="$text"/>
 				            <xsl:with-param name="editAttributes" select="false()"/>
+<!-- 
 		                    <xsl:with-param name="title">
 		                        <xsl:call-template name="getTitle">
 		                            <xsl:with-param name="name" select="name(@uuidref)"/>
 		                            <xsl:with-param name="schema" select="$schema"/>
 		                        </xsl:call-template>
 		                    </xsl:with-param>
+ -->
 						</xsl:apply-templates>
 			            <xsl:apply-templates mode="simpleAttribute" select="@xlink:href">
 							<xsl:with-param name="schema" select="$schema"/>
@@ -2825,6 +2840,13 @@
             gmd:identificationInfo/srv:SV_ServiceIdentification|
             gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
             gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='resourceConstraints' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="ommitNameTag" select="false()"/>
+	<!--            <xsl:with-param name="visible"   select="true()"/>-->	            
+	            <xsl:with-param name="visible"   select="count(gmd:resourceConstraints/gmd:MD_Constraints)=0 or count(gmd:resourceConstraints/gmd:MD_LegalConstraints)=0 or count(gmd:resourceConstraints/gmd:MD_SecurityConstraints)=0"/>
+			</xsl:apply-templates>
             <xsl:apply-templates mode="iso19139" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
                 <xsl:with-param name="schema" select="$schema"/>
                 <xsl:with-param name="edit"   select="$edit"/>
@@ -4029,6 +4051,9 @@
                         <xsl:when test="contains($fileName ,'://')">
                             <image type="unknown"><xsl:value-of select="$fileName"/></image>
                         </xsl:when>
+                        <xsl:when test="not(contains($fileName ,'://'))">
+                            <span class="thumbnail"><xsl:value-of select="$fileName"/></span>
+                        </xsl:when>
 
                         <!-- small thumbnail -->
 
@@ -4417,12 +4442,16 @@
 	                        </xsl:variable>
 	
 	                        <xsl:variable name="fileName" select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+	                        <xsl:variable name="url" select="$fileName"/>
+<!-- 
 	                        <xsl:variable name="url" select="if (contains($fileName, '://') or not(string(normalize-space($fileName))))
 	                                                then $fileName
 	                                                else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
-	
+ -->
+ 	
 	                       	<xsl:if test="not($url='')">
 		                        <div class="md-view">
+		                        	<xsl:if test="contains($url, '://')">
 			                            <a rel="lightbox-viewset" href="{$url}" target="thumbnail-view">
 			                                <img class="logo" src="{$url}">
 			                                    <xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
@@ -4430,7 +4459,8 @@
 			                                </img>
 			                            </a>
 			                            <br/>
-			                            <span class="thumbnail"><a href="{$url}" target="thumbnail-view"><xsl:value-of select="$imageTitle"/></a></span>
+		                            </xsl:if>
+		                            <span class="thumbnail"><a href="{$url}" target="thumbnail-view"><xsl:value-of select="$imageTitle"/></a></span>
 		                        </div>
 	                        </xsl:if>
 	                    </xsl:with-param>
@@ -4451,7 +4481,7 @@
         <xsl:variable name="desc" select="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString"/>
         <xsl:variable name="info" select="ancestor::*[name(.) = 'gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info"></xsl:variable>
 
-        <xsl:if test="string($fileName)">
+        <xsl:if test="contains(string($fileName),'://')">
             <thumbnail>
                 <href><xsl:value-of select="geonet:get-thumbnail-url($fileName, $info, /root/gui/locService)"/></href>
                 <desc><xsl:value-of select="$desc"/></desc>

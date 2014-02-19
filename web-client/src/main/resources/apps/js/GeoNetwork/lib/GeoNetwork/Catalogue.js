@@ -741,7 +741,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 url: this.services.mdSelect,
 	            method: 'POST', 
 //            OpenLayers.Request.GET({
-                url: this.services.mdSelect,
+//                url: this.services.mdSelect,
                 params: {
                     id: uuids.join(",")/*[i]*/,
                     selected: type
@@ -1261,7 +1261,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
 	        scope.loadingMask.show();
         }
-        OpenLayers.Request.GET({
+	        Ext.Ajax.request({
+	            method: 'POST', 
+//        OpenLayers.Request.GET({
             url: url,
             params: params,
             success: function(response){

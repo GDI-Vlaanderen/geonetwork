@@ -52,8 +52,26 @@
 	                                                        <xsl:attribute name="disabled"/>
 								                            <xsl:variable name="disabled" select="true"/>                                            
                                                 		</xsl:when>
-                                                		<xsl:when test="id='10' or id='11'">
-															<xsl:if test="$isWorkspace='true'">
+<!-- 
+                                                		<xsl:when test="id='4'">
+															<xsl:if test="lower-case($nodeType)='agiv'">
+		                                                        <xsl:attribute name="disabled"/>
+									                            <xsl:variable name="disabled" select="true"/>
+									                        </xsl:if>                                            
+                                                		</xsl:when>
+                                                		<xsl:when test="id='5'">
+	                                                        <xsl:attribute name="disabled"/>
+								                            <xsl:variable name="disabled" select="true"/>                                            
+                                                		</xsl:when>
+-->
+                                                		<xsl:when test="id='10'">
+															<xsl:if test="$isWorkspace='true' or $currentStatus='11'">
+		                                                        <xsl:attribute name="disabled"/>
+									                            <xsl:variable name="disabled" select="true"/>                                            
+															</xsl:if>
+                                                		</xsl:when>
+                                                		<xsl:when test="id='11'">
+															<xsl:if test="$isWorkspace='true' or $currentStatus='10'">
 		                                                        <xsl:attribute name="disabled"/>
 									                            <xsl:variable name="disabled" select="true"/>                                            
 															</xsl:if>
@@ -88,9 +106,15 @@
                                                         </xsl:when>
                                                         <xsl:otherwise>
 		                                                	<xsl:choose>
-		                                                		<xsl:when test="id='0' or id='1' or id='2' or id='3' or id='6' or id='8' or id='9' or id='12' or id='13' or id='14'">
+		                                                		<xsl:when test="id='0' or id='1' or id='3' or id='6' or id='8' or id='9' or id='12' or id='13' or id='14'">
 			                                                        <xsl:attribute name="disabled"/>
 										                            <xsl:variable name="disabled" select="true"/>                                            
+		                                                		</xsl:when>
+		                                                		<xsl:when test="id='2'">
+																	<xsl:if test="lower-case($nodeType)='agiv'">
+				                                                        <xsl:attribute name="disabled"/>
+											                            <xsl:variable name="disabled" select="true"/>                                            
+			                                                        </xsl:if>
 		                                                		</xsl:when>
 		                                                		<xsl:when test="id='4' or id='5' or id='7'">
 			                                                		<xsl:if test="$currentStatus='2' or $currentStatus='3'">
@@ -98,8 +122,14 @@
 											                            <xsl:variable name="disabled" select="true"/>                                            
 			                                                        </xsl:if>
 		                                                		</xsl:when>
-		                                                		<xsl:when test="id='10' or id='11'">
-																	<xsl:if test="$isWorkspace='true'">
+		                                                		<xsl:when test="id='10'">
+																	<xsl:if test="$isWorkspace='true' or $currentStatus='11'">
+				                                                        <xsl:attribute name="disabled"/>
+											                            <xsl:variable name="disabled" select="true"/>                                            
+																	</xsl:if>
+		                                                		</xsl:when>
+		                                                		<xsl:when test="id='11'">
+																	<xsl:if test="$isWorkspace='true' or $currentStatus='10'">
 				                                                        <xsl:attribute name="disabled"/>
 											                            <xsl:variable name="disabled" select="true"/>                                            
 																	</xsl:if>
@@ -118,7 +148,7 @@
                                                         </xsl:when>
                                                         <xsl:otherwise>
 		                                                	<xsl:choose>
-		                                                		<xsl:when test="id='0' or id='1' or id='2' or id='3' or id='5' or id='6' or id='7' or id='8' or id='9' or id='12' or id='13' or id='14'">
+		                                                		<xsl:when test="id='0' or id='1' or id='2' or id='3' or id='5' or id='6' or id='7' or id='8' or id='9' or id='10' or id='11' or id='12' or id='13' or id='14'">
 			                                                        <xsl:attribute name="disabled"/>
 																	<xsl:variable name="disabled" select="true"/>                                            
 		                                                		</xsl:when>
@@ -127,12 +157,6 @@
 				                                                        <xsl:attribute name="disabled"/>
 											                            <xsl:variable name="disabled" select="true"/>                                            
 			                                                        </xsl:if>
-		                                                		</xsl:when>
-		                                                		<xsl:when test="id='10' or id='11'">
-																	<xsl:if test="$isWorkspace='true'">
-				                                                        <xsl:attribute name="disabled"/>
-											                            <xsl:variable name="disabled" select="true"/>                                            
-																	</xsl:if>
 		                                                		</xsl:when>
 		                                                		<xsl:otherwise>
 		                                                		</xsl:otherwise>
