@@ -1826,6 +1826,9 @@
 							<xsl:when test="starts-with($protocol,'OGC:WMS-')">
 								<xsl:attribute name="type">application/vnd.ogc.wms_xml</xsl:attribute>
 							</xsl:when>
+							<xsl:when test="starts-with($protocol,'OGC:WMTS-')">
+								<xsl:attribute name="type">application/vnd.ogc.wmts_xml</xsl:attribute>
+							</xsl:when>
 							<xsl:when test="$protocol='ESRI:AIMS-'">
 								<xsl:attribute name="type">application/vnd.esri.arcims_axl</xsl:attribute>
 							</xsl:when>

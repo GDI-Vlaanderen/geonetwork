@@ -202,8 +202,9 @@ Mapping between :
                                     <protocol>
                                         <gco:CharacterString>
                                         	<xsl:choose>
-                                        		<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">
+                                        		<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities' or name(.)='Capabilities'">
 		                                        	<xsl:choose>
+		                                        		<xsl:when test="$ogctype='WMTS1.0.0'">OGC:WMTS-1.0.0-http-get-capabilities</xsl:when>
 		                                        		<xsl:when test="$ogctype='WMS1.1.1'">OGC:WMS-1.1.1-http-get-capabilities</xsl:when>
 		                                        		<xsl:when test="$ogctype='WMS1.3.0'">OGC:WMS-1.3.0-http-get-capabilities</xsl:when>
 		                                        		<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>

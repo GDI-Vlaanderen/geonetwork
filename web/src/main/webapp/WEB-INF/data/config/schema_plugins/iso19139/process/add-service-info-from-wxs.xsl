@@ -19,9 +19,9 @@
 
   <!-- i18n information -->
   <xsl:variable name="wxs-info-loc">
-    <msg id="a" xml:lang="eng">OGC WMS or WFS service </msg>
+    <msg id="a" xml:lang="eng">OGC WMS, WMTS or WFS service </msg>
     <msg id="b" xml:lang="eng"> is described in online resource section. Run this process to add operations information</msg>
-    <msg id="a" xml:lang="fre">Le service WMS ou WFS </msg>
+    <msg id="a" xml:lang="fre">Le service WMS, WMTS ou WFS </msg>
     <msg id="b" xml:lang="fre"> est décrit dans la section resource en ligne. Exécuter cette action pour ajouter ou remplacer les informations relatives aux opérations</msg>
   </xsl:variable>
 
@@ -36,7 +36,7 @@
     Check if containsOperation element is already defined
   -->
   <xsl:variable name="wxsOnlineNodes"
-    select="//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine//gmd:CI_OnlineResource[(contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')
+    select="//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine//gmd:CI_OnlineResource[(contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or contains(gmd:protocol/gco:CharacterString, 'OGC:WMTS')
     or contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')) and gmd:linkage/gmd:URL = $wxsServiceUrl]"/>
   <xsl:variable name="wxsProtocol" select="$wxsOnlineNodes/gmd:protocol/gco:CharacterString"/>
   
@@ -48,6 +48,9 @@
       <xsl:choose>
         <xsl:when test="contains($wxsProtocol, 'WMS')">
           <xsl:copy-of select="geonet:get-wxs-capabilities($wxsServiceUrl, 'WMS', '1.3.0')"/>
+        </xsl:when>
+        <xsl:when test="contains($wxsProtocol, 'WMTS')">
+          <xsl:copy-of select="geonet:get-wxs-capabilities($wxsServiceUrl, 'WMTS', '1.0.0')"/>
         </xsl:when>
         <xsl:when test="contains($wxsProtocol, 'WFS')">
           <xsl:copy-of select="geonet:get-wxs-capabilities($wxsServiceUrl, 'WFS', '1.1.0')"/>
@@ -74,7 +77,7 @@
       select="$root//*[local-name(.)='SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"/>
     
     <xsl:variable name="onlineResources"
-      select="$root//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[(contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')
+      select="$root//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[(contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or contains(gmd:protocol/gco:CharacterString, 'OGC:WMTS')
                                             or contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')) 
                                             and normalize-space(gmd:linkage/gmd:URL)!='']"/>
 

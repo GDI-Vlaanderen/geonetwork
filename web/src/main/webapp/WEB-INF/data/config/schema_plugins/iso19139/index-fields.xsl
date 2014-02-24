@@ -365,13 +365,13 @@
 			    	<Field name="download" string="true" store="false" index="true"/>
 			  	</xsl:if>
 			  
-				<xsl:if test="contains($protocol, 'OGC:WMS')">
+				<xsl:if test="contains($protocol, 'OGC:WMS') or contains($protocol, 'OGC:WMTS')">
 			   	 	<Field name="dynamic" string="true" store="false" index="true"/>
 			  	</xsl:if>
 				<Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype)}" store="true" index="false"/>
 				
 				<!-- Add KML link if WMS -->
-				<xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
+				<xsl:if test="starts-with($protocol,'OGC:WMS-')and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
 					<!-- FIXME : relative path -->
 					<Field name="link" string="{concat($title, '|', $desc, '|', 
 						'../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title, 

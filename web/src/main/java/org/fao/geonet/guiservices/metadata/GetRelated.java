@@ -258,7 +258,7 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("uuid").setText(uuid));
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
-            parameters.addContent(new Element("sortOrder").addContent("reverse"));
+//            parameters.addContent(new Element("sortOrder").addContent("reverse"));
             parameters.addContent(new Element("from").addContent(from));
             parameters.addContent(new Element("to").addContent(to));
 

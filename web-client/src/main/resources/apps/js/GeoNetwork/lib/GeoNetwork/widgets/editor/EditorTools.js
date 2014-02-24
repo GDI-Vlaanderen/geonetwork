@@ -323,7 +323,7 @@ function doRemoveElementAction(action, ref, parentref, id, min){
                 var prevElementType = ((prevElement == null)?"":prevElement.id.split("_")[0]);
                 var nextElementType = ((nextElement == null)?"":nextElement.id.split("_")[0]);
 
-                if (id.indexOf("resourceConstraints")==-1 && originalElementType!=prevElementType && originalElementType!=nextElementType) {
+                if (id.indexOf("resourceConstraints")==-1 && id.indexOf("report")==-1 && originalElementType!=prevElementType && originalElementType!=nextElementType) {
 	            	var addSubtemplateRowCmp = document.getElementById(addSubtemplateRow);
 	            	if (addSubtemplateRowCmp) {
 	            		addSubtemplateRowCmp.style.display = "block";

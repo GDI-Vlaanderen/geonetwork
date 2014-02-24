@@ -2417,6 +2417,8 @@
 		<xsl:param name="visible" select="false()"/>
 		<xsl:param name="embedded"/>
 		<xsl:param name="ommitNameTag" select="true()"/>
+		<xsl:param name="title" />
+		<xsl:param name="content" />
 		<xsl:variable name="name" select="concat(@prefix,':',@name)"/>
 		<xsl:variable name="qname"><xsl:value-of select="concat(@prefix,'COLON',@name)"/></xsl:variable>
 	    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
@@ -2427,27 +2429,25 @@
 				<options>
 				    <xsl:choose>
 						<xsl:when test="$name='gmd:resourceConstraints'">
-							<xsl:if test="count(../gmd:resourceConstraints/gmd:MD_Constraints)=0">
-								<option name="gmd:MD_Constraints">
-								  <xsl:call-template name="getTitle">
-								    <xsl:with-param name="name">gmd:MD_Constraints</xsl:with-param>
-								    <xsl:with-param name="schema" select="$schema"/>
-								  </xsl:call-template>
-								</option>
-								</xsl:if>
-				              <option name="gmd:MD_LegalConstraints">
-				                <xsl:attribute name="selected">selected</xsl:attribute>
-				                <xsl:call-template name="getTitle">
-				                  <xsl:with-param name="name">gmd:MD_LegalConstraints</xsl:with-param>
-				                  <xsl:with-param name="schema" select="$schema"/>
-				                </xsl:call-template>
-				              </option>
-				              <option name="gmd:MD_SecurityConstraints">
-				                <xsl:call-template name="getTitle">
-				                  <xsl:with-param name="name">gmd:MD_SecurityConstraints</xsl:with-param>
-				                  <xsl:with-param name="schema" select="$schema"/>
-				                </xsl:call-template>
-				              </option>
+							<option name="gmd:MD_Constraints">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+								<xsl:call-template name="getTitle">
+									<xsl:with-param name="name">gmd:MD_Constraints</xsl:with-param>
+									<xsl:with-param name="schema" select="$schema"/>
+								</xsl:call-template>
+							</option>
+							<option name="gmd:MD_LegalConstraints">
+								<xsl:call-template name="getTitle">
+									<xsl:with-param name="name">gmd:MD_LegalConstraints</xsl:with-param>
+									<xsl:with-param name="schema" select="$schema"/>
+								</xsl:call-template>
+							</option>
+							<option name="gmd:MD_SecurityConstraints">
+								<xsl:call-template name="getTitle">
+									<xsl:with-param name="name">gmd:MD_SecurityConstraints</xsl:with-param>
+									<xsl:with-param name="schema" select="$schema"/>
+								</xsl:call-template>
+							</option>
 						</xsl:when>
 						<xsl:when test="$name='gmd:report'">
 				        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
@@ -2476,10 +2476,7 @@
 						          	<xsl:if test="$service=true()">
 						                <xsl:attribute name="selected">selected</xsl:attribute>
 					                </xsl:if>
-					                <xsl:call-template name="getTitle">
-					                  <xsl:with-param name="name">gmd:DQ_DomainConsistency</xsl:with-param>
-					                  <xsl:with-param name="schema" select="$schema"/>
-					                </xsl:call-template>
+					                INSPIRE Domeinconsistentie
 					              </option>
 						</xsl:when>
 						<xsl:otherwise>
@@ -2514,20 +2511,59 @@
 				<xsl:with-param name="schema" select="$schema"/>
 			</xsl:call-template>
 		</xsl:variable>
-	    <xsl:call-template name="simpleElementGui">
-			<xsl:with-param name="id" select="concat('_',$parentName,'_',$name,'_subtemplate_row')"/>
-			<xsl:with-param name="title">
-				<xsl:call-template name="getTitle">
-					<xsl:with-param name="name" select="$name"/>
-					<xsl:with-param name="schema" select="$schema"/>
-				</xsl:call-template>
-			</xsl:with-param>
-			<xsl:with-param name="text" select="$text"/>
-			<xsl:with-param name="addLink" select="$addLink"/>
-			<xsl:with-param name="helpLink" select="$helpLink"/>
-			<xsl:with-param name="edit" select="$edit"/>
-			<xsl:with-param name="visible" select="$visible"/>
-		</xsl:call-template>
+		<xsl:variable name="id" select="generate-id(.)"/>
+		<xsl:variable name="selectionRow">
+		    <xsl:call-template name="simpleElementGui">
+				<xsl:with-param name="id" select="concat('_',$parentName,'_',$name,'_subtemplate_row')"/>
+				<xsl:with-param name="title">
+					<xsl:call-template name="getTitle">
+						<xsl:with-param name="name" select="$name"/>
+						<xsl:with-param name="schema" select="$schema"/>
+					</xsl:call-template>
+				</xsl:with-param>
+				<xsl:with-param name="text" select="$text"/>
+				<xsl:with-param name="addLink" select="$addLink"/>
+				<xsl:with-param name="helpLink" select="$helpLink"/>
+				<xsl:with-param name="edit" select="$edit"/>
+				<xsl:with-param name="visible" select="$visible"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:if test="not($content)">
+			<xsl:copy-of select="$selectionRow"/>
+		</xsl:if>
+		<xsl:if test="$content">
+		    <tr id="{$id}">
+		      <td colspan="2" class="complex">
+		        <fieldset>
+		          <legend>
+		            <span>
+		              <xsl:if test="/root/gui/config/metadata-view-toggleTab">
+		                <div class="toggle button tgDown" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
+		                  >&#160;</div>
+		              </xsl:if>
+		              <xsl:choose>
+		                <xsl:when test="$title!=''">
+		                  <xsl:value-of select="$title"/>
+		                </xsl:when>
+		                <xsl:otherwise>
+		                  <xsl:call-template name="showTitleWithTag">
+		                    <xsl:with-param name="title" select="$title"/>
+		                  </xsl:call-template>
+		                </xsl:otherwise>
+		              </xsl:choose>
+		            </span>
+		          </legend>
+		          <!-- Check if divs could be used instead ? -->
+		          <table class="gn" id="toggled{$id}">
+		            <tbody>
+		              <xsl:copy-of select="$selectionRow"/>
+		              <xsl:copy-of select="$content"/>
+		            </tbody>
+		          </table>
+		        </fieldset>
+		      </td>
+		    </tr>
+		</xsl:if>
   </xsl:template>
 <!-- 
   <xsl:template mode="addReportElement" match="*">
