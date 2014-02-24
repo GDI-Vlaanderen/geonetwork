@@ -126,9 +126,10 @@
     <xsl:param name="mimeType" as="xs:string?"/>
     
     <xsl:choose>
-      <xsl:when test="(starts-with($protocol,'WWW:LINK-') or starts-with($protocol,'WWW:DOWNLOAD-')) and $mimeType!=''">
+      <xsl:when test="(starts-with($protocol,'WWW:LINK-') or starts-with($protocol,'WWW:DOWNLOAD-') or starts-with($protocol,'LINK')) and $mimeType!=''">
         <xsl:value-of select="$mimeType"/>
       </xsl:when>
+      <xsl:when test="starts-with($protocol,'LINK')">text/html</xsl:when>
       <xsl:when test="starts-with($protocol,'WWW:LINK')">text/html</xsl:when>
       <xsl:when test="starts-with($protocol,'WWW:DOWNLOAD') and contains($linkage,'.jpg')">image/jpeg</xsl:when>
       <xsl:when test="starts-with($protocol,'WWW:DOWNLOAD') and contains($linkage,'.png')">image/png</xsl:when>
@@ -139,6 +140,7 @@
       <xsl:when test="starts-with($protocol,'GLG:KML') and contains($linkage,'.kml')">application/vnd.google-earth.kml+xml</xsl:when>
       <xsl:when test="starts-with($protocol,'GLG:KML') and contains($linkage,'.kmz')">application/vnd.google-earth.kmz</xsl:when>
       <xsl:when test="starts-with($protocol,'OGC:WMS')">application/vnd.ogc.wms_xml</xsl:when>
+      <xsl:when test="starts-with($protocol,'OGC:WMTS')">application/vnd.ogc.wmts_xml</xsl:when>
       <xsl:when test="$protocol='ESRI:AIMS-'">application/vnd.esri.arcims_axl</xsl:when>
       <xsl:when test="$protocol!=''"><xsl:value-of select="$protocol"/></xsl:when>
       <!-- fall back to the default content type -->

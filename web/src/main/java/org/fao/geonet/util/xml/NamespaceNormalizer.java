@@ -282,9 +282,8 @@ public class NamespaceNormalizer {
         normNSList.addAll(normNSs);
         for(Object normNSO : normNSList) {
             Namespace normNS = (Namespace) normNSO;
-            //System.out.println("additional namespace: " + normNS);
             e.removeNamespaceDeclaration(normNS);
-            if(!normNS.getPrefix().startsWith("xxx")) {
+            if(!StringUtils.isBlank(normNS.getPrefix()) && !normNS.getPrefix().startsWith("xxx")) {
                 e.addNamespaceDeclaration(normNS);
             }
         }

@@ -196,7 +196,7 @@
         </xsl:apply-templates>
 <!-- 		<xsl:if test="not($currTab='dataQuality')"> -->
 			<xsl:if test="$edit=true()">
-			<xsl:apply-templates mode="addElement" select="geonet:child[@name='report' and @prefix='gmd']">
+			<xsl:apply-templates mode="addElement" select="../geonet:child[@name='report' and @prefix='gmd']">
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
 	            <xsl:with-param name="ommitNameTag" select="false()"/>
@@ -217,19 +217,40 @@
     <!-- ===================================================================== -->
 
     <xsl:template mode="iso19139" match="gmd:DQ_DataQuality|gmd:identificationInfo|gmd:distributionInfo|gmd:thesaurusName|
-              gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints|gmd:spatialRepresentationInfo|gmd:pointOfContact|
+              gmd:resourceConstraints|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:serviceType|srv:containsOperations|srv:coupledResource|
               gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:aggregationInfo|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
-              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS|gmd:onLine">
+              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS|gmd:onLine|gmd:processor">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
         <xsl:apply-templates mode="complexElement" select=".">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="title">
+	            <xsl:call-template name="getTitle">
+			        <xsl:with-param name="name">
+				        <xsl:choose>
+				            <xsl:when test="count(./child::*[name() = 'gmd:MD_Constraints'])>0">
+					        	<xsl:value-of select="'gmd:MD_Constraints'"/>
+				            </xsl:when>
+				            <xsl:when test="count(./child::*[name() = 'gmd:MD_LegalConstraints'])>0">
+					        	<xsl:value-of select="'gmd:MD_LegalConstraints'"/>
+				            </xsl:when>
+				            <xsl:when test="count(./child::*[name() = 'gmd:MD_SecurityConstraints'])>0">
+					        	<xsl:value-of select="'gmd:MD_SecurityConstraints'"/>
+				            </xsl:when>
+					        <xsl:otherwise>
+					        	<xsl:value-of select="name(.)"/>
+					        </xsl:otherwise>
+				        </xsl:choose>
+		        	</xsl:with-param>
+			        <xsl:with-param name="schema" select="$schema"/>
+		    	</xsl:call-template>
+			</xsl:with-param>
         </xsl:apply-templates>
         <xsl:if test="name(.)='gmd:dataQualityInfo'">
 	        <xsl:if test="gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency[contains(gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString,'2007/2/E')]">
@@ -1826,7 +1847,7 @@
     <!-- ============================================================================= -->
 
     <!-- Display date and dateType in same section -->
-    <xsl:template mode="iso19139" match="gmd:CI_Date" priority="2">
+    <xsl:template mode="iso19139" match="gmd:date[gmd:CI_Date]" priority="2">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -1835,21 +1856,28 @@
                 <xsl:apply-templates mode="complexElement" select=".">
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="edit"    select="$edit"/>
+					<xsl:with-param name="title">
+						<xsl:call-template name="getTitle">
+							<xsl:with-param name="node" select="./gmd:CI_Date"/>
+							<xsl:with-param name="name" select="'gmd:CI_Date'"/>
+							<xsl:with-param name="schema" select="$schema"/>
+						</xsl:call-template>
+					</xsl:with-param>
                     <xsl:with-param name="content">
                             <tr>
                                 <td class="col" style="border:none">
                                     <table class="gn">
 			                        <tbody>
-                                        <xsl:apply-templates mode="simpleElement" select="gmd:date">
+                                        <xsl:apply-templates mode="simpleElement" select="./gmd:CI_Date/gmd:date">
                                             <xsl:with-param name="schema"  select="$schema"/>
                                             <xsl:with-param name="edit"   select="$edit"/>
                                             <xsl:with-param name="text">
 
-                                                <xsl:variable name="ref" select="gmd:date/gco:DateTime/geonet:element/@ref|gmd:date/gco:Date/geonet:element/@ref"/>
+                                                <xsl:variable name="ref" select="./gmd:CI_Date/gmd:date/gco:DateTime/geonet:element/@ref|./gmd:CI_Date/gmd:date/gco:Date/geonet:element/@ref"/>
 
                                                 <xsl:variable name="format">
                                                     <xsl:choose>
-                                                        <xsl:when test="gmd:date/gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+                                                        <xsl:when test="./gmd:CI_Date/gmd:date/gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
                                                         <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
                                                     </xsl:choose>
                                                 </xsl:variable>
@@ -1858,7 +1886,7 @@
                                                 <xsl:call-template name="calendar">
 								                    <xsl:with-param name="schema" select="$schema"/>
                                                     <xsl:with-param name="ref" select="$ref"/>
-                                                    <xsl:with-param name="date" select="gmd:date/gco:DateTime/text()|gmd:date/gco:Date/text()"/>
+                                                    <xsl:with-param name="date" select="./gmd:CI_Date/gmd:date/gco:DateTime/text()|./gmd:CI_Date/gmd:date/gco:Date/text()"/>
                                                     <xsl:with-param name="format" select="$format"/>
                                                 </xsl:call-template>
 
@@ -1870,7 +1898,7 @@
                                 <td class="col" style="border:none">
                                     <table class="gn">
 			                        <tbody>
-                                        <xsl:apply-templates mode="iso19139" select="gmd:dateType">
+                                        <xsl:apply-templates mode="iso19139" select="./gmd:CI_Date/gmd:dateType">
                                             <xsl:with-param name="schema"  select="$schema"/>
                                             <xsl:with-param name="edit"   select="$edit"/>
                                         </xsl:apply-templates>
@@ -1886,11 +1914,11 @@
 
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates mode="simpleElement" select="gmd:date">
+                <xsl:apply-templates mode="simpleElement" select="./gmd:CI_Date/gmd:date">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="false()"/>
                 </xsl:apply-templates>
-                <xsl:apply-templates mode="iso19139" select="gmd:dateType">
+                <xsl:apply-templates mode="iso19139" select="./gmd:CI_Date/gmd:dateType">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit"   select="false()"/>
                 </xsl:apply-templates>
@@ -2830,6 +2858,12 @@
             <xsl:with-param name="flat"   select="$flat"/>
         </xsl:apply-templates>
 
+		<xsl:apply-templates mode="addElement" select="geonet:child[@name='dataQualityInfo' and @prefix='gmd']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="visible"   select="count(gmd:dataQualityInfo)=0"/>
+		</xsl:apply-templates>
+
         <xsl:apply-templates mode="elementEP" select="gmd:dataQualityInfo|geonet:child[string(@name)='dataQualityInfo']">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
@@ -2844,14 +2878,18 @@
 	            <xsl:with-param name="schema" select="$schema"/>
 	            <xsl:with-param name="edit"   select="$edit"/>
 	            <xsl:with-param name="ommitNameTag" select="false()"/>
-	<!--            <xsl:with-param name="visible"   select="true()"/>-->	            
-	            <xsl:with-param name="visible"   select="count(gmd:resourceConstraints/gmd:MD_Constraints)=0 or count(gmd:resourceConstraints/gmd:MD_LegalConstraints)=0 or count(gmd:resourceConstraints/gmd:MD_SecurityConstraints)=0"/>
+	            <xsl:with-param name="visible"   select="true()"/>	            
+	            <xsl:with-param name="title">
+					<xsl:value-of select="/root/gui/strings/constraintsTab"/>
+				</xsl:with-param>
+	            <xsl:with-param name="content">
+		            <xsl:apply-templates mode="elementEP" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
+		                <xsl:with-param name="schema" select="$schema"/>
+		                <xsl:with-param name="edit"   select="$edit"/>
+		                <xsl:with-param name="flat"   select="$flat"/>
+		            </xsl:apply-templates>
+	            </xsl:with-param>	            
 			</xsl:apply-templates>
-            <xsl:apply-templates mode="iso19139" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
-                <xsl:with-param name="schema" select="$schema"/>
-                <xsl:with-param name="edit"   select="$edit"/>
-                <xsl:with-param name="flat"   select="$flat"/>
-            </xsl:apply-templates>
         </xsl:for-each>
 
         <xsl:apply-templates mode="elementEP" select="gmd:distributionInfo|geonet:child[string(@name)='distributionInfo']">
@@ -3099,7 +3137,17 @@
 	            </xsl:apply-templates>
             </xsl:with-param>
 		</xsl:apply-templates>
+		<xsl:apply-templates mode="addElement" select="geonet:child[@name='processor' and @prefix='gmd']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="visible"   select="count(gmd:processor)=0"/>
+		</xsl:apply-templates>
         <xsl:for-each select="gmd:processor">
+			<xsl:apply-templates mode="elementEP" select=".">
+                <xsl:with-param name="schema"  select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+            </xsl:apply-templates>
+<!-- 
             <xsl:call-template name="complexElementGuiWrapper">
 	            <xsl:with-param name="title">
 					<xsl:call-template name="getTitle">
@@ -3117,6 +3165,7 @@
                 <xsl:with-param name="edit"   select="$edit"/>
                 <xsl:with-param name="realname"   select="name(.)"/>
             </xsl:call-template>
+-->
 		</xsl:for-each>
         <xsl:apply-templates mode="elementEP" select="gmd:source">
             <xsl:with-param name="schema" select="$schema"/>
@@ -3480,7 +3529,7 @@
     <!-- online resources: WMS get capabilities -->
     <!-- ============================================================================= -->
 
-    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]" priority="2">
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[(starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') or starts-with(gmd:protocol/gco:CharacterString,'OGC:WMTS-')) and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]" priority="2">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
         <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
@@ -3863,13 +3912,13 @@
                     <xsl:attribute name="href" select="$linkage"/>
                     <xsl:attribute name="name" select="$name"/>
                     <xsl:attribute name="protocol" select="$protocol"/>
-                    <xsl:attribute name="type" select="geonet:protocolMimeType($linkage, $protocol, $mimeType)"/>
+                    <xsl:attribute name="type" select="concat(geonet:protocolMimeType($linkage, $protocol, $mimeType),$protocol)"/>
                 </xsl:element>
 
             </xsl:if>
 
             <!-- Generate a KML output link for a WMS service -->
-            <xsl:if test="string($linkage)!='' and starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
+            <xsl:if test="string($linkage)!='' and starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($name)!=''">
 
                 <xsl:element name="link">
                     <xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
@@ -3880,7 +3929,7 @@
                     </xsl:attribute>
 -->                    
                     <xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
-                    <xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>
+                    <xsl:attribute name="type">application/vnd.google-earth.kml+xml<xsl:value-of select="$protocol"/></xsl:attribute>
                 </xsl:element>
             </xsl:if>
 
@@ -3897,7 +3946,7 @@
                         <xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
                     </link>
                 </xsl:when>
-                <xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!=''">
+                <xsl:when test="(starts-with($protocol,'OGC:WMS-') or starts-with($protocol,'OGC:WMTS-')) and contains($protocol,'-get-capabilities') and string($linkage)!=''">
                     <link type="wms">
                         <!--xsl:value-of select="concat('javascript:runIM_selectService(&#34;'  ,  $linkage  ,  '&#34;, 2,',$id,')' )"/-->
                         <xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
@@ -5123,6 +5172,7 @@ to build the XML fragment in the editor. -->
     <!-- ============================================================================= -->
     <!-- Group resource constraints in a box -->
     <!-- ============================================================================= -->
+<!--
     <xsl:template mode="iso19139" match="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
@@ -5156,6 +5206,7 @@ to build the XML fragment in the editor. -->
 	       	</xsl:if>
        	</xsl:if>
 	</xsl:template>
+-->
 
     <!-- ============================================================================= -->
     <!-- pass -->

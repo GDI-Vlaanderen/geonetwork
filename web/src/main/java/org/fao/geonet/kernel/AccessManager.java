@@ -501,11 +501,10 @@ public class AccessManager {
         return dbms.select(query);
     }
 
-/*
-    public Element getAdmins(Dbms dbms, Set<String> metadataIds) throws Exception {
+    public Element getContentAdmins(Dbms dbms, Set<String> metadataIds) throws Exception {
 
         StringBuffer metadataIdsList = new StringBuffer();
-        for (Iterator i = metadataIds.iterator(); i.hasNext(); ) {
+        for (Iterator<String> i = metadataIds.iterator(); i.hasNext(); ) {
             String metadataId = (String) i.next();
             metadataIdsList.append('\'' + metadataId + '\'');
 
@@ -515,14 +514,14 @@ public class AccessManager {
         }
 
         String query =
-        "SELECT id as userid, name as name, surname as surname, email as email from Users "+
-                "WHERE profile = '"+Geonet.Profile.ADMINISTRATOR+"' "+
-                "ORDER BY id";
+        "SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m, Users u "+
+                "WHERE m.id IN (" + metadataIdsList + ") "+
+                "AND u.profile = '"+Geonet.Profile.ADMINISTRATOR+"' "+
+                "ORDER BY u.id";
 
-        System.out.println("** getAdmins query: " + query);
+        System.out.println("** getContentAdmins query: " + query);
         return dbms.select(query);
     }
-*/
     
     /**
      * Returns whether a particular metadata is visible to group 'all'.

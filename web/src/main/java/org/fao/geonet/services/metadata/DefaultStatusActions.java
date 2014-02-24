@@ -212,13 +212,13 @@ public class DefaultStatusActions implements StatusActions {
 			String changeDate, String changeMessage) throws Exception {
 		System.out.println("Starting statusChange to " + status + " for #"
 				+ metadataIds.size() + " metadata");
+		Map<String,String> recordsToBeDeleted = new HashMap<String,String>();
 		try {
 
 			Set<String> unchanged = new HashSet<String>();
 			Map<String, Map> changedMmetadataIdsToInformEditors = new HashMap<String,Map>();
 			Map<String, Map> changedMmetadataIdsToInformReviewers = new HashMap<String,Map>();
 			Map<String, Map> changedMmetadataIdsToInformAdministrators = new HashMap<String,Map>();
-
 			// -- process the metadata records to set status
 			for (String mid : metadataIds) {
 				String currentStatus = dm.getCurrentStatus(dbms, mid);
@@ -332,10 +332,7 @@ public class DefaultStatusActions implements StatusActions {
 								if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
 									changedMmetadataIdsToInformAdministrators.put(mid,properties);
 								}
-								backupFile(context, mid, mdInfo.uuid, MEFLib.doExport(context, mdInfo.uuid, "full", false, true, false));
-								File pb = new File(Lib.resource.getMetadataDir(context, mid));
-								FileCopyMgr.removeDirectoryOrFile(pb);
-								dm.deleteMetadata(context, dbms, mid);
+								recordsToBeDeleted.put(mid, mdInfo.uuid);
 								break;
 							case 13: //REJECTED_FOR_RETIRE
 								changedMmetadataIdsToInformEditors.put(mid,properties);
@@ -381,6 +378,18 @@ public class DefaultStatusActions implements StatusActions {
 			System.out.println("ERROR in statusChange " + x.getMessage());
 			x.printStackTrace();
 			throw new Exception(x);
+		} finally {
+			try {
+				for (String mid : recordsToBeDeleted.keySet()) {
+					String uuid = recordsToBeDeleted.get(mid);
+					backupFile(context, mid, uuid, MEFLib.doExport(context, uuid, "full", false, true, false));
+					File pb = new File(Lib.resource.getMetadataDir(context, mid));
+					FileCopyMgr.removeDirectoryOrFile(pb);
+					dm.deleteMetadata(context, dbms, mid);
+				}
+			} catch (Exception e) {
+				System.out.println("ERROR in statusChange during delete metadata " + e.getMessage());
+			}			
 		}
 	}
 
@@ -812,7 +821,12 @@ public class DefaultStatusActions implements StatusActions {
 			String changeDate, String changeMessage, String profile, String status, List<String> emailMetadataIdList) throws Exception {
 
 		// --- get content reviewers (sorted on content reviewer userid)
-		Element contentUsers = am.getContentUsers(dbms, metadataMap.keySet(), profile);
+		Element contentUsers;
+		if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
+			contentUsers = am.getContentAdmins(dbms, metadataMap.keySet());
+		} else {
+			contentUsers = am.getContentUsers(dbms, metadataMap.keySet(), profile);
+		}
 
 		String subject = "Status metadata record(s) gewijzigd naar '" + dm.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
 					+ replyToDescr + ") op " + changeDate;

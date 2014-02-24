@@ -424,13 +424,15 @@
 		
 		<!-- TODO : here we could use service type and version if
 			GetCapabilities url is not complete with parameter. -->
-		<xsl:variable name="parameters">&amp;SERVICE=WMS&amp;VERSION=1.1.1&amp;REQUEST=GetCapabilities</xsl:variable>
+		<xsl:variable name="parameters">&amp;SERVICE=<xsl:value-of select="$metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata[srv:operationName/gco:CharacterString='GetCapabilities']/srv:connectPoint/gmd:CI_OnlineResource/gmd:protocol[1]/gco:CharacterString|
+				$metadata/gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:containsOperations/srv:SV_OperationMetadata[srv:operationName/gco:CharacterString='GetCapabilities']/srv:connectPoint/gmd:CI_OnlineResource/gmd:protocol[1]/gco:CharacterString"/>&amp;VERSION=1.1.1&amp;REQUEST=GetCapabilities</xsl:variable>
 
 		<xsl:choose>
 			<xsl:when test="$serviceUrl=''">
 				<!-- Search for URLs related to an OGC protocol in distribution section -->
-				<xsl:variable name="urlFilter">OGC:WMS</xsl:variable>
-				<xsl:variable name="distributionInfoUrl" select="$metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol[1]/gco:CharacterString, $urlFilter)]/gmd:linkage/gmd:URL"/>
+				<xsl:variable name="urlFilterWMS">OGC:WMS</xsl:variable>
+				<xsl:variable name="urlFilterWMTS">OGC:WMTS</xsl:variable>
+				<xsl:variable name="distributionInfoUrl" select="$metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol[1]/gco:CharacterString, $urlFilterWMS) or contains(gmd:protocol[1]/gco:CharacterString, $urlFilterWMTS)]/gmd:linkage/gmd:URL"/>
 				<xsl:value-of select="$distributionInfoUrl"/>
 				<!-- FIXME ? Here we assume that only one URL is related to an OGC protocol which could not be the case in all situation.
 				This service URL is used to initialize the LinkedServiceMetadataPanel to search for layers. It should be the case in most
@@ -438,7 +440,7 @@
 				<xsl:if test="not(contains($distributionInfoUrl[position()=1], '?'))">
 					<xsl:text>?</xsl:text>
 				</xsl:if>
-				<xsl:value-of select="$parameters"/>
+				<xsl:value-of select="$parameters"/>&amp;SERVICE=<xsl:value-of select="substring-after($metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol[1]/gco:CharacterString,':')"/>
 			</xsl:when>
 			<xsl:when test="not(contains($serviceUrl, '?'))">
 				<xsl:value-of select="$serviceUrl"/>?<xsl:value-of select="$parameters"/>

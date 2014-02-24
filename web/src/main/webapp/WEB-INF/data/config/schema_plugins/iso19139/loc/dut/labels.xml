@@ -1480,6 +1480,11 @@
 		<description>Methode gebruikt om gelijkaardige trefwoorden te groeperen.</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:MD_Constraints">
+		<label>Beperkingen</label>
+		<description>Beperkingen van de dataset of datasetserie.</description>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:MD_LegalConstraints">
 		<label>Legale beperkingen voor toegang en gebruik</label>
 		<description>Toegangsbeperkingen en legale vereisten voor toegang en gebruik van de dataset of datasetserie.</description>

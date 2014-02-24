@@ -114,10 +114,10 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
 //        console.log(record);
             
         if (exist !== null) {
-            exist.next().child('div').insertHtml('afterEnd', link);
+            exist.next().child('div').insertHtml('beforeBegin', link);
         } else {
-            el.child('tr').insertHtml('beforeBegin', '<tr><td class="main ' + type + '" style="vertical-align:top"><span class="cat-' + type +' icon">' + OpenLayers.i18n('related' + type) + '</span></td>' + 
-            '<td>' + link + '</td></tr>');
+            el.child('tr').insertHtml('beforeBegin', '<td class="main ' + type + '" style="vertical-align:top"><span class="cat-' + type +' icon">' + OpenLayers.i18n('related' + type) + '</span></td>' + 
+            '<td>' + link + '</td>');
         }
     },
     createActionMenu: function(){

@@ -80,38 +80,37 @@
 
         <!-- schematrons to use in validation -->
         <tr id="gn.schematrons">
-            <th class="padded">
+            <th class="padded" colspan="2">
                 <label for="schematrons">
-                    Schematrons
+                    Valideren schematrons 
                 </label>
             </th>
-            <td>
             <xsl:for-each select="/root/gui/schematrons/schemas/schema">
-
-                    <table class="text-aligned-left">
-                        <tr>
-                            <th class="padded">
-                                <xsl:value-of select="schemaname"/>
-                                <xsl:if test="count(schematronname[. != 'schematron-rules-none.xsl']) = 0">
-                                    (no schematrons)
-                                </xsl:if>
-                            </th>
-                        </tr>
-                        <xsl:for-each select="schematronname">
-                            <xsl:if test=". != 'schematron-rules-none.xsl'">
-                                <tr>
-                                    <td class="padded">
-                                        <xsl:text>&#160;</xsl:text>
-                                    </td>
-                                    <td>  <input class="content" type="checkbox" name="{../schemaname}-{.}" id="{../schemaname}-{.}"/>
-                                        <xsl:value-of select="."/>
-                                    </td>
-                                </tr>
-                            </xsl:if>
-                        </xsl:for-each>
-                    </table>
-            </xsl:for-each>
-            </td>
+	            <xsl:for-each select="schematronname">
+	                <xsl:if test=". != 'schematron-rules-none.xsl'">
+                        <tr><td/><td><input class="content" type="checkbox" name="{../schemaname}-{.}" id="{../schemaname}-{.}"/>
+                        	<xsl:value-of select="/root/gui/strings/schematronRules"/><xsl:text> </xsl:text>
+                        	<xsl:choose>
+                        		<xsl:when test="contains(lower-case(.),'rules-gdi-vlaanderen')">
+		                            <xsl:value-of select="/root/gui/strings/rulesgdivlaanderen"/>
+                        		</xsl:when>
+                        		<xsl:when test="contains(lower-case(.),'rules-geonetwork')">
+                                    <xsl:value-of select="/root/gui/strings/rulesgeonetwork"/>
+                        		</xsl:when>
+                        		<xsl:when test="contains(lower-case(.),'rules-inspire')">
+                                    <xsl:value-of select="/root/gui/strings/rulesinspire"/>
+                        		</xsl:when>
+                        		<xsl:when test="contains(lower-case(.),'rules-iso')">
+                                    <xsl:value-of select="/root/gui/strings/rulesiso"/>
+                        		</xsl:when>
+                        		<xsl:otherwise>
+                                    <xsl:value-of select="name(.)"/>
+                        		</xsl:otherwise>
+                        	</xsl:choose>
+                        </td></tr>
+	                </xsl:if>
+	            </xsl:for-each>
+             </xsl:for-each>
         </tr>
 
         <!-- Assign to current catalog -->
@@ -141,51 +140,28 @@
 
         <!-- groups -->
         <tr id="gn.groups">
+        	<xsl:variable name="groupCount" select="count(/root/gui/groups/record/label/child::*[name() = $lang])"/>
             <th class="padded">
-                <xsl:value-of select="/root/gui/strings/group"/>
+            	<xsl:if test="$groupCount > 1">
+	                <xsl:value-of select="/root/gui/strings/group"/>
+				</xsl:if>	                
             </th>
             <td class="padded">
-                <select class="content" name="group" size="1" style="width:400px">
-                    <xsl:for-each select="/root/gui/groups/record">
-                        <xsl:sort select="label/child::*[name() = $lang]"/>
-                        <option value="{id}">
-                            <xsl:value-of select="label/child::*[name() = $lang]"/>
-                        </option>
-                    </xsl:for-each>
-                </select>
+            	<xsl:if test="$groupCount = 1">
+	                <input class="content" type="hidden" name="group" id="group" value="{/root/gui/groups/record/id}"/>
+            	</xsl:if>
+            	<xsl:if test="$groupCount > 1">
+	                <select class="content" name="group" size="1" style="width:400px">
+	                    <xsl:for-each select="/root/gui/groups/record">
+	                        <xsl:sort select="label/child::*[name() = $lang]"/>
+	                        <option value="{id}">
+	                            <xsl:value-of select="label/child::*[name() = $lang]"/>
+	                        </option>
+	                    </xsl:for-each>
+	                </select>
+               </xsl:if>
             </td>
         </tr>
-
-
-
-        <!-- categories 
-        Some users are not using categories, so hide the list and
-        set default value to _none_ if no categories available.
-        -->
-        <xsl:choose>
-            <xsl:when test="/root/gui/categories/record and /root/gui/config/category/admin">
-                <tr id="gn.categories">
-                    <th class="padded">
-                        <xsl:value-of select="/root/gui/strings/category"/>
-                    </th>
-                    <td class="padded">
-                        <select class="content" name="category" size="1">
-                            <option value="_none_">
-                                <xsl:value-of select="/root/gui/strings/none"/>
-                            </option>
-                            <xsl:for-each select="/root/gui/categories/record">
-                                <xsl:sort select="label/child::*[name() = $lang]"/>
-                                <option value="{id}">
-                                    <xsl:value-of select="label/child::*[name() = $lang]"/>
-                                </option>
-                            </xsl:for-each>
-                        </select>
-                    </td>
-                </tr>
-            </xsl:when>
-            <xsl:otherwise>
-                <input type="hidden" name="category" value="_none_"/>
-            </xsl:otherwise>
-        </xsl:choose>
+		<input type="hidden" name="category" value="_none_"/>
     </xsl:template>
 </xsl:stylesheet>

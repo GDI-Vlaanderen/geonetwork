@@ -89,14 +89,16 @@
   <xsl:template name="getTitle">
     <xsl:param name="name"/>
     <xsl:param name="schema"/>
+    <xsl:param name="node" select="."/>
     
     <xsl:variable name="fullContext">
-        <xsl:call-template name="getXPath"/>
+        <xsl:call-template name="getXPath">
+			<xsl:with-param name="node" select="$node"/>
+        </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name="context" select="name(parent::node())"/>
-    <xsl:variable name="contextIsoType" select="parent::node()/@gco:isoType"/>
-    
+    <xsl:variable name="context" select="name($node/parent::node())"/>
+    <xsl:variable name="contextIsoType" select="$node/parent::node()/@gco:isoType"/>
     <xsl:variable name="title">
       <xsl:choose>
         <xsl:when test="starts-with($schema,'iso19139')">

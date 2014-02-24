@@ -82,7 +82,11 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
             }),
             record: 'relation',
             idPath: 'uuid',
-            fields: fields
+            fields: fields/*,
+            sortInfo: {
+                field: 'title',
+                direction: "ASC"
+            }*/
         });
     }
 };

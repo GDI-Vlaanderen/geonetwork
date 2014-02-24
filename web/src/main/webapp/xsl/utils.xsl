@@ -161,6 +161,8 @@
 	</xsl:template>
 
   <xsl:template name="getXPath">
+	<xsl:param name="node" select="."/>
+<!--
     <xsl:for-each select="ancestor-or-self::*">
       <xsl:if test="not(position() = 1)">
         <xsl:value-of select="name()"/>
@@ -169,8 +171,17 @@
         <xsl:text>/</xsl:text>
       </xsl:if>
     </xsl:for-each>
-    <!-- Check if is an attribute: http://www.dpawson.co.uk/xsl/sect2/nodetest.html#d7610e91 -->
     <xsl:if test="count(. | ../@*) = count(../@*)">/@<xsl:value-of select="name()"/></xsl:if>
+-->
+    <xsl:for-each select="$node/ancestor-or-self::*">
+      <xsl:if test="not(position() = 1)">
+        <xsl:value-of select="name()"/>
+      </xsl:if>
+      <xsl:if test="not(position() = 1) and not(position() = last())">
+        <xsl:text>/</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
+    <xsl:if test="count($node | $node/../@*) = count($node/../@*)">/@<xsl:value-of select="$node/name()"/></xsl:if>
   </xsl:template>
 
     <xsl:template name="getLabelElementValue">

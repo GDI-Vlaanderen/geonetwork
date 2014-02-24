@@ -570,8 +570,8 @@
 	<insert>Invoegen</insert>
 	<existingUpdate>Update</existingUpdate>
 	<insertFileMode js="true">Bestand Toevoegen</insertFileMode>
-	<insertMode>Insert mode:</insertMode>
-	<insertPasteMode>Kopieër/Plak</insertPasteMode>
+	<insertMode>Modus:</insertMode>
+	<insertPasteMode>Kopieer/Plak</insertPasteMode>
 	<interactiveMap>Toon kaart</interactiveMap>		
 	<interMapInfo><h1>Informatie interactieve kaarten</h1><p>U kunt interactieve kaarten zoeken door naar digitale data te zoeken met een interactieve kaartcomponent, daarnaast kunt u rechtstreeks verbinding maken met een voorgeconfigureerde mapserver.</p><p> Ondersteunde webmapping servers zijn <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> WMS Map Servers en <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
 	<intermapSearch>Ruimtelijk zoeken</intermapSearch>
@@ -718,7 +718,7 @@
 	<output>Output</output>
 	<outputType id="full">Volledig</outputType>
 	<outputType id="text">Alleen Tekst</outputType>
-	<overwrite>Overschrijf metadata met eenzelfde UUID</overwrite>
+	<overwrite>Overschrijf metadata met hetzelfde UUID</overwrite>
 	<overwriteFile>Overschrijven?</overwriteFile>
 	<owner>Gebruiker</owner>
 	<ownerRights>Verwijder/Toegangsrechten/Categorieën vrij: u heeft beheersrechten</ownerRights>
@@ -756,15 +756,23 @@
 	<progressChoice value="planned">gepland</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Bestand ter download dmv FTP</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Bestand ter download dmv HTTP</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service (endpoint)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Map service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Get Capabilities service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC-WMS Get Map service (ver 1.3.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Get Capabilities service (ver 1.3.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service (endpoint)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Get Capabilities service (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMTS">OGC-WMTS Web Map Tile Service (endpoint)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMTS-1.0.0-http-get-map">OGC-WMTS Get Map service (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMTS-1.0.0-http-get-capabilities">OGC-WMTS Get Capabilities service (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMTS-1.0.0-http-get-tile">OGC-WMTS Get Tile service (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Bestand ter directe download over FTP</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Bestand ter directe download over HTTP</protocolChoice>
+	<protocolChoice show="-" value="LINK-download-store">Indirecte link naar download-store (URL)</protocolChoice>
+	<protocolChoice show="-" value="WWW:LINK-1.0-http--atom">ATOM feed (URL)</protocolChoice>
+	<protocolChoice show="-" value="WWW:LINK-1.0-http--link">Webadres (URL)</protocolChoice>
+	<protocolChoice show="-" value="WWW:LINK-1.0-http--related">Gerelateerde link (URL)</protocolChoice>
 	<pubdate>Publicatie Datum</pubdate>
 	<publicationDate>Publicatie datum</publicationDate>
 	<publisher>Publiceerder</publisher>
@@ -852,7 +860,7 @@
 	<spatialTab>Begrenzing</spatialTab>
 	<startsWith>Begint met</startsWith>
 	<state>Provincie/Staat</state>
-	<styleSheet>StyleSheet</styleSheet>
+	<styleSheet>Transformatie (XSLT)</styleSheet>
 	<submit>Bewaren en sluiten</submit>
 	<subtemplate>Subtemplate</subtemplate>
 	<subtemplateTitle>subtemplate titel</subtemplateTitle>
@@ -862,7 +870,7 @@
 	<systemConfigDes>Hiermee kunt u de systeemconfiguratie aanpassen</systemConfigDes>
 	<systemInfo>System information</systemInfo>
 	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
-	<template>Template</template>
+	<template>Sjabloon</template>
 	<Term>Zoekterm</Term>
 	<thanks>Bedankt voor uw inspanningen.</thanks>
 	<theme>ISO onderwerp categorie</theme>
@@ -900,7 +908,12 @@
 	<userPw>Wijzig wachtwoord</userPw>
 	<userPwDes>Sta de huidige gebruiker toe het wachtwoord te wijzigen</userPwDes>
 	<uuidAction>Import acties:</uuidAction>
-	<validate>Valideren</validate>
+	<validate>Valideren schema</validate>
+    <schematronRules>Schematron regels</schematronRules>
+    <rulesgdivlaanderen>GDI-Vlaanderen</rulesgdivlaanderen>
+    <rulesgeonetwork>Geonetwork</rulesgeonetwork>
+	<rulesinspire>INSPIRE</rulesinspire>
+	<rulesiso>ISO</rulesiso>
 	<assign>Aan huidige cataloog toewijzen</assign>
 	<relatedOnly>Initiële import waarbij metadata gelinkt wordt aan groepen</relatedOnly>
 	<validityBegins>Validatie begint</validityBegins>

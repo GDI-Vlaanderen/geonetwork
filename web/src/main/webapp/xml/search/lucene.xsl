@@ -177,6 +177,10 @@ compiles a request
 					</BooleanClause>
 
 					<BooleanClause required="false" prohibited="false">
+                        <WildcardQuery fld="protocol" txt="OGC:WMTS-*-get-capabilities"/>
+					</BooleanClause>
+
+					<BooleanClause required="false" prohibited="false">
                         <WildcardQuery fld="protocol" txt="ESRI:AIMS-*-get-image"/>
 					</BooleanClause>
 				</BooleanQuery>
