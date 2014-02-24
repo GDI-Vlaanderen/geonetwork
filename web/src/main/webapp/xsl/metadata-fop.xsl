@@ -289,11 +289,11 @@
       <!-- Thumbnails - Use the first one only -->
       <xsl:if test="$metadata/image">
         <xsl:choose>
-          <xsl:when test="contains($metadata/image[1] ,'://')">
+          <xsl:when test="contains($metadata/image[count($metadata/image)] ,'://')">
             <fo:external-graphic content-width="4.6cm">
               <xsl:attribute name="src">
                 <xsl:text>url('</xsl:text>
-                <xsl:value-of select="$metadata/image[1]"/>
+                <xsl:value-of select="$metadata/image[count($metadata/image)]"/>
                 <xsl:text>')"</xsl:text>
               </xsl:attribute>
             </fo:external-graphic>
@@ -303,7 +303,7 @@
               <xsl:attribute name="src">
                 <xsl:text>url('</xsl:text>
                 <xsl:value-of
-                  select="concat($server/protocol, '://', $server/host,':', $server/port, $metadata/image[1])"/>
+                  select="concat($server/protocol, '://', $server/host,':', $server/port, $metadata/image[count($metadata/image)])"/>
                 <xsl:text>')"</xsl:text>
               </xsl:attribute>
             </fo:external-graphic>
