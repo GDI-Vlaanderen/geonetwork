@@ -45,7 +45,7 @@
         <description>Attribute table description</description>
     </element>
     <element name="gfc:typeName">
-        <label>Property name</label>
+        <label>Naam</label>
         <description></description>
     </element>
     <element name="gfc:carrierOfCharacteristics">
@@ -276,7 +276,7 @@
 		<label>Postcode</label>
 		<description>Postcode</description>
 	</element>
-	<element name="gmd:Country">
+	<element name="gmd:country">
 		<label>Land</label>
 		<description>Land</description>
 	</element>
