@@ -38,7 +38,7 @@
         <xsl:apply-templates mode="elementEPFop" select="*[namespace-uri(.)!=$geonetUri]|geonet:child">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
-      </xsl:when>
+     </xsl:when>
 
       <!-- neither children nor attributes, just text -->
       <xsl:otherwise>
@@ -66,11 +66,16 @@
 			<xsl:with-param name="langId" select="concat('#',translate(substring(/root/gui/language,1,2),$LOWER,$UPPER))" />
 		</xsl:call-template>
 	</xsl:variable>
-	<xsl:call-template name="info-rows">
+	
+	<xsl:call-template name="info-blocks">
 		<xsl:with-param name="label" select="$title" />
 		<xsl:with-param name="value" select="$text" />
 	</xsl:call-template>
-  </xsl:template>
+<!-- 	<xsl:call-template name="info-rows">
+		<xsl:with-param name="label" select="$title" />
+		<xsl:with-param name="value" select="$text" />
+	</xsl:call-template>
+ -->  </xsl:template>
 
   <xsl:template mode="simpleElementFop" match="*">
     <xsl:param name="schema"/>
@@ -99,10 +104,14 @@
       </xsl:call-template>
     </xsl:param>
     
-    <xsl:call-template name="info-rows">
+    <xsl:call-template name="info-blocks">
       <xsl:with-param name="label" select="$title"/>
       <xsl:with-param name="value" select="$text"/>
     </xsl:call-template>
+    <!-- <xsl:call-template name="info-rows">
+      <xsl:with-param name="label" select="$title"/>
+      <xsl:with-param name="value" select="$text"/>
+    </xsl:call-template> -->
   </xsl:template>
 
   <xsl:template mode="simpleElementFop" match="@*">
@@ -120,11 +129,15 @@
       </xsl:call-template>
     </xsl:param>
     
-    <xsl:call-template name="info-rows">
+     <xsl:call-template name="info-blocks">
       <xsl:with-param name="label" select="$title"/>
       <xsl:with-param name="value" select="$text"/>
     </xsl:call-template>
-  </xsl:template>
+<!--     <xsl:call-template name="info-rows">
+      <xsl:with-param name="label" select="$title"/>
+      <xsl:with-param name="value" select="$text"/>
+    </xsl:call-template>
+ -->  </xsl:template>
 
 
 

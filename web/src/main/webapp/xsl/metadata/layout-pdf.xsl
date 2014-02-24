@@ -147,4 +147,40 @@
     </xsl:for-each>
   </xsl:template>
 
+<xsl:template name="md-content">
+    <xsl:param name="title"/>
+    <xsl:param name="logo"/>
+    <xsl:param name="exportButton"/>
+    <xsl:param name="abstract"/>
+    <xsl:param name="relatedResources"/>
+    <xsl:param name="tabs"/>
+
+    <table class="gn">
+      <tr>
+        <td>
+          <span class="title">
+            <xsl:value-of select="$title"/>
+          </span>
+        </td>
+      </tr>
+<!--
+      <tr>
+        <td>
+          <xsl:copy-of select="$abstract"/>
+        </td>
+        <td class="right">
+          <xsl:copy-of select="$logo"/>
+        </td>
+      </tr>
+-->
+      <tr>
+        <td>
+          <xsl:copy-of select="$relatedResources"/>
+          <xsl:copy-of select="$tabs"/>
+        </td>
+      </tr>
+    </table>
+
+  </xsl:template>
+
 </xsl:stylesheet>
