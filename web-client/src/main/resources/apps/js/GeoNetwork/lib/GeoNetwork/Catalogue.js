@@ -855,7 +855,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *	Export current selection in PDF format.
      */
     pdfExport: function(){
-        location.replace(this.services.pdf);
+        location.replace(this.services.pdf + "?sortBy=" + Ext.getCmp('E_sortBy').getValue()  + "&sortOrder=" + Ext.getCmp('sortOrder').getValue());
     },
     /** api: method[metadataShow]
      *  :param uuid: ``String`` uuid of the metadata to dislay

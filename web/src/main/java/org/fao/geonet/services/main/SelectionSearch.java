@@ -85,10 +85,11 @@ public class SelectionSearch implements Service
 		SelectionManager sm = SelectionManager.getManager(session) ;
 
 		// Get the sortBy params in order to apply on new result list.
-        if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_BY)) ) {
+/*
+		if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_BY)) ) {
             params.addContent(new Element(Geonet.SearchResult.SORT_BY).setText(params.getChildText(Geonet.SearchResult.SORT_BY)));
         }
-
+*/
         if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_ORDER))) {
             params.addContent(new Element(Geonet.SearchResult.SORT_ORDER).setText(params.getChildText(Geonet.SearchResult.SORT_ORDER)));
         }
