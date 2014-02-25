@@ -44,7 +44,7 @@
 		#2e456b
 	</xsl:variable>
 	<xsl:variable name="header-size">
-		12pt
+		24pt
 	</xsl:variable>
 	<xsl:variable name="header-weight">
 		bold
@@ -84,9 +84,11 @@
 		<fo:static-content flow-name="xsl-region-after">
 			<fo:block text-align="end" font-family="{$font-family}"
 				font-size="{$note-size}" color="{$font-color}">
+<!--
 				<xsl:value-of select="/root/gui/env/site/name" />
 				-
-				<xsl:value-of select="/root/gui/env/site/organization" />
+				<xsl:value-of select="/root/gui/env/site/organization" />-->
+				<xsl:value-of select="/root/gui/metadataCenter/fromDescription" />
 				| <!-- TODO : set date format according to locale -->
 				<xsl:value-of select="format-dateTime(current-dateTime(),$df)" />
 				|
@@ -449,10 +451,13 @@
 								<xsl:attribute name="src"> url('<xsl:value-of
 									select="concat( //server/protocol, '://', //server/host,':', //server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')" />')" </xsl:attribute>
 							</fo:external-graphic>
+							<xsl:value-of select="/root/gui/metadataCenter/fromDescription" />
+<!-- 
 							<xsl:value-of select="upper-case(/root/gui/env/site/name)" />
 							(
 							<xsl:value-of select="upper-case(/root/gui/env/site/organization)" />
 							)
+-->
 						</fo:block>
 					</fo:table-cell>
 					<!-- <fo:table-cell display-align="right" text-align="top" background-color="{$background-color-banner}"> 

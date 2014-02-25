@@ -112,6 +112,7 @@
 	  <service name="pdf">
 	    <class name=".services.metadata.Show" />
 	    <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
+	      <call name="metadataCenter" class=".guiservices.util.GetMetadataCenter" />
 	      <call name="siteURL" class=".guiservices.util.GetSiteURL" />
 	      <call name="sources" class=".guiservices.util.Sources" />
 	    </output>

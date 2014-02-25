@@ -15,7 +15,7 @@
 
   <xsl:include href="../utils.xsl"/>
   <xsl:include href="../metadata-fop.xsl"/>
-  <xsl:include href="../metadata-fop-utils.xsl"/>
+  <xsl:include href="../metadata-fop-utils-copy.xsl"/>
 
   <xsl:variable name="server" select="/root/gui/env/server"/>
   <!--<xsl:variable name="server"

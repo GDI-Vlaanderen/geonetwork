@@ -117,6 +117,7 @@
 				<call name="mdresults" class=".services.main.Result" >
 					<param name="range" value="1000" /> <!-- too many causes problems -->
 				</call>
+				<call name="metadataCenter" class=".guiservices.util.GetMetadataCenter" />
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
@@ -135,6 +136,7 @@
 				<param name="range" value="1000" /> 
 			</class>
 			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
+				<call name="metadataCenter" class=".guiservices.util.GetMetadataCenter" />
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
