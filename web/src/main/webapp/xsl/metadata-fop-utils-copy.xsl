@@ -330,6 +330,13 @@
 
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
+	
+	<xsl:template mode="elementFop" match="gmd:MD_Keywords/gmd:keyword">
+		<xsl:param name="schema"/>
+		
+		
+		<xsl:message>Calling special for keywords</xsl:message>
+	</xsl:template>	
 
 	<!-- <xsl:template mode="elementFop" match="gfc:cardinality"> <xsl:param 
 		name="schema" /> <xsl:param name="blockHeaders" /> <xsl:message>Found cardinality 
