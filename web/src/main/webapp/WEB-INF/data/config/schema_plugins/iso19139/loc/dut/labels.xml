@@ -1936,7 +1936,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:processor">
-		<label>Producent</label>
+		<label>Contactgegevens (bewerking/inwinning)</label>
 		<description>identificatie en/of manier om in contact te treden met de perso(o)n(en) en organisatie(s)
 			die geassocieerd zijn met deze stap in het bewerkingsproces</description>
 	</element>

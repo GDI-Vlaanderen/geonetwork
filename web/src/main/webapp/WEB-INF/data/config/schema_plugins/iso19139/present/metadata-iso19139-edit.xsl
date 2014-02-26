@@ -25,7 +25,7 @@
                 <xsl:with-param name="metadata" select="."/>
             </xsl:call-template>
         </xsl:variable>
-        <input type="hidden" id="serviceUrl" value="{$capabilitiesUrl}"/>
+<!--        <input type="hidden" id="serviceUrl" value="{$capabilitiesUrl}"/>-->
 
     </xsl:template>
 

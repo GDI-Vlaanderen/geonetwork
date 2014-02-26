@@ -1277,31 +1277,13 @@
     </xsl:variable>
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
     <xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
-
-	  <xsl:variable name="className" select="./@class"/>
-      <xsl:variable name="pairClassName" select="./@geonet:class"/>
-      <xsl:variable name="prefixedClassName" select="concat('diff-',$pairClassName)"/>
-
-      <!--<script>
-          function findContainerId(node) {
-          if(node == null) {
-          console.log('container id not found');
-          return null;
-          }
-          if(node.parentNode.tagName == 'DIV' &amp;&amp; node.parentNode.id) {
-          console.log('found container id: ' + node.parentNode.id);
-          return node.parentNode.id;
-          }
-          return findContainerId(node.parentNode);
-          }
-      </script>-->
-
-
-
+	<xsl:variable name="className" select="./@class"/>
+	<xsl:variable name="pairClassName" select="./@geonet:class"/>
+	<xsl:variable name="prefixedClassName" select="concat('diff-',$pairClassName)"/>
     <tr id="{$id}" type="metadata">
       <xsl:attribute name="class">
         <!-- Add codelist value in CSS class -->
-        <xsl:value-of select="$pairClassName"/> <xsl:if test="*/@codeListValue and not($edit)"><xsl:value-of select="*/@codeListValue"/></xsl:if>
+        <xsl:value-of select="$pairClassName"/> <xsl:if test="*/@codeListValue"><xsl:value-of select="*/@codeListValue"/></xsl:if>
         <xsl:text> </xsl:text>
        	<xsl:call-template name="getMandatoryType">
        		<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
@@ -1314,14 +1296,11 @@
               <xsl:attribute name="onclick">
                   // to know whether we're on source or target doc
                   var containerId = GeoNetwork.Util.findContainerId(this);
-                  var selected = Ext.query('.<xsl:value-of select="$pairClassName"/>');
-                  
-                  
+                  var selected = Ext.query('.<xsl:value-of select="$pairClassName"/> <xsl:if test="*/@codeListValue"><xsl:value-of select="*/@codeListValue"/></xsl:if>');
                   var id = this.id;
                   var correspondingElement;
                   var thisTop;
                   var correspondingElementTop;
-                  
                   //Look for elements and calculate top height to display them
                   for(var i = 0; i &lt; selected.length; i++) {
 	                  // the element being hovered
@@ -1338,18 +1317,15 @@
 	                    }
 	                  }
                   }
-                  
                   //If pair does not exists, look for closest sibling pair
                   var current = Ext.get(id);
                   if(!correspondingElementTop) {
-	                  current = GeoNetwork.Util.findClosestSiblingPair(current);
+	                  current = GeoNetwork.Util.findClosestSiblingPair(current);	                  
 	                  if(current) {
                         GeoNetwork.Util.openSections(current);
 	                    correspondingElementTop = GeoNetwork.Util.getTopLeft(current).Top;
 	                  }
                   }
-                  
-                  
                   if(containerId == 'source-container') {
 	                    if (correspondingElementTop) {
 	                        $('target-container').scrollTop = correspondingElementTop-200;
@@ -1359,7 +1335,6 @@
 	                  	}
                   }
                   else if(containerId == 'target-container' || containerId == 'hiddenFormElements') {
-                    
 	                  	if (correspondingElementTop) {
 	                  	     $('source-container').scrollTop = correspondingElementTop-200;
 	                  	}

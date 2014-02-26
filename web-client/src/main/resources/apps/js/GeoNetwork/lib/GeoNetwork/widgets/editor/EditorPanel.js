@@ -680,13 +680,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      */
     showLinkedServiceMetadataSelectionPanel: function(name, serviceUrl, uuid){
         var editorPanel = this;
-        serviceUrl = Ext.getDom('serviceUrl') && Ext.getDom('serviceUrl').value;
+//        serviceUrl = Ext.getDom('serviceUrl') && Ext.getDom('serviceUrl').value;
         
         var linkedMetadataSelectionPanel = new GeoNetwork.editor.LinkedMetadataSelectionPanel({
             mode: name,
             autoWidth: true,
             ref: null,
-            serviceUrl: serviceUrl,
+//            serviceUrl: serviceUrl,
             catalogue: this.catalogue,
             region: 'north',
             uuid: uuid,
@@ -761,7 +761,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                                     "?uuid=" + metadata[0].data.uuid +
                                                     "&process=update-onlineSrc" + 
                                                     "&desc=" + layerName + 
-                                                    "&url=" + serviceUrl + 
+//                                                    "&url=" + serviceUrl + 
                                                     "&scopedName=" + layerName;
                         
                         Ext.Ajax.request({
