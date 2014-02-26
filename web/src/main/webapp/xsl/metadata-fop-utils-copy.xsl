@@ -3,7 +3,8 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan="http://xml.apache.org/xalan"
 	exclude-result-prefixes="xalan" xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc"
-	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:fo="http://www.w3.org/1999/XSL/Format">
+	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:fo="http://www.w3.org/1999/XSL/Format"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
 
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -33,52 +34,58 @@
 	<xsl:template mode="blockedFop" match="*">
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
 
-		<xsl:choose>
-			<xsl:when test="contains($blockHeaders, node-name(current()))">
-				<xsl:call-template name="newBlock">
-					<xsl:with-param name="title">
-						<xsl:call-template name="getTitle">
-
-							<xsl:with-param name="name">
-								<xsl:choose>
-									<xsl:when
-										test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
-										<xsl:value-of select="name(.)" />
-									</xsl:when>
-									<xsl:when test="@codeList">
-										<xsl:value-of select="name(.)" />
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="name(.)" />
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:with-param>
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:call-template>
-					</xsl:with-param>
-					<xsl:with-param name="content">
-						<xsl:apply-templates mode="elementFop" select=".">
-							<xsl:with-param name="schema" select="$schema" />
-							<xsl:with-param name="blockHeaders" select="$blockHeaders" />
-						</xsl:apply-templates>
-					</xsl:with-param>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates mode="elementFop" select=".">
-					<xsl:with-param name="schema" select="$schema" />
-					<xsl:with-param name="blockHeaders" select="$blockHeaders" />
-				</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
-
+		<xsl:if test="not($skipTags) or not(contains($skipTags, node-name(current())))">
+			<xsl:choose>
+				<xsl:when test="contains($blockHeaders, node-name(current()))">
+					<xsl:call-template name="newBlock">
+						<xsl:with-param name="title">
+							<xsl:call-template name="getTitle">
+	
+								<xsl:with-param name="name">
+									<xsl:choose>
+										<xsl:when
+											test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+											<xsl:value-of select="name(.)" />
+										</xsl:when>
+										<xsl:when test="@codeList">
+											<xsl:value-of select="name(.)" />
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="name(.)" />
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:with-param>
+								<xsl:with-param name="schema" select="$schema" />
+							</xsl:call-template>
+						</xsl:with-param>
+						<xsl:with-param name="content">
+							<xsl:apply-templates mode="elementFop" select=".">
+								<xsl:with-param name="schema" select="$schema" />
+								<xsl:with-param name="blockHeaders" select="$blockHeaders" />
+								<xsl:with-param name="skipTags" select="$skipTags" />
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates mode="elementFop" select=".">
+						<xsl:with-param name="schema" select="$schema" />
+						<xsl:with-param name="blockHeaders" select="$blockHeaders" />
+						<xsl:with-param name="skipTags" select="$skipTags" />
+					</xsl:apply-templates>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+			
 	</xsl:template>
 
 
 	<xsl:template mode="elementFop" match="*|@*">
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
 
 		<xsl:choose>
 			<!-- Is a localized element -->
@@ -112,6 +119,7 @@
 					select="*[namespace-uri(.)!=$geonetUri and local-name(.)!='listedValue']|geonet:child">
 					<xsl:with-param name="schema" select="$schema" />
 					<xsl:with-param name="blockHeaders" select="$blockHeaders" />
+					<xsl:with-param name="skipTags" select="$skipTags" />
 				</xsl:apply-templates>
 
 				<xsl:variable name="table">
@@ -302,55 +310,82 @@
 	<xsl:template mode="blockedFop" match="gfc:FC_FeatureType">
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
 
 		<xsl:apply-templates mode="blockedFop" select="*">
 			<xsl:with-param name="schema" select="$schema" />
 			<xsl:with-param name="blockHeaders" select="$blockHeaders" />
+			<xsl:with-param name="skipTags" select="$skipTags" />
 		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template mode="elementFop" match="gfc:producer/gmd:CI_ResponsibleParty">
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
 
 		<xsl:apply-templates mode="blockedFop" select="gmd:organisationName">
 			<xsl:with-param name="schema" select="$schema" />
 			<xsl:with-param name="blockHeaders" select="$blockHeaders" />
+			<xsl:with-param name="skipTags" select="$skipTags" />
 		</xsl:apply-templates>
 		<xsl:apply-templates mode="blockedFop" select="gmd:role">
 			<xsl:with-param name="schema" select="$schema" />
 			<xsl:with-param name="blockHeaders" select="$blockHeaders" />
+			<xsl:with-param name="skipTags" select="$skipTags" />
 		</xsl:apply-templates>
 		<xsl:apply-templates mode="blockedFop" select="gmd:contactInfo">
 			<xsl:with-param name="schema" select="$schema" />
 			<xsl:with-param name="blockHeaders" select="$blockHeaders" />
+			<xsl:with-param name="skipTags" select="$skipTags" />
 		</xsl:apply-templates>
 	</xsl:template>
 
 
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
+
+	<xsl:template mode="elementFop" match="gmd:MD_Keywords">
+		<xsl:param name="schema" />
+		<xsl:choose>
+			<xsl:when test="$schema='iso19139'">
+				<xsl:call-template name="info-blocks">
+					<xsl:with-param name="label">
+						<xsl:call-template name="getTitle">
+							<xsl:with-param name="name" select="name(.)" />
+							<xsl:with-param name="schema" select="$schema" />
+						</xsl:call-template>
 	
-	<xsl:template mode="elementFop" match="gmd:MD_Keywords/gmd:keyword">
-		<xsl:param name="schema"/>
-		
-		
-		<xsl:message>Calling special for keywords</xsl:message>
+						<xsl:if
+							test="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString">
+							(
+							<xsl:value-of
+								select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString" />
+							)
+						</xsl:if>
+					</xsl:with-param>
+					<xsl:with-param name="value">
+						<xsl:for-each select="gmd:keyword">
+							<xsl:if test="position() &gt; 1">
+								<xsl:text>, </xsl:text>
+							</xsl:if>
+							<xsl:value-of select="*"/>
+						</xsl:for-each>
+					</xsl:with-param>
+				</xsl:call-template>
+	
+			</xsl:when>
+			<xsl:otherwise></xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>	
 
-	<!-- <xsl:template mode="elementFop" match="gfc:cardinality"> <xsl:param 
-		name="schema" /> <xsl:param name="blockHeaders" /> <xsl:message>Found cardinality 
-		<xsl:value-of select="*/gco:range/*/gco:lower/*/text()"/>, <xsl:value-of 
-		select="*/gco:range/*/gco:upper/*/text()"/></xsl:message> <xsl:apply-templates 
-		mode="blockedFop" select="*"> <xsl:with-param name="schema" select="$schema" 
-		/> <xsl:with-param name="blockHeaders" select="$blockHeaders" /> </xsl:apply-templates> 
-		</xsl:template> -->
+
 
 	<!-- prevent drawing of geonet:* elements -->
 	<xsl:template mode="elementFop"
 		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors" />
 	<xsl:template mode="simpleElementFop"
-		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]" />
+		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@xlink:type" />
 	<xsl:template mode="complexElementFop"
 		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors" />
 
