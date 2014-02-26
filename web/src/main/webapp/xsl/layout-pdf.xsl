@@ -14,8 +14,6 @@
 		indent="yes" />
 
 	<xsl:include href="utils.xsl" />
-	<xsl:include href="metadata-fop.xsl" />
-	<xsl:include href="metadata-fop-utils-copy.xsl" />
 
 	<xsl:variable name="server" select="/root/gui/env/server" />
 	<!--<xsl:variable name="server" select="concat('http://', /root/gui/env/server/host, 
@@ -67,7 +65,7 @@
 
 				<fo:flow flow-name="xsl-region-body">
 					<!-- Banner level -->
-					<xsl:call-template name="banner" />
+					<xsl:call-template name="fopBanner" />
 
 					<fo:block font-size="10pt">
 						<xsl:call-template name="contentFop" />
