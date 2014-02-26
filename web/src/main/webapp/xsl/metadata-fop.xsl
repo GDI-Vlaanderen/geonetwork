@@ -26,7 +26,10 @@
 		#707070
 	</xsl:variable>
 	<xsl:variable name="font-size">
-		8pt
+		10pt
+	</xsl:variable>
+	<xsl:variable name="font-weight">
+		normal
 	</xsl:variable>
 	<xsl:variable name="font-family">
 		verdana
@@ -35,7 +38,7 @@
 		#2e456b
 	</xsl:variable>
 	<xsl:variable name="title-size">
-		8pt
+		12pt
 	</xsl:variable>
 	<xsl:variable name="title-weight">
 		bold
@@ -64,10 +67,10 @@
 	<xsl:template name="fop-master">
 		<fo:layout-master-set>
 			<fo:simple-page-master master-name="simpleA4"
-				page-height="29.7cm" page-width="21cm" margin-top=".2cm"
-				margin-bottom=".2cm" margin-left=".6cm" margin-right=".2cm">
-				<fo:region-body margin-top="0cm" />
-				<fo:region-after extent=".2cm" />
+				page-height="29.7cm" page-width="21cm" margin-top=".6cm"
+				margin-bottom=".6cm" margin-left=".6cm" margin-right=".6cm">
+				<fo:region-body margin-top="0cm" margin-bottom=".6cm" margin-right=".6cm"/>
+				<fo:region-after extent=".6cm" />
 			</fo:simple-page-master>
 
 			<fo:page-sequence-master master-name="PSM_Name">
@@ -487,7 +490,7 @@
 				</fo:block>
 			</fo:table-cell>
 			<fo:table-cell color="{$font-color}" padding-top="4pt"
-				padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
+				padding-bottom="4pt" padding-right="4pt" padding-left="4pt" font-size="{$font-size}">
 				<fo:block linefeed-treatment="preserve">
 					<xsl:value-of select="$value" />
 					<xsl:copy-of select="$content" />

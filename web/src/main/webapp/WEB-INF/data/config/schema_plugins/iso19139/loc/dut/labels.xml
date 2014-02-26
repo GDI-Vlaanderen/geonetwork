@@ -243,6 +243,11 @@
 		<description>Locatie voor online toegang bij gebruik van een Uniform Resource Locator adres of een vergelijkbaar schema.</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:linkage">
+		<label>Connectiepunt URL</label>
+		<description>Locatie (adres) voor de on-line toegang, gebruik makend van een Uniform Resource Locator address (URL) of gelijkaardige adresschema's zoals http://www.statkart.na/isotc211.</description>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:URL" context="gmd:linkage">
 		<label>Connectiepunt URL</label>
 		<description>Locatie (adres) voor de on-line toegang, gebruik makend van een Uniform Resource Locator address (URL) of gelijkaardige adresschema's zoals http://www.statkart.na/isotc211.</description>
