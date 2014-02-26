@@ -47,8 +47,8 @@
 	<xsl:template name="Wmetadata-fop-iso19110">
 		<xsl:param name="schema" />
 <!-- 		<xsl:for-each select="*[namespace-uri(.)!=$geonetUri]"> -->
-			<fo:inline font-size="{$title-size}" font-weight="{$title-weight}"
-				color="{$title-color}" margin="8pt">
+			<fo:inline font-size="{$font-size}" font-weight="{$font-weight}"
+				color="{$font-color}" margin="8pt">
 				<xsl:call-template name="newBlock">
 					<xsl:with-param name="title">
 						<xsl:call-template name="getTitle">
