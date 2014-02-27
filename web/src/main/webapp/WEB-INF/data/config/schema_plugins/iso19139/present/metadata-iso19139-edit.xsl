@@ -2874,22 +2874,33 @@
             gmd:identificationInfo/srv:SV_ServiceIdentification|
             gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
             gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
-			<xsl:apply-templates mode="addElement" select="geonet:child[@name='resourceConstraints' and @prefix='gmd']">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-	            <xsl:with-param name="ommitNameTag" select="false()"/>
-	            <xsl:with-param name="visible"   select="true()"/>	            
-	            <xsl:with-param name="title">
-					<xsl:value-of select="/root/gui/strings/constraintsTab"/>
-				</xsl:with-param>
-	            <xsl:with-param name="content">
-		            <xsl:apply-templates mode="elementEP" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
+            <xsl:choose>
+            	<xsl:when test="$edit">
+					<xsl:apply-templates mode="addElement" select="geonet:child[@name='resourceConstraints' and @prefix='gmd']">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+			            <xsl:with-param name="ommitNameTag" select="false()"/>
+			            <xsl:with-param name="visible"   select="true()"/>	            
+			            <xsl:with-param name="title">
+							<xsl:value-of select="/root/gui/strings/constraintsTab"/>
+						</xsl:with-param>
+			            <xsl:with-param name="content">
+				            <xsl:apply-templates mode="elementEP" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
+				                <xsl:with-param name="schema" select="$schema"/>
+				                <xsl:with-param name="edit"   select="$edit"/>
+				                <xsl:with-param name="flat"   select="$flat"/>
+				            </xsl:apply-templates>
+			            </xsl:with-param>	            
+					</xsl:apply-templates>
+				</xsl:when>
+				<xsl:otherwise>
+		            <xsl:apply-templates mode="iso19139-view" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
 		                <xsl:with-param name="schema" select="$schema"/>
 		                <xsl:with-param name="edit"   select="$edit"/>
 		                <xsl:with-param name="flat"   select="$flat"/>
 		            </xsl:apply-templates>
-	            </xsl:with-param>	            
-			</xsl:apply-templates>
+				</xsl:otherwise>
+            </xsl:choose>
         </xsl:for-each>
 
         <xsl:apply-templates mode="elementEP" select="gmd:distributionInfo|geonet:child[string(@name)='distributionInfo']">
@@ -5172,8 +5183,7 @@ to build the XML fragment in the editor. -->
     <!-- ============================================================================= -->
     <!-- Group resource constraints in a box -->
     <!-- ============================================================================= -->
-<!--
-    <xsl:template mode="iso19139" match="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
+    <xsl:template mode="iso19139-view" match="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 		<xsl:if test="$currTab!='contentInfo'">
@@ -5206,7 +5216,6 @@ to build the XML fragment in the editor. -->
 	       	</xsl:if>
        	</xsl:if>
 	</xsl:template>
--->
 
     <!-- ============================================================================= -->
     <!-- pass -->

@@ -14,6 +14,8 @@
 		indent="yes" />
 
 	<xsl:include href="utils.xsl" />
+	<xsl:include href="metadata-fop.xsl"/>
+	<xsl:include href="metadata-fop-utils-copy.xsl"/>
 
 	<xsl:variable name="server" select="/root/gui/env/server" />
 	<!--<xsl:variable name="server" select="concat('http://', /root/gui/env/server/host, 

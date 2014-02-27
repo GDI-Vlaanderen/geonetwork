@@ -1283,7 +1283,7 @@
     <tr id="{$id}" type="metadata">
       <xsl:attribute name="class">
         <!-- Add codelist value in CSS class -->
-        <xsl:value-of select="$pairClassName"/> <xsl:if test="*/@codeListValue"><xsl:value-of select="*/@codeListValue"/></xsl:if>
+        <xsl:value-of select="$pairClassName"/><!-- <xsl:if test="*/@codeListValue"><xsl:value-of select="*/@codeListValue"/></xsl:if>-->
         <xsl:text> </xsl:text>
        	<xsl:call-template name="getMandatoryType">
        		<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
@@ -1296,7 +1296,7 @@
               <xsl:attribute name="onclick">
                   // to know whether we're on source or target doc
                   var containerId = GeoNetwork.Util.findContainerId(this);
-                  var selected = Ext.query('.<xsl:value-of select="$pairClassName"/> <xsl:if test="*/@codeListValue"><xsl:value-of select="*/@codeListValue"/></xsl:if>');
+                  var selected = Ext.query('.<xsl:value-of select="$pairClassName"/><!-- <xsl:if test="*/@codeListValue"><xsl:value-of select="*/@codeListValue"/></xsl:if>-->');
                   var id = this.id;
                   var correspondingElement;
                   var thisTop;

@@ -14,6 +14,8 @@
   <xsl:output method="xml" version="1.0" omit-xml-declaration="no" indent="yes"/>
 
   <xsl:include href="../utils.xsl"/>
+  <xsl:include href="../metadata-fop.xsl"/>
+  <xsl:include href="../metadata-fop-utils-copy.xsl"/>
 
   <xsl:variable name="server" select="/root/gui/env/server"/>
   <!--<xsl:variable name="server"
