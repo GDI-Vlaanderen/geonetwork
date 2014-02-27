@@ -119,7 +119,7 @@
 								<xsl:value-of select="$metadata/title" />
 							</fo:block>
 						</fo:table-cell> -->
-						<fo:table-cell>
+<!-- 						<fo:table-cell>
 							<fo:block text-align="right">
 
 								<xsl:call-template name="metadata-thumbnail-block">
@@ -128,7 +128,7 @@
 								</xsl:call-template>
 							</fo:block>
 						</fo:table-cell>
-					</fo:table-row>
+ -->					</fo:table-row>
 <!-- 
 					<xsl:call-template name="metadata-resources">
 						<xsl:with-param name="title" select="false()" />
@@ -143,6 +143,8 @@
 				<xsl:variable name="schemaTemplate" select="concat('Wmetadata-fop-',$schema)" />
 				<saxon:call-template name="{$schemaTemplate}">
 					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="server" select="$server" />
+					<xsl:with-param name="metadata" select="$metadata" />
 					<xsl:fallback>
 						<xsl:message>
 							Fall back as no saxon:call-template exists

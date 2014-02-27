@@ -5,6 +5,8 @@
 	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc"
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:saxon="http://saxon.sf.net/"
+	extension-element-prefixes="saxon"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
 
 
@@ -87,7 +89,19 @@
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />
-
+	
+		<xsl:call-template name="elementFop">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
+			<xsl:with-param name="skipTags" select="$skipTags"/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name="elementFop">
+		<xsl:param name="schema" />
+		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
+	
 		<xsl:choose>
 			<!-- Is a localized element -->
 			<xsl:when test="contains($schema, 'iso19139') and gmd:PT_FreeText">
@@ -153,10 +167,7 @@
 								<fo:table-body>
 									<fo:table-row background-color="{$background-color}">
 										<fo:table-cell >
-											<fo:block>
-												<fo:inline font-size="{$title-size}" font-weight="{$title-weight}"
-													color="{$title-color}">Waarde</fo:inline>
-											</fo:block>
+											<fo:block>Waarde</fo:block>
 										</fo:table-cell>
 										<fo:table-cell >
 											<fo:block>Code</fo:block>
@@ -231,6 +242,20 @@
 					</xsl:choose>
 				</xsl:with-param>
 				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="node" select=".."/>
+					<!-- <xsl:choose>
+							<xsl:when
+								test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+								<xsl:value-of select="." />
+							</xsl:when>
+							<xsl:when test="@codeList">
+								<xsl:value-of select="." />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="./.." />
+							</xsl:otherwise>
+					</xsl:choose>
+				</xsl:with-param> -->
 			</xsl:call-template>
 		</xsl:param>
 		<xsl:param name="text">
@@ -238,6 +263,8 @@
 				<xsl:with-param name="schema" select="$schema" />
 			</xsl:call-template>
 		</xsl:param>
+		
+<!-- 		<xsl:message>Calling simpleElementFop on <xsl:value-of select="saxon:path()"/>, <xsl:value-of select="."/></xsl:message> -->
 
 
 		<xsl:call-template name="info-blocks">
@@ -353,39 +380,72 @@
 
 	<xsl:template mode="elementFop" match="gmd:MD_Keywords">
 		<xsl:param name="schema" />
+		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
+		
 		<xsl:choose>
-			<xsl:when test="$schema='iso19139'">
-				<xsl:call-template name="info-blocks">
-					<xsl:with-param name="label">
-						<xsl:call-template name="getTitle">
-							<xsl:with-param name="name" select="name(.)" />
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:call-template>
-	
-						<xsl:if test="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString">
-							<xsl:text>&#xA;</xsl:text>
-							<fo:inline font-style="italic">
-								<xsl:value-of select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString" />
-							</fo:inline>
-							<xsl:text>&#xA;</xsl:text>
-						</xsl:if>
-					</xsl:with-param>
-					<xsl:with-param name="value">
-						<xsl:for-each select="gmd:keyword">
-							<xsl:if test="position() &gt; 1">
-								<xsl:text>, </xsl:text>
-							</xsl:if>
-							<xsl:value-of select="*"/>
-						</xsl:for-each>
-					</xsl:with-param>
-				</xsl:call-template>
-	
-			</xsl:when>
-			<xsl:otherwise></xsl:otherwise>
+		<xsl:when test="$schema='iso19139'">
+			<xsl:apply-templates mode="elementFop-iso19139" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			</xsl:apply-templates>
+		</xsl:when>
+		
+		<xsl:otherwise>
+			<xsl:call-template name="elementFop">
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
+				<xsl:with-param name="skipTags" select="$skipTags"/>
+			</xsl:call-template>
+		</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>	
 
 
+	<xsl:template mode="elementFop" match="gmd:CI_ResponsibleParty" >
+		<xsl:param name="schema" />
+		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
+		
+		<xsl:choose>
+		<xsl:when test="$schema='iso19139'">
+			<xsl:apply-templates mode="elementFop-iso19139" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			</xsl:apply-templates>
+		</xsl:when>
+		
+		<xsl:otherwise>
+			<xsl:call-template name="elementFop">
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
+				<xsl:with-param name="skipTags" select="$skipTags"/>
+			</xsl:call-template>
+		</xsl:otherwise>
+		</xsl:choose>
+ 	</xsl:template>
+ 	
+ 	
+<!-- 	<xsl:template mode="elementFop" match="gmd:CI_Date" >
+		<xsl:param name="schema" />
+		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
+		
+		<xsl:choose>
+		<xsl:when test="$schema='iso19139'">
+			<xsl:apply-templates mode="elementFop-iso19139" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			</xsl:apply-templates>
+		</xsl:when>
+		
+		<xsl:otherwise>
+			<xsl:call-template name="elementFop">
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
+				<xsl:with-param name="skipTags" select="$skipTags"/>
+			</xsl:call-template>
+		</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+ -->
 
 	<!-- prevent drawing of geonet:* elements -->
 	<xsl:template mode="elementFop"
