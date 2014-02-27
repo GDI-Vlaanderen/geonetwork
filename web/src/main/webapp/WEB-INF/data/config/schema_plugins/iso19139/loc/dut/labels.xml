@@ -481,7 +481,12 @@
         <label>Identificator geografische begrenzing</label>
         <description>Beschrijving van het geografisch gebied</description>
     </element>
-	  <element name="gmd:code" id="208.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code">
+	<element name="gmd:code" id="208.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
+        <label>Dataset identificator</label>
+        <description>Alphanumeric value identifying an instance in the namespace</description>
+        <condition>mandatory</condition>
+    </element>
+	<element name="gmd:code" id="208.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code">
         <label>Unieke code</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
@@ -528,7 +533,7 @@
         <condition>mandatory</condition>
     </element>
     <element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
-        <label>Code</label>
+        <label>Dataset identifier</label>
         <description>Alphanumeric value identifying an instance in the namespace</description>
         <condition>mandatory</condition>
     </element>
@@ -2231,7 +2236,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:topicCategory">
-		<label>Onderwerp</label>
+		<label>Categorie(en)</label>
 		<description>Belangrijkste themas van de dataset</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
