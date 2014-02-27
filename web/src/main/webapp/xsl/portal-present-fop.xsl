@@ -4,8 +4,6 @@
   
   <xsl:import href="metadata.xsl"/>
   
-  <xsl:include href="metadata-fop.xsl"/>
-  <xsl:include href="metadata-fop-utils-copy.xsl"/>
   <xsl:include href="utils.xsl"/>
 
 
@@ -23,7 +21,7 @@
         <fo:flow flow-name="xsl-region-body">
 
           <!-- Banner level -->
-          <xsl:call-template name="banner"/>
+          <xsl:call-template name="fopBanner"/>
 
 
           <fo:block font-size="{$font-size}">

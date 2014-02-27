@@ -437,7 +437,7 @@
 
 
 	<!-- main pdf banner -->
-	<xsl:template name="banner">
+	<xsl:template name="fopBanner">
 		<fo:table table-layout="fixed" width="100%">
 			<fo:table-column column-width="20cm" />
 			<!--<fo:table-column column-width="4cm"/> -->
