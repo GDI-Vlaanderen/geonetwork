@@ -447,12 +447,19 @@
 					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
 					<xsl:with-param name="schema" select="$schema" />
 				</xsl:apply-templates>
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
+					<xsl:apply-templates mode="elementFop"
+						select=".">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
 				<!-- Date -->
-				<xsl:apply-templates mode="elementFop"
-					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date |
-	                ./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date">
+					<xsl:apply-templates mode="elementFop"
+						select=".">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
 				<xsl:apply-templates mode="elementFop"
 					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:edition">
 					<xsl:with-param name="schema" select="$schema" />
@@ -475,10 +482,13 @@
 					<xsl:with-param name="schema" select="$schema" />
 				</xsl:apply-templates>
 				<!-- Code -->
-				<xsl:apply-templates mode="elementFop"
-					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
+				
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier">
+					<xsl:apply-templates mode="elementFop"
+						select="./gmd:MD_Identifier/gmd:code">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
 			</xsl:with-param>
 		</xsl:call-template>
 
@@ -499,10 +509,13 @@
 				</xsl:apply-templates>
 
 				<!-- Status -->
-				<xsl:apply-templates mode="elementFop"
-					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
+				
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status">
+					<xsl:apply-templates mode="elementFop"
+						select=".">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
 
 				<!-- Contactpoints -->
 				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact">
@@ -523,6 +536,47 @@
 					</xsl:call-template>
 				</xsl:for-each>
 
+				<!-- Voorbeeld weergave -->
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview">
+					<fo:table>
+						<fo:table-column column-width="5cm" />
+						<fo:table-column />
+						<fo:table-body>
+		
+						<fo:table-row border-bottom-style="solid"
+							border-top-style="solid" border-top-color="{$title-color}"
+							border-top-width=".1pt" border-bottom-color="{$title-color}"
+							border-bottom-width=".1pt">
+							<fo:table-cell
+								background-color="{$background-color}"
+								color="{$title-color}" padding-top="4pt" padding-bottom="4pt"
+								padding-right="4pt" padding-left="4pt" >
+		 						<fo:block linefeed-treatment="preserve">
+									<xsl:call-template name="getTitle">
+										<xsl:with-param name="name">
+											<xsl:value-of select="name(.)" />
+										</xsl:with-param>
+										<xsl:with-param name="schema" select="$schema" />
+									</xsl:call-template>
+								</fo:block>						
+							</fo:table-cell>
+							<fo:table-cell color="{$font-color}" padding-top="4pt"
+								padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
+		 						<fo:block linefeed-treatment="preserve">
+						            <fo:external-graphic content-width="4.6cm">
+						              <xsl:variable name="url" select="./gmd:MD_BrowseGraphic/gmd:fileName"/>
+						              <xsl:attribute name="src">
+						                <xsl:text>url('</xsl:text>
+						               		<xsl:value-of select="$url" disable-output-escaping="yes"/> 
+						                <xsl:text>')"</xsl:text>
+						              </xsl:attribute>
+									</fo:external-graphic>
+								</fo:block>
+							</fo:table-cell>
+							</fo:table-row>
+						</fo:table-body>
+					</fo:table>
+				</xsl:for-each>
 				<!-- Keywords -->
 				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
 					<xsl:apply-templates mode="elementFop" select="./gmd:MD_Keywords">
@@ -530,43 +584,25 @@
 					</xsl:apply-templates>
 				</xsl:for-each>
 
-				<!-- Voorbeeld weergave -->
-				<xsl:call-template name="newBlock">
-					<xsl:with-param name="title">
+				<!-- Toepassing -->
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage">
+					<xsl:call-template name="newBlock">
+						<xsl:with-param name="title">
 							<xsl:call-template name="getTitle">
 								<xsl:with-param name="name">
-									<xsl:value-of select="name(./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview)" />
+									<xsl:value-of
+										select="name(.)" />
 								</xsl:with-param>
 								<xsl:with-param name="schema" select="$schema" />
 							</xsl:call-template>
-					</xsl:with-param>
-					<xsl:with-param name="content">
-						<xsl:call-template name="metadata-thumbnail-block">
-							<xsl:with-param name="server" select="$server"/>
-							<xsl:with-param name="metadata" select="$metadata"/>
-						</xsl:call-template>	
-					</xsl:with-param>
-				</xsl:call-template>
-						
-				<!-- Toepassing -->
-				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage">
-				<xsl:call-template name="newBlock">
-					<xsl:with-param name="title">
-						<xsl:call-template name="getTitle">
-							<xsl:with-param name="name">
-								<xsl:value-of
-									select="name(.)" />
-							</xsl:with-param>
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:call-template>
-					</xsl:with-param>
-					<xsl:with-param name="content">
-						<xsl:apply-templates mode="elementFop"
-							select=".">
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:apply-templates>
-					</xsl:with-param>
-				</xsl:call-template>
+						</xsl:with-param>
+						<xsl:with-param name="content">
+							<xsl:apply-templates mode="elementFop"
+								select=".">
+								<xsl:with-param name="schema" select="$schema" />
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
 				</xsl:for-each>
 				
 				<!-- Verwante dataset(series) -->
@@ -590,11 +626,12 @@
 				</xsl:for-each>
 
 
-				<xsl:apply-templates mode="elementFop"
-					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
-
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType">
+					<xsl:apply-templates mode="elementFop" select=".">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
+	
 				<xsl:call-template name="newBlock">
 					<xsl:with-param name="title">
 						<xsl:call-template name="getTitle">
@@ -606,36 +643,40 @@
 						</xsl:call-template>
 					</xsl:with-param>
 					<xsl:with-param name="content">
-						<xsl:apply-templates mode="elementFop"
-							select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution">
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:apply-templates>
+						<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType">
+							<xsl:apply-templates mode="elementFop"
+								select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution">
+								<xsl:with-param name="schema" select="$schema" />
+							</xsl:apply-templates>
+						</xsl:for-each>
 					</xsl:with-param>
-
 				</xsl:call-template>
 
 				<!-- Language -->
-				<xsl:apply-templates mode="elementFop"
-					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
+				
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language">
+					<xsl:apply-templates mode="elementFop"
+						select=".">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
 
 				<!-- Charset Encoding -->
-				<xsl:apply-templates mode="elementFop"
-					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
-
-				<!-- Hierarchy Level -->
-				<xsl:apply-templates mode="elementFop"
-					select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
-<!-- 				<xsl:apply-templates mode="elementFop"
-					select="./gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
-					<xsl:with-param name="schema" select="$schema" />
-				</xsl:apply-templates>
- -->
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet">
+					<xsl:apply-templates mode="elementFop"
+						select=".">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
+				
+				<!-- Categorieen -->
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory">
+					<xsl:apply-templates mode="elementFop"
+						select=".">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+				</xsl:for-each>
+				
 				<!-- Extent -->
 				<xsl:call-template name="newBlock">
 					<xsl:with-param name="title">
@@ -720,31 +761,60 @@
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
-
-		<xsl:apply-templates mode="blockedFop" select="./gmd:dataQualityInfo">
-			<xsl:with-param name="schema" select="$schema" />
-			<xsl:with-param name="blockHeaders">
-				gmd:dataQualityInfo|gmd:DQ_DataQuality|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_AbsoluteExternalPositionalAccuracy|
-				gmd:DQ_CompletenessOmission|gmd:DQ_QuantitativeResult|gmd:DQ_QualitativeResult|
-				gmd:lineage|gmd:LI_Lineage|gmd:description|gmd:processStep|gmd:processor
-			</xsl:with-param>
-			<xsl:with-param name="skipTags">
-				gmd:DQ_DomainConsistency
-			</xsl:with-param>
-		</xsl:apply-templates>
-
+	
+		<xsl:for-each select="./gmd:dataQualityInfo">
+			<xsl:apply-templates mode="blockedFop" select=".">
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="blockHeaders">
+					gmd:dataQualityInfo|gmd:DQ_DataQuality|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_AbsoluteExternalPositionalAccuracy|
+					gmd:DQ_CompletenessOmission|gmd:DQ_QuantitativeResult|gmd:DQ_QualitativeResult|
+					gmd:lineage|gmd:LI_Lineage|gmd:description|gmd:processStep|gmd:processor
+				</xsl:with-param>
+				<xsl:with-param name="skipTags">
+					gmd:DQ_DomainConsistency
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</xsl:for-each>
+	
 		<xsl:call-template name="newBlock">
 			<xsl:with-param name="title">
-				<xsl:text>Inspire Domeinconsistentie</xsl:text>
+				<xsl:text>INSPIRE Domeinconsistentie</xsl:text>
 			</xsl:with-param>
 			<xsl:with-param name="content">
-				<xsl:apply-templates mode="blockedFop"
-					select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult">
-					<xsl:with-param name="schema" select="$schema" />
-					<xsl:with-param name="blockHeaders">
-					gmd:DQ_ConformanceResult|gmd:specification
+				<xsl:call-template name="newBlock">
+					<xsl:with-param name="title">
+						<xsl:call-template name="getTitle">
+							<xsl:with-param name="name">
+								<xsl:value-of
+									select="name(./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult)" />
+							</xsl:with-param>
+							<xsl:with-param name="schema" select="$schema" />
+						</xsl:call-template>
 					</xsl:with-param>
-				</xsl:apply-templates>
+					<xsl:with-param name="content">
+						<xsl:call-template name="newBlock">
+							<xsl:with-param name="title">
+								<xsl:call-template name="getTitle">
+									<xsl:with-param name="name">
+										<xsl:value-of
+											select="name(./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification)" />
+									</xsl:with-param>
+									<xsl:with-param name="schema" select="$schema" />
+								</xsl:call-template>
+							</xsl:with-param>
+							<xsl:with-param name="content">
+								<xsl:apply-templates mode="elementFop"
+									select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+									<xsl:with-param name="schema" select="$schema" />
+								</xsl:apply-templates>
+								<xsl:apply-templates mode="elementFop"
+									select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date">
+									<xsl:with-param name="schema" select="$schema" />
+								</xsl:apply-templates>
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:with-param>
+				</xsl:call-template>
 			</xsl:with-param>
 		</xsl:call-template>
 
@@ -854,23 +924,25 @@
 
 
 				<!-- Meta-metadata -->
-				<xsl:call-template name="newBlock">
-					<xsl:with-param name="title">
-						<xsl:call-template name="getTitle">
-							<xsl:with-param name="name">
-								<xsl:value-of
-									select="'Metadata-auteur'"/>
-							</xsl:with-param>
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:call-template>
-					</xsl:with-param>
-					<xsl:with-param name="content">
-						<xsl:apply-templates mode="elementFop" select="./gmd:contact">
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:apply-templates>
-					</xsl:with-param>
-				</xsl:call-template>
-
+				<xsl:for-each select="./gmd:contact">
+					<xsl:call-template name="newBlock">
+						<xsl:with-param name="title">
+							<xsl:call-template name="getTitle">
+								<xsl:with-param name="name">
+									<xsl:value-of
+										select="'Metadata-auteur'"/>
+								</xsl:with-param>
+								<xsl:with-param name="schema" select="$schema" />
+							</xsl:call-template>
+						</xsl:with-param>
+						<xsl:with-param name="content">
+							<xsl:apply-templates mode="elementFop" select=".">
+								<xsl:with-param name="schema" select="$schema" />
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>
+				
 			</xsl:with-param>
 		</xsl:call-template>
 
@@ -939,7 +1011,7 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
-<xsl:template mode="elementFop-iso19139" match="gmd:MD_Keywords">
+	<xsl:template mode="elementFop-iso19139" match="gmd:MD_Keywords">
 		<xsl:param name="schema" />
 		<xsl:call-template name="info-blocks">
 			<xsl:with-param name="label">
@@ -966,6 +1038,35 @@
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>	
+	
+	<xsl:template mode="elementFop-iso19139" match="gmd:RS_Identifier">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+		<xsl:variable name="code" select="."/>
+		
+        <xsl:apply-templates mode="simpleElementFop" select=".">
+            <xsl:with-param name="schema"   select="$schema"/>
+            <xsl:with-param name="title">
+				<xsl:call-template name="getTitle">
+				    <xsl:with-param name="name"   select="name($code/gmd:code)"/>
+				    <xsl:with-param name="schema" select="$schema"/>
+				    <xsl:with-param name="node" select="$code/gmd:code"/>
+				</xsl:call-template>
+            </xsl:with-param>
+            <xsl:with-param name="text">
+            	<xsl:variable name="codeDescription" select="normalize-space(/root/gui/schemas/iso19139/labels/element[@name = 'gmd:code' and @context='gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code']/helper/option[@value=$code/gmd:code/gco:CharacterString])"/>
+            	<xsl:if test="$codeDescription=''">
+            		<xsl:value-of select="gco:CharacterString"/>
+           		</xsl:if>
+            	<xsl:if test="not($codeDescription='')">
+            		<xsl:value-of select="$codeDescription"/>
+           		</xsl:if>
+            </xsl:with-param>
+         </xsl:apply-templates>
+        <xsl:apply-templates mode="elementFop" select="./gmd:codeSpace">
+            <xsl:with-param name="schema"   select="$schema"/>
+         </xsl:apply-templates>
+    </xsl:template>
 	
 <!-- 	<xsl:template mode="elementFop-iso19139" match="gmd:CI_Date">
 		<xsl:param name="schema" />

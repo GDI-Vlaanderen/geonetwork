@@ -243,19 +243,6 @@
 				</xsl:with-param>
 				<xsl:with-param name="schema" select="$schema" />
 				<xsl:with-param name="node" select=".."/>
-					<!-- <xsl:choose>
-							<xsl:when
-								test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
-								<xsl:value-of select="." />
-							</xsl:when>
-							<xsl:when test="@codeList">
-								<xsl:value-of select="." />
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="./.." />
-							</xsl:otherwise>
-					</xsl:choose>
-				</xsl:with-param> -->
 			</xsl:call-template>
 		</xsl:param>
 		<xsl:param name="text">
@@ -264,9 +251,6 @@
 			</xsl:call-template>
 		</xsl:param>
 		
-<!-- 		<xsl:message>Calling simpleElementFop on <xsl:value-of select="saxon:path()"/>, <xsl:value-of select="."/></xsl:message> -->
-
-
 		<xsl:call-template name="info-blocks">
 			<xsl:with-param name="label" select="$title" />
 			<xsl:with-param name="value" select="$text" />
@@ -423,8 +407,7 @@
 		</xsl:choose>
  	</xsl:template>
  	
- 	
-<!-- 	<xsl:template mode="elementFop" match="gmd:CI_Date" >
+ 	<xsl:template mode="elementFop" match="gmd:RS_Identifier" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />
@@ -444,9 +427,43 @@
 			</xsl:call-template>
 		</xsl:otherwise>
 		</xsl:choose>
+ 	</xsl:template>
+ 	
+ 	
+	<xsl:template mode="simpleElementFop" match="gml:beginPosition|gml:endPosition">
+		<xsl:param name="schema" />
+		<xsl:param name="title">
+			<xsl:call-template name="getTitle">
+				<xsl:with-param name="name">
+					<xsl:choose>
+						<xsl:when
+							test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+							<xsl:value-of select="name(.)" />
+						</xsl:when>
+						<xsl:when test="@codeList">
+							<xsl:value-of select="name(.)" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="name(.)" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:with-param>
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="node" select="."/>
+			</xsl:call-template>
+		</xsl:param>
+		<xsl:param name="text">
+			<xsl:call-template name="getElementText">
+				<xsl:with-param name="schema" select="$schema" />
+			</xsl:call-template>
+		</xsl:param>
+		
+		<xsl:call-template name="info-blocks">
+			<xsl:with-param name="label" select="$title" />
+			<xsl:with-param name="value" select="$text" />
+		</xsl:call-template>
 	</xsl:template>
- -->
-
+ 	
 	<!-- prevent drawing of geonet:* elements -->
 	<xsl:template mode="elementFop"
 		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors" />
