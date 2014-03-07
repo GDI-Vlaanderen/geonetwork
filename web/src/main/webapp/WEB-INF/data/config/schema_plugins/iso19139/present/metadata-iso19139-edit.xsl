@@ -4466,10 +4466,8 @@
 	                <xsl:apply-templates mode="simpleElement"
 	                                     select=".">
 	                    <xsl:with-param name="schema" select="$schema" />
-	                    <xsl:with-param name="text">&#160;
-	
-	
-	                        <xsl:variable name="langId">
+	                    <xsl:with-param name="text">
+	                    	<xsl:variable name="langId">
 	                            <xsl:call-template name="getLangId">
 	                                <xsl:with-param name="langGui" select="/root/gui/language" />
 	                                <xsl:with-param name="md"
@@ -4519,8 +4517,11 @@
 			                                </img>
 			                            </a>
 			                            <br/>
+			                            <span class="thumbnail"><a href="{$url}" target="thumbnail-view"><xsl:value-of select="$imageTitle"/></a></span>
 		                            </xsl:if>
-		                            <span class="thumbnail"><a href="{$url}" target="thumbnail-view"><xsl:value-of select="$imageTitle"/></a></span>
+		                        	<xsl:if test="not (contains($url, '://'))">
+										<xsl:value-of select="$url"/>
+		                            </xsl:if>
 		                        </div>
 	                        </xsl:if>
 	                    </xsl:with-param>
