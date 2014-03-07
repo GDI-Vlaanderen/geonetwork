@@ -2980,7 +2980,6 @@
         <xsl:param name="ref"/>
 
         <xsl:variable name="lang"  select="/root/gui/language"/>
-        <xsl:message> Lang = <xsl:value-of select="$lang"/></xsl:message>
 
         <xsl:choose>
             <xsl:when test="$edit=true()">
