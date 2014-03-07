@@ -462,10 +462,7 @@
 				<fo:table-column />
 				<fo:table-body>
 
-					<fo:table-row border-bottom-style="solid"
-						border-top-style="solid" border-top-color="{$title-color}"
-						border-top-width=".1pt" border-bottom-color="{$title-color}"
-						border-bottom-width=".1pt">
+					<fo:table-row >
 						<fo:table-cell
 							background-color="{if ($label != '') then $background-color else ''}"
 							color="{$title-color}" padding-top="4pt" padding-bottom="4pt"

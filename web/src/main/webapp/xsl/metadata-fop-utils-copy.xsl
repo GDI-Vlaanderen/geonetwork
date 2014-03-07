@@ -20,7 +20,6 @@
 
 		<xsl:if test="$content and $content!=''">
 			<fo:block-container margin-left="10pt" margin-right="0pt" margin-bottom="5pt">
-<!-- 				<fo:block-container width="100%" margin-left="0pt"> -->
 					<fo:block width="100%" margin-top="5pt" margin-bottom="5pt">
 						<fo:inline font-size="{$title-size}" font-weight="{$title-weight}"
 							color="{$title-color}">
@@ -28,8 +27,7 @@
 						</fo:inline>
 					</fo:block>
 					<xsl:copy-of select="$content" />
-<!-- 				</fo:block-container>
- -->			</fo:block-container>
+ 			</fo:block-container>
 		</xsl:if>
 	</xsl:template>
 
