@@ -643,9 +643,9 @@
 						</xsl:call-template>
 					</xsl:with-param>
 					<xsl:with-param name="content">
-						<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType">
+						<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution">
 							<xsl:apply-templates mode="elementFop"
-								select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution">
+								select=".">
 								<xsl:with-param name="schema" select="$schema" />
 							</xsl:apply-templates>
 						</xsl:for-each>
@@ -653,8 +653,7 @@
 				</xsl:call-template>
 
 				<!-- Language -->
-				
-				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language">
+ 				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language">
 					<xsl:apply-templates mode="elementFop"
 						select=".">
 						<xsl:with-param name="schema" select="$schema" />
@@ -1068,56 +1067,36 @@
          </xsl:apply-templates>
     </xsl:template>
 	
-<!-- 	<xsl:template mode="elementFop-iso19139" match="gmd:CI_Date">
-		<xsl:param name="schema" />
-		<fo:table>
-				<fo:table-column column-width="5cm" />
-				<fo:table-column />
-				<fo:table-column column-width="5cm" />
-				<fo:table-column />
-				<fo:table-body>
-
-					<fo:table-row border-bottom-style="solid"
-						border-top-style="solid" border-top-color="{$title-color}"
-						border-top-width=".1pt" border-bottom-color="{$title-color}"
-						border-bottom-width=".1pt">
-						<fo:table-cell
-							background-color="{if ($label != '') then $background-color else ''}"
-							color="{$title-color}" padding-top="4pt" padding-bottom="4pt"
-							padding-right="4pt" padding-left="4pt" >
- 							<fo:block linefeed-treatment="preserve">
-								<xsl:call-template name="getTitle">
-									<xsl:with-param name="name" select="name(./gmd:dateType)" />
-									<xsl:with-param name="schema" select="$schema" />
-								</xsl:call-template>
-							</fo:block>						
-						</fo:table-cell>
-						<fo:table-cell color="{$font-color}" padding-top="4pt"
-							padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
- 							<fo:block linefeed-treatment="preserve">
-								<xsl:value-of select="$value" />
-								<xsl:copy-of select="$content" />
-							</fo:block>
-						</fo:table-cell>
-						<fo:table-cell
-							background-color="{if ($label != '') then $background-color else ''}"
-							color="{$title-color}" padding-top="4pt" padding-bottom="4pt"
-							padding-right="4pt" padding-left="4pt" >
- 							<fo:block linefeed-treatment="preserve">
-								<xsl:value-of select="$label" />
-							</fo:block>						
-						</fo:table-cell>
-						<fo:table-cell color="{$font-color}" padding-top="4pt"
-							padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
- 							<fo:block linefeed-treatment="preserve">
-								<xsl:value-of select="$value" />
-								<xsl:copy-of select="$content" />
-							</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
-				</fo:table-body>
-			</fo:table>
-	</xsl:template>	
- -->
-
+	<xsl:template mode="elementFop-iso19139" match="gmd:language">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+		
+        <xsl:variable name="guilang"  select="/root/gui/language"/>
+        <xsl:variable name="lang"  select="string(gmd:LanguageCode/@codeListValue)"/>
+       	
+		<xsl:call-template name="info-blocks">
+			<xsl:with-param name="label" >
+				<xsl:call-template name="getTitle">
+					<xsl:with-param name="name">
+						<xsl:choose>
+							<xsl:when
+								test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+								<xsl:value-of select="name(.)" />
+							</xsl:when>
+							<xsl:when test="@codeList">
+								<xsl:value-of select="name(.)" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="name(.)" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="node" select="."/>
+				</xsl:call-template>
+			</xsl:with-param>
+			<xsl:with-param name="value" select="/root/gui/isolanguages/record[code=$lang]/label/child::*[name() = $guilang]" />
+		</xsl:call-template>
+        
+    </xsl:template>
 </xsl:stylesheet>
