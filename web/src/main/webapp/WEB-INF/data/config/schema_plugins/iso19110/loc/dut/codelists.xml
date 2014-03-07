@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<codelists/>
+<codelists>
+	<codelist name="gmd:CI_RoleCode">
+		<entry>
+			<code>originator</code>
+			<label>Producent</label>
+			<description>Producent van de dataset.</description>
+		</entry>
+	</codelist>
+</codelists>
 
 

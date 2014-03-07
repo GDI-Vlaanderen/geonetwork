@@ -1205,7 +1205,7 @@
           which will not be submitted to the form. -->
         <xsl:param name="no_name" select="false()" />
 
-
+		
         <xsl:variable name="name"  select="name(.)"/>
         <xsl:variable name="value" select="string(.)"/>
         <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
@@ -1433,9 +1433,22 @@
                 <xsl:choose>
                     <xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
                     <xsl:when test="starts-with($schema,'iso19139')">
-                        <xsl:apply-templates mode="localised" select="..">
-                            <xsl:with-param name="langId" select="$langId"></xsl:with-param>
-                        </xsl:apply-templates>
+                    	<xsl:choose>
+                    		<xsl:when test="name(.)='gml:beginPosition' or name(.)='gml:endPosition'">
+                    		<xsl:message>Begin or EndPosition</xsl:message>
+                    			<xsl:value-of select="."/>
+<!--                         		<xsl:apply-templates mode="localised" select=".">
+                            		<xsl:with-param name="langId" select="$langId"></xsl:with-param>
+                        		</xsl:apply-templates>
+ -->                        	</xsl:when>
+                        	<xsl:otherwise>
+                        		<xsl:apply-templates mode="localised" select="..">
+                            		<xsl:with-param name="langId" select="$langId"></xsl:with-param>
+                        		</xsl:apply-templates>
+                        	</xsl:otherwise>
+                        </xsl:choose>
+                        	
+                        	
                     </xsl:when>
                     <xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
                 </xsl:choose>

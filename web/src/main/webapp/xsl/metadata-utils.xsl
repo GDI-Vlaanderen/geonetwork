@@ -6,6 +6,10 @@
                 xmlns:exslt="http://exslt.org/common"
                 exclude-result-prefixes="exslt saxon geonet">
 
+	<xsl:import href="metadata-fop-variables.xsl"/>
+	<xsl:import href="metadata-fop.xsl"/>
+	<xsl:import href="metadata-fop-utils-copy.xsl"/>
+	
     <xsl:include href="blanks/metadata-schema01.xsl"/>
     <xsl:include href="blanks/metadata-schema02.xsl"/>
     <xsl:include href="blanks/metadata-schema03.xsl"/>

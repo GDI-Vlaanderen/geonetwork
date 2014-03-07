@@ -362,70 +362,26 @@
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
 
-	<xsl:template mode="elementFop" match="gmd:MD_Keywords">
+ 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />
 		
-		<xsl:choose>
-		<xsl:when test="$schema='iso19139'">
-			<xsl:apply-templates mode="elementFop-iso19139" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			</xsl:apply-templates>
-		</xsl:when>
-		
-		<xsl:otherwise>
-			<xsl:call-template name="elementFop">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
-				<xsl:with-param name="skipTags" select="$skipTags"/>
-			</xsl:call-template>
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>	
 
-
-	<xsl:template mode="elementFop" match="gmd:CI_ResponsibleParty" >
-		<xsl:param name="schema" />
-		<xsl:param name="blockHeaders" />
-		<xsl:param name="skipTags" />
-		
 		<xsl:choose>
-		<xsl:when test="$schema='iso19139'">
-			<xsl:apply-templates mode="elementFop-iso19139" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			</xsl:apply-templates>
-		</xsl:when>
-		
-		<xsl:otherwise>
-			<xsl:call-template name="elementFop">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
-				<xsl:with-param name="skipTags" select="$skipTags"/>
-			</xsl:call-template>
-		</xsl:otherwise>
-		</xsl:choose>
- 	</xsl:template>
- 	
- 	<xsl:template mode="elementFop" match="gmd:RS_Identifier" >
-		<xsl:param name="schema" />
-		<xsl:param name="blockHeaders" />
-		<xsl:param name="skipTags" />
-		
-		<xsl:choose>
-		<xsl:when test="$schema='iso19139'">
-			<xsl:apply-templates mode="elementFop-iso19139" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			</xsl:apply-templates>
-		</xsl:when>
-		
-		<xsl:otherwise>
-			<xsl:call-template name="elementFop">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
-				<xsl:with-param name="skipTags" select="$skipTags"/>
-			</xsl:call-template>
-		</xsl:otherwise>
+			<xsl:when test="$schema='iso19139'">
+				<xsl:apply-templates mode="elementFop-iso19139" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			
+			<xsl:otherwise>
+				<xsl:call-template name="elementFop">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
+					<xsl:with-param name="skipTags" select="$skipTags"/>
+				</xsl:call-template>
+			</xsl:otherwise>
 		</xsl:choose>
  	</xsl:template>
  	
