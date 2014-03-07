@@ -423,6 +423,8 @@ GeoNetwork.Lang.nl = {
     'mdMenu': "Acties",
     'deleteRecord': "Verwijder metadatarecord?",
     'deleteConfirm': "Bent u zeker dat u dit metadatarecord wil verwijderen?",
+    'deleteRecords': "Verwijder metadatarecords?",
+    'deleteConfirms': "Bent u zeker dat u deze metadatarecord(s) wil verwijderen?",
     'deleteRecordSuccess': "Metadatarecord verwijderd.",
     'deleteRecordFailure': "Fout bij het verwijderen van het metadatarecord.",
     'unlockRecordSuccess': 'Editeersessie geannuleerd',
