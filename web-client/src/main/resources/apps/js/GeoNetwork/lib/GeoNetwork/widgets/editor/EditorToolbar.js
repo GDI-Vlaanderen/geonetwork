@@ -59,6 +59,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
     configMenu: undefined,
     viewMenu: undefined,
     saveAction: undefined,
+    collapseAction: undefined,
     saveAndCloseAction: undefined,
     checkAction: undefined,
     resetAction: undefined,
@@ -194,21 +195,23 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
         
         return this.typeMenu;
     },
+    collapseAction : function() {
+		Ext.each(Ext.DomQuery.select(this.checked?'div.tgDown':'div.tgRight'), function(i) {
+        	if (i.className.indexOf('toggle-attr')<0 && i.onclick) {
+            	i.onclick();
+			}
+        });
+    },
     configMenu: function(){
         
         this.configMenu = {
             iconCls: 'configIcon',
             menu: {
                 items: [{
+                		id: 'collapseAllMenuItem',
                         text: OpenLayers.i18n('collapseAll'),
                         checked: false,
-                        checkHandler: function(){
-                            Ext.each(Ext.DomQuery.select(this.checked?'div.tgDown':'div.tgRight'), function(i) {
-                                if (i.className.indexOf('toggle-attr')<0 && i.onclick) {
-                                    i.onclick();
-                                }
-                            });
-                        }
+                        checkHandler: this.collapseAction
                     }/*,
                     {
                         text: OpenLayers.i18n('editAttributes'),

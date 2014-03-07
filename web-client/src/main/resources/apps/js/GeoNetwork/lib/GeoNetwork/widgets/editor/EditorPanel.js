@@ -1107,7 +1107,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
         }, this);
         
+        if (Ext.getCmp('collapseAllMenuItem')) {
+        	if (Ext.getCmp('collapseAllMenuItem').checked) {
+        		Ext.getCmp('collapseAllMenuItem').checkHandler();
+        	}
+        }
         
+        // TODO WIM HIER ZETTEN
         this.updateViewMenu();
     },
     /** private: method[validateMetadataFields]
