@@ -1435,7 +1435,6 @@
                     <xsl:when test="starts-with($schema,'iso19139')">
                     	<xsl:choose>
                     		<xsl:when test="name(.)='gml:beginPosition' or name(.)='gml:endPosition'">
-                    		<xsl:message>Begin or EndPosition</xsl:message>
                     			<xsl:value-of select="."/>
 <!--                         		<xsl:apply-templates mode="localised" select=".">
                             		<xsl:with-param name="langId" select="$langId"></xsl:with-param>
