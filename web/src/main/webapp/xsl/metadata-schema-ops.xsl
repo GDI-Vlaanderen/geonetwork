@@ -50,6 +50,9 @@
 				</xsl:variable>
 				
 				<button class="content" type="button" id="btn" onclick="checkAndSubmitSchemaOps('{$formAction}')"><xsl:value-of select="$buttonName"/></button>
+					
+				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
+				
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
