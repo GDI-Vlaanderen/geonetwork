@@ -318,7 +318,7 @@ GeoNetwork.app = function(){
 */
 
         // Hide or show extra fields after login event
-        var loggedInFields = [statusField];
+        var loggedInFields = [statusField,groupField];
         Ext.each(loggedInFields, function(item){
         	item.setVisible(user && !Ext.isEmpty(user.role));
         });
@@ -327,7 +327,7 @@ GeoNetwork.app = function(){
         Ext.each(reviewerFields, function(item){
             item.setVisible(user && (user.role=='Hoofdeditor' || user.role=='Administrator'));
         });
-        var adminFields = [groupField/*, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField*/];
+        var adminFields = [/*, validField, validXSDField, validISOSchematronField, validInspireSchematronField, validAGIVSchematronField*/];
         Ext.each(adminFields, function(item){
             item.setVisible(user && user.role=='Administrator');
         });
@@ -520,7 +520,7 @@ GeoNetwork.app = function(){
                         // What panel
                         {
                        		border: false,
-                        	columnWidth: 0.15
+                        	columnWidth: 0.125
                         },
                         {
                         	frame: true,
@@ -530,7 +530,7 @@ GeoNetwork.app = function(){
 //                            width: 820,
                             boxMinWidth: 400,
                             boxMaxidth: 1100,
-                        	columnWidth: 0.7,
+                        	columnWidth: 0.75,
                         	labelWidth:130,
                             items:[
                                 advancedCriteria,GeoNetwork.util.SearchFormTools.getTypesField(GeoNetwork.searchDefault.activeMapControlExtent, true),
@@ -597,7 +597,7 @@ GeoNetwork.app = function(){
                        	},
                         {
                        		border: false,
-                        	columnWidth: 0.15
+                        	columnWidth: 0.125
                         }
                     ]
                 })

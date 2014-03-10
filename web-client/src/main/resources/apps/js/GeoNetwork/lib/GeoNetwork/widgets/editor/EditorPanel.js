@@ -546,14 +546,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     if (single) {
                     	var scope = this;
                         if (this.ref !== null) {
-                        	var uuidValue = null;
-                        	if (useUuid || this.mode=='iso19110' || otherRefs!=null) {
-                        		uuidValue = metadata[0].data.uuid;
-                        	}
+                        	var uuidValue = metadata[0].data.uuid;
                         	if (!(useUuid || this.mode=='iso19110')) {
                             	panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
                                 	if (mduuid) {
-		                                Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
+		                                Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
                                 	}
                             	});
                         	}
