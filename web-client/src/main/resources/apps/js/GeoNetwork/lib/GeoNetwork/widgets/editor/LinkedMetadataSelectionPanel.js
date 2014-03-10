@@ -306,7 +306,7 @@ GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
             name: 'nbResultPerPage',
             id: 'nbResultPerPage',
             value: 50,
-            readOnly: true,
+            readOnly: false,
             width: 40
         };
     },
