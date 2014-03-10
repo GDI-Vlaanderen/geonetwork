@@ -357,12 +357,12 @@ GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
         this.loadingMask.show();
         
         GeoNetwork.editor.nbResultPerPage = 50;
-        /*
+        
         if (Ext.getCmp('nbResultPerPage')) {
             GeoNetwork.editor.nbResultPerPage = Ext.getCmp('nbResultPerPage').getValue();
         }
-        */
-        GeoNetwork.util.CSWSearchTools.doCSWQueryFromForm(this.id, this.catalogue, 1, this.showResults.bind(this), null, Ext.emptyFn/*, "http://www.isotc211.org/2005/gmd"*/);
+        
+        GeoNetwork.util.CSWSearchTools.doCSWQueryFromForm(this.id, this.catalogue, 1, this.showResults.bind(this), this.linkedMetadataStore.removeAll(), Ext.emptyFn/*, "http://www.isotc211.org/2005/gmd"*/);
     },
     
     showResults: function(response){
