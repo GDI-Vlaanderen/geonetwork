@@ -270,6 +270,12 @@ GeoNetwork.app = function(){
             name: 'E__isLocked',
             hidden: true
         });
+        
+        var myMetadata = new Ext.form.Checkbox({
+        	name: 'E__owner',
+        	fieldLabel: OpenLayers.i18n('myMetadata'),
+        	inputValue: catalogue.identifiedUser.id
+        });
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
@@ -344,6 +350,9 @@ GeoNetwork.app = function(){
             });
             GeoNetwork.util.SearchFormTools.reload(this);
             Ext.getCmp('searchForm').doLayout();
+            
+            
+            myMetadata.inputValue = catalogue.identifiedUser.id;
         });
         catalogue.on('afterLogout', function(){
             Ext.each(loggedInFields, function(item){
@@ -357,6 +366,8 @@ GeoNetwork.app = function(){
             });
             GeoNetwork.util.SearchFormTools.reload(this);
             Ext.getCmp('searchForm').doLayout();
+            
+            myMetadata.inputValue = undefined;
         });
         var hitsPerPage =  [['10'], ['20'], ['50'], ['100']];
         var hitsPerPageField = new Ext.form.ComboBox({
@@ -538,7 +549,7 @@ GeoNetwork.app = function(){
                                 GeoNetwork.util.INSPIRESearchFormTools.getAnnexField(true),
                                 GeoNetwork.util.INSPIRESearchFormTools.getThemesField(catalogue.services, true),
                                 GeoNetwork.util.INSPIRESearchFormTools.getServiceTypeField(true),
-                                advancedCriteriaExtra
+                                advancedCriteriaExtra, myMetadata
                             ]
                         },
 /*
