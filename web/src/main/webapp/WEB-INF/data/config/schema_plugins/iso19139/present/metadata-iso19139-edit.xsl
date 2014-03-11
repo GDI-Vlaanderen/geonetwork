@@ -815,7 +815,7 @@
 
     <xsl:decimal-format name="separateThousandsBySpace" decimal-separator="," grouping-separator="&#160;" />
     
-    <xsl:template mode="iso19139" match="gmd:denominator" priority="100"  xmlns:functx="http://www.functx.com">
+    <xsl:template mode="iso19139" match="gmd:denominator" priority="100">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
         <xsl:variable name="text">
@@ -823,6 +823,9 @@
 		        <xsl:choose> 
 			        <xsl:when test="contains(gco:Integer,':')">
 		            	<xsl:value-of select="format-number(number(substring-after(gco:Integer, ':')), '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
+		            </xsl:when>
+			        <xsl:when test="contains(gco:Integer,'/')">
+		            	<xsl:value-of select="format-number(number(substring-after(gco:Integer, '/')), '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
 		            </xsl:when>
 		            <xsl:otherwise>
 		            	<xsl:value-of select="format-number(gco:Integer, '#&#160;###,##;(#&#160;###,##)', 'separateThousandsBySpace')"/>
@@ -2977,7 +2980,6 @@
         <xsl:param name="ref"/>
 
         <xsl:variable name="lang"  select="/root/gui/language"/>
-        <xsl:message> Lang = <xsl:value-of select="$lang"/></xsl:message>
 
         <xsl:choose>
             <xsl:when test="$edit=true()">

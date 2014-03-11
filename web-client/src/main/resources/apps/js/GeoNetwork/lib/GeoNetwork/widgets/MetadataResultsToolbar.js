@@ -178,8 +178,12 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             iconCls: 'cancel',
             id: 'deleteAction',
             handler: function(){
-                this.catalogue.massiveOp('delete', function() {
-                    this.catalogue.metadataSelectNone();
+            	Ext.Msg.confirm(OpenLayers.i18n('deleteRecords'), OpenLayers.i18n('deleteConfirms'), function (btn) {
+            		if (btn == 'yes') {
+		                this.catalogue.massiveOp('delete', function() {
+		                    this.catalogue.metadataSelectNone();
+		                });
+					}
                 });
             },
             scope: this,

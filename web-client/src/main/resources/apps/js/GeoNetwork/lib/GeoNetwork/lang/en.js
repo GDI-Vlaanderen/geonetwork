@@ -411,6 +411,8 @@ GeoNetwork.lang.en = {
     'mdMenu': 'Actions',
     'deleteRecord': 'Delete metadata record ?',
     'deleteConfirm': 'Are you sure to delete this metadata record?',
+    'deleteRecords': 'Delete metadata records ?',
+    'deleteConfirms': 'Are you sure to delete these metadata record(s)?',
     'deleteRecordSuccess': 'Metadata deleted.', 
     'deleteRecordFailure': 'Error when deleting metadata record.',
     'unlockRecordSuccess': 'Metadata unlocked',
