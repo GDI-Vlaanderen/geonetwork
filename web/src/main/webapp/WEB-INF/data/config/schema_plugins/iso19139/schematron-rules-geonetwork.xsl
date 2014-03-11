@@ -221,6 +221,7 @@
          <xsl:when test="$localeAndNoLanguage"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$localeAndNoLanguage">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -235,6 +236,7 @@
 		    <!--REPORT -->
 <xsl:if test="$localeAndNoLanguage">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$localeAndNoLanguage">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -253,6 +255,7 @@
          <xsl:when test="$duplicateLanguage"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$duplicateLanguage">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -267,6 +270,7 @@
 		    <!--REPORT -->
 <xsl:if test="$duplicateLanguage">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$duplicateLanguage">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>

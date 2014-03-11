@@ -432,6 +432,7 @@
 		    <!--REPORT -->
 <xsl:if test="(normalize-space(gco:CharacterString) = '') and (not(@gco:nilReason) or not(contains('inapplicable missing template unknown withheld',@gco:nilReason)))">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="(normalize-space(gco:CharacterString) = '') and (not(@gco:nilReason) or not(contains('inapplicable missing template unknown withheld',@gco:nilReason)))">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -461,6 +462,7 @@
 		    <!--REPORT -->
 <xsl:if test="not(@srsDimension) or @srsName">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="not(@srsDimension) or @srsName">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -474,6 +476,7 @@
 		    <!--REPORT -->
 <xsl:if test="not(@axisLabels) or @srsName">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="not(@axisLabels) or @srsName">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -487,6 +490,7 @@
 		    <!--REPORT -->
 <xsl:if test="not(@uomLabels) or @srsName">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="not(@uomLabels) or @srsName">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -500,6 +504,7 @@
 		    <!--REPORT -->
 <xsl:if test="(not(@uomLabels) and not(@axisLabels)) or (@uomLabels and @axisLabels)">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="(not(@uomLabels) and not(@axisLabels)) or (@uomLabels and @axisLabels)">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -522,17 +527,19 @@
    </svrl:text>
 
 	  <!--RULE -->
-<xsl:template match="//*[gmd:CI_ResponsibleParty]" priority="1000" mode="M9">
+<xsl:template match="//*/gmd:CI_ResponsibleParty/gmd:organisationName" priority="1000"
+                 mode="M9">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="//*[gmd:CI_ResponsibleParty]"/>
+                       context="//*/gmd:CI_ResponsibleParty/gmd:organisationName"/>
       <xsl:variable name="count"
-                    select="(count(gmd:CI_ResponsibleParty/gmd:individualName[@gco:nilReason!='missing' or not(@gco:nilReason)])      + count(gmd:CI_ResponsibleParty/gmd:organisationName[@gco:nilReason!='missing' or not(@gco:nilReason)])     + count(gmd:CI_ResponsibleParty/gmd:positionName[@gco:nilReason!='missing' or not(@gco:nilReason)]))"/>
+                    select="(count(../gmd:individualName[@gco:nilReason!='missing' or not(@gco:nilReason)])      + count(.[@gco:nilReason!='missing' or not(@gco:nilReason)])     + count(../gmd:positionName[@gco:nilReason!='missing' or not(@gco:nilReason)]))"/>
 
 		    <!--ASSERT -->
 <xsl:choose>
          <xsl:when test="$count &gt; 0"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$count &gt; 0">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -547,6 +554,7 @@
 		    <!--REPORT -->
 <xsl:if test="$count &gt; 0">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$count &gt; 0">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -556,10 +564,10 @@
                <xsl:copy-of select="$loc/strings/report.M8"/>
                <xsl:text/> 
 				           <xsl:text/>
-               <xsl:copy-of select="gmd:CI_ResponsibleParty/gmd:organisationName"/>
+               <xsl:copy-of select="."/>
                <xsl:text/>-
 				<xsl:text/>
-               <xsl:copy-of select="gmd:CI_ResponsibleParty/gmd:individualName"/>
+               <xsl:copy-of select="../gmd:individualName"/>
                <xsl:text/>
 			         </svrl:text>
          </svrl:successful-report>
@@ -590,6 +598,7 @@
          <xsl:when test="$access = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$access = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -606,6 +615,7 @@
 		    <!--REPORT -->
 <xsl:if test="$access = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$access = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -637,6 +647,7 @@
          <xsl:when test="$use = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$use = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -653,6 +664,7 @@
 		    <!--REPORT -->
 <xsl:if test="$use = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$use = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -691,6 +703,7 @@
          <xsl:when test="$values = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$values = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -707,6 +720,7 @@
 		    <!--REPORT -->
 <xsl:if test="$values = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$values = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -756,6 +770,7 @@
          <xsl:when test="$extent"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$extent">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -770,6 +785,7 @@
 		    <!--REPORT -->
 <xsl:if test="$extent">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$extent">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -805,6 +821,7 @@
          <xsl:when test="$emptyStatement = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$emptyStatement = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -819,6 +836,7 @@
 		    <!--REPORT -->
 <xsl:if test="$emptyStatement = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$emptyStatement = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -851,6 +869,7 @@
          <xsl:when test="$emptySource = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$emptySource = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -865,6 +884,7 @@
 		    <!--REPORT -->
 <xsl:if test="$emptySource = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$emptySource = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -882,6 +902,7 @@
          <xsl:when test="$emptyProcessStep = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$emptyProcessStep = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -896,6 +917,7 @@
 		    <!--REPORT -->
 <xsl:if test="$emptyProcessStep = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$emptyProcessStep = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -930,6 +952,7 @@
          <xsl:when test="$noReportNorLineage = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$noReportNorLineage = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -944,6 +967,7 @@
 		    <!--REPORT -->
 <xsl:if test="$noReportNorLineage = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$noReportNorLineage = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -976,6 +1000,7 @@
          <xsl:when test="$levelDesc"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$levelDesc">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -990,6 +1015,7 @@
 		    <!--REPORT -->
 <xsl:if test="$levelDesc">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$levelDesc">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1027,6 +1053,7 @@
          <xsl:when test="$density = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$density = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1041,6 +1068,7 @@
 		    <!--REPORT -->
 <xsl:if test="$density = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$density = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1083,6 +1111,7 @@
          <xsl:when test="$count"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$count">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1097,6 +1126,7 @@
 		    <!--REPORT -->
 <xsl:if test="$count">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$count">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1134,6 +1164,7 @@
          <xsl:when test="$count"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$count">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1148,6 +1179,7 @@
 		    <!--REPORT -->
 <xsl:if test="$count">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$count">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1183,6 +1215,7 @@
          <xsl:when test="$extent = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$extent = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1197,6 +1230,7 @@
 		    <!--REPORT -->
 <xsl:if test="$extent = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$extent = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1232,6 +1266,7 @@
          <xsl:when test="$topic = false"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$topic = false">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1246,6 +1281,7 @@
 		    <!--REPORT -->
 <xsl:if test="$topic = false">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$topic = false">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1280,6 +1316,7 @@
          <xsl:when test="gmd:aggregateDataSetName or gmd:aggregateDataSetIdentifier"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="gmd:aggregateDataSetName or gmd:aggregateDataSetIdentifier">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1294,6 +1331,7 @@
 		    <!--REPORT -->
 <xsl:if test="gmd:aggregateDataSetName or gmd:aggregateDataSetIdentifier">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="gmd:aggregateDataSetName or gmd:aggregateDataSetIdentifier">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1342,6 +1380,7 @@
          <xsl:when test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist'      or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration'      or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement')      or (gmd:obligation and ((normalize-space(gmd:obligation) != '')       or (gmd:obligation/gmd:MD_ObligationCode)      or (gmd:obligation/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:obligation/@gco:nilReason))))"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement') or (gmd:obligation and ((normalize-space(gmd:obligation) != '') or (gmd:obligation/gmd:MD_ObligationCode) or (gmd:obligation/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:obligation/@gco:nilReason))))">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1358,6 +1397,7 @@
          <xsl:when test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist'      or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration'      or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement')      or (gmd:maximumOccurrence and ((normalize-space(gmd:maximumOccurrence) != '')       or (normalize-space(gmd:maximumOccurrence/gco:CharacterString) != '')      or (gmd:maximumOccurrence/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:maximumOccurrence/@gco:nilReason))))"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement') or (gmd:maximumOccurrence and ((normalize-space(gmd:maximumOccurrence) != '') or (normalize-space(gmd:maximumOccurrence/gco:CharacterString) != '') or (gmd:maximumOccurrence/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:maximumOccurrence/@gco:nilReason))))">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1374,6 +1414,7 @@
          <xsl:when test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist'      or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration'      or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement')      or (gmd:domainValue and ((normalize-space(gmd:domainValue) != '')       or (normalize-space(gmd:domainValue/gco:CharacterString) != '')      or (gmd:domainValue/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:domainValue/@gco:nilReason))))"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement') or (gmd:domainValue and ((normalize-space(gmd:domainValue) != '') or (normalize-space(gmd:domainValue/gco:CharacterString) != '') or (gmd:domainValue/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:domainValue/@gco:nilReason))))">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1408,6 +1449,7 @@
          <xsl:when test="$condition = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$condition = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1424,6 +1466,7 @@
 		    <!--REPORT -->
 <xsl:if test="$condition = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$condition = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1459,6 +1502,7 @@
          <xsl:when test="$domain = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$domain = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1473,6 +1517,7 @@
 		    <!--REPORT -->
 <xsl:if test="$domain = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$domain = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1506,6 +1551,7 @@
          <xsl:when test="$shortName = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$shortName = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1520,6 +1566,7 @@
 		    <!--REPORT -->
 <xsl:if test="$shortName = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$shortName = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1552,6 +1599,7 @@
          <xsl:when test="$cpd = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$cpd = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1566,6 +1614,7 @@
 		    <!--REPORT -->
 <xsl:if test="$cpd = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$cpd = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1603,6 +1652,7 @@
          <xsl:when test="$hl = false()"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$hl = false()">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -1617,6 +1667,7 @@
 		    <!--REPORT -->
 <xsl:if test="$hl = false()">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$hl = false()">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>

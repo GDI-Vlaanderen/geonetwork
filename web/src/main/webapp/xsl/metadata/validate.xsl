@@ -68,7 +68,7 @@
   <xsl:template match="svrl:failed-assert" mode="validation-report">
     <xsl:param name="title"/>
     
-    <rule group="{ancestor::*[name(.)='geonet:report']/@geonet:rule}" type="error" id="{generate-id(.)}" ref="{@ref}">
+    <rule group="{ancestor::*[name(.)='geonet:report']/@geonet:rule}" type="error" id="{generate-id(.)}" ref="{@ref}" parent="{@parent}">
       <title><xsl:value-of select="$title"/></title>
       <details><xsl:value-of select="@location"/></details>
       <msg>
@@ -82,7 +82,7 @@
   <xsl:template match="svrl:successful-report" mode="validation-report">
     <xsl:param name="title"/>
     
-    <rule group="{ancestor::*[name(.)='geonet:report']/@geonet:rule}" type="success" id="{generate-id(.)}" ref="{@ref}">
+    <rule group="{ancestor::*[name(.)='geonet:report']/@geonet:rule}" type="success" id="{generate-id(.)}" ref="{@ref}" parent="{@parent}">
       <title><xsl:value-of select="$title"/></title>
       <details><xsl:value-of select="@location"/></details>
       <msg>

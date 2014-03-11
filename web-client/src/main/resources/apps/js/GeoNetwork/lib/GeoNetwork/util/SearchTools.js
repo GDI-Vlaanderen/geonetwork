@@ -413,6 +413,7 @@ GeoNetwork.util.SearchTools = {
                         } else {
                             var value = cur.getValue();
                             // Check if value is a string or an array
+/*
                             if (value.split) {
                                 // Use phase query
                                 if (value.split(" ").length > 1) {
@@ -421,8 +422,9 @@ GeoNetwork.util.SearchTools = {
                                     result[cur.getName()] = value;
                                 }
                             } else {
+*/
                                 result[cur.getName()] = value;
-                            }
+//                            }
                         }
 
                     }

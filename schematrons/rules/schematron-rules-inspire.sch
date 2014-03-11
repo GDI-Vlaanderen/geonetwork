@@ -576,8 +576,8 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/org</sch:title>
 		
-		<sch:rule context="//gmd:identificationInfo">
-			<sch:let name="missing" value="not(*/gmd:pointOfContact)"/>
+		<sch:rule context="//gmd:identificationInfo/*/gmd:pointOfContact">
+			<sch:let name="missing" value="not(.)"/>
 			<sch:assert
 				test="not($missing)"
 				><sch:value-of select="$loc/strings/alert.M47/div"/></sch:assert>
@@ -587,17 +587,17 @@ USA.
 			</sch:report>
 		</sch:rule>
 		
-		<sch:rule context="//gmd:identificationInfo/*/gmd:pointOfContact
-			|//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:pointOfContact
-			|//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:pointOfContact">
-			<sch:let name="missing" value="not(*/gmd:organisationName) 
-				or (*/gmd:organisationName/@gco:nilReason) 
-				or not(*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
-				or (*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
-			<sch:let name="organisationName" value="*/gmd:organisationName/*/text()"/>
-			<sch:let name="role" value="normalize-space(*/gmd:role/*/@codeListValue)"/>
+		<sch:rule context="//gmd:identificationInfo/*/gmd:pointOfContact/*/gmd:organisationName
+			|//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:pointOfContact/*/gmd:organisationName
+			|//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:pointOfContact/*/gmd:organisationName">
+			<sch:let name="missing" value="not(.) 
+				or (./@gco:nilReason) 
+				or not(../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
+				or (../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
+			<sch:let name="organisationName" value="./*/text()"/>
+			<sch:let name="role" value="normalize-space(../gmd:role/*/@codeListValue)"/>
 		    <sch:let name="emptyRole" value="$role=''"/>
-		    <sch:let name="emailAddress" value="*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
+		    <sch:let name="emailAddress" value="../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
 			
 			<sch:assert
 				test="not($missing)"
@@ -658,12 +658,12 @@ USA.
 			</sch:report>
 		</sch:rule>
 		
-		<sch:rule context="//gmd:MD_Metadata/gmd:contact">
-			<sch:let name="missing" value="not(gmd:CI_ResponsibleParty/gmd:organisationName) 
-				or (gmd:CI_ResponsibleParty/gmd:organisationName/@gco:nilReason) 
-				or not(gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
-				or (gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
-			<sch:let name="organisationName" value="gmd:CI_ResponsibleParty/gmd:organisationName/*/text()"/>
+		<sch:rule context="//gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName">
+			<sch:let name="missing" value="not(.) 
+				or (./@gco:nilReason) 
+				or not(../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
+				or (../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
+			<sch:let name="organisationName" value="./*/text()"/>
 			<!-- 
 				2.11.1 "The role of the responsible party serving as a metadata
 				point of contact is out of scope of the INSPIRE
@@ -671,9 +671,9 @@ USA.
 				19115. The default value is pointOfContact."
 				JRC schematron 1.0 validate only if role=pointOfContact
 			-->
-		    <sch:let name="role" value="normalize-space(gmd:CI_ResponsibleParty/gmd:role/*/@codeListValue)"/>
+		    <sch:let name="role" value="normalize-space(../gmd:role/*/@codeListValue)"/>
 		    <sch:let name="emptyRole" value="$role=''"/>
-		    <sch:let name="emailAddress" value="gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
+		    <sch:let name="emailAddress" value="../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
 			
 		    <sch:assert
 		        test="not($emptyRole)"

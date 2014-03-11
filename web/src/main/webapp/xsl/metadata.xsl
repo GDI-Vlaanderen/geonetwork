@@ -499,13 +499,14 @@
             </xsl:if>
         </xsl:variable>
         <!-- xsd and schematron validation info -->
-        <xsl:variable name="validationLink">
+        <xsl:variable name="validationLink" select="concat('#_',geonet:element/@parent,'#_', geonet:element/@ref)"/>
+<!--
             <xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
             <xsl:call-template name="validationLink">
                 <xsl:with-param name="ref" select="$ref"/>
             </xsl:call-template>
         </xsl:variable>
-
+-->
         <xsl:call-template name="simpleElementGui">
             <xsl:with-param name="title" select="$title"/>
             <xsl:with-param name="text" select="$text"/>
@@ -717,13 +718,14 @@
             </xsl:if>
         </xsl:variable>
         <!-- xsd and schematron validation info -->
-        <xsl:variable name="validationLink">
+        <xsl:variable name="validationLink" select="concat('#_',geonet:element/@parent,'#_', geonet:element/@ref)"/>
+<!--
             <xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
             <xsl:call-template name="validationLink">
                 <xsl:with-param name="ref" select="$ref"/>
             </xsl:call-template>
         </xsl:variable>
-
+-->
         <xsl:call-template name="complexElementGui">
             <xsl:with-param name="title" select="$title"/>
             <xsl:with-param name="text" select="text()"/>

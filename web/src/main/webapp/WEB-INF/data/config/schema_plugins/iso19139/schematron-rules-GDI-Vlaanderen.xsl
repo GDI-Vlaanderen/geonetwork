@@ -243,6 +243,7 @@
          <xsl:when test="$fileIdentifier"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$fileIdentifier">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -255,6 +256,7 @@
 		    <!--REPORT -->
 <xsl:if test="$fileIdentifier">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$fileIdentifier">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -288,6 +290,7 @@
          <xsl:when test="$referenceSystemInfo"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$referenceSystemInfo">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -317,6 +320,7 @@
          <xsl:when test="$ReferenceSystemInfo"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$ReferenceSystemInfo">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -331,6 +335,7 @@
 		    <!--REPORT -->
 <xsl:if test="$ReferenceSystemInfo">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$ReferenceSystemInfo">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -352,17 +357,19 @@
 <svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">GDI-Vlaanderen SC-3: organisationName (ISO-element 376) is aanwezig binnen elk voorkomen van CI_ResponsibleParty en is niet leeg.</svrl:text>
 
 	  <!--RULE -->
-<xsl:template match="//gmd:CI_ResponsibleParty" priority="1000" mode="M10">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="//gmd:CI_ResponsibleParty"/>
-      <xsl:variable name="organisationName"
-                    select="gmd:organisationName and not(normalize-space(gmd:organisationName)= '')"/>
-      <xsl:variable name="organisationNameValue" select="gmd:organisationName/*/text()"/>
+<xsl:template match="//*/gmd:CI_ResponsibleParty/gmd:organisationName" priority="1000"
+                 mode="M10">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="//*/gmd:CI_ResponsibleParty/gmd:organisationName"/>
+      <xsl:variable name="organisationName" select=". and not(normalize-space(.)= '')"/>
+      <xsl:variable name="organisationNameValue" select="./*/text()"/>
 
 		    <!--ASSERT -->
 <xsl:choose>
          <xsl:when test="$organisationName"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$organisationName">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -375,6 +382,7 @@
 		    <!--REPORT -->
 <xsl:if test="$organisationName">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$organisationName">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -410,6 +418,7 @@
          <xsl:when test="count($inspire-theme) &gt; 0"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="count($inspire-theme) &gt; 0">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -430,6 +439,7 @@
          <xsl:when test="$inspire-theme-selected &gt;0"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
                                 test="$inspire-theme-selected &gt;0">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
@@ -444,6 +454,7 @@
 		    <!--REPORT -->
 <xsl:if test="$inspire-theme-selected &gt; 0">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
                                  test="$inspire-theme-selected &gt; 0">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>

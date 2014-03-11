@@ -82,18 +82,18 @@ USA.
 	<!-- TEST 21 FXCHECK -->
 	<sch:pattern>
 		<sch:title>$loc/strings/M8</sch:title>
-		<sch:rule context="//*[gmd:CI_ResponsibleParty]">
-			<sch:let name="count" value="(count(gmd:CI_ResponsibleParty/gmd:individualName[@gco:nilReason!='missing' or not(@gco:nilReason)]) 
-				+ count(gmd:CI_ResponsibleParty/gmd:organisationName[@gco:nilReason!='missing' or not(@gco:nilReason)])
-				+ count(gmd:CI_ResponsibleParty/gmd:positionName[@gco:nilReason!='missing' or not(@gco:nilReason)]))"/>
+		<sch:rule context="//*/gmd:CI_ResponsibleParty/gmd:organisationName">
+			<sch:let name="count" value="(count(../gmd:individualName[@gco:nilReason!='missing' or not(@gco:nilReason)]) 
+				+ count(.[@gco:nilReason!='missing' or not(@gco:nilReason)])
+				+ count(../gmd:positionName[@gco:nilReason!='missing' or not(@gco:nilReason)]))"/>
 			<sch:assert
 				test="$count > 0"
 				>$loc/strings/alert.M8</sch:assert>
 			<sch:report
 				test="$count > 0"
 				><sch:value-of select="$loc/strings/report.M8"/> 
-				<sch:value-of select="gmd:CI_ResponsibleParty/gmd:organisationName"/>-
-				<sch:value-of select="gmd:CI_ResponsibleParty/gmd:individualName"/>
+				<sch:value-of select="."/>-
+				<sch:value-of select="../gmd:individualName"/>
 			</sch:report>
 		</sch:rule>
 	</sch:pattern>
