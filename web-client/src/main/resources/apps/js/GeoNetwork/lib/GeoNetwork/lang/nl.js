@@ -400,6 +400,7 @@ GeoNetwork.Lang.nl = {
     'onSelection': "Op selectie",
     'adminAction': "Ander",
     'newMetadata': "Nieuw metadatarecord",
+    'myMetadata': "Mijn metadatarecords",
     'chooseTemplate': "Selecteer een sjabloon",
     'process': "Behandeling",
     'suggestions': "Suggesties",

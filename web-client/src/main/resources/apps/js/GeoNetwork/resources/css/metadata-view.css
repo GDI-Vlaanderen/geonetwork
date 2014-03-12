@@ -56,6 +56,10 @@ table.related * li {
   line-height : initial !important;
 }
 
+.md-view input.selector {
+  margin-right: 5px;	
+}
+
 .md-view * a {
   text-decoration : none;
   color : #0076A1;

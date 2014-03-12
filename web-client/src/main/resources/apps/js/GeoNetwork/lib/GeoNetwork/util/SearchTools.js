@@ -441,7 +441,13 @@ GeoNetwork.util.SearchTools = {
                     var first = cur.items.get(0);
                     result[first.getName()] = first.getGroupValue();
                 } else if (cur.isXType('checkbox')) {
-                    result[cur.getName()] = cur.getValue();
+                	if (cur.getRawValue() != 'on') { // inputValue has been set explicitly: insert if selected, ignore if not
+                		if (cur.getValue()) {
+                			result[cur.getName()] = cur.getRawValue();
+                		} 
+                	} else {
+                		result[cur.getName()] = cur.getValue();
+                	}
                 } else if (cur.isXType('datefield')) {
                     if (cur.getValue() !== "") {
                         result[cur.getName()] = cur.getValue().format('Y-m-d') +

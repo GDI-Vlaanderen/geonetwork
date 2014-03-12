@@ -105,26 +105,6 @@
 
 					<!-- metadata services -->
 					<xsl:variable name="mdServices">
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'metadata.create.form'"/>
-						  <xsl:with-param name="link">
-						    <!-- When client application is the widget redirect to that app 
-						    FIXME : hl parameter is only available for GUI widget experimental client.
-						    -->
-						    <xsl:if test="/root/gui/config/client/@widget='true'"><xsl:value-of select="concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, /root/gui/config/client/@createParameter)"/></xsl:if>
-						  </xsl:with-param>
-							<xsl:with-param name="title" select="/root/gui/strings/newMetadata"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/newMdDes"/>
-							<xsl:with-param name="icon">page_add.png</xsl:with-param>
-						</xsl:call-template>
-
-<!-- 						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'metadata.searchunused.form'"/>
-							<xsl:with-param name="title"
-								select="/root/gui/strings/searchUnusedTitle"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/searchUnused"/>
-						</xsl:call-template>
- -->
 						<xsl:choose>
 						  <xsl:when test="/root/gui/config/client/@widget='true' and /root/gui/config/client/@stateId!=''">
 								
