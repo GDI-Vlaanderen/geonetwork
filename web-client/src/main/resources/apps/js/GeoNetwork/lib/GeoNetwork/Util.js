@@ -608,7 +608,22 @@ GeoNetwork.Util = {
         	GeoNetwork.Util.validateMetadataField(input);
         }, scope);
         
+    },
+
+    scrollEditorPanelElement: function(parent,ref) {
+    	var domElem = document.getElementById(ref.substring(1));
+    	if (!domElem) {
+	    	var domElems = document.getElementsByClassName(parent+ref);
+	    	if (domElems!=null && domElems.length>0) {
+				domElem = domElems[domElems.length-1];
+			}
+    	}
+    	if (domElem) {
+    		var thisTop = GeoNetwork.Util.getTopLeft(domElem).Top;
+    		var parentNode = Ext.getCmp('editorMainPanel').getEl().dom.parentNode;
+    		if (thisTop && parentNode) {
+    			parentNode.scrollTop = thisTop-200;
+    		}
+    	}
     }
-
-
 };

@@ -38,7 +38,7 @@ GeoNetwork.data.ValidationRuleStore = function(url, params, grouping){
 
     function getStatusIcon(v, record){
         var status = record.getAttribute('type');
-        return '<span class="' + status + '">&#160;</span>';
+        return '<span class="' + status + '" onclick="GeoNetwork.Util.scrollEditorPanelElement(\'' + record.getAttribute('parent') + '\',\'' + record.getAttribute('ref') + '\')">&#160;</span>';
     }
     
     var fields = [{
@@ -53,6 +53,12 @@ GeoNetwork.data.ValidationRuleStore = function(url, params, grouping){
     }, {
         name: 'statusIcon',
         convert: getStatusIcon
+    }, {
+        name: 'parent',
+        mapping: '@parent'
+    }, {
+        name: 'ref',
+        mapping: '@ref'
     }, {
         name: 'title'
     }, {

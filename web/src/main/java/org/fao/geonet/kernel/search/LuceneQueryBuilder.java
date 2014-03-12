@@ -68,6 +68,7 @@ import java.util.StringTokenizer;
  */
 public class LuceneQueryBuilder {
 
+//    public static final String OR_SEPARATOR = " or ";
     private static final String OR_SEPARATOR = " or ";
     private static final String FIELD_OR_SEPARATOR = "_OR_";
     private static final String STRING_TOKENIZER_DELIMITER = " \n\r\t";

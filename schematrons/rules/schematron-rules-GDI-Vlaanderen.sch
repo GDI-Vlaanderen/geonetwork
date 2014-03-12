@@ -51,9 +51,9 @@
 	<!-- GDI-Vlaanderen SC3 -->
 	<sch:pattern>
 		<sch:title>GDI-Vlaanderen SC-3: organisationName (ISO-element 376) is aanwezig binnen elk voorkomen van CI_ResponsibleParty en is niet leeg.</sch:title>
-		<sch:rule context="//gmd:CI_ResponsibleParty">
-			<sch:let name="organisationName" value="gmd:organisationName and not(normalize-space(gmd:organisationName)= '')"/>
-			<sch:let name="organisationNameValue" value="gmd:organisationName/*/text()"/>
+		<sch:rule context="//*/gmd:CI_ResponsibleParty/gmd:organisationName">
+			<sch:let name="organisationName" value=". and not(normalize-space(.)= '')"/>
+			<sch:let name="organisationNameValue" value="./*/text()"/>
 			<sch:assert test="$organisationName">Naam van de verantwoordelijke organisatie ontbreekt of is leeg.</sch:assert>
 			<sch:report test="$organisationName">Naam van de verantwoordelijke organisatie is aanwezig : <sch:value-of select="$organisationNameValue"/>
 			</sch:report>

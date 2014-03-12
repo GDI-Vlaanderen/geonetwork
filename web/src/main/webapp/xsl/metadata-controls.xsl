@@ -118,10 +118,13 @@
 			<!-- xsd and schematron validation error button -->
 			<xsl:if test="normalize-space($validationLink)">
 				<xsl:text> </xsl:text>
+		        <div style="display:none;" class="{normalize-space($validationLink)}"/>
+<!--
 				<a id="validationError{$id}" onclick="setBunload(false);" href='javascript:doEditorAlert("error_{$id}", "errorimg_{$id}");'><img id="errorimg_{$id}" src="{/root/gui/url}/images/validationError.gif"/></a>
 				<div style="display:none;" class="toolTipOverlay" id="error_{$id}" onclick="this.style.display='none';">
 					<xsl:copy-of select="$validationLink"></xsl:copy-of>
 				</div>
+-->
 			</xsl:if>
 		</span>
 	</xsl:template>

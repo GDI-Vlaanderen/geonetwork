@@ -265,7 +265,7 @@
 	<xsl:param name="lang" />
 	<xsl:param name="see" />
 	<xsl:param name="space" />
-	<svrl:failed-assert ref="#_{{geonet:element/@ref}}" test="{$test}" >
+	<svrl:failed-assert ref="#_{{geonet:element/@ref}}" parent="#_{{geonet:element/@parent}}" test="{$test}">
 		<xsl:if test="string-length( $id ) &gt; 0">
 			<axsl:attribute name="id">
 				<xsl:value-of select=" $id " />
@@ -330,7 +330,7 @@
 	<xsl:param name="lang" />
 	<xsl:param name="see" />
 	<xsl:param name="space" />
-	<svrl:successful-report ref="#_{{geonet:element/@ref}}" test="{$test}" >
+	<svrl:successful-report ref="#_{{geonet:element/@ref}}" parent="#_{{geonet:element/@parent}}" test="{$test}" >
 		<xsl:if test=" string-length( $id ) &gt; 0">
 			<axsl:attribute name="id">
 				<xsl:value-of select=" $id " />
@@ -393,7 +393,7 @@
 	<xsl:param name="lang" />
 	<xsl:param name="see" />
 	<xsl:param name="space" />
-	<svrl:diagnostic-reference ref="#_{{geonet:element/@ref}}" diagnostic="{$id}" >
+	<svrl:diagnostic-reference ref="#_{{geonet:element/@ref}}" parent="#_{{geonet:element/@parent}}" diagnostic="{$id}" >
 		<!--xsl:if test="string($id)">
 			<xsl:attribute name="id">
 				<xsl:value-of select="$id"/>
