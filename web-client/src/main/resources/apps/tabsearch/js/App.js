@@ -274,7 +274,7 @@ GeoNetwork.app = function(){
         var myMetadata = new Ext.form.Checkbox({
         	name: 'E__owner',
         	fieldLabel: OpenLayers.i18n('myMetadata'),
-        	inputValue: catalogue.identifiedUser.id
+        	inputValue: (catalogue.identifiedUser?catalogue.identifiedUser.id : 'None') 
         });
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
@@ -324,7 +324,7 @@ GeoNetwork.app = function(){
 */
 
         // Hide or show extra fields after login event
-        var loggedInFields = [statusField,groupField];
+        var loggedInFields = [statusField,groupField,myMetadata];
         Ext.each(loggedInFields, function(item){
         	item.setVisible(user && !Ext.isEmpty(user.role));
         });
@@ -367,7 +367,7 @@ GeoNetwork.app = function(){
             GeoNetwork.util.SearchFormTools.reload(this);
             Ext.getCmp('searchForm').doLayout();
             
-            myMetadata.inputValue = undefined;
+            myMetadata.inputValue = 'None';
         });
         var hitsPerPage =  [['10'], ['20'], ['50'], ['100']];
         var hitsPerPageField = new Ext.form.ComboBox({
