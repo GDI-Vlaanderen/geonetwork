@@ -100,9 +100,8 @@ public class AgivLogout implements Service
 		if (httpSession!=null) {
 			httpSession.invalidate();
 		}
-		context.getUserSession().clear();
+		userSession.clear();
 		return BinaryFile.encode(200, context.getAppPath() + "/images/logout.png", "logout.png", false);
-//		return new Element("ok");
 	}
 }
 

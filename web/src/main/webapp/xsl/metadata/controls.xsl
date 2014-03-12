@@ -177,7 +177,7 @@
       <!-- xsd and schematron validation error button -->
       <xsl:if test="normalize-space($validationLink)">
         <xsl:text> </xsl:text>
-        <div style="display:block;" class="{normalize-space($validationLink)}" id="validation_{$id}"><xsl:value-of select="$validationLink"/></div>
+        <div style="display:block;" class="{normalize-space($validationLink)}" id="validation_{$id}"/>
 <!-- 
         <a id="validationError{$id}" onclick="setBunload(false);"
           href="javascript:doEditorAlert(&quot;error_{$id}&quot;, &quot;errorimg_{$id}&quot;);" class="small error">

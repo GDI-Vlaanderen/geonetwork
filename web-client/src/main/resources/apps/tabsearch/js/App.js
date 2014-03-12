@@ -270,6 +270,7 @@ GeoNetwork.app = function(){
             name: 'E__isLocked',
             hidden: true
         });
+        var flandersKeywordField = GeoNetwork.util.SearchFormTools.getFlandersKeywordField(catalogue.services, true);
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
@@ -285,7 +286,7 @@ GeoNetwork.app = function(){
 
         // Disabled for AGIV
         //advancedCriteria.push(themekeyField, orgNameField, categoryField,
-        advancedCriteria.push(themekeyField, orgNameField/*,
+        advancedCriteria.push(flandersKeywordField,themekeyField, orgNameField/*,
             spatialTypes, denominatorField*/);
         if (GeoNetwork.Settings.nodeType.toLowerCase() != "agiv") {
         	advancedCriteria.push(catalogueField);	

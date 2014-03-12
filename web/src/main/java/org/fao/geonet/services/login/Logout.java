@@ -23,8 +23,11 @@
 
 package org.fao.geonet.services.login;
 
+import javax.servlet.http.HttpSession;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
@@ -45,7 +48,14 @@ public class Logout implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		context.getUserSession().clear();
+		UserSession userSession = context.getUserSession();
+		HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
+		if (httpSession!=null) {
+			httpSession.invalidate();
+		}
+		userSession.clear();
+
+//		context.getUserSession().clear();
 
 		return new Element("ok");
 	}

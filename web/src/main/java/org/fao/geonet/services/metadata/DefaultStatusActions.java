@@ -879,6 +879,9 @@ public class DefaultStatusActions implements StatusActions {
 				}
 				currentUserId = userId;
 				currentEmail = record.getChildText("email");
+				if (currentEmail!=null) {
+					currentEmail = currentEmail.toLowerCase();
+				}
 				root = getNewRootElement(status, changeMessage, context.getUserSession().getUserId());
 			}
 			if (StringUtils.isNotBlank(currentEmail) && !emailMetadataIdList.contains(currentEmail + "_" + metadataId)) {

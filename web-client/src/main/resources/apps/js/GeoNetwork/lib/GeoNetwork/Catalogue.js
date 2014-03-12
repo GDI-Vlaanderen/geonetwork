@@ -1413,7 +1413,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Fires the afterLogout or afterBadLogout events
      */
     logout: function(){
-    	var agivLogout = GeoNetwork.Settings.logoutUrlSTS + '?wa=wsignout1.0&wreply=' + this.services.rootUrl + /*'user.agiv.logout'*/ 'home';
+    	var agivLogout = GeoNetwork.Settings.logoutUrlSTS + '?wa=wsignout1.0&wreply=' + this.services.rootUrl + 'user.logout'/* 'home'*/;
 //      var agivLogout: serviceUrl + 'user.agiv.logout';
         if (GeoNetwork.Settings.useSTS) {
             var cookie = Ext.state.Manager.getProvider();
