@@ -343,7 +343,7 @@ GeoNetwork.util.CSWSearchTools = {
                      '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2" resultType="' + 
                         this.resultsMode + 
                         '" startPosition="' + startRecord + 
-                        '" maxRecords="' + this.maxRecords + 
+                        '" maxRecords="' + (GeoNetwork.editor.nbResultPerPage || this.maxRecords) + 
                       '">\n' + 
                       '  <csw:Query typeNames="csw:Record">\n' + 
                       '    <csw:ElementSetName>full</csw:ElementSetName>\n'; 
@@ -388,7 +388,7 @@ GeoNetwork.util.CSWSearchTools = {
             constraint_language_version: '1.1.0',
             elementSetName: 'full',
             startPosition: startRecord,
-            maxRecords: this.maxRecords
+            maxRecords: (GeoNetwork.editor.nbResultPerPage || this.maxRecords)
         };
         
         if (sortBy) {
