@@ -396,6 +396,7 @@ GeoNetwork.util.SearchTools = {
      */
     getFormValues: function(form){
         var result = form.getForm().getValues() || {};
+    	var bSkipThemekey = false;
         
         form.cascade(function(cur){
             if (cur.disabled !== true && cur.rendered) { // Check element is
@@ -409,24 +410,35 @@ GeoNetwork.util.SearchTools = {
                     if (cur.getValue && cur.getValue()) {
                         if (cur.id === "E_any") {
                             result[cur.getName()] = cur.getValue();
-
+                        } else if (cur.id === "E_flanderskeyword") {
+                        	var themekeyValue = result["E_themekey"];
+                        	var flanderskeywordValue = result["E_flanderskeyword"];
+                        	if (flanderskeywordValue.length > 0) {
+                        		if (themekeyValue.length > 0) {
+		                        	result["E_themekey"] = ((Ext.isArray(themekeyValue) ? themekeyValue.join(" or ") : themekeyValue) + " or " + cur.getValue()).toLowerCase();  
+	                        	} else {
+	                        		var value = cur.getValue().toLowerCase();
+	                        		result["E_themekey"] = (value.indexOf(" or ") > -1) ? value : (value.split ? '"' + value + '"' : value); 
+	                        	}
+	                        	bSkipThemekey = true;
+	                        	result["E_flanderskeyword"] = "";
+                        	}
                         } else {
-                            var value = cur.getValue();
-                            // Check if value is a string or an array
-/*
-                            if (value.split) {
-                                // Use phase query
-                                if (value.split(" ").length > 1) {
-                                    result[cur.getName()] = '"' + value + '"';
-                                } else {
+                        	if (cur.id != "E_themekey" || !bSkipThemekey) {
+	                            var value = cur.getValue();
+	                            // Check if value is a string or an array
+	                            if (value.split) {
+	                                // Use phase query
+	                                if (value.split(" ").length > 1) {
+		                                result[cur.getName()] = (value.indexOf(" or ") > -1) ? value : '"' + value + '"';
+	                                } else {
+	                                    result[cur.getName()] = value;
+	                                }
+	                            } else {
                                     result[cur.getName()] = value;
-                                }
-                            } else {
-*/
-                                result[cur.getName()] = value;
-//                            }
+								}
+							}
                         }
-
                     }
                 } else if (cur.isXType('fieldset')) {
                     if (cur.checkbox) {

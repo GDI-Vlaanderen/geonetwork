@@ -1341,7 +1341,7 @@ GeoNetwork.util.SearchFormTools = {
 
         flandersKeywordStore.load();
         var config = {
-                id : 'flanderskeyword',
+                id : 'E_flanderskeyword',
                 name : 'E_flanderskeyword',
                 mode : 'local',
                 triggerAction : 'all',

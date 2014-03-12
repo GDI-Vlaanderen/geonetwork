@@ -400,6 +400,7 @@ GeoNetwork.Lang.nl = {
     'onSelection': "Op selectie",
     'adminAction': "Ander",
     'newMetadata': "Nieuw metadatarecord",
+    'flanderskeyword': "GDI-Vlaanderen trefwoord",
     'myMetadata': "Mijn metadatarecords",
     'chooseTemplate': "Selecteer een sjabloon",
     'process': "Behandeling",

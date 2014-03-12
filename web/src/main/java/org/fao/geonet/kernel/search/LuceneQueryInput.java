@@ -72,8 +72,7 @@ public class LuceneQueryInput extends UserQueryInput {
         if(groupsE != null) {
             Set<String> groups = new HashSet<String>();
             for(Element groupE : groupsE) {
-                groups.add(groupE.getText());
-/*
+//                groups.add(groupE.getText());
             	String groupEText = groupE.getText();
             	if (StringUtils.isNotBlank(groupEText)) {
                 	String[] groupValueArray = groupEText.split(LuceneQueryBuilder.OR_SEPARATOR);
@@ -81,7 +80,6 @@ public class LuceneQueryInput extends UserQueryInput {
                         groups.add(groupValueArray[i]);
                 	}
             	}
-*/
             }
             setGroups(groups);
         }
