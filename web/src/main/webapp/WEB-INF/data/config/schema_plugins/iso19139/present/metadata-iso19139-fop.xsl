@@ -629,25 +629,27 @@
 					</xsl:apply-templates>
 				</xsl:for-each>
 	
-				<xsl:call-template name="newBlock">
-					<xsl:with-param name="title">
-						<xsl:call-template name="getTitle">
-							<xsl:with-param name="name">
-								<xsl:value-of
-									select="name(./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution)" />
-							</xsl:with-param>
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:call-template>
-					</xsl:with-param>
-					<xsl:with-param name="content">
-						<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution">
-							<xsl:apply-templates mode="elementFop"
-								select=".">
+				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution">
+					<xsl:call-template name="newBlock">
+						<xsl:with-param name="title">
+							<xsl:call-template name="getTitle">
+								<xsl:with-param name="name">
+									<xsl:value-of
+										select="name(.)" />
+								</xsl:with-param>
 								<xsl:with-param name="schema" select="$schema" />
-							</xsl:apply-templates>
-						</xsl:for-each>
-					</xsl:with-param>
-				</xsl:call-template>
+							</xsl:call-template>
+						</xsl:with-param>
+						<xsl:with-param name="content">
+							<xsl:for-each select=".">
+								<xsl:apply-templates mode="elementFop"
+									select=".">
+									<xsl:with-param name="schema" select="$schema" />
+								</xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>
 
 				<!-- Language -->
  				<xsl:for-each select="./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language">
