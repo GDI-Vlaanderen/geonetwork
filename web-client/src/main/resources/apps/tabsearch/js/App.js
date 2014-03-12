@@ -256,6 +256,7 @@ GeoNetwork.app = function(){
         });
 
         var ownerField = new Ext.form.TextField({
+            id: 'E__owner',
             name: 'E__owner',
             hidden: true
         });
@@ -271,10 +272,16 @@ GeoNetwork.app = function(){
         });
         var flandersKeywordField = GeoNetwork.util.SearchFormTools.getFlandersKeywordField(catalogue.services, true);
         var myMetadata = new Ext.form.Checkbox({
-        	name: 'E__owner',
         	fieldLabel: OpenLayers.i18n('myMetadata'),
-        	inputValue: (catalogue.identifiedUser?catalogue.identifiedUser.id : 'None') 
+        	handler: function(ck, checked){
+        		if (checked && catalogue.identifiedUser) {
+                    Ext.getCmp('E__owner').setValue(catalogue.identifiedUser.id);
+                } else {
+                    Ext.getCmp('E__owner').setValue('');
+                }
+        	}
         });
+        
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
@@ -351,7 +358,7 @@ GeoNetwork.app = function(){
             Ext.getCmp('searchForm').doLayout();
             
             
-            myMetadata.inputValue = catalogue.identifiedUser.id;
+            Ext.getCmp('E__owner').setValue('');
         });
         catalogue.on('afterLogout', function(){
             Ext.each(loggedInFields, function(item){
@@ -366,7 +373,8 @@ GeoNetwork.app = function(){
             GeoNetwork.util.SearchFormTools.reload(this);
             Ext.getCmp('searchForm').doLayout();
             
-            myMetadata.inputValue = 'None';
+            myMetadata.setValue(false);
+            Ext.getCmp('E__owner').setValue('');
         });
         var hitsPerPage =  [['10'], ['20'], ['50'], ['100']];
         var hitsPerPageField = new Ext.form.ComboBox({
