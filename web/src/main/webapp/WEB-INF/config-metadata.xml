@@ -114,6 +114,7 @@
 	    <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
 	      <call name="metadataCenter" class=".guiservices.util.GetMetadataCenter" />
 	      <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+	      <call name="siteURL" class=".guiservices.util.GetImageLinks" />
 	      <call name="sources" class=".guiservices.util.Sources" />
 	    </output>
 	    <error id="access" sheet="error-form.xsl">

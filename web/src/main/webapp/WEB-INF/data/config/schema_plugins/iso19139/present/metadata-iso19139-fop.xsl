@@ -561,7 +561,13 @@
 								padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
 		 						<fo:block linefeed-treatment="preserve">
 						            <fo:external-graphic content-width="4.6cm">
-						              <xsl:variable name="url" select="./gmd:MD_BrowseGraphic/gmd:fileName"/>
+						              <xsl:variable name="url" select="/root/gui/siteURL/link[starts-with(@url,normalize-space(./gmd:MD_BrowseGraphic/gmd:fileName))]"/>
+									  <xsl:if test="$url=''">
+									  	<xsl:variable name="url" select="./gmd:MD_BrowseGraphic/gmd:fileName"/>
+									  </xsl:if>
+									  
+									  <xsl:message><xsl:value-of select="$url"/></xsl:message>
+									  
 						              <xsl:attribute name="src">
 						                <xsl:text>url('</xsl:text>
 						               		<xsl:value-of select="$url" disable-output-escaping="yes"/> 
