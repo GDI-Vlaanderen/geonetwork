@@ -8,4 +8,6 @@
   <refDate>Referentie datum</refDate>
   <temporalRef>Temporele informatie</temporalRef>
   <constraintInfo>Informatie betreffende toegangsbeperkingen</constraintInfo>
+  <true>Ja</true>
+  <false>Nee</false>
 </strings>

@@ -360,7 +360,7 @@
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
 
- 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language" >
+ 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gco:Boolean" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />
