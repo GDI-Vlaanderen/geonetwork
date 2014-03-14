@@ -468,6 +468,8 @@
     <xsl:template name="getIdFromCorrespondingOperatesOn">
        	<xsl:param name="mduuidValue" />
 		<xsl:variable name="idParamValue" select="substring-after(../../../srv:operatesOn[@xlink:href!='' and @uuidref=$mduuidValue][1]/@xlink:href,';id=')"/>
+		<xsl:message><xsl:value-of select="$mduuidValue"/></xsl:message>
+		<xsl:message><xsl:value-of select="$idParamValue"/></xsl:message>
 		<xsl:call-template name="getUuidRelatedMetadata">
 			<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
 			<xsl:with-param name="idParamValue" select="$idParamValue"/>
