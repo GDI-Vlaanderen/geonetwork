@@ -7,6 +7,16 @@
 			<description>Producent van de dataset.</description>
 		</entry>
 	</codelist>
+    <codelist name="gfc:isAbstract">
+        <entry>
+            <code>true</code>
+            <label>Ja</label>
+        </entry>
+        <entry>
+            <code>false</code>
+            <label>Nee</label>
+        </entry>
+    </codelist> 
 </codelists>
 
 

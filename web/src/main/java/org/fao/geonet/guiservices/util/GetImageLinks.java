@@ -74,45 +74,46 @@ public class GetImageLinks implements Service
 		for (Element node: nodes) {
 			URL url = new URL(node.getText());
 			Map<String, String> parameters = new HashMap<String, String>();
-			for (String keyvalue: url.getQuery().split("&")) {
-				if (keyvalue.contains("=")) {
-					String[] parts = keyvalue.split("=");
-					parameters.put(parts[0], parts[1]);
+			if (url.getQuery() != null) {
+				for (String keyvalue: url.getQuery().split("&")) {
+					if (keyvalue.contains("=")) {
+						String[] parts = keyvalue.split("=");
+						parameters.put(parts[0], parts[1]);
+					}
+				}
+				String fname = parameters.get("fname");
+				String uuid = parameters.get("uuid");
+				String access = Params.Access.PUBLIC;
+				
+				
+				Element request = new Element("request");
+				request.addContent(new Element(Params.UUID).setText(uuid));
+				request.addContent(new Element(Params.FNAME).setText(fname));
+				
+				String id = Utils.getIdentifierFromParameters(request, context);
+	
+				if (fname.contains("..")) {
+					throw new BadParameterEx("Invalid character found in resource name.", fname);
+				}
+				
+				if (access.equals(Params.Access.PRIVATE))
+				{
+					Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+				}
+	
+				try {
+					// Build the response
+					File dir = new File(Lib.resource.getDir(context, access, id));
+					File file= new File(dir, fname);
+					
+					Element fileMap = new Element("link");
+					fileMap.setAttribute("url", url.toString());
+					fileMap.setText(file.getAbsolutePath());
+					root.addContent(fileMap);
+				} catch (Exception e) {
+					// File could not be found, don't put it in the list of mapped urls
 				}
 			}
-			String fname = parameters.get("fname");
-			String uuid = parameters.get("uuid");
-			String access = Params.Access.PUBLIC;
-			
-			
-			Element request = new Element("request");
-			request.addContent(new Element(Params.UUID).setText(uuid));
-			request.addContent(new Element(Params.FNAME).setText(fname));
-			
-			String id = Utils.getIdentifierFromParameters(request, context);
-
-			if (fname.contains("..")) {
-				throw new BadParameterEx("Invalid character found in resource name.", fname);
-			}
-			
-			if (access.equals(Params.Access.PRIVATE))
-			{
-				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
-			}
-
-			try {
-				// Build the response
-				File dir = new File(Lib.resource.getDir(context, access, id));
-				File file= new File(dir, fname);
-				
-				Element fileMap = new Element("link");
-				fileMap.setAttribute("url", url.toString());
-				fileMap.setText(file.getAbsolutePath());
-				root.addContent(fileMap);
-			} catch (Exception e) {
-				// File could not be found, don't put it in the list of mapped urls
-			}
-
 		}
 
 		return root;

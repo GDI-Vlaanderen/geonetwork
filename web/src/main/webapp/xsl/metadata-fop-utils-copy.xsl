@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan="http://xml.apache.org/xalan"
-	exclude-result-prefixes="xalan" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+	exclude-result-prefixes="xalan" xmlns:gmd="http://www.isotc211.org/2005/gmd" 
 	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc"
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:gml="http://www.opengis.net/gml"
@@ -321,6 +321,11 @@
 		</fo:table-row>
 	</xsl:template>
 
+	<xsl:template mode="emptyTableElementFop" match="*">
+		<xsl:param name="schema" />
+		<xsl:value-of select="*/gfc:label/gco:CharacterString='' and */gfc:definition/gco:CharacterString=''" />
+	</xsl:template>
+	
 	<!-- Special rules -->
 	<xsl:template mode="blockedFop" match="gfc:FC_FeatureType">
 		<xsl:param name="schema" />
@@ -360,7 +365,30 @@
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
 
- 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gco:Boolean" >
+ 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language" >
+		<xsl:param name="schema" />
+		<xsl:param name="blockHeaders" />
+		<xsl:param name="skipTags" />
+		
+
+		<xsl:choose>
+			<xsl:when test="$schema='iso19139'">
+				<xsl:apply-templates mode="elementFop-iso19139" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			
+			<xsl:otherwise>
+				<xsl:call-template name="elementFop">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="blockHeaders" select="$blockHeaders"/>
+					<xsl:with-param name="skipTags" select="$skipTags"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+ 	</xsl:template>
+ 	
+ 	<xsl:template mode="elementFop" match="gco:Boolean" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />
@@ -384,7 +412,7 @@
  	</xsl:template>
  	
  	
-	<xsl:template mode="simpleElementFop" match="gml:beginPosition|gml:endPosition">
+	<xsl:template mode="simpleElementFop" match="gml:beginPosition|gml:endPosition|gco:ScopedName|@uuidref|@xlink:href">
 		<xsl:param name="schema" />
 		<xsl:param name="title">
 			<xsl:call-template name="getTitle">
@@ -407,9 +435,7 @@
 			</xsl:call-template>
 		</xsl:param>
 		<xsl:param name="text">
-			<xsl:call-template name="getElementText">
-				<xsl:with-param name="schema" select="$schema" />
-			</xsl:call-template>
+			<xsl:value-of select="."></xsl:value-of>
 		</xsl:param>
 		
 		<xsl:call-template name="info-blocks">
@@ -422,7 +448,7 @@
 	<xsl:template mode="elementFop"
 		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors" />
 	<xsl:template mode="simpleElementFop"
-		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@xlink:type|@gco:nilReason" />
+		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@xlink:type|@gco:nilReason|gco:UnlimitedInteger/@*" />
 	<xsl:template mode="simpleElementFop"
 		match="gml:TimePeriod/@gml:id|gml:TimePeriod/@frame|gml:TimePeriod/*/@frame" />
 	<xsl:template mode="complexElementFop"

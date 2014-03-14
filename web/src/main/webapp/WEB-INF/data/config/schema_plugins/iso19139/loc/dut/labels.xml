@@ -1227,6 +1227,10 @@
 	<element name="gmd:includedWithDataset">
 		<label>Onderdeel van de dataset</label>
 		<description>Indicatie of de objectencatalogus al dan niet onderdeel uitmaakt van de dataset.</description>
+		<helper>
+			<option value="true">Ja</option>
+			<option value="false">Nee</option>
+		</helper>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
