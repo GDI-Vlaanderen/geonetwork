@@ -1702,6 +1702,11 @@
         <description>Name of the medium on which the resource can be received</description>
     </element>
 	<!-- ==================================================== -->
+	<element name="gco:CharacterString" context="gmd:name">
+		<label>Naam</label>
+		<description>Naam</description>
+		<condition>mandatory</condition>
+	</element>
 	<element name="gmd:name">
 		<label>Naam</label>
 		<description>Naam</description>
