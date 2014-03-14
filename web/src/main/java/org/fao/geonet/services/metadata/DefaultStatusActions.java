@@ -309,6 +309,10 @@ public class DefaultStatusActions implements StatusActions {
 								changedMmetadataIdsToInformAdministrators.put(mid,properties);
 								break;
 							case 8: //APPROVED_BY_AGIV
+								if (session.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && currentStatus.equals(Params.Status.DRAFT)) {
+									changedMmetadataIdsToInformEditors.put(mid,properties);
+									changedMmetadataIdsToInformReviewers.put(mid,properties);
+								}
 								changedMmetadataIdsToInformAdministrators.put(mid,properties);
 								break;
 							case 9: //REJECTED_BY_AGIV
@@ -410,6 +414,9 @@ public class DefaultStatusActions implements StatusActions {
 					case 0: //UNKNOWN
 						break;
 					case 1: //DRAFT
+						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV)) {
+							changeAllowed = false;
+						}
 						break;
 					case 2: //APPROVED
 						break;
@@ -429,10 +436,16 @@ public class DefaultStatusActions implements StatusActions {
 					case 6: //JUSTCREATED
 						break;
 					case 7: //SUBMITTED_FOR_AGIV
+						if (!currentStatus.equals(Params.Status.DRAFT)) {
+							changeAllowed = false;
+						}
 						break;
 					case 8: //APPROVED_BY_AGIV
 						break;
 					case 9: //REJECTED_BY_AGIV
+						if (currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.SUBMITTED)) {
+							changeAllowed = false;
+						}
 						break;
 					case 10: //RETIRED_FOR_AGIV
 						if (isWorkspace || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
