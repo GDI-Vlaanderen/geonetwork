@@ -1188,8 +1188,8 @@
             <xsl:with-param name="schema"   select="$schema"/>
          </xsl:apply-templates>
     </xsl:template>
-	
-<!-- 	<xsl:template mode="elementFop-iso19139" match="gco:Boolean">
+
+ 	<xsl:template mode="elementFop-iso19139" match="gco:Boolean">
 		<xsl:param name="schema"/>
 		<xsl:variable name="bool" select="current()"/>
 		
@@ -1217,7 +1217,7 @@
 			<xsl:with-param name="value" select="/root/gui/schemas/*[name(.)=$schema]/strings/*[name(.)=$bool]" />
 		</xsl:call-template>
 	</xsl:template>
- -->	
+
 	<xsl:template mode="elementFop-iso19139" match="gmd:language">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
