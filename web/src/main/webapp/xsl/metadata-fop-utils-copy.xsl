@@ -165,10 +165,10 @@
 								<fo:table-body>
 									<fo:table-row background-color="{$background-color}">
 										<fo:table-cell >
-											<fo:block>Waarde</fo:block>
+											<fo:block>Code</fo:block>
 										</fo:table-cell>
 										<fo:table-cell >
-											<fo:block>Code</fo:block>
+											<fo:block>Waarde</fo:block>
 										</fo:table-cell>
 										<fo:table-cell>
 											<fo:block>Definitie</fo:block>
