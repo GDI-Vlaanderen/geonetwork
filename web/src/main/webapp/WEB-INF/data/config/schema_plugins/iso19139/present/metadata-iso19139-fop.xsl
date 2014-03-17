@@ -734,6 +734,13 @@
 							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:call-template>
+					
+					<xml:message>test</xml:message>
+					<xsl:for-each select="./gmd:identificationInfo/*/*[local-name()='extent']/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription">
+						<xsl:apply-templates mode="elementFop" select=".">
+							<xsl:with-param name="schema" select="$schema" />
+						</xsl:apply-templates>
+					</xsl:for-each>
 
 					<xsl:call-template name="newBlock">
 						<xsl:with-param name="title">
