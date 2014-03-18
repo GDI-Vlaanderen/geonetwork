@@ -1439,7 +1439,6 @@
                                     </xsl:choose>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                	<xsl:message>Y</xsl:message>
                                     <b><xsl:value-of select="$value"/></b>
                                 </xsl:otherwise>
                             </xsl:choose>

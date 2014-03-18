@@ -248,7 +248,6 @@
 				<xsl:with-param name="schema" select="$schema" />
 			</xsl:call-template>
 		</xsl:param>
-		
 		<xsl:call-template name="info-blocks">
 			<xsl:with-param name="label" select="$title" />
 			<xsl:with-param name="value" select="$text" />

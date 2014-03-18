@@ -556,8 +556,6 @@
 								  	<xsl:variable name="url" select="./gmd:MD_BrowseGraphic/gmd:fileName"/>
 								  </xsl:if>
 								  
-								  <xsl:message><xsl:value-of select="$url"/></xsl:message>
-								  
 					              <xsl:attribute name="src">
 					                <xsl:text>url('</xsl:text>
 					               		<xsl:value-of select="$url" disable-output-escaping="yes"/> 
@@ -823,10 +821,6 @@
 			</xsl:for-each>
 			
 			<xsl:for-each select="./gmd:identificationInfo/*/srv:operatesOn">
-				<xsl:message>idy<xsl:call-template name="getIdFromCorrespondingOperatesOn">
-							       	<xsl:with-param name="mduuidValue" select="./xlink:href"/>
-								</xsl:call-template></xsl:message>
-			
 				<xsl:call-template name="newBlock">
 					<xsl:with-param name="title">
 						<xsl:call-template name="getTitle">
@@ -844,7 +838,6 @@
 							</xsl:with-param>
 							<xsl:with-param name="value">
 								<xsl:variable name="idParamValue" select="substring-after(./@xlink:href,';id=')"/>
-								<xsl:message><xsl:value-of select="$idParamValue"/></xsl:message>
 								<xsl:call-template name="getUuidRelatedMetadata">
 									<xsl:with-param name="mduuidValue" select="./@xlink:href"/>
 									<xsl:with-param name="idParamValue" select="$idParamValue"/>
@@ -940,6 +933,14 @@
 							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:call-template>
+				
+					<xsl:apply-templates mode="elementFop" select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:explanation">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+					
+					<xsl:apply-templates mode="elementFop" select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:with-param>

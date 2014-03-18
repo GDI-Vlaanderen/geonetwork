@@ -1117,15 +1117,11 @@
         <xsl:param name="schema"/>
         <xsl:param name="node" select="."/>
 
-        <!-- <xsl:message>Running getTitle on <xsl:value-of select="concat($name,' from ',$schema)"/></xsl:message> -->
-
         <xsl:variable name="fullContext">
             <xsl:call-template name="getXPath" >
 				<xsl:with-param name="node" select="$node"/>
 			</xsl:call-template>
         </xsl:variable>
-
-        <!-- <xsl:message>XPath <xsl:value-of select="$fullContext"/></xsl:message> -->
 
         <xsl:variable name="context" select="name($node/parent::node())"/>
         <xsl:variable name="contextIsoType" select="$node/parent::node()/@gco:isoType"/>
