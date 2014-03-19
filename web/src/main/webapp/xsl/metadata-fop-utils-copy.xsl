@@ -145,19 +145,29 @@
 				</xsl:variable>
 
 				<xsl:if test="$table!=''">
+					
+					<xsl:variable name="empty">
+						<xsl:for-each select="*[local-name(.)='listedValue']/gfc:FC_ListedValue/gfc:label/gco:CharacterString">
+							<xsl:value-of select="."/>
+						</xsl:for-each>
+						<xsl:for-each select="*[local-name(.)='listedValue']/gfc:FC_ListedValue/gfc:label/gco:CharacterString">
+							<xsl:value-of select="."/>
+						</xsl:for-each>
+					</xsl:variable>
+					
 					<xsl:call-template name="newBlock">
 						<xsl:with-param name="title" select="'Domein'"/>
 						<xsl:with-param name="content" >
 							<fo:table width="100%" table-layout="fixed" border-top=".1pt solid {$title-color}">
 								<xsl:choose>
-									<xsl:when test="contains($table, '-8: niet gekend')">
-										<fo:table-column column-width="80%" border-right=".1pt solid {$title-color}"/>
-										<fo:table-column column-width="10%" border-right=".1pt solid {$title-color}"/>
+									<xsl:when test="$empty=''">
+										<fo:table-column column-width="80%" />
+										<fo:table-column column-width="10%" />
 										<fo:table-column column-width="10%" />
 									</xsl:when>
 									<xsl:otherwise>
-										<fo:table-column column-width="10%" border-right=".1pt solid {$title-color}"/>
-										<fo:table-column column-width="45%" border-right=".1pt solid {$title-color}"/>
+										<fo:table-column column-width="10%" />
+										<fo:table-column column-width="45%" />
 										<fo:table-column column-width="45%" />
 									</xsl:otherwise>
 								</xsl:choose>
