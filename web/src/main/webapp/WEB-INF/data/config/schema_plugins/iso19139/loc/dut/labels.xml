@@ -3018,6 +3018,11 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 1.1: titel is verplicht.</mandatoryTooltip>
 	</element>
+	<element name="gmd:title" context="gmd:MD_Metadata/gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation/gmd:title">
+		<label>Naam van de catalogus</label>
+		<description>Naam van de catalogus</description>
+		<condition>mandatory</condition>
+	</element>
 	<element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
 		<label>Alternatieve titel dataset(serie)</label>
 		<description>Korte titel, afkorting of titel in een andere taal.</description>

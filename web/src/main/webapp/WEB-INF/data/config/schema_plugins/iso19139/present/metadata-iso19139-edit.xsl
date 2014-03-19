@@ -1380,7 +1380,7 @@
                         <!-- codelist in edit mode -->
                         <select class="md" name="_{../geonet:element/@ref}_{name(.)}" id="_{../geonet:element/@ref}_{name(.)}" size="1">
 <!-- 		        	<xsl:variable name="mandatory" select="../../geonet:element/@min='1' and not(../../@gco:nilReason)"/>-->
-		        	<xsl:variable name="mandatory" select="false()"/>
+			        	<xsl:variable name="mandatory" select="false()"/>
 					          <xsl:variable name="agivmandatory">
 					          	<xsl:call-template name="getMandatoryType">
 							    	<xsl:with-param name="name"><xsl:value-of select="name(../..)"/></xsl:with-param>
@@ -1428,8 +1428,15 @@
                             <xsl:variable name="label" select="$codelist/entry[code = $value]/label"/>
                             <xsl:choose>
                                 <xsl:when test="normalize-space($label)!=''">
-                                    <b><xsl:value-of select="$label"/></b>
-                                    <xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
+                                	<xsl:choose>
+			                        	<xsl:when test="$qname='gmd:MD_CharacterSetCode'">
+		                                    <xsl:value-of select="$label"/>
+							            </xsl:when>
+			                            <xsl:otherwise>
+	                                    	<b><xsl:value-of select="$label"/></b>
+	                                    	<xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
+	                                    </xsl:otherwise>
+                                    </xsl:choose>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <b><xsl:value-of select="$value"/></b>

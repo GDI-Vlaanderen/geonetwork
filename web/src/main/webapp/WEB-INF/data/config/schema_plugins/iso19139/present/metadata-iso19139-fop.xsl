@@ -556,8 +556,6 @@
 								  	<xsl:variable name="url" select="./gmd:MD_BrowseGraphic/gmd:fileName"/>
 								  </xsl:if>
 								  
-								  <xsl:message><xsl:value-of select="$url"/></xsl:message>
-								  
 					              <xsl:attribute name="src">
 					                <xsl:text>url('</xsl:text>
 					               		<xsl:value-of select="$url" disable-output-escaping="yes"/> 
@@ -734,6 +732,12 @@
 							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:call-template>
+					
+					<xsl:for-each select="./gmd:identificationInfo/*/*[local-name()='extent']/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription">
+						<xsl:apply-templates mode="elementFop" select=".">
+							<xsl:with-param name="schema" select="$schema" />
+						</xsl:apply-templates>
+					</xsl:for-each>
 
 					<xsl:call-template name="newBlock">
 						<xsl:with-param name="title">
@@ -817,10 +821,6 @@
 			</xsl:for-each>
 			
 			<xsl:for-each select="./gmd:identificationInfo/*/srv:operatesOn">
-				<xsl:message>idy<xsl:call-template name="getIdFromCorrespondingOperatesOn">
-							       	<xsl:with-param name="mduuidValue" select="./xlink:href"/>
-								</xsl:call-template></xsl:message>
-			
 				<xsl:call-template name="newBlock">
 					<xsl:with-param name="title">
 						<xsl:call-template name="getTitle">
@@ -838,11 +838,17 @@
 							</xsl:with-param>
 							<xsl:with-param name="value">
 								<xsl:variable name="idParamValue" select="substring-after(./@xlink:href,';id=')"/>
-								<xsl:message><xsl:value-of select="$idParamValue"/></xsl:message>
-								<xsl:call-template name="getUuidRelatedMetadata">
-									<xsl:with-param name="mduuidValue" select="./@xlink:href"/>
-									<xsl:with-param name="idParamValue" select="$idParamValue"/>
+								<xsl:variable name="uuid">
+									<xsl:call-template name="getUuidRelatedMetadata">
+										<xsl:with-param name="mduuidValue" select="./@xlink:href"/>
+										<xsl:with-param name="idParamValue" select="$idParamValue"/>
+									</xsl:call-template>
+								</xsl:variable>
+								
+								<xsl:call-template name="getMetadataTitle">
+									<xsl:with-param name="uuid" select="$uuid"/>
 								</xsl:call-template>
+									
 							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:apply-templates mode="elementFop" select="./@uuidref">
@@ -934,6 +940,14 @@
 							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:call-template>
+				
+					<xsl:apply-templates mode="elementFop" select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:explanation">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+					
+					<xsl:apply-templates mode="elementFop" select="./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:with-param>
@@ -1026,6 +1040,10 @@
 			</xsl:apply-templates>
 
 			<xsl:apply-templates mode="elementFop" select="./gmd:hierarchyLevel">
+				<xsl:with-param name="schema" select="$schema" />
+			</xsl:apply-templates>
+
+			<xsl:apply-templates mode="elementFop" select="./gmd:hierarchyLevelName">
 				<xsl:with-param name="schema" select="$schema" />
 			</xsl:apply-templates>
 
@@ -1188,8 +1206,8 @@
             <xsl:with-param name="schema"   select="$schema"/>
          </xsl:apply-templates>
     </xsl:template>
-	
-<!-- 	<xsl:template mode="elementFop-iso19139" match="gco:Boolean">
+
+ 	<xsl:template mode="elementFop-iso19139" match="gco:Boolean">
 		<xsl:param name="schema"/>
 		<xsl:variable name="bool" select="current()"/>
 		
@@ -1214,16 +1232,43 @@
 					<xsl:with-param name="node" select="."/>
 				</xsl:call-template>
 			</xsl:with-param>
-			<xsl:with-param name="value" select="/root/gui/schemas/*[name(.)=$schema]/strings/*[name(.)=$bool]" />
+			<xsl:with-param name="value">
+				<xsl:variable name="mappedBoolean">
+					<xsl:variable name="context" select="name(..)"/>
+					<xsl:variable name="value" select="."/>
+			 		<xsl:value-of select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name=$context]/entry[code=$value]/label"/>
+				</xsl:variable>
+				
+				<xsl:choose>
+					<xsl:when test="$mappedBoolean!=''">
+						<xsl:value-of select="$mappedBoolean"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="/root/gui/schemas/*[name(.)=$schema]/strings/*[name(.)=$bool]"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
- -->	
+	
 	<xsl:template mode="elementFop-iso19139" match="gmd:language">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 		
         <xsl:variable name="guilang"  select="/root/gui/language"/>
-        <xsl:variable name="lang"  select="string(gmd:LanguageCode/@codeListValue)"/>
+		<xsl:variable name="lang">
+			<xsl:choose>
+				<xsl:when test="gmd:LanguageCode">
+					<xsl:value-of select="string(gmd:LanguageCode/@codeListValue)"/>
+				</xsl:when>
+				<xsl:when test="gco:CharacterString">
+					<xsl:value-of select="gco:CharacterString"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>dut</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
        	
 		<xsl:call-template name="info-blocks">
 			<xsl:with-param name="label" >

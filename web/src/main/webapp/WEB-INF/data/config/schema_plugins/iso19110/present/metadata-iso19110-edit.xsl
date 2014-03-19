@@ -536,7 +536,9 @@
 									<th class="main"><label class="" for="_"><xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:label']/label"/></label></th>
 									<th class="main"><label class="" for="_"><xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:definition']/label"/></label></th>
 								</tr>
+								
 			                    <xsl:for-each select="gfc:listedValue/gfc:FC_ListedValue[gfc:code/gco:CharacterString!='' or gfc:label/gco:CharacterString!='' or gfc:definition/gco:CharacterString!='']">
+			                    	<xsl:sort select="gfc:code/gco:CharacterString" data-type="number"/>
 			                    	<tr>
 				                        <td>
 				                            <xsl:value-of select="gfc:code/gco:CharacterString"/>
