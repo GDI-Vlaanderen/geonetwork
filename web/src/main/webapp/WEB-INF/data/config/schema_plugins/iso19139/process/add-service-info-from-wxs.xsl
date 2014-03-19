@@ -37,7 +37,7 @@
   -->
   <xsl:variable name="wxsOnlineNodes"
     select="//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine//gmd:CI_OnlineResource[(contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or contains(gmd:protocol/gco:CharacterString, 'OGC:WMTS')
-    or contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')) and gmd:linkage/gmd:URL = $wxsServiceUrl]"/>
+    or contains(gmd:protocol/gco:CharacterString, 'OGC:WFS') or contains(gmd:protocol/gco:CharacterString, 'OGC:WCS')) and gmd:linkage/gmd:URL = $wxsServiceUrl]"/>
   <xsl:variable name="wxsProtocol" select="$wxsOnlineNodes/gmd:protocol/gco:CharacterString"/>
   
   <xsl:variable name="alreadyContainsOp" select="count(//srv:containsOperations[
@@ -78,7 +78,7 @@
     
     <xsl:variable name="onlineResources"
       select="$root//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[(contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or contains(gmd:protocol/gco:CharacterString, 'OGC:WMTS')
-                                            or contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')) 
+                                            or contains(gmd:protocol/gco:CharacterString, 'OGC:WFS') or contains(gmd:protocol/gco:CharacterString, 'OGC:WCS')) 
                                             and normalize-space(gmd:linkage/gmd:URL)!='']"/>
 
     <xsl:if test="$srv"><!-- Only apply to service metadata-->

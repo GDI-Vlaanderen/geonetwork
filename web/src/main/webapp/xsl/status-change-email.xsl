@@ -100,8 +100,8 @@
 			</xsl:choose>
 		</xsl:if>
 		<xsl:if test="$currentStatus='10' or $currentStatus='11'">
-			<xsl:text>Het </xsl:text><xsl:if test="$currentStatus='10'">depubliceren</xsl:if><xsl:if test="$currentStatus='11'">verwijderen</xsl:if><xsl:text> van </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:if test="$status='2'"><xsl:text> kon</xsl:text><xsl:if test="$metadataCount>1">den</xsl:if> niet gevalideerd worden</xsl:if><xsl:if test="$status!='2'"><xsl:text> </xsl:text>werd<xsl:if test="$metadataCount>1">en</xsl:if> gevalideerd</xsl:if><xsl:text> door het AGIV.</xsl:text>
-			<xsl:if test="$status='2'">
+			<xsl:text>Het </xsl:text><xsl:if test="$currentStatus='10'">depubliceren</xsl:if><xsl:if test="$currentStatus='11'">verwijderen</xsl:if><xsl:text> van </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:if test="$status='13' or $status='14'"><xsl:text> kon</xsl:text><xsl:if test="$metadataCount>1">den</xsl:if> niet gevalideerd worden</xsl:if><xsl:if test="$status!='13' and $status!='14'"><xsl:text> </xsl:text>werd<xsl:if test="$metadataCount>1">en</xsl:if> gevalideerd</xsl:if><xsl:text> door het AGIV.</xsl:text>
+			<xsl:if test="$status='13' or $status='14'">
 				<xsl:text>&#10;&#13;&#10;&#13;De reden hiervoor is:</xsl:text>
 				<xsl:text>&#10;&#13;&#10;&#13;</xsl:text><xsl:value-of select="/root/changeMessage"/>
 				<xsl:text>&#10;&#13;&#10;&#13;De metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> werd</xsl:text><xsl:if test="$metadataCount>1">en</xsl:if><xsl:text> om die reden terug naar zijn oorspronkelijke status "Goedgekeurd door AGIV en gepubliceerd" gebracht.</xsl:text>
@@ -125,8 +125,8 @@
 					<xsl:when test="$status='7'">intern goedgekeurd en ingediend bij het AGIV ter validatie</xsl:when>
 					<xsl:when test="$status='8'">is klaar voor publicatie</xsl:when>
 					<xsl:when test="$status='9'">afgekeurd door AGIV-validator</xsl:when>
-					<xsl:when test="$status='10'">ingediend voor depubliceren bij het AGIV ter validatie</xsl:when>
-					<xsl:when test="$status='11'">ingediend voor verwijderen bij het AGIV ter validatie</xsl:when>
+					<xsl:when test="$status='10'">ingediend bij het AGIV ter validatie</xsl:when>
+					<xsl:when test="$status='11'">ingediend bij het AGIV ter validatie</xsl:when>
 					<xsl:when test="$status='12'">verwijderd</xsl:when>
 					<xsl:otherwise></xsl:otherwise>
 				</xsl:choose>

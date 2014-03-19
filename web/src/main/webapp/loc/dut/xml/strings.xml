@@ -768,12 +768,19 @@
 	<protocolChoice show='-' value='OGC:WFS-1.1.0-http-get-feature'>OGC-WFS GetFeature operatie (ver 1.1.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WFS-2.0.0-http-get-capabilities'>OGC-WFS GetCapabilities operatie (ver 2.0.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WFS-2.0.0-http-get-feature'>OGC-WFS GetFeature operatie (ver 2.0.0)</protocolChoice>
+	<protocolChoice show='-' value='OGC:WCS'>OGC-WCS Web Coverage Service (endpoint)</protocolChoice>
+	<protocolChoice show='-' value='OGC:WCS-1.0.0-http-get-capabilities'>OGC-WCS GetCapabilities operatie (ver 1.0.0)</protocolChoice>  
+	<protocolChoice show='-' value='OGC:WCS-1.0.0-http-get-coverage'>OGC-WCS GetCoverage operatie (ver 1.0.0)</protocolChoice>  
+	<protocolChoice show='-' value='OGC:WCS-1.1.1-http-get-capabilities'>OGC-WCS GetCapabilities operatie (ver 1.1.1)</protocolChoice>
+	<protocolChoice show='-' value='OGC:WCS-1.1.1-http-get-coverage'>OGC-WCS GetCoverage operatie (ver 1.1.1)</protocolChoice>
+	<protocolChoice show='-' value='OGC:WCS-2.0.0-http-get-capabilities'>OGC-WCS GetCapabilities operatie (ver 2.0.0)</protocolChoice>
+	<protocolChoice show='-' value='OGC:WCS-2.0.0-http-get-coverage'>OGC-WCS GetCoverage operatie (ver 2.0.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WMTS'>OGC-WMTS Web Map Tile Service (endpoint)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WMTS-1.0.0-http-get-capabilities'>OGC-WMTS GetCapabilities operatie (ver 1.0.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WMTS-1.0.0-http-get-tile'>OGC-WMTS GetTile operatie (ver 1.0.0)</protocolChoice>
 	<protocolChoice show='-' value='WWW:DOWNLOAD-1.0-ftp--download'>Bestand ter directe download over FTP</protocolChoice>
 	<protocolChoice show='-' value='WWW:DOWNLOAD-1.0-http--download'>Bestand ter directe download over HTTP</protocolChoice>
-	<protocolChoice show='-' value='LINKdownload-store'>Indirecte link naar download-store (URL)</protocolChoice>
+	<protocolChoice show='-' value='LINK download-store'>Indirecte link naar download-store (URL)</protocolChoice>
 	<protocolChoice show='-' value='WWW:LINK-1.0-http--atom'>ATOM feed (URL)</protocolChoice>
 	<protocolChoice show='-' value='WWW:LINK-1.0-http--link '>Webadres (URL)</protocolChoice>
 	<protocolChoice show='-' value='WWW:LINK-1.0-http--related'>Gerelateerde link (URL)</protocolChoice>

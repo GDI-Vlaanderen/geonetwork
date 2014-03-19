@@ -140,6 +140,7 @@
       <xsl:when test="starts-with($protocol,'GLG:KML') and contains($linkage,'.kml')">application/vnd.google-earth.kml+xml</xsl:when>
       <xsl:when test="starts-with($protocol,'GLG:KML') and contains($linkage,'.kmz')">application/vnd.google-earth.kmz</xsl:when>
       <xsl:when test="starts-with($protocol,'OGC:WFS')">application/vnd.ogc.wfs_xml</xsl:when>
+      <xsl:when test="starts-with($protocol,'OGC:WCS')">application/vnd.ogc.wcs_xml</xsl:when>
       <xsl:when test="starts-with($protocol,'OGC:WMS')">application/vnd.ogc.wms_xml</xsl:when>
       <xsl:when test="starts-with($protocol,'OGC:WMTS')">application/vnd.ogc.wmts_xml</xsl:when>
       <xsl:when test="$protocol='ESRI:AIMS-'">application/vnd.esri.arcims_axl</xsl:when>

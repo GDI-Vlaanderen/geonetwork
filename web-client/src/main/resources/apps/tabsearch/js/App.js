@@ -191,6 +191,8 @@ GeoNetwork.app = function(){
             }
         });
 
+        var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{values.value}">{values.value}</div></tpl>';
+        var displayFieldTpl = '<tpl for="."><span ext:qtip="{values.value}">{values.value}</span></tpl>';
         var orgNameField = new Ext.ux.form.SuperBoxSelect({
             hideLabel: false,
             minChars: 0,
@@ -202,7 +204,8 @@ GeoNetwork.app = function(){
             valueField: 'value',
             displayField: 'value',
             valueDelimiter: ' or ',
-//            tpl: tpl,
+            displayFieldTpl: displayFieldTpl,
+            tpl: tpl,
             fieldLabel: OpenLayers.i18n('org')
         });
 
@@ -229,7 +232,8 @@ GeoNetwork.app = function(){
             valueField: 'value',
             displayField: 'value',
             valueDelimiter: ' or ',
-//            tpl: tpl,
+            displayFieldTpl: displayFieldTpl,
+            tpl: tpl,
             fieldLabel: OpenLayers.i18n('keyword')
 //            FIXME : Allow new data is not that easy
 //            allowAddNewData: true,
@@ -541,7 +545,7 @@ GeoNetwork.app = function(){
                         // What panel
                         {
                        		border: false,
-                        	columnWidth: 0.125
+                        	columnWidth: 0.15
                         },
                         {
                         	frame: true,
@@ -551,7 +555,7 @@ GeoNetwork.app = function(){
 //                            width: 820,
                             boxMinWidth: 400,
                             boxMaxidth: 1100,
-                        	columnWidth: 0.75,
+                        	columnWidth: 0.70,
                         	labelWidth:130,
                             items:[
                                 advancedCriteria,GeoNetwork.util.SearchFormTools.getTypesField(GeoNetwork.searchDefault.activeMapControlExtent, true),
@@ -618,7 +622,7 @@ GeoNetwork.app = function(){
                        	},
                         {
                        		border: false,
-                        	columnWidth: 0.125
+                        	columnWidth: 0.15
                         }
                     ]
                 })

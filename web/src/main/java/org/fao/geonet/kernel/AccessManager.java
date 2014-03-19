@@ -329,6 +329,33 @@ public class AccessManager {
 	}
 
     /**
+     * Returns true if, and only if, the record is locked by the current user
+     *
+     * @param context
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public boolean isLockedBy(ServiceContext context, String id) throws Exception {
+		UserSession us = context.getUserSession();
+		if (us==null || !us.isAuthenticated()) {
+			return false;
+		}
+
+		//--- retrieve metadata info
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		MdInfo info = dm.getMetadataInfo(dbms, id);
+
+        if(info != null && us.getUserId().equals(info.lockedBy)) {
+            return true;
+        }
+
+		return false;
+	}
+
+	/**
      * TODO javadoc.
      *
      * @param context

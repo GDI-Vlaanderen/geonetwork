@@ -414,11 +414,14 @@ public class DefaultStatusActions implements StatusActions {
 					case 0: //UNKNOWN
 						break;
 					case 1: //DRAFT
-						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV)) {
+						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
 						break;
 					case 2: //APPROVED
+						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED_FOR_RETIRE) || currentStatus.equals(Params.Status.REJECTED_FOR_REMOVE)) {
+							changeAllowed = false;
+						}
 						break;
 					case 3: //RETIRED
 						if (context.getServlet().getNodeType().equalsIgnoreCase("agiv") && !currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
@@ -441,14 +444,18 @@ public class DefaultStatusActions implements StatusActions {
 						}
 						break;
 					case 8: //APPROVED_BY_AGIV
+						if (!currentStatus.equals(Params.Status.DRAFT) && !currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
+							changeAllowed = false;
+						}
 						break;
 					case 9: //REJECTED_BY_AGIV
-						if (currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.SUBMITTED)) {
+						if (currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) ||
+							currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
 						break;
 					case 10: //RETIRED_FOR_AGIV
-						if (isWorkspace || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
+						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
 						break;
@@ -476,7 +483,7 @@ public class DefaultStatusActions implements StatusActions {
 						break;
 				}
 			} else if (session.getProfile().equals(Geonet.Profile.REVIEWER)) {
-				if (currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV)) {
+				if (currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV) ) {
 					changeAllowed = false;
 				} else {
 					switch(Integer.parseInt(status)) {
@@ -497,7 +504,9 @@ public class DefaultStatusActions implements StatusActions {
 						case 4: //SUBMITTED
 							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
 								changeAllowed = false;
-							}
+							}/* else if (am.isLockedBy(context, mid)) {
+								changeAllowed = false;
+							}*/
 							break;
 						case 5: //REJECTED
 							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
@@ -519,7 +528,7 @@ public class DefaultStatusActions implements StatusActions {
 							changeAllowed = false;
 							break;
 						case 10: //RETIRED_FOR_AGIV
-							if (isWorkspace || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
+							if (isWorkspace || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 								changeAllowed = false;
 							}
 							break;
@@ -559,7 +568,7 @@ public class DefaultStatusActions implements StatusActions {
 							changeAllowed = false;
 							break;
 						case 4: //SUBMITTED
-							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
+							if (!(currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV))) {
 								changeAllowed = false;
 							}
 							break;

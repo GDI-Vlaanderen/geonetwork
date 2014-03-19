@@ -478,7 +478,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
 
 
         // AGIV: Editors can't change privileges of metadata
-        this.adminAction.setDisabled(!((/*isReviewer || */isAdmin || isUserAdmin) && (!isLocked || sameLockedByAndLoggedUser)));
+        this.adminAction.setDisabled(!((/*isReviewer || */isAdmin || isUserAdmin)/* && (!isLocked || sameLockedByAndLoggedUser)*/));
 
         this.statusAction.setDisabled(!(isOwner && (!isHarvested || GeoNetwork.Settings.editor.editHarvested)));
         this.cancelEditSessionAction.setDisabled(!(isLocked && (isAdmin || sameLockedByAndLoggedUser)));

@@ -556,8 +556,7 @@ GeoNetwork.util.SearchFormTools = {
 
         var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
-        var groupStore = GeoNetwork.data.GroupStore(url),
-            tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
+        var groupStore = GeoNetwork.data.GroupStore(url);
 
         groupStore.load({ 
             callback: function() {
@@ -566,6 +565,8 @@ GeoNetwork.util.SearchFormTools = {
             scope: groupStore
         });
 
+        var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{[values.label.' + lang + ']}">{[values.label.' + lang + ']}</div></tpl>';
+        var displayFieldTpl = '<tpl for="."><span ext:qtip="{[values.label.' + lang + ']}">{[values.label.' + lang + ']}</span></tpl>';
         var config = {
                 name: 'E_group',
                 mode: 'local',
@@ -574,13 +575,14 @@ GeoNetwork.util.SearchFormTools = {
                 store: groupStore,
                 valueField: 'id',
                 displayField: 'name',
+                displayFieldTpl: displayFieldTpl,
                 tpl: tpl
             };
         if (multi) {
             Ext.apply(config, {
                 valueDelimiter: ' or ',
                 stackItems: true,
-                displayFieldTpl: '{[values.label.' + lang + ']}'});
+                displayFieldTpl: displayFieldTpl});
             this.groupField = new Ext.ux.form.SuperBoxSelect(config);
         } else {
             this.groupField = new Ext.form.ComboBox(config);

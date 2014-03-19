@@ -186,6 +186,8 @@ GeoNetwork.util.INSPIRESearchFormTools = {
         });
 
         themesStore.load();
+        var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{values.value}">{values.value}</div></tpl>';
+        var displayFieldTpl = '<tpl for="."><span ext:qtip="{values.value}">{values.value}</span></tpl>';
         var config = {
                 id : 'inspiretheme',
                 name : 'E_inspiretheme',
@@ -194,7 +196,9 @@ GeoNetwork.util.INSPIRESearchFormTools = {
                 fieldLabel : OpenLayers.i18n('inspiretheme'),
                 store : themesStore,
                 valueField : 'value',
-                displayField : 'value'
+                displayField : 'value',
+	            displayFieldTpl: displayFieldTpl,
+                tpl:tpl
             };
         if (multi) {
             Ext.apply(config, {
