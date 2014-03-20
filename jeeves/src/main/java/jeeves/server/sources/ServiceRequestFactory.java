@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.FileTypeNotAllowedEx;
 import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
@@ -298,7 +299,6 @@ public final class ServiceRequestFactory
 					String type = item.getContentType();
 					long   size = item.getSize();
 
-
                     if(Log.isDebugEnabled(Log.REQUEST))
 					Log.debug(Log.REQUEST, "Uploading file "+file+" type: "+type+" size: "+size);
 					//--- remove path information from file (some browsers put it, like IE)
@@ -313,6 +313,17 @@ public final class ServiceRequestFactory
 					//--- we could get troubles if 2 users upload files with the same name
 					item.write(new File(uploadDir, file));
 
+					if (req.getPathInfo().endsWith("metadata.thumbnail.set.new") 
+							&& !type.contains("image") 
+							&& !("png".equalsIgnoreCase(ext) || 
+									"jpg".equalsIgnoreCase(ext) ||
+									"jpeg".equalsIgnoreCase(ext) ||
+									"gif".equalsIgnoreCase(ext) ||
+									"bmp".equalsIgnoreCase(ext)
+								)) {
+						throw new FileTypeNotAllowedEx();
+					}
+					
 					Element elem = new Element(name)
 											.setAttribute("type", "file")
 											.setAttribute("size", Long.toString(size))
