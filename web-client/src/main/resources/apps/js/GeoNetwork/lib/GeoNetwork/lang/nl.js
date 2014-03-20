@@ -554,6 +554,8 @@ GeoNetwork.Lang.nl = {
     'workspaceCopy': 'Werkdocument',
     'diffMetadata': 'Metadata vergelijken',
     'switchViewTT': 'Verwissel links en rechts',
+    'metadataSaved': 'Metadata record is bewaard',
+    'metadataSaveFailed': 'Metadata record kon niet bewaard worden',
 
     'backgroundLayer': 'Achtergrond laag',
     'what': 'Wat',

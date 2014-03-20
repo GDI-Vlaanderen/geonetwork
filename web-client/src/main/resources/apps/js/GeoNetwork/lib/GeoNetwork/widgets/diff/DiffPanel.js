@@ -108,12 +108,12 @@ GeoNetwork.view.DiffPanel = Ext.extend(Ext.Panel, {
         GeoNetwork.editor.ConceptSelectionPanel.init();
     },
     getPanelTbar: function(){
-        if (this.edit) return [this.createSwitchMenu(),'->',{text:'save',handler:function(){
+        if (this.edit) return [this.createSwitchMenu(),'->',{text:OpenLayers.i18n('save'),handler:function(){
             Ext.Ajax.request({
                 method:"POST",
                 form:Ext.get('editForm'),
-                success:function(){alert('Metadata Saved');Ext.getCmp('searchBt').fireEvent('click');},
-                failure:function(){alert('Metadata save failed')
+                success:function(){alert(OpenLayers.i18n('metadataSaved'));Ext.getCmp('searchBt').fireEvent('click');},
+                failure:function(){alert(OpenLayers.i18n('metadataSaveFailed'))
             }});
 
         }}];
