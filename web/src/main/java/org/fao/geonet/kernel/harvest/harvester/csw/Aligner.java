@@ -29,6 +29,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.CswOperation;
@@ -42,11 +43,15 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.services.metadata.validation.agiv.AGIVValidation;
 import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 //=============================================================================
@@ -399,8 +404,21 @@ public class Aligner
                 try {
                     String schema = dataMan.autodetectSchema(response);
                     dataMan.validateMetadata(schema, params.getSchemaSchematronMap(), response, context);
-
-                } catch (Exception ex) {
+                    if (context.getServlet().getNodeType().toLowerCase().equals("agiv") || context.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
+                        MetadataSchema metadataSchema = dataMan.getSchema(schema);
+	                    String[] schematronFilenames = {AGIVValidation.INSPIRE_SCHEMATRON_KEY + ".xsl", AGIVValidation.AGIV_SCHEMATRON_KEY + ".xsl"};
+	                    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+	                    try {
+		    			    dataMan.getEditLib().enumerateTree(response);
+		                    Element schematronError = dataMan.getSchemaTronXmlReport(metadataSchema, schematronFilenames, response, context.getLanguage(), valTypeAndStatus);
+		        	        // remove editing info added by enumerateTree
+		                    dataMan.getEditLib().removeEditingInfo(response);
+	            			response = new AGIVValidation(context).addConformKeywords(response, valTypeAndStatus, schema);
+	                    } catch (Exception e) {
+	                        log.error("Ignoring schematron erros for AGIVValidation with metadata with uuid " + uuid /*+ " : " + ex*/);
+	                    }
+            		}
+            } catch (Exception ex) {
                     log.error("Ignoring invalid metadata with uuid " + uuid /*+ " : " + ex*/);
                     result.doesNotValidate++;
                     return null;

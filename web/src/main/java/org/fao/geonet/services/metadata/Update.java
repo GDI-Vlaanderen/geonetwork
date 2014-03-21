@@ -35,7 +35,9 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
 import org.jdom.Element;
 
 /**
@@ -74,6 +76,18 @@ public class Update implements Service {
 
 		String id         = Util.getParam(params, Params.ID);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+		MdInfo mdInfo = dataMan.getMetadataInfo(dbms, id);
+		if (mdInfo!=null) {
+			String publishedRecordIsTemplate = mdInfo.template.equals(MdInfo.Template.TEMPLATE) ? "y" : "n"; 
+			if (!publishedRecordIsTemplate.equals(isTemplate)) {
+				dataMan.setTemplateExt(dbms, id, isTemplate, null);			
+				dbms.commit();
+			}
+            if (isTemplate.equals("y")) {
+				unsetAllOperations(dataMan, dbms, context, id);
+            }
+            dataMan.indexMetadata(dbms, id, false, false, true);
+        }
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
 //		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
@@ -135,5 +149,14 @@ public class Update implements Service {
 		}
 
 		return elResp;
+	}
+
+	private void unsetAllOperations(DataManager dm, Dbms dbms, ServiceContext context, String mdId) throws Exception {
+		String allGroup = "1";
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
+		dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
 	}
 }

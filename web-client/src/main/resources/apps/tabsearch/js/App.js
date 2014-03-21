@@ -524,7 +524,7 @@ GeoNetwork.app = function(){
 							columnWidth : 1,
 							xtype: 'label',
 							text : OpenLayers.i18n('Advanced')
-						},
+						}
                     ]
                 },
                 //  Advanced search form
@@ -1401,6 +1401,12 @@ Ext.onReady(function () {
 */
 		} else if (tabs[0]) {
             tabPanel.setActiveTab( tabs[ 0 ] );
+/*
+            var newTitle = uuid;
+            try{newTitle=record.data.title;} catch (e) {}
+            tabPanel.setTitle(newTitle);
+*/
+            Ext.getCmp(uuid + '_viewpanel').doAutoLoad();
 		} else {
             // Retrieve information in synchrone mode    todo: this doesn't work here
             var store = GeoNetwork.data.MetadataResultsFastStore();

@@ -323,9 +323,8 @@ GeoNetwork.Util = {
                 var dynamicDate = cal.className.contains("dynamicDate");
                 var agivmandatoryconfig = cal.getAttribute("agivmandatoryconfig");
                 var jsonAgivmandatoryconfig = Ext.decode(agivmandatoryconfig);
-
                 var mandatoryImgCmp;
-                if (!Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                if (!(Ext.isIE7 || Ext.isIE8) && !Ext.isEmpty(jsonAgivmandatoryconfig.tooltip) ) {
                 	mandatoryImgCmp = {
 	    	        	style: {
 	    	        		height:'22px'
@@ -351,14 +350,14 @@ GeoNetwork.Util = {
                         hiddenFormat: 'Y-m-d\\TH:i:s',
                         dtSeparator: 'T'
                     };
-                    if (Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                    if ((Ext.isIE7 || Ext.isIE8) || Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
                         dateFieldConfig.renderTo = cal.id;
                     } else {
                         dateFieldConfig.jsonAgivmandatoryconfig = jsonAgivmandatoryconfig;
                         dateFieldConfig.cls = jsonAgivmandatoryconfig.type;
                     }
                 	var dtCal = new Ext.ux.form.DateTime(dateFieldConfig);
-                    if (!Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                    if (!(Ext.isIE7 || Ext.isIE8) && !Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
                         new Ext.form.CompositeField({
                         	renderTo: cal.id,
                         	items: [
@@ -402,14 +401,14 @@ GeoNetwork.Util = {
                         value: value,
                         format: value.length==19 ? 'Y-m-d\\TH:i:s' : 'Y-m-d'
                     };
-                    if (Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                    if ((Ext.isIE7 || Ext.isIE8) || Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
                         dateFieldConfig.renderTo = cal.id;
                     } else {
                         dateFieldConfig.jsonAgivmandatoryconfig = jsonAgivmandatoryconfig;
                         dateFieldConfig.cls = jsonAgivmandatoryconfig.type;
                     }
                     var dCal = new Ext.form.DateField(dateFieldConfig);
-                    if (!Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
+                    if (!(Ext.isIE7 || Ext.isIE8) && !Ext.isEmpty(jsonAgivmandatoryconfig.tooltip)) {
                         new Ext.form.CompositeField({
                         	renderTo: cal.id,
                         	items: [

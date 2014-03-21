@@ -48,8 +48,8 @@ public class AGIVValidation {
 */
 //    private static final String XSD_KEY = "xsd";
 //    private static final String ISO_SCHEMATRON_KEY = "schematron-rules-iso";
-    private static final String INSPIRE_SCHEMATRON_KEY = "schematron-rules-inspire";
-    private static final String AGIV_SCHEMATRON_KEY = "schematron-rules-GDI-Vlaanderen";
+    public static final String INSPIRE_SCHEMATRON_KEY = "schematron-rules-inspire";
+    public static final String AGIV_SCHEMATRON_KEY = "schematron-rules-GDI-Vlaanderen";
 
     //
     // XSLT file names

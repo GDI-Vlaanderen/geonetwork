@@ -20,12 +20,13 @@
     <!-- Use this mode on the root element to add hidden fields to the editor -->
     <xsl:template mode="schema-hidden-fields" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" priority="2">
         <!-- The GetCapabilities URL -->
+<!--
         <xsl:variable name="capabilitiesUrl">
             <xsl:call-template name="getServiceURL">
                 <xsl:with-param name="metadata" select="."/>
             </xsl:call-template>
-        </xsl:variable>
-<!--        <input type="hidden" id="serviceUrl" value="{$capabilitiesUrl}"/>-->
+        </xsl:variable>		
+        <input type="hidden" id="serviceUrl" value="{$capabilitiesUrl}"/>-->
 
     </xsl:template>
 
@@ -271,6 +272,33 @@
 		</xsl:if>
 
     </xsl:template>
+
+    <xsl:template mode="iso19139" match="gmd:LI_Lineage">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+		<xsl:apply-templates mode="elementEP" select="*[name()!='gmd:source']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:apply-templates mode="addElement" select="geonet:child[@name='source' and @prefix='gmd']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="visible"   select="count(gmd:source)=0"/>
+		</xsl:apply-templates>
+        <xsl:for-each select="gmd:source">
+	        <xsl:apply-templates mode="complexElement" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="content">
+	          		<xsl:apply-templates mode="elementEP" select="./gmd:LI_Source/*">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+					</xsl:apply-templates>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</xsl:for-each>
+	</xsl:template>
+	
     <!-- ===================================================================== -->
     <!-- some gco: elements and gmx:MimeFileType are swallowed -->
     <!-- ===================================================================== -->
@@ -2861,6 +2889,12 @@
             <xsl:with-param name="edit"   select="$edit"/>
             <xsl:with-param name="flat"   select="$flat"/>
         </xsl:apply-templates>
+
+		<xsl:apply-templates mode="addElement" select="geonet:child[@name='referenceSystemInfo' and @prefix='gmd']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+            <xsl:with-param name="visible"   select="count(gmd:referenceSystemInfo)=0"/>
+		</xsl:apply-templates>
 
         <xsl:apply-templates mode="elementEP" select="gmd:referenceSystemInfo|geonet:child[string(@name)='referenceSystemInfo']">
             <xsl:with-param name="schema" select="$schema"/>

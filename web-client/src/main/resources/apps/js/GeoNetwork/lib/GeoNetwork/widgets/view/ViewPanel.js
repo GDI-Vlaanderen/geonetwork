@@ -388,6 +388,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         Ext.applyIf(this, {
         	items:
         		new Ext.Panel({
+	                id: this.record.get('uuid') + '_viewpanel',
                     autoLoad: {
                         url: this.serviceUrl + '&currTab=' + this.currTab,
                         callback: this.afterMetadataLoad,

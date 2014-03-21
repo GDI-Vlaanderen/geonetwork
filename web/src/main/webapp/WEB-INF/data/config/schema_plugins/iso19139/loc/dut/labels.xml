@@ -2140,6 +2140,12 @@
 		<description>Software afhankelijk formaat gebruikt voor de definitie van het applicatie schemas</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:source" context="gmd:LI_Lineage">
+		<label>Bron</label>
+		<description>Informatie over de bron data gebruikt bij het produceren van de data gespecifieerd door het toepassingsgebied.</description>
+		<condition>mandatory</condition>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:source">
 		<label>Bron</label>
 		<description>Informatie over de bron.</description>

@@ -115,7 +115,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             autoLoad: true
         });
         
-        var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{values.label}">aaa{values.label}</div></tpl>';
+        var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{values.label}">{values.label}</div></tpl>';
         this.combo = new Ext.form.ComboBox({
         	name: 'E_group',
             mode: 'local',

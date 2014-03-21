@@ -11,7 +11,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.services.metadata.validation.agiv.AGIVValidation;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;

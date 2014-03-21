@@ -1170,7 +1170,7 @@ public class DataManager {
      * @return
      * @throws Exception hmm
      */
-	private Element getSchemaTronXmlReport(MetadataSchema metadataSchema, String[] schematronFilenames, Element md, String lang, Map<String, Integer[]> valTypeAndStatus) throws Exception {
+	public Element getSchemaTronXmlReport(MetadataSchema metadataSchema, String[] schematronFilenames, Element md, String lang, Map<String, Integer[]> valTypeAndStatus) throws Exception {
 		// NOTE: this method assumes that you've run enumerateTree on the metadata
 		
 		// Schematron report is composed of one or more report(s)
@@ -2026,7 +2026,7 @@ public class DataManager {
 			if (withEditorValidationErrors) {
 			    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
 			    doValidate(/*srvContext.getUserSession(), */srvContext, dbms, schema, id, md, /*srvContext.getLanguage(), */forEditing, workspace, valTypeAndStatus).two();
-				if (srvContext.getServlet().getNodeType().toLowerCase().equals("agiv")) {
+//        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
 		        	try {
 		        		/*
 		        		GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -2040,7 +2040,7 @@ public class DataManager {
 			            System.err.println("validation hook exception: " + x.getMessage());
 			            x.printStackTrace();
 			        }
-		        }
+//		        }
 		   		
 			}
             else {
@@ -2185,9 +2185,9 @@ public class DataManager {
             if (withEditorValidationErrors) {
         	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
                 doValidate(srvContext/*.getUserSession()*/, dbms, schema, id, md, /*srvContext.getLanguage(), */forEditing, workspace, valTypeAndStatus).two();
-        		if (srvContext.getServlet().getNodeType().toLowerCase().equals("agiv")) {
+//        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
         			md = new AGIVValidation(srvContext/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
-        		}
+//        		}
             }
             else {
                 editLib.expandElements(schema, md);
@@ -2366,7 +2366,7 @@ public class DataManager {
             if (session != null && validate) {
         	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
                 doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, workspace, valTypeAndStatus).two();
-//        		if (context.getServlet().getNodeType().toLowerCase().equals("agiv")) {
+//        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
         			md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
 //        		}
     		}
@@ -2478,9 +2478,9 @@ public class DataManager {
             if (session != null && validate) {
         	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
                 doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, workspace, valTypeAndStatus).two();
-        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
+//        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
         			md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
-        		}
+//        		}
     		}
         } catch (Exception e) {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
