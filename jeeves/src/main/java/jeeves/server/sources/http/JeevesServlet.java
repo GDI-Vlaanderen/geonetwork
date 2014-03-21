@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jeeves.exceptions.FileTypeNotAllowedEx;
 import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
@@ -206,6 +207,17 @@ public class JeevesServlet extends HttpServlet
 		} catch (FileUploadTooBigEx e) {
 			StringBuffer sb = new StringBuffer();
 			sb.append("Opgeladen bestand overschrijdt de maximaal toegelaten grootte van "+jeeves.getMaxUploadSize()+" Mb\n");
+			sb.append("Error : " +e.getClass().getName() +"\n");
+			res.sendError(400, sb.toString());
+
+			// now stick the stack trace on the end and log the whole lot
+			sb.append("Stack :\n");
+			sb.append(Util.getStackTrace(e));
+			Log.error(Log.REQUEST,sb.toString());
+			return;
+		} catch (FileTypeNotAllowedEx e) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("Bestand heeft niet het juiste type\n");
 			sb.append("Error : " +e.getClass().getName() +"\n");
 			res.sendError(400, sb.toString());
 

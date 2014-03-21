@@ -99,11 +99,12 @@ public class Get implements Service
             }
 
             String template     = elem.getChildText("isTemplate");
+            String workspace     = elem.getChildText("isWorkspace");
             String displayOrder = elem.getChildText("displayOrder");
 						String schema = info.getChildText("schema");
             String id = info.getChildText(Edit.Info.Elem.ID);
 
-            if (template.equals("y") && schemaMan.existsSchema(schema)) {
+            if (template.equals("y") && workspace.equals("false") && schemaMan.existsSchema(schema)) {
                 // heikki, GeoNovum: added displayOrder
                 responseRecords.add(buildRecord(id, elem.getChildText("title"), schema, displayOrder));
             }
