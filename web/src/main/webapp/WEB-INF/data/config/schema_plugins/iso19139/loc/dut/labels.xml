@@ -3213,7 +3213,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 		<description>Beschrijving</description>
 		<condition>mandatory</condition>
 	</element>
-	<element name="gmd:description" context="gmd:LI_Source">
+	<element name="gmd:description" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description">
 		<label>Omschrijving bron</label>
 		<description>Omschrijving van de bron</description>
 		 <condition>mandatory</condition>
