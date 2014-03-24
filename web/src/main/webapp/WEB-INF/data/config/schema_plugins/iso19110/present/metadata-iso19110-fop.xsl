@@ -74,6 +74,49 @@
 	</xsl:template>
 	
 	
+	<xsl:template mode="elementFop-iso19110" match="gco:Boolean">
+		<xsl:param name="schema"/>
+		<xsl:variable name="bool" select="current()"/>
+		
+		<xsl:call-template name="info-blocks">
+			<xsl:with-param name="label" >
+				<xsl:call-template name="getTitle">
+					<xsl:with-param name="name">
+						<xsl:choose>
+							<xsl:when
+								test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+								<xsl:value-of select="name(..)" />
+							</xsl:when>
+							<xsl:when test="@codeList">
+								<xsl:value-of select="name(..)" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="name(..)" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="node" select="."/>
+				</xsl:call-template>
+			</xsl:with-param>
+			<xsl:with-param name="value">
+				<xsl:variable name="mappedBoolean">
+					<xsl:variable name="context" select="name(..)"/>
+					<xsl:variable name="value" select="."/>
+			 		<xsl:value-of select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name=$context]/entry[code=$value]/label"/>
+				</xsl:variable>
+				
+				<xsl:choose>
+					<xsl:when test="$mappedBoolean!=''">
+						<xsl:value-of select="$mappedBoolean"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="/root/gui/schemas/*[name(.)=$schema]/strings/*[name(.)=$bool]"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
 
 
 </xsl:stylesheet>
