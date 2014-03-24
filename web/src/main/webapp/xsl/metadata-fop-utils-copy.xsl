@@ -409,6 +409,11 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
+			<xsl:when test="$schema='iso19110'">
+				<xsl:apply-templates mode="elementFop-iso19110" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+				</xsl:apply-templates>
+			</xsl:when>
 			
 			<xsl:otherwise>
 				<xsl:call-template name="elementFop">
