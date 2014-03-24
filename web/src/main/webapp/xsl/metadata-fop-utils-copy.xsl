@@ -462,7 +462,7 @@
 	<xsl:template mode="elementFop"
 		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors" />
 	<xsl:template mode="simpleElementFop"
-		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@xlink:type|@gco:nilReason|gco:UnlimitedInteger/@*" />
+		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@xlink:type|gmd:pass[@gco:nilReason]|@gco:nilReason|gco:UnlimitedInteger/@*" />
 	<xsl:template mode="simpleElementFop"
 		match="gml:TimePeriod/@gml:id|gml:TimePeriod/@frame|gml:TimePeriod/*/@frame" />
 	<xsl:template mode="complexElementFop"
