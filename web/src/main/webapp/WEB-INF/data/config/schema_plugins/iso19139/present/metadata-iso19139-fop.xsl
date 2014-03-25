@@ -551,10 +551,17 @@
 							padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
 	 						<fo:block linefeed-treatment="preserve">
 					            <fo:external-graphic content-width="4.6cm">
-					              <xsl:variable name="url" select="/root/gui/siteURL/link[starts-with(@url,normalize-space(./gmd:MD_BrowseGraphic/gmd:fileName))]"/>
-								  <xsl:if test="$url=''">
-								  	<xsl:variable name="url" select="./gmd:MD_BrowseGraphic/gmd:fileName"/>
-								  </xsl:if>
+					              <xsl:variable name="urlTemp" select="/root/gui/imageLinks/link[starts-with(@url,normalize-space(./gmd:MD_BrowseGraphic/gmd:fileName))]"/>
+					              <xsl:variable name="url">
+									<xsl:choose>
+										<xsl:when test="not($urlTemp) or $urlTemp=''">
+											<xsl:value-of select="./gmd:MD_BrowseGraphic/gmd:fileName" />
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$urlTemp" />
+										</xsl:otherwise>
+									</xsl:choose>
+					              </xsl:variable>
 								  
 					              <xsl:attribute name="src">
 					                <xsl:text>url('</xsl:text>
