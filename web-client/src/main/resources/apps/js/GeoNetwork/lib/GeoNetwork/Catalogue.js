@@ -1012,6 +1012,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (!edit) {
             url = this.services.mdDiff + '?first=' + escape(id);
         } else {
+	    	if (GeoNetwork.Settings && GeoNetwork.Settings.ga) {
+	    		ga('send','event','edit','clicked');
+			}
             url = this.services.mdDiff + '.edit?editmode=true&first=' + escape(id);
         }
         var bd = Ext.getBody();
@@ -1165,7 +1168,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  FIXME : metadata.edit service does not support uuid param
      */
     metadataEdit: function(id, create, group, child, isTemplate){
-        
+    	if (GeoNetwork.Settings && GeoNetwork.Settings.ga) {
+    		ga('send','event','edit','clicked');
+		}
         switch(this.editMode) {
         case this.EDITOR_MODE.IN_EDITOR_POPUP:
             if (this.metadataEditFn) {

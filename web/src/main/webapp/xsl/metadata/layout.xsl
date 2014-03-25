@@ -869,7 +869,7 @@
       <xsl:value-of
         select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
 <!--         <xsl:if test="not(geonet:element/@del='true') or (($currTab = 'simple') and (geonet:element/@del='true') and ($siblingsCount = 0))"> -->
-		<xsl:if test="not(geonet:element/@del='true')">
+		<xsl:if test="not(geonet:element/@del='true') or name(.)='gmd:distributionInfo'">
         	<xsl:text>!OPTIONAL</xsl:text>
       	</xsl:if>
     </xsl:variable>

@@ -2592,17 +2592,6 @@ public class DataManager {
 			e.printStackTrace();
 			Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata "+id+": "+e.getMessage());
 		}
-/*
-		if (srvContext.getServlet().getNodeType().toLowerCase().equals("agiv")) {
-        	try {
-	            new AGIVValidation(srvContext, dbms).getValidatedMetadata(id, valTypeAndStatus, now, workspace);
-	        }
-	        catch(ValidationHookException x) {
-	            System.err.println("validation hook exception: " + x.getMessage());
-	            x.printStackTrace();
-	        }
-        }
-*/
 		return valid;
 	}
 
@@ -3531,7 +3520,7 @@ public class DataManager {
                 env.addContent(new Element("id").setText(id));
                 env.addContent(new Element("uuid").setText(uuid));
                 env.addContent(new Element("createdFromTemplate").setText(createdFromTemplate ? "y" : "n"));
-                if (createdFromTemplate && (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt"))) {
+                if (createdFromTemplate/* && (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt"))*/) {
                     env.addContent(new Element("mduuid").setText(UUID.randomUUID().toString()));
                 }
                 

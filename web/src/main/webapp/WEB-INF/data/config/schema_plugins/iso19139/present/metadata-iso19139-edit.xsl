@@ -197,17 +197,17 @@
         </xsl:apply-templates>
 <!-- 		<xsl:if test="not($currTab='dataQuality')"> -->
 			<xsl:if test="$edit=true()">
-			<xsl:apply-templates mode="addElement" select="../geonet:child[@name='report' and @prefix='gmd']">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-	            <xsl:with-param name="ommitNameTag" select="false()"/>
-	            <xsl:with-param name="visible"   select="true()"/>	            
-			</xsl:apply-templates>
+				<xsl:apply-templates mode="addElement" select="../geonet:child[@name='report' and @prefix='gmd']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		            <xsl:with-param name="ommitNameTag" select="false()"/>
+		            <xsl:with-param name="visible"   select="true()"/>	            
+				</xsl:apply-templates>
 <!--
-			<xsl:apply-templates mode="addReportElement" select=".">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
+				<xsl:apply-templates mode="addReportElement" select=".">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
 -->			
 			</xsl:if>
 <!-- 	</xsl:if> -->
@@ -221,7 +221,7 @@
               gmd:resourceConstraints|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
-              gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
+              gmd:geographicBox|gmd:EX_TemporalExtent|
               srv:serviceType|srv:containsOperations|srv:coupledResource|
               gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:aggregationInfo|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
               gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS|gmd:onLine|gmd:processor">
@@ -280,11 +280,13 @@
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
         </xsl:apply-templates>
-		<xsl:apply-templates mode="addElement" select="geonet:child[@name='source' and @prefix='gmd']">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="visible"   select="count(gmd:source)=0"/>
-		</xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='source' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:source)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
         <xsl:for-each select="gmd:source">
 	        <xsl:apply-templates mode="complexElement" select=".">
 	            <xsl:with-param name="schema" select="$schema"/>
@@ -2890,11 +2892,13 @@
             <xsl:with-param name="flat"   select="$flat"/>
         </xsl:apply-templates>
 
-		<xsl:apply-templates mode="addElement" select="geonet:child[@name='referenceSystemInfo' and @prefix='gmd']">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="visible"   select="count(gmd:referenceSystemInfo)=0"/>
-		</xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='referenceSystemInfo' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:referenceSystemInfo)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
 
         <xsl:apply-templates mode="elementEP" select="gmd:referenceSystemInfo|geonet:child[string(@name)='referenceSystemInfo']">
             <xsl:with-param name="schema" select="$schema"/>
@@ -2908,11 +2912,13 @@
             <xsl:with-param name="flat"   select="$flat"/>
         </xsl:apply-templates>
 
-		<xsl:apply-templates mode="addElement" select="geonet:child[@name='dataQualityInfo' and @prefix='gmd']">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="visible"   select="count(gmd:dataQualityInfo)=0"/>
-		</xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='dataQualityInfo' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:dataQualityInfo)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
 
         <xsl:apply-templates mode="elementEP" select="gmd:dataQualityInfo|geonet:child[string(@name)='dataQualityInfo']">
             <xsl:with-param name="schema" select="$schema"/>
@@ -2925,7 +2931,7 @@
             gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
             gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
             <xsl:choose>
-            	<xsl:when test="$edit">
+            	<xsl:when test="$edit=true()">
 					<xsl:apply-templates mode="addElement" select="geonet:child[@name='resourceConstraints' and @prefix='gmd']">
 			            <xsl:with-param name="schema" select="$schema"/>
 			            <xsl:with-param name="edit"   select="$edit"/>
@@ -3140,6 +3146,44 @@
 
     </xsl:template>
 
+    <xsl:template mode="iso19139" match="gmd:distributionInfo/gmd:MD_Distribution">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='distributionFormat' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:distributionFormat)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="elementEP" select="gmd:distributionFormat|geonet:child[string(@name)='distributionFormat']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='distributor' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:distributor)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="complexElement" select="gmd:distributor">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='transferOptions' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:transferOptions)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="elementEP" select="gmd:transferOptions">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+	</xsl:template>
+
     <!-- ============================================================================= -->
     <!-- distributionFormat -->
     <!-- ============================================================================= -->
@@ -3198,11 +3242,13 @@
 	            </xsl:apply-templates>
             </xsl:with-param>
 		</xsl:apply-templates>
-		<xsl:apply-templates mode="addElement" select="geonet:child[@name='processor' and @prefix='gmd']">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit"   select="$edit"/>
-            <xsl:with-param name="visible"   select="count(gmd:processor)=0"/>
-		</xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='processor' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:processor)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
         <xsl:for-each select="gmd:processor">
 			<xsl:apply-templates mode="elementEP" select=".">
                 <xsl:with-param name="schema"  select="$schema"/>

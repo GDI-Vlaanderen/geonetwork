@@ -113,11 +113,11 @@ public class LuceneIndexWriterFactory {
     }
 
     public synchronized void optimize() throws Exception {
-        System.out.println("Optimizing the Lucene Index started...");
+//        System.out.println("Optimizing the Lucene Index started...");
         if (optimizingLock.tryLock()) {
             System.out.println("Lock successfully");
             synchronized(MUTEX) {
-                System.out.println("** START SYNCHRONIZED optimize.");
+//                System.out.println("** START SYNCHRONIZED optimize.");
 	            try {
 	                openWriter();
 	                try{
@@ -128,15 +128,15 @@ public class LuceneIndexWriterFactory {
 		                Log.info(Geonet.INDEX_ENGINE, "Optimizing Done.");
 		            } finally {
 		                closeWriter();
-		                System.out.println("** END SYNCHRONIZED optimize.");
+//		                System.out.println("** END SYNCHRONIZED optimize.");
 		            }
 	            } finally {
 	                optimizingLock.unlock();
-	                System.out.println("Unlock successfully");
+//	                System.out.println("Unlock successfully");
 	            }
             }
         }
-        System.out.println("Optimizing the Lucene Index successfully ended...");
+//        System.out.println("Optimizing the Lucene Index successfully ended...");
     }
     public synchronized void createDefaultLocale() throws IOException {
         File enLocale = new File(_luceneDir, Geonet.DEFAULT_LANGUAGE);

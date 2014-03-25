@@ -404,7 +404,7 @@ public class Aligner
                 try {
                     String schema = dataMan.autodetectSchema(response);
                     dataMan.validateMetadata(schema, params.getSchemaSchematronMap(), response, context);
-                    if (context.getServlet().getNodeType().toLowerCase().equals("agiv") || context.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
+//                    if (context.getServlet().getNodeType().toLowerCase().equals("agiv") || context.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
                         MetadataSchema metadataSchema = dataMan.getSchema(schema);
 	                    String[] schematronFilenames = {AGIVValidation.INSPIRE_SCHEMATRON_KEY + ".xsl", AGIVValidation.AGIV_SCHEMATRON_KEY + ".xsl"};
 	                    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
@@ -417,7 +417,7 @@ public class Aligner
 	                    } catch (Exception e) {
 	                        log.error("Ignoring schematron erros for AGIVValidation with metadata with uuid " + uuid /*+ " : " + ex*/);
 	                    }
-            		}
+//            		}
             } catch (Exception ex) {
                     log.error("Ignoring invalid metadata with uuid " + uuid /*+ " : " + ex*/);
                     result.doesNotValidate++;

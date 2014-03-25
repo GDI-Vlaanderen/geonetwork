@@ -1313,7 +1313,7 @@ public class LuceneSearcher extends MetaSearcher {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
 		    Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
         }
-		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
+		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits+1, true, trackDocScores, trackMaxScore, docsScoredInOrder);
 
         if(query != null && reader != null && Log.isDebugEnabled(Geonet.SEARCH_ENGINE )){
             try {

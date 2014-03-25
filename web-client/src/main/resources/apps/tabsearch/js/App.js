@@ -876,7 +876,6 @@ GeoNetwork.app = function(){
                 closeAction: 'close',
                 collapsible: false,
                 collapsed: false,
-                maximizable: false,
                 maximized: true,
                 resizable: true,
 //                constrain: true,
@@ -897,6 +896,9 @@ GeoNetwork.app = function(){
         }
 
         if (metadataId) {
+	    	if (GeoNetwork.Settings && GeoNetwork.Settings.ga) {
+	    		ga('send','event','edit','clicked');
+			}
             this.editorWindow.show();
             this.editorPanel.init(metadataId, create, group, child);
         }
@@ -1117,8 +1119,17 @@ GeoNetwork.app = function(){
                         html:"<div><span class='madeBy' style='text-align:left;padding:0px 3px'>"+ OpenLayers.i18n('Powered by') + " GeoNetwork OpenSource"/* + "<a href='http://geonetwork-opensource.org/'><img style='width:80px' src='../images/default/gn-logo.png' title='GeoNetwork OpenSource' border='0' /></a>"*/ + "</span><span class='madeBy' style='text-align:right;padding:0px 3px'>" + GeoNetwork.Settings.nodeFooterInfo + "</span></div>",
                         layout:'fit'
                  }
-                ]
-            });
+                ],
+		        listeners: {
+		            'resize': function () {
+			            var editorWindow = Ext.getCmp("editorWindow");
+			            if (editorWindow!=null && editorWindow.isVisible()) {
+			            	editorWindow.restore();
+			            	editorWindow.maximize();
+			            }
+		            }
+            	}
+	   		});
 			
             // Hide advanced search options
             //Ext.get("advSearchTabs").hide();

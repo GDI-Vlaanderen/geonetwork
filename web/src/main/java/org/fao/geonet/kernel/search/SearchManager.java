@@ -931,7 +931,7 @@ public class SearchManager {
      */
 	public void delete(String fld, String txt, boolean workspace) throws Exception {
         synchronized(_indexWriter.MUTEX) {
-            System.out.println("** START SYNCHRONIZED delete. Workspace? " + workspace);
+//            System.out.println("** START SYNCHRONIZED delete. Workspace? " + workspace);
     		_indexWriter.openWriter();
     		try {
     			_indexWriter.deleteDocuments(new Term(fld, txt), workspace);
@@ -941,7 +941,7 @@ public class SearchManager {
     			    Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
                 }
     			_indexWriter.closeWriter();
-                System.out.println("** END SYNCHRONIZED delete. Workspace? " + workspace);
+//                System.out.println("** END SYNCHRONIZED delete. Workspace? " + workspace);
     		}
         }
 		_spatial.writer().delete(txt);

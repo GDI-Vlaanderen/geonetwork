@@ -770,7 +770,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:distributor">
 		<label>Verdeler</label>
-		<description>Geeft informatie over de verdeler</description>
+		<description>Informatie over de verdeler.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorContact">
