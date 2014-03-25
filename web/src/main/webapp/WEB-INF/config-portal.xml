@@ -137,6 +137,7 @@
 			</class>
 			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
 				<call name="metadataCenter" class=".guiservices.util.GetMetadataCenter" />
+			    <call name="imageLinks" class=".guiservices.util.GetImageLinks" />
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>

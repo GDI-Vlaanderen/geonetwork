@@ -95,7 +95,7 @@
 			<xsl:variable name="id" select="geonet:info/id" />
 
 
-			<fo:table width="100%" table-layout="fixed">
+			<!-- <fo:table width="100%" table-layout="fixed">
 				<fo:table-column column-width="1.8cm" />
 				<fo:table-column column-width="12.2cm" />
 				<fo:table-column column-width="6cm" />
@@ -112,14 +112,14 @@
 
 							</fo:block>
 						</fo:table-cell>
-<!-- 						<fo:table-cell display-align="center">
+ 						<fo:table-cell display-align="center">
 							<fo:block font-weight="{$title-weight}" font-size="{$title-size}"
 								color="{$title-color}" padding-top="4pt" padding-bottom="4pt"
 								padding-left="4pt" padding-right="4pt">
 								<xsl:value-of select="$metadata/title" />
 							</fo:block>
-						</fo:table-cell> -->
-<!-- 						<fo:table-cell>
+						</fo:table-cell>
+ 						<fo:table-cell>
 							<fo:block text-align="right">
 
 								<xsl:call-template name="metadata-thumbnail-block">
@@ -128,16 +128,16 @@
 								</xsl:call-template>
 							</fo:block>
 						</fo:table-cell>
- -->					</fo:table-row>
-<!-- 
+					</fo:table-row>
+
 					<xsl:call-template name="metadata-resources">
 						<xsl:with-param name="title" select="false()" />
 						<xsl:with-param name="gui" select="/root/gui" />
 						<xsl:with-param name="server" select="/root/gui/env/server" />
 						<xsl:with-param name="metadata" select="$metadata" />
-					</xsl:call-template> -->
+					</xsl:call-template>
 				</fo:table-body>
-			</fo:table>
+			</fo:table> -->
 
 			<fo:block>
 				<xsl:variable name="schemaTemplate" select="concat('Wmetadata-fop-',$schema)" />
