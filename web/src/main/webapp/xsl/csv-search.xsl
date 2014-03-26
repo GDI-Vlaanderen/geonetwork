@@ -3,6 +3,8 @@
 						xmlns:geonet="http://www.fao.org/geonetwork" 
 						xmlns:exslt= "http://exslt.org/common"
 						xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+						xmlns:saxon="http://saxon.sf.net/"
+						extension-element-prefixes="saxon"
 						exclude-result-prefixes="xsl exslt geonet">
 	<!-- 
 		CSV search results export.
@@ -41,7 +43,6 @@
 	-->
 	<xsl:variable name="sep" select="'&#009;'"/>
 	
-	
 	<!-- Intra field separator -->
 	<xsl:variable name="internalSep" select="'###'"/>
 	
@@ -77,11 +78,11 @@
 			
 			<!-- Try to apply csv mode template to current metadata record -->          
 			<xsl:variable name="mdcsv">
-				<xsl:apply-templates mode="csv" select=".">
+				<xsl:variable name="schemaTemplate"><xsl:value-of select="concat(geonet:info/schema, '-csv')"/></xsl:variable>
+				<saxon:call-template name="{$schemaTemplate}">
 					<xsl:with-param name="internalSep" select="$internalSep"/>
-				</xsl:apply-templates>
+				</saxon:call-template>
 			</xsl:variable>
-			
 			<!-- If not define just use the brief format -->
 			<xsl:variable name="md">
 				<xsl:choose>
@@ -96,7 +97,8 @@
 			
 			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 			<xsl:choose>
-				<xsl:when test="position()!=1 and geonet:info/schema=preceding-sibling::node()/geonet:info/schema"/>
+				<xsl:when test="position()!=1"/>
+<!-- 				<xsl:when test="position()!=1 and geonet:info/schema=preceding-sibling::node()/geonet:info/schema"/> -->
 				<xsl:otherwise>
 					<xsl:call-template name="csvHeader">
 						<xsl:with-param name="metadata" select="$metadata"/>
@@ -115,9 +117,9 @@
 	<!-- Create header using first row corresponding to current schema -->
 	<xsl:template name="csvHeader">
 		<xsl:param name="metadata"/>
-		<xsl:value-of select="concat('schema', $sep, 'id', $sep)"/>
+		<xsl:value-of select="concat('schema', $sep, 'type', $sep, 'uuid', $sep, 'id', $sep, 'title')"/>
 		
-		<xsl:for-each select="$metadata/*[name(.)!='geonet:info']">
+		<xsl:for-each select="$metadata/*[name(.)!='geonet:info' and name(.)!='type' and name(.)!='gmd:title' and name(.)!='gmx:name']">
 			<xsl:choose>
 				<xsl:when test="name(.) = name(following-sibling::node())">
 				</xsl:when>
@@ -136,9 +138,9 @@
 	<xsl:template name="csvLine">
 		<xsl:param name="metadata"/>
 
-		<xsl:value-of select="concat($metadata/geonet:info/schema, $sep, $metadata/geonet:info/id, $sep)"/>
+		<xsl:value-of select="concat($metadata/geonet:info/schema, $sep, $metadata/type, $sep,  $metadata/geonet:info/uuid, $sep, $metadata/geonet:info/id)"/>
 
-		<xsl:for-each select="$metadata/*[name(.)!='geonet:info']">
+		<xsl:for-each select="$metadata/*[name(.)!='geonet:info' and name(.)!='type' and name(.)!='gmd:title' and name(.)!='gmx:name']">
 			<xsl:value-of select="normalize-space(.)"/>
 			<xsl:choose>
 				<xsl:when test="name(.) = name(following-sibling::node())">
