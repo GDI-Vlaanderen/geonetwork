@@ -43,12 +43,18 @@
 			</xsl:apply-templates>
 
 			<!-- not tokenized title for sorting -->
-			<Field name="_title"
-                string="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
-                /gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
-                /gfc:FC_FeatureType/gfc:typeName/gco:LocalName"
-                store="false" index="true"/>
 
+			<xsl:variable name="title" select="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
+                /gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
+                /gfc:FC_FeatureType/gfc:typeName/gco:LocalName"/>
+			<xsl:choose>
+				<xsl:when test="normalize-space($title)!=''">
+                    <Field name="_title" string="{lower-case(string($title))}" store="false" index="true"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<Field name="_title" string="{''}" store="false" index="true"/>
+				</xsl:otherwise>
+			</xsl:choose>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Abstract === -->

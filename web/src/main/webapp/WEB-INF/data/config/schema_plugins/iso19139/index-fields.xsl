@@ -83,10 +83,18 @@
 				</xsl:for-each>
 
 	
-				<xsl:for-each select="gmd:title/gco:CharacterString">
-					<Field name="title" string="{string(.)}" store="true" index="true"/>
+				<xsl:for-each select="gmd:title">
+					<xsl:variable name="title">
+						<xsl:choose>
+							<xsl:when test="normalize-space(gco:CharacterString)!=''">
+								<xsl:value-of select="normalize-space(gco:CharacterString)"/>
+							</xsl:when>
+							<xsl:otherwise><xsl:value-of select="''"/></xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<Field name="title" string="{string($title)}" store="true" index="true"/>
                     <!-- not tokenized title for sorting -->
-                    <Field name="_title" string="{string(.)}" store="false" index="true"/>
+                    <Field name="_title" string="{lower-case(string($title))}" store="false" index="true"/>
 				</xsl:for-each>
 	
 				<xsl:for-each select="gmd:alternateTitle/gco:CharacterString">

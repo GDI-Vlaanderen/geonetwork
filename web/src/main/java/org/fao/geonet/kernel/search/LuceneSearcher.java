@@ -1313,7 +1313,7 @@ public class LuceneSearcher extends MetaSearcher {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
 		    Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
         }
-		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits+1, true, trackDocScores, trackMaxScore, docsScoredInOrder);
+		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
 
         if(query != null && reader != null && Log.isDebugEnabled(Geonet.SEARCH_ENGINE )){
             try {
@@ -1350,13 +1350,20 @@ public class LuceneSearcher extends MetaSearcher {
 
 			// -- get all hits from search to build the summary
 			tdocs = tfc.topDocs(0, numHits);
-
+			System.out.println("All docs");
+			for (ScoreDoc scoreDoc : tdocs.scoreDocs) {
+				System.out.println(scoreDoc.toString());
+			}
 			// -- add summary keys to summary element
 			summaryMaps = LuceneSearcher.buildSummaryMaps(elSummary, reader, tdocs.scoreDocs, summaryMaps);
 			elSummary = LuceneSearcher.addSortedSummaryKeys(elSummary, langCode, summaryMaps, summaryConfigValues);
 		}
         else {
 			tdocs = tfc.topDocs(startHit, endHit);
+			System.out.println("Page docs from " + startHit + " to " + endHit);
+			for (ScoreDoc scoreDoc : tdocs.scoreDocs) {
+				System.out.println(scoreDoc.toString());
+			}
 		}
 
 		return Pair.read(tdocs,elSummary);
