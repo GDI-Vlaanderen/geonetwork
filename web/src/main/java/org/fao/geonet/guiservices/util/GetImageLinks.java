@@ -72,36 +72,36 @@ public class GetImageLinks implements Service
 
 		List<Element> nodes = (List<Element>) Xml.selectNodes(params, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString", namespaces);
 		for (Element node: nodes) {
-			URL url = new URL(node.getText());
-			Map<String, String> parameters = new HashMap<String, String>();
-			if (url.getQuery() != null) {
-				for (String keyvalue: url.getQuery().split("&")) {
-					if (keyvalue.contains("=")) {
-						String[] parts = keyvalue.split("=");
-						parameters.put(parts[0], parts[1]);
+			try {
+				URL url = new URL(node.getText());
+				Map<String, String> parameters = new HashMap<String, String>();
+				if (url.getQuery() != null) {
+					for (String keyvalue: url.getQuery().split("&")) {
+						if (keyvalue.contains("=")) {
+							String[] parts = keyvalue.split("=");
+							parameters.put(parts[0], parts[1]);
+						}
 					}
-				}
-				String fname = parameters.get("fname");
-				String uuid = parameters.get("uuid");
-				String access = Params.Access.PUBLIC;
-				
-				
-				Element request = new Element("request");
-				request.addContent(new Element(Params.UUID).setText(uuid));
-				request.addContent(new Element(Params.FNAME).setText(fname));
-				
-				String id = Utils.getIdentifierFromParameters(request, context);
+					String fname = parameters.get("fname");
+					String uuid = parameters.get("uuid");
+					String access = Params.Access.PUBLIC;
+					
+					
+					Element request = new Element("request");
+					request.addContent(new Element(Params.UUID).setText(uuid));
+					request.addContent(new Element(Params.FNAME).setText(fname));
+					
+					String id = Utils.getIdentifierFromParameters(request, context);
+		
+					if (fname.contains("..")) {
+						throw new BadParameterEx("Invalid character found in resource name.", fname);
+					}
+					
+					if (access.equals(Params.Access.PRIVATE))
+					{
+						Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+					}
 	
-				if (fname.contains("..")) {
-					throw new BadParameterEx("Invalid character found in resource name.", fname);
-				}
-				
-				if (access.equals(Params.Access.PRIVATE))
-				{
-					Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
-				}
-	
-				try {
 					// Build the response
 					File dir = new File(Lib.resource.getDir(context, access, id));
 					File file= new File(dir, fname);
@@ -110,9 +110,9 @@ public class GetImageLinks implements Service
 					fileMap.setAttribute("url", url.toString());
 					fileMap.setText(file.getAbsolutePath());
 					root.addContent(fileMap);
-				} catch (Exception e) {
-					// File could not be found, don't put it in the list of mapped urls
 				}
+			} catch (Exception e) {
+				// File could not be found, don't put it in the list of mapped urls
 			}
 		}
 

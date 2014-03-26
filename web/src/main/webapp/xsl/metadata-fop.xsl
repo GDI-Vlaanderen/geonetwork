@@ -179,8 +179,7 @@
 			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]" />
 			<xsl:variable name="source"
 				select="string($metadata/geonet:info/source)" />
-
-
+				
 			<xsl:if test="$metadata/geonet:info/id != ''">
 				<fo:table-row border-top-style="solid"
 					border-right-style="solid" border-left-style="solid"
@@ -338,15 +337,12 @@
 							<xsl:attribute name="external-destination"> url('<xsl:value-of
 								select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url,'?uuid=', $metadata/geonet:info/uuid)" />') </xsl:attribute>
 							<xsl:value-of select="$gui/strings/show" />
-						</fo:basic-link>
-						|
+						</fo:basic-link>&#160;
 						<fo:basic-link text-decoration="underline" color="blue">
 							<xsl:attribute name="external-destination"> url('<xsl:value-of
 								select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/en/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)" />') </xsl:attribute>
-							<xsl:value-of select="$gui/strings/show" />
-							(XML)
+							<xsl:value-of select="$gui/strings/show" /> (XML)
 						</fo:basic-link>
-						|
 					</xsl:when>
 					<xsl:otherwise>
 						<fo:block text-align="left" font-style="italic">
@@ -363,22 +359,20 @@
 							<xsl:attribute name="external-destination"> url('<xsl:value-of
 								select="." />') </xsl:attribute>
 							<xsl:value-of select="$gui/strings/download" />
-						</fo:basic-link>
-						|
+						</fo:basic-link>&#160;
 					</xsl:for-each>
 				</xsl:if>
 
 				<xsl:if test="$metadata/geonet:info/dynamic='true'">
 					<xsl:for-each select="$metadata/link[@type='application/vnd.ogc.wms_xml' or @type='application/vnd.ogc.wmts_xml']">
-						<fo:basic-link text-decoration="underline" color="blue">
-							<xsl:attribute name="external-destination"> url('<xsl:value-of
-								select="@href" />') </xsl:attribute>
-							<xsl:value-of select="$gui/strings/visualizationService" />
-							(
-							<xsl:value-of select="@title" />
-							)
-						</fo:basic-link>
-						|
+						<xsl:variable name="protocolName" select="@protocol"/>
+						<fo:block>
+							<fo:basic-link text-decoration="underline" color="blue">
+								<xsl:attribute name="external-destination"> url('<xsl:value-of
+									select="@href" />') </xsl:attribute>
+								<xsl:value-of select="$gui/strings/protocolChoice[@value=$protocolName]"/>&#160;<xsl:value-of select="@title" />
+							</fo:basic-link>
+						</fo:block>
 					</xsl:for-each>
 				</xsl:if>
 

@@ -8,6 +8,9 @@
                 xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
                 xmlns:date="http://exslt.org/dates-and-times"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gfc="http://www.isotc211.org/2005/gfc"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date">
 
@@ -2201,5 +2204,29 @@
         <xsl:param name="color"/>
         <xsl:param name="block"/>
     </xsl:template>
+
+	<xsl:template name="iso19110-csv" match="*">
+		<xsl:param name="internalSep"/>
+		<metadata>
+			<xsl:copy-of select="geonet:info"/>
+			<type>Objectencatalogus</type>
+			<xsl:copy-of select="gmx:name"/>
+		</metadata>
+	</xsl:template>
+	
+	<xsl:template name="iso19139-csv" match="*">
+		<xsl:param name="internalSep"/>
+		<metadata>
+			<xsl:copy-of select="geonet:info"/>
+			<type>
+				<xsl:choose>
+					<xsl:when test="gmd:identificationInfo/srv:SV_ServiceIdentification">Service</xsl:when>
+					<xsl:when test="gmd:identificationInfo/gmd:MD_DataIdentification">Dataset/dataset serie</xsl:when>
+				</xsl:choose>	
+			</type>
+			<xsl:copy-of select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+		</metadata>
+	</xsl:template>
+	
 
 </xsl:stylesheet>
