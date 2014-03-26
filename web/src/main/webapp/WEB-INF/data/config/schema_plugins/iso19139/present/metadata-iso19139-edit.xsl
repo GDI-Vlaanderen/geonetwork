@@ -3101,6 +3101,33 @@
         </xsl:apply-templates>
     </xsl:template>
 
+    <xsl:template mode="iso19139" match="gmd:MD_DigitalTransferOptions">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+		        <xsl:apply-templates mode="elementEP" select="gmd:unitsOfDistribution|geonet:child[string(@name)='unitsOfDistribution']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		        </xsl:apply-templates>
+		        <xsl:apply-templates mode="elementEP" select="gmd:transferSize">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		        </xsl:apply-templates>
+				<xsl:if test="$edit=true()">
+					<xsl:apply-templates mode="addElement" select="geonet:child[@name='onLine' and @prefix='gmd']">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+			            <xsl:with-param name="visible"   select="count(gmd:onLine)=0"/>
+					</xsl:apply-templates>
+				</xsl:if>
+		        <xsl:apply-templates mode="complexElement" select="gmd:onLine">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		        </xsl:apply-templates>
+		        <xsl:apply-templates mode="elementEP" select="gmd:offLine">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		        </xsl:apply-templates>
+	</xsl:template>
     <!-- =============================================================================
     Custom element layout
     -->

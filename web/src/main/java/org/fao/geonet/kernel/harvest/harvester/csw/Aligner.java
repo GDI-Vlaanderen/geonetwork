@@ -404,20 +404,22 @@ public class Aligner
                 try {
                     String schema = dataMan.autodetectSchema(response);
                     dataMan.validateMetadata(schema, params.getSchemaSchematronMap(), response, context);
-//                    if (context.getServlet().getNodeType().toLowerCase().equals("agiv") || context.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
-                        MetadataSchema metadataSchema = dataMan.getSchema(schema);
-	                    String[] schematronFilenames = {AGIVValidation.INSPIRE_SCHEMATRON_KEY + ".xsl", AGIVValidation.AGIV_SCHEMATRON_KEY + ".xsl"};
-	                    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
-	                    try {
-		    			    dataMan.getEditLib().enumerateTree(response);
-		                    Element schematronError = dataMan.getSchemaTronXmlReport(metadataSchema, schematronFilenames, response, context.getLanguage(), valTypeAndStatus);
-		        	        // remove editing info added by enumerateTree
-		                    dataMan.getEditLib().removeEditingInfo(response);
-	            			response = new AGIVValidation(context).addConformKeywords(response, valTypeAndStatus, schema);
-	                    } catch (Exception e) {
-	                        log.error("Ignoring schematron erros for AGIVValidation with metadata with uuid " + uuid /*+ " : " + ex*/);
-	                    }
-//            		}
+                    if ("iso19139".equals(schema)) {
+//                    	if (context.getServlet().getNodeType().toLowerCase().equals("agiv") || context.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
+	                        MetadataSchema metadataSchema = dataMan.getSchema(schema);
+		                    String[] schematronFilenames = {AGIVValidation.INSPIRE_SCHEMATRON_KEY + ".xsl", AGIVValidation.AGIV_SCHEMATRON_KEY + ".xsl"};
+		                    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+		                    try {
+			    			    dataMan.getEditLib().enumerateTree(response);
+			                    Element schematronError = dataMan.getSchemaTronXmlReport(metadataSchema, schematronFilenames, response, context.getLanguage(), valTypeAndStatus);
+			        	        // remove editing info added by enumerateTree
+			                    dataMan.getEditLib().removeEditingInfo(response);
+		            			response = new AGIVValidation(context).addConformKeywords(response, valTypeAndStatus, schema);
+		                    } catch (Exception e) {
+		                        log.error("Ignoring schematron erros for AGIVValidation with metadata with uuid " + uuid /*+ " : " + ex*/);
+		                    }
+//                    	}
+                    }
             } catch (Exception ex) {
                     log.error("Ignoring invalid metadata with uuid " + uuid /*+ " : " + ex*/);
                     result.doesNotValidate++;

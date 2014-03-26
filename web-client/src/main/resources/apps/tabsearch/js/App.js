@@ -897,7 +897,10 @@ GeoNetwork.app = function(){
 
         if (metadataId) {
 	    	if (GeoNetwork.Settings && GeoNetwork.Settings.ga) {
-	    		ga('send','event','edit','clicked');
+		    	try {
+		    		ga('send','event','edit','clicked');
+				} catch(e) {
+				}
 			}
             this.editorWindow.show();
             this.editorPanel.init(metadataId, create, group, child);

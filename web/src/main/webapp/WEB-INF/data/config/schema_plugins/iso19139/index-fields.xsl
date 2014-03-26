@@ -89,7 +89,7 @@
 							<xsl:when test="normalize-space(gco:CharacterString)!=''">
 								<xsl:value-of select="normalize-space(gco:CharacterString)"/>
 							</xsl:when>
-							<xsl:otherwise><xsl:value-of select="''"/></xsl:otherwise>
+							<xsl:otherwise><xsl:value-of select="'-'"/></xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
 					<Field name="title" string="{string($title)}" store="true" index="true"/>

@@ -720,7 +720,7 @@ public class SearchManager {
 	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                            String title, boolean workspace) throws Exception {
         List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, workspace, true);
-		System.out.println("** indexGroup. Workspace? " + workspace);
+//		System.out.println("** indexGroup. Workspace? " + workspace);
         for( Pair<String, Document> document : docs ) {
         	_indexWriter.addDocument(document.one(), document.two());
         }
@@ -775,7 +775,7 @@ public class SearchManager {
         //
         // delete earlier do from index
         //
-        System.out.println("Deleting "+id+" from index. Workspace? " + workspace);
+//        System.out.println("Deleting "+id+" from index. Workspace? " + workspace);
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index. Workspace? " + workspace);
         }

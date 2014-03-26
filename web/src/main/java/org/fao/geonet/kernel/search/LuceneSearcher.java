@@ -825,7 +825,9 @@ public class LuceneSearcher extends MetaSearcher {
             if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Sorting by : " + sortBy);
             SortField sortField = LuceneSearcher.makeSortField(sortBy.one(), sortBy.two());
-            if( sortField!=null ) sortFields.add(sortField);
+            if( sortField!=null ) {
+            	sortFields.add(sortField);
+            }
         }
         sortFields.add(SortField.FIELD_SCORE);
         return new Sort(sortFields.toArray(new SortField[sortFields.size()]));
@@ -1350,20 +1352,24 @@ public class LuceneSearcher extends MetaSearcher {
 
 			// -- get all hits from search to build the summary
 			tdocs = tfc.topDocs(0, numHits);
+/*
 			System.out.println("All docs");
 			for (ScoreDoc scoreDoc : tdocs.scoreDocs) {
 				System.out.println(scoreDoc.toString());
 			}
+*/
 			// -- add summary keys to summary element
 			summaryMaps = LuceneSearcher.buildSummaryMaps(elSummary, reader, tdocs.scoreDocs, summaryMaps);
 			elSummary = LuceneSearcher.addSortedSummaryKeys(elSummary, langCode, summaryMaps, summaryConfigValues);
 		}
         else {
 			tdocs = tfc.topDocs(startHit, endHit);
+/*
 			System.out.println("Page docs from " + startHit + " to " + endHit);
 			for (ScoreDoc scoreDoc : tdocs.scoreDocs) {
 				System.out.println(scoreDoc.toString());
 			}
+*/
 		}
 
 		return Pair.read(tdocs,elSummary);

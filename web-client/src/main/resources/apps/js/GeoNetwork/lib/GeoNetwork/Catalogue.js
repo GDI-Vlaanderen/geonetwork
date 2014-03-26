@@ -1013,7 +1013,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             url = this.services.mdDiff + '?first=' + escape(id);
         } else {
 	    	if (GeoNetwork.Settings && GeoNetwork.Settings.ga) {
-	    		ga('send','event','edit','clicked');
+		    	try {
+		    		ga('send','event','edit','clicked');
+				} catch(e) {
+				}
 			}
             url = this.services.mdDiff + '.edit?editmode=true&first=' + escape(id);
         }
@@ -1169,7 +1172,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     metadataEdit: function(id, create, group, child, isTemplate){
     	if (GeoNetwork.Settings && GeoNetwork.Settings.ga) {
-    		ga('send','event','edit','clicked');
+	    	try {
+	    		ga('send','event','edit','clicked');
+			} catch(e) {
+			}
 		}
         switch(this.editMode) {
         case this.EDITOR_MODE.IN_EDITOR_POPUP:

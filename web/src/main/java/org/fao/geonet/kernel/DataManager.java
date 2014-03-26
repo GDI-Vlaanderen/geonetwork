@@ -343,7 +343,7 @@ public class DataManager {
      */
     private void batchRebuild(ServiceContext context, List<String> ids, boolean workspace, boolean sendReIndexMessages) {
 
-        System.out.println("batchrebuild(). workspace? " + workspace);
+//        System.out.println("batchrebuild(). workspace? " + workspace);
 
         // split reindexing task according to number of processors we can assign
         int threadCount = ThreadUtils.getNumberOfThreads();
@@ -2034,7 +2034,9 @@ public class DataManager {
 			            IValidationHook validationHook = validationHookFactory.createValidationHook(servContext, dbms);
 			            validationHookFactory.onValidate(validationHook, id, valTypeAndStatus, now, workspace);
 		*/
-			            md = new AGIVValidation(srvContext/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+	                    if ("iso19139".equals(schema)) {
+	                    	md = new AGIVValidation(srvContext/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+	                    }
 			        }
 			        catch(ValidationHookException x) {
 			            System.err.println("validation hook exception: " + x.getMessage());
@@ -2186,7 +2188,9 @@ public class DataManager {
         	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
                 doValidate(srvContext/*.getUserSession()*/, dbms, schema, id, md, /*srvContext.getLanguage(), */forEditing, workspace, valTypeAndStatus).two();
 //        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
-        			md = new AGIVValidation(srvContext/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+                	if ("iso19139".equals(schema)) {
+                		md = new AGIVValidation(srvContext/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+                	}
 //        		}
             }
             else {
@@ -2367,7 +2371,9 @@ public class DataManager {
         	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
                 doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, workspace, valTypeAndStatus).two();
 //        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
-        			md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+                	if ("iso19139".equals(schema)) {
+                		md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+                	}
 //        		}
     		}
 		}
@@ -2479,7 +2485,9 @@ public class DataManager {
         	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
                 doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, workspace, valTypeAndStatus).two();
 //        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
-        			md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+                	if ("iso19139".equals(schema)) {
+                		md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+                	}
 //        		}
     		}
         } catch (Exception e) {

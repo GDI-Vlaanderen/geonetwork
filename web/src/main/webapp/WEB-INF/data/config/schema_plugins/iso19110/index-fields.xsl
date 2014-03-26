@@ -52,7 +52,7 @@
                     <Field name="_title" string="{lower-case(string($title))}" store="false" index="true"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<Field name="_title" string="{''}" store="false" index="true"/>
+					<Field name="_title" string="{'-'}" store="false" index="true"/>
 				</xsl:otherwise>
 			</xsl:choose>
 
