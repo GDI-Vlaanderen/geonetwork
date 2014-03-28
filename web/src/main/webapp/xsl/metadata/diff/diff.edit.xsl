@@ -20,6 +20,10 @@
 
     <xsl:template match="/">
 
+		<xsl:variable name="sourceId" select="/root/response/source/gmd:MD_Metadata/geonet:info/id"/>
+		<xsl:variable name="targetId" select="/root/response/target/gmd:MD_Metadata/geonet:info/id"/>
+		<xsl:variable name="compareSameDoc" select="$sourceId=$targetId"/>
+		
         <!--<html>
             <body>
                 <xsl:call-template name="content"/>
@@ -36,12 +40,19 @@
                 <div class="metadata" style="height: inherit">
                     <div class="x-toolbar x-small-editor x-toolbar-layout-ct" style="padding:5px;">
                         <xsl:choose>
-                            <xsl:when test="string(geonet:info/workspace)='true'">
-                                <xsl:value-of select="/root/gui/strings/workspaceview"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="/root/gui/strings/workspaceoriginal"/>
-                            </xsl:otherwise>
+	                        <xsl:when test="$compareSameDoc">
+		                        <xsl:choose>
+		                            <xsl:when test="string(geonet:info/workspace)='true'">
+		                                <xsl:value-of select="/root/gui/strings/workspaceview"/>
+		                            </xsl:when>
+		                            <xsl:otherwise>
+		                                <xsl:value-of select="/root/gui/strings/workspaceoriginal"/>
+		                            </xsl:otherwise>
+		                        </xsl:choose>
+	                        </xsl:when>
+	                        <xsl:otherwise>
+                               <xsl:value-of select="/root/gui/strings/firstDocument"/>
+	                        </xsl:otherwise>
                         </xsl:choose>
                     </div>
 
@@ -70,13 +81,20 @@
                 <div class="metadata" style="height: inherit">
                     <div class="x-toolbar x-small-editor x-toolbar-layout-ct" style="padding:5px;">
                         <xsl:choose>
-                            <xsl:when test="string(geonet:info/workspace)='true'">
-                                <xsl:value-of select="/root/gui/strings/workspaceview"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                Modified version
-                            </xsl:otherwise>
-                        </xsl:choose>
+	                        <xsl:when test="$compareSameDoc">
+		                        <xsl:choose>
+		                            <xsl:when test="string(geonet:info/workspace)='true'">
+		                                <xsl:value-of select="/root/gui/strings/workspaceview"/>
+		                            </xsl:when>
+		                            <xsl:otherwise>
+		                                <xsl:value-of select="/root/gui/strings/modifiedVersion"/>
+		                            </xsl:otherwise>
+	                            </xsl:choose>
+	                        </xsl:when>
+	                        <xsl:otherwise>
+                               <xsl:value-of select="/root/gui/strings/secondDocument"/>
+							</xsl:otherwise>
+	                    </xsl:choose>
                     </div>
 
 

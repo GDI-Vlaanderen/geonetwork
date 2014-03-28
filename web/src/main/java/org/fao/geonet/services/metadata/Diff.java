@@ -135,14 +135,15 @@ public class Diff implements Service {
             Element md1;
             Element md2;
 
-            md1 = dataMan.getMetadata(context, id1, false, false, false);
 
             // if not compare with workspace copy
             if (!compareWithWorkspace) {
-                md2 = dataMan.getMetadata(context, id2, false, false, false);
+                md1 = dataMan.getMetadataFromWorkspace(context, id1, false, false, false, true);
+                md2 = dataMan.getMetadataFromWorkspace(context, id2, false, false, false, true);
             }
             // compare with workspace copy
             else {
+	            md1 = dataMan.getMetadata(context, id1, false, false, false);
                 md2 = dataMan.getMetadataFromWorkspace(context, id1, false, false, false, true) ;
             }
 
