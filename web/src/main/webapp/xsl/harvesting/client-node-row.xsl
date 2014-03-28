@@ -33,7 +33,7 @@
 					</xsl:when>
 					<xsl:when test="options/status = 'active'">
 						<xsl:choose>
-							<xsl:when test="info/running = 'true'">
+							<xsl:when test="info/running = 'true' or info/clusterRunning = 'true'">
 								<img id="status" src="{/root/env/url}/images/exec.png" alt="R" />
 							</xsl:when>
 							<xsl:otherwise>
@@ -49,6 +49,9 @@
 			<td class="padded" align="center">
 				<xsl:choose>
 					<xsl:when test="count(error/*) = 0">
+						<img id="error" src="{/root/env/url}/images/button_ok.png" alt="I" />
+					</xsl:when>
+					<xsl:when test="info/running = 'true' or info/clusterRunning = 'true'">
 						<img id="error" src="{/root/env/url}/images/button_ok.png" alt="I" />
 					</xsl:when>
 					<xsl:otherwise>
