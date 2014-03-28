@@ -405,7 +405,7 @@
 	</tipHeader>
 	
 	<notRun>Wachten op de eerste uitvoer</notRun>
-	
+	<running>Wordt uitgevoerd</running>
 	<tips>
 		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		

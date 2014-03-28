@@ -15,7 +15,9 @@
 			<xsl:when test="info/result">
 				<xsl:apply-templates select="info/result"/>
 			</xsl:when>
-			
+			<xsl:when test="info/running = 'true' or info/clusterRunning = 'true'">
+				<span><xsl:value-of select="/root/strings/running"/></span>
+			</xsl:when>
 			<xsl:otherwise>
 				<span><xsl:value-of select="/root/strings/notRun"/></span>
 			</xsl:otherwise>
