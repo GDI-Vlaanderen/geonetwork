@@ -189,15 +189,28 @@ public abstract class AbstractHarvester
 	}
 
     private void doSchedule() throws SchedulerException {
-        Scheduler scheduler = getScheduler();
-
-        JobDetail jobDetail = getParams().getJob();
-        Trigger trigger = getParams().getTrigger();
-        scheduler.scheduleJob(jobDetail, trigger);
+    	Scheduler scheduler = getScheduler();
+    	if(ClusterConfig.isEnabled()) {
+            if (getNodeId().equals(ClusterConfig.getClientID())) {
+                JobDetail jobDetail = getParams().getJob();
+                Trigger trigger = getParams().getTrigger();
+                scheduler.scheduleJob(jobDetail, trigger);
+            }
+    	} else {
+            JobDetail jobDetail = getParams().getJob();
+            Trigger trigger = getParams().getTrigger();
+            scheduler.scheduleJob(jobDetail, trigger);
+    	}
     }
 
     private void doUnschedule() throws SchedulerException {
-        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+    	if(ClusterConfig.isEnabled()) {
+            if (getNodeId().equals(ClusterConfig.getClientID())) {
+        		getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+            }
+    	} else {
+    		getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+    	}
     }
 
     public static Scheduler getScheduler() throws SchedulerException {
