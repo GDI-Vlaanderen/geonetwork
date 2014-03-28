@@ -19,6 +19,9 @@
     <workspaceview>Werkdocument</workspaceview>
     <workspaceoriginal>Origineel document</workspaceoriginal>
     <metadataview>Metadata view</metadataview>
+    <modifiedVersion>Gewijzigde versie</modifiedVersion>
+    <firstDocument>Document 1</firstDocument>
+    <secondDocument>Document 2</secondDocument>
     <vieworiginal>Bekijk origineel</vieworiginal>
     <viewworkspace>Bekijk werkblad kopie</viewworkspace>
     <islocked>Deze metadata is geblokkeerd door een edit sessie</islocked>
