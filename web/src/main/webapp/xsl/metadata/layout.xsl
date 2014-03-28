@@ -570,8 +570,8 @@
     <xsl:variable name="removeLink">
       <xsl:value-of
         select="concat('doRemoveElementAction(', $apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
-<!--       <xsl:if test="not(geonet:element/@del='true') or ($currTab = 'simple' and (geonet:element/@del='true') and ($siblingsCount = 0))">-->
-		<xsl:if test="not(geonet:element/@del='true')">
+       <xsl:if test="not(geonet:element/@del='true') or ($currTab = 'simple' and ($siblingsCount = 0))">
+<!-- 		<xsl:if test="not(geonet:element/@del='true')"> -->
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
     </xsl:variable>
@@ -868,9 +868,15 @@
     <xsl:variable name="removeLink">
       <xsl:value-of
         select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
-<!--         <xsl:if test="not(geonet:element/@del='true') or (($currTab = 'simple') and (geonet:element/@del='true') and ($siblingsCount = 0))"> -->
-		<xsl:if test="not(geonet:element/@del='true') or name(.)='gmd:distributionInfo'">
-        	<xsl:text>!OPTIONAL</xsl:text>
+        <xsl:if test="not(geonet:element/@del='true') or (($currTab = 'simple') and ($siblingsCount = 0))">
+<!-- 		<xsl:if test="not(geonet:element/@del='true') or name(.)='gmd:distributionInfo'"> -->
+			<xsl:if test="$schema!='iso19139' or (name(.) != 'gmd:resourceSpecificUsage' and
+			name(.) != 'gmd:applicationSchemaInfo'  and
+			name(.) != 'gmd:aggregationInfo'  and
+			name(.) != 'gmd:processStep'  and
+			name(.) != 'gmd:source')">
+	        	<xsl:text>!OPTIONAL</xsl:text>
+        	</xsl:if>
       	</xsl:if>
     </xsl:variable>
     <xsl:variable name="upLink">

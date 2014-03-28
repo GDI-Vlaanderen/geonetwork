@@ -22,7 +22,7 @@
      * Cache for the script location returned from
      * OpenLayers._getScriptLocation
      */
-    var scriptLocation;
+    var scriptLocation = window['openLayersLocation'] || undefined;
     
     /**
      * Namespace: OpenLayers

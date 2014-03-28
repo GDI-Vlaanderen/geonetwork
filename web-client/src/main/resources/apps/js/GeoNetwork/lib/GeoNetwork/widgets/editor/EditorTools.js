@@ -700,6 +700,21 @@ function isSameElement(el1, el2){
         return false;
 }
 
+function isException(el) {
+	var exceptions = ['stip.iso19139|gmd:resourceSpecificUsage|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceSpecificUsage||gmd:resourceSpecificUsage',
+                      'stip.iso19139|gmd:aggregationInfo|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo||gmd:aggregationInfo',
+                      'stip.iso19139|gmd:applicationSchemaInfo|gmd:MD_Metadata|gmd:MD_Metadata/gmd:applicationSchemaInfo||gmd:applicationSchemaInfo',
+                      'stip.iso19139|gmd:processStep|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep||gmd:processStep',
+                      'stip.iso19139|gmd:source|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source||gmd:source'
+                      ];
+	for (var i = 0; i < exceptions.length; i++) {
+		if (el.dom.getElementsByTagName('legend').length > 0 && el.dom.getElementsByTagName('legend')[0].getAttribute('id').startsWith(exceptions[i])) {
+			return true;
+		}
+	}
+	return false;
+}
+
 /**
  * Display control after delete
  *
@@ -708,6 +723,12 @@ function isSameElement(el1, el2){
  */
 function topControls(el, min){
     var elDescs = getControlsFromElement(el);
+    var exceptions = ['stip.iso19139|gmd:resourceSpecificUsage|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceSpecificUsage||gmd:resourceSpecificUsage',
+                      'stip.iso19139|gmd:aggregationInfo|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo||gmd:aggregationInfo',
+                      'stip.iso19139|gmd:applicationSchemaInfo|gmd:MD_Metadata|gmd:MD_Metadata/gmd:applicationSchemaInfo||gmd:applicationSchemaInfo',
+                      'stip.iso19139|gmd:processStep|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep||gmd:processStep',
+                      'stip.iso19139|gmd:source|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source||gmd:source'
+                      ];
     
     
     // Check addXmlFragment control
@@ -730,10 +751,10 @@ function topControls(el, min){
     
     // sort out x
     if (bottomElement(el)) {
-        if (min == 0) 
+        if (min == 0 && (document.mainForm.currTab.value != 'simple' || isException(el))) 
             elDescs[1 + index].show();
         else 
-            elDescs[1 + index].hide();
+        	elDescs[1 + index].hide();
     } else 
         elDescs[1 + index].show();
     

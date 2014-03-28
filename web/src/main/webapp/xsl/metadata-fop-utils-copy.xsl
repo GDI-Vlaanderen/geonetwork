@@ -374,7 +374,7 @@
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
 
- 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language" >
+ 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gmd:DQ_QuantitativeResult|gmd:role" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />
@@ -426,7 +426,7 @@
  	</xsl:template>
  	
  	
-	<xsl:template mode="simpleElementFop" match="gml:beginPosition|gml:endPosition|gco:ScopedName|@uuidref|@xlink:href">
+	<xsl:template mode="simpleElementFop" match="gml:beginPosition|gml:endPosition|gml:UnitDefinition/gml:identifier/@codeSpace|gml:UnitDefinition/gml:identifier|gml:UnitDefinition/gml:name|gco:ScopedName|@uuidref|@xlink:href">
 		<xsl:param name="schema" />
 		<xsl:param name="title">
 			<xsl:call-template name="getTitle">

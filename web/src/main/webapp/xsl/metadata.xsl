@@ -285,6 +285,7 @@
                 <xsl:with-param name="schema" select="$schema"/>
             </xsl:call-template>
         </xsl:param>
+        <xsl:message>Title van <xsl:value-of select="name(.)"/> is <xsl:value-of select="$title"/></xsl:message>
         <xsl:choose>
             <xsl:when test="$edit=true()">
                 <xsl:variable name="name" select="name(.)"/>
