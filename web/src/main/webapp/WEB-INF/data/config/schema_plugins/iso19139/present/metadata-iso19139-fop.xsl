@@ -902,10 +902,10 @@
 			<xsl:with-param name="blockHeaders">
 				gmd:dataQualityInfo|gmd:DQ_DataQuality|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_AbsoluteExternalPositionalAccuracy|
 				gmd:DQ_CompletenessOmission|gmd:DQ_QuantitativeResult|gmd:DQ_QualitativeResult|
-				gmd:lineage|gmd:LI_Lineage|gmd:description|gmd:processStep|gmd:processor
+				gmd:lineage|gmd_gmd:description|gmd:processStep|gmd:processor|gmd:valueUnit
 			</xsl:with-param>
 			<xsl:with-param name="skipTags">
-				gmd:DQ_DomainConsistency
+				gmd:DQ_DomainConsistency|gmd:dateTime
 			</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:for-each>
@@ -1011,7 +1011,7 @@
 				<xsl:with-param name="schema" select="$schema" />
 				<xsl:with-param name="blockHeaders">
 					gmd:distributionFormat|gmd:distributor|gmd:distributionOrderProcess|gmd:transferOptions|
-					gmd:onLine|gmd:name
+					gmd:onLine
 				</xsl:with-param>
 			</xsl:apply-templates>
 		</xsl:with-param>
@@ -1144,6 +1144,49 @@
 			<xsl:with-param name="schema" select="$schema" />
 		</xsl:apply-templates>
 	
+		<!-- Contact -->
+		<xsl:apply-templates mode="elementFop"
+			select="./gmd:contactInfo">
+			<xsl:with-param name="schema" select="$schema" />
+		</xsl:apply-templates>
+		
+		<!-- Role -->
+		<xsl:apply-templates mode="elementFop"
+			select="./gmd:role">
+			<xsl:with-param name="schema" select="$schema" />
+		</xsl:apply-templates>
+	
+	</xsl:template>
+	
+	<xsl:template mode="elementFop-iso19139" match="gmd:CI_ResponsibleParty/gmd:role" >
+		<xsl:param name="schema" />
+		<xsl:call-template name="info-blocks">
+			<xsl:with-param name="label">
+				<xsl:call-template name="getTitle">
+					<xsl:with-param name="name" select="name(.)" />
+					<xsl:with-param name="schema" select="$schema" />
+				</xsl:call-template>
+			</xsl:with-param>
+			<xsl:with-param name="value">
+				<xsl:variable name="codeList"><xsl:value-of select="gmd:CI_RoleCode/@codeListValue"/></xsl:variable>
+				<xsl:variable name="label"><xsl:value-of select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name='gmd:CI_RoleCode']/entry[code=$codeList]/label"/></xsl:variable>
+				<xsl:variable name="description"><xsl:value-of select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name='gmd:CI_RoleCode']/entry[code=$codeList]/description"/></xsl:variable>
+				<xsl:value-of select="$label"/>: <xsl:value-of select="$description"/>
+			</xsl:with-param>
+		</xsl:call-template>
+		
+	</xsl:template>
+	
+	<xsl:template mode="elementFop-iso19139" match="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty" >
+		<xsl:param name="schema" />
+		
+		<xsl:apply-templates mode="elementFop"
+			select="./gmd:individualName |
+					./gmd:organisationName  |
+		            ./gmd:positionName">
+			<xsl:with-param name="schema" select="$schema" />
+		</xsl:apply-templates>
+	
 		<!-- Role -->
 		<xsl:apply-templates mode="elementFop"
 			select="./gmd:role">
@@ -1155,6 +1198,7 @@
 			select="./gmd:contactInfo">
 			<xsl:with-param name="schema" select="$schema" />
 		</xsl:apply-templates>
+		
 	</xsl:template>
 	
 	<xsl:template mode="elementFop-iso19139" match="gmd:MD_Keywords">
@@ -1258,6 +1302,48 @@
 		</xsl:call-template>
 	</xsl:template>
 	
+	<xsl:template mode="elementFop-iso19139" match="gmd:DQ_QuantitativeResult">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+        
+			<xsl:call-template name="newBlock">
+				<xsl:with-param name="title">
+					<xsl:call-template name="getTitle">
+						<xsl:with-param name="name">
+							<xsl:value-of
+								select="name(./gmd:valueUnit/gml:UnitDefinition)" />
+						</xsl:with-param>
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:call-template>
+				</xsl:with-param>
+				<xsl:with-param name="content">
+					<xsl:apply-templates mode="elementFop"
+						select="./gmd:valueUnit/gml:UnitDefinition/gml:identifier">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+					
+					<xsl:apply-templates mode="elementFop"
+						select="./gmd:valueUnit/gml:UnitDefinition/gml:identifier/@codeSpace">
+						<xsl:with-param name="schema" select="$schema" />
+					</xsl:apply-templates>
+					
+			</xsl:with-param>
+		</xsl:call-template>
+		
+		<xsl:apply-templates mode="elementFop"
+			select="./gmd:valueUnit/gml:UnitDefinition/gml:name">
+			<xsl:with-param name="schema" select="$schema" />
+		</xsl:apply-templates>
+					
+		<xsl:apply-templates mode="elementFop"
+			select="./gmd:value">
+			<xsl:with-param name="schema" select="$schema" />
+		</xsl:apply-templates>
+	
+	
+        
+    </xsl:template>
+		
 	<xsl:template mode="elementFop-iso19139" match="gmd:language">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
