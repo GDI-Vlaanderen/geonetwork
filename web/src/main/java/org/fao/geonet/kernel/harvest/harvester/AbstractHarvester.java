@@ -49,7 +49,6 @@ import org.fao.geonet.jms.Producer;
 import org.fao.geonet.jms.message.harvest.HarvestMessage;
 import org.fao.geonet.jms.message.harvest.HarvesterActivateMessage;
 import org.fao.geonet.jms.message.harvest.HarvesterDeactivateMessage;
-import org.fao.geonet.jms.message.harvest.HarvesterMessage;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -207,16 +206,8 @@ public abstract class AbstractHarvester
             if (getNodeId().equals(ClusterConfig.getClientID())) {
                 JobDetail jobDetail = getParams().getJob();
                 Trigger trigger = getParams().getTrigger();
-                scheduler.scheduleJob(jobDetail, trigger);
-                try {
-                    HarvesterMessage message = new HarvesterMessage();
-                    message.setSenderClientID(ClusterConfig.getClientID());
-                    Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
-                    harvesterProducer.produce(message);
-                }
-                catch (ClusterException x) {
-                    System.err.println(x.getMessage());
-                    x.printStackTrace();
+                if (!scheduler.checkExists(jobDetail.getKey())) {
+                	scheduler.scheduleJob(jobDetail, trigger);
                 }
             } else {
                 try {
@@ -234,7 +225,9 @@ public abstract class AbstractHarvester
     	} else {
             JobDetail jobDetail = getParams().getJob();
             Trigger trigger = getParams().getTrigger();
-            scheduler.scheduleJob(jobDetail, trigger);
+            if (!scheduler.checkExists(jobDetail.getKey())) {
+            	scheduler.scheduleJob(jobDetail, trigger);
+            }
     	}
     }
 
@@ -245,16 +238,6 @@ public abstract class AbstractHarvester
             if (getNodeId().equals(ClusterConfig.getClientID())) {
             	System.out.println("Unscheduling harvester with uuid " + getParams().uuid + " at " + scheduletime + " on node " + nodeName  + " with id " + getNodeId());
         		getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
-                try {
-                    HarvesterMessage message = new HarvesterMessage();
-                    message.setSenderClientID(ClusterConfig.getClientID());
-                    Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
-                    harvesterProducer.produce(message);
-                }
-                catch (ClusterException x) {
-                    System.err.println(x.getMessage());
-                    x.printStackTrace();
-                }
             } else {
                 try {
                 	HarvesterDeactivateMessage message = new HarvesterDeactivateMessage();
@@ -320,9 +303,11 @@ public abstract class AbstractHarvester
      * @throws SQLException
      */
 	public synchronized OperResult start(Dbms dbms) throws SQLException, SchedulerException {
+/*
 		if (status != Status.INACTIVE) {
             return OperResult.ALREADY_ACTIVE;
         }
+*/
         // if clustering is enabled, the periodic execution does not run the harvester but rather sends a message that
         // any of the peer GN nodes can pick up; one node (the first to get the message) will actually run the
         // harvester. Therefore, set status to ACTIVE only if we're NOT clustering, otherwise the message handler that
@@ -349,9 +334,10 @@ public abstract class AbstractHarvester
      * @throws SQLException
      */
 	public synchronized OperResult stop(Dbms dbms) throws SQLException, SchedulerException {
+/*
 		if (status != Status.ACTIVE)
 			return OperResult.ALREADY_INACTIVE;
-
+*/
 		settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.INACTIVE);
 
 		doUnschedule();
