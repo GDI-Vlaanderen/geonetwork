@@ -23,14 +23,34 @@
 
 package org.fao.geonet.jms;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Session;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.jms.message.harvest.HarvestMessageHandler;
+import org.fao.geonet.jms.message.harvest.HarvesterActivateMessageHandler;
+import org.fao.geonet.jms.message.harvest.HarvesterDeactivateMessageHandler;
 import org.fao.geonet.jms.message.harvest.HarvesterMessageHandler;
 import org.fao.geonet.jms.message.reindex.OptimizeIndexMessageHandler;
 import org.fao.geonet.jms.message.reindex.ReIndexMessageHandler;
@@ -48,22 +68,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author heikki doeleman
@@ -235,6 +239,8 @@ public class ClusterConfig {
             register(new Producer(siteID, Geonet.ClusterMessageTopic.UPDATETHESAURUS_ELEM, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.MD_VERSIONING, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER, MessagingDomain.PUBLISH_SUBSCRIBE));
+            register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER_ACTIVATE, MessagingDomain.PUBLISH_SUBSCRIBE));
+            register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER_DEACTIVATE, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION_RESPONSE, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageQueue.HARVEST, MessagingDomain.POINT_TO_POINT));
@@ -267,6 +273,10 @@ public class ClusterConfig {
                     new MetadataVersioningMessageHandler(context)));
             register(new Consumer(siteID, Geonet.ClusterMessageTopic.HARVESTER, MessagingDomain.PUBLISH_SUBSCRIBE,
                     new HarvesterMessageHandler(context)));
+            register(new Consumer(siteID, Geonet.ClusterMessageTopic.HARVESTER_ACTIVATE, MessagingDomain.PUBLISH_SUBSCRIBE,
+                    new HarvesterActivateMessageHandler(context)));
+            register(new Consumer(siteID, Geonet.ClusterMessageTopic.HARVESTER_DEACTIVATE, MessagingDomain.PUBLISH_SUBSCRIBE,
+                    new HarvesterDeactivateMessageHandler(context)));
             register(new Consumer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION, MessagingDomain.PUBLISH_SUBSCRIBE,
                     new SystemConfigurationMessageHandler(context)));
             systemConfigurationResponseMessageHandler = new SystemConfigurationResponseMessageHandler();

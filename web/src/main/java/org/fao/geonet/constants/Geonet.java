@@ -603,6 +603,8 @@ public class Geonet {
         public static final String DELETETHESAURUS_ELEM = "DELETE-THESAURUS-ELEMENT";
         public static final String MD_VERSIONING        = "MD-VERSIONING";
         public static final String HARVESTER            = "HARVESTER";
+        public static final String HARVESTER_ACTIVATE     = "HARVESTER_ACTIVATE";
+        public static final String HARVESTER_DEACTIVATE   = "HARVESTER_DEACTIVATE";
         public static final String SYSTEM_CONFIGURATION  = "SYSTEM_CONFIGURATION";
         public static final String SYSTEM_CONFIGURATION_RESPONSE  = "SYSTEM_CONFIGURATION_RESPONSE";
     }

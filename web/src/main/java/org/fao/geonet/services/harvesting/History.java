@@ -46,8 +46,8 @@ public class History  implements Service
 		if ((uuid == null) || (uuid.equals(""))) {
 			result = HarvesterHistoryDao.retrieveSort(dbms, sortCriteria);
 		} else {
-      result = HarvesterHistoryDao.retrieve(dbms, uuid);
-    }
+			result = HarvesterHistoryDao.retrieve(dbms, uuid);
+	    }
 
 
 

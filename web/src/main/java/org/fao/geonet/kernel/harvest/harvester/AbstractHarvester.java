@@ -23,6 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import static org.quartz.JobKey.jobKey;
+
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
@@ -33,8 +41,15 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.ClusterException;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.harvest.HarvestMessage;
+import org.fao.geonet.jms.message.harvest.HarvesterActivateMessage;
+import org.fao.geonet.jms.message.harvest.HarvesterDeactivateMessage;
+import org.fao.geonet.jms.message.harvest.HarvesterMessage;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -59,13 +74,7 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
-
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.quartz.JobKey.jobKey;
+import org.tuckey.web.filters.urlrewrite.utils.StringUtils;
 
 //=============================================================================
 
@@ -178,6 +187,10 @@ public abstract class AbstractHarvester
 		status = Status.parse(node.getChild("options").getChildText("status"));
 		error    = null;
         nodeId = node.getChild("site").getChildText("nodeId");
+    	if(StringUtils.isBlank(nodeId) && ClusterConfig.isEnabled()) {
+            nodeId = ClusterConfig.getClientID();
+    		node.getChild("site").getChild("nodeId").setText(nodeId);
+    	}
 
 		//--- init harvester
 
@@ -195,6 +208,28 @@ public abstract class AbstractHarvester
                 JobDetail jobDetail = getParams().getJob();
                 Trigger trigger = getParams().getTrigger();
                 scheduler.scheduleJob(jobDetail, trigger);
+                try {
+                    HarvesterMessage message = new HarvesterMessage();
+                    message.setSenderClientID(ClusterConfig.getClientID());
+                    Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
+                    harvesterProducer.produce(message);
+                }
+                catch (ClusterException x) {
+                    System.err.println(x.getMessage());
+                    x.printStackTrace();
+                }
+            } else {
+                try {
+                	HarvesterActivateMessage message = new HarvesterActivateMessage();
+                    message.setId(getID());
+                    message.setSenderClientID(ClusterConfig.getClientID());
+                    Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER_ACTIVATE);
+                    harvesterProducer.produce(message);      
+                }
+                catch (ClusterException x) {
+                    Log.error(Geonet.HARVESTER, x.getMessage());
+                    x.printStackTrace();
+                }
             }
     	} else {
             JobDetail jobDetail = getParams().getJob();
@@ -204,11 +239,37 @@ public abstract class AbstractHarvester
     }
 
     private void doUnschedule() throws SchedulerException {
+		String scheduletime = new ISODate(System.currentTimeMillis()).toString();
+		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
     	if(ClusterConfig.isEnabled()) {
             if (getNodeId().equals(ClusterConfig.getClientID())) {
+            	System.out.println("Unscheduling harvester with uuid " + getParams().uuid + " at " + scheduletime + " on node " + nodeName  + " with id " + getNodeId());
         		getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+                try {
+                    HarvesterMessage message = new HarvesterMessage();
+                    message.setSenderClientID(ClusterConfig.getClientID());
+                    Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
+                    harvesterProducer.produce(message);
+                }
+                catch (ClusterException x) {
+                    System.err.println(x.getMessage());
+                    x.printStackTrace();
+                }
+            } else {
+                try {
+                	HarvesterDeactivateMessage message = new HarvesterDeactivateMessage();
+                    message.setId(getID());
+                    message.setSenderClientID(ClusterConfig.getClientID());
+                    Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER_DEACTIVATE);
+                    harvesterProducer.produce(message);      
+                }
+                catch (ClusterException x) {
+                    Log.error(Geonet.HARVESTER, x.getMessage());
+                    x.printStackTrace();
+                }
             }
     	} else {
+        	System.out.println("Unscheduling harvester with uuid " + getParams().uuid + " at " + scheduletime + " on node " + nodeName  + " with id " + getNodeId());
     		getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
     	}
     }
@@ -316,50 +377,65 @@ public abstract class AbstractHarvester
 
         // Set clusterRunning = true before send harvest message to avoid issues with ClusterConfig (see SettingManager.setValues finally block)
         if(ClusterConfig.isEnabled()) {
-            if (getNodeId().equals(ClusterConfig.getClientID())) {
-                /**
-                 * Add setting to indicate harvester running in the cluster so all nodes can show the proper RUNNING info in the
-                 * harvesters list.
-                 *
-                 *
-                 * Settings are stored in memory using a ResourceListener, so only are saved when the dbms resource is closed
-                 * In "normal" jeeves request like saving a harvester jeeves closes the dbms when the request finishes and settings are updated
-                 *
-                 * Here is required to close it manually. Not so nice.
-                 *
-                 */
-                ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
-                Dbms dbms2 = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-                boolean bException = false;
-                try {
-
-                    settingMan.setValue(dbms2, "harvesting/id:"+id+"/info/clusterRunning", "true") ;
-
-                } catch (Exception e) {
-                	bException = true;
-                    e.printStackTrace();
-                    if (dbms2 != null) {
-                        try {
-                        	rm.abort(Geonet.Res.MAIN_DB, dbms2);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
+            /**
+             * Add setting to indicate harvester running in the cluster so all nodes can show the proper RUNNING info in the
+             * harvesters list.
+             *
+             *
+             * Settings are stored in memory using a ResourceListener, so only are saved when the dbms resource is closed
+             * In "normal" jeeves request like saving a harvester jeeves closes the dbms when the request finishes and settings are updated
+             *
+             * Here is required to close it manually. Not so nice.
+             *
+             */
+            ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
+            Dbms dbms2 = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+            boolean bException = false;
+            try {
+                settingMan.setValue(dbms2, "harvesting/id:"+id+"/info/clusterRunning", "true") ;
+                if (getNodeId().equals(ClusterConfig.getClientID())) {
+                    getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+            		return OperResult.OK;
+                } else {
+                    try {
+                        Log.info(Geonet.HARVESTER, "clustering enabled, creating harvest message");
+                        HarvestMessage message = new HarvestMessage();
+                        message.setId(getID());
+                        Producer harvestProducer = ClusterConfig.get(Geonet.ClusterMessageQueue.HARVEST);
+                        harvestProducer.produce(message);
+                		return OperResult.OK;
                     }
-                } finally {
-                    if (!bException && dbms2 != null) {
-                        try {
-                            rm.close(Geonet.Res.MAIN_DB, dbms2);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    catch (ClusterException x) {
+                        System.err.println(x.getMessage());
+                        x.printStackTrace();
+                        // todo what ?
+                		return OperResult.ERROR;
                     }
-        		}
-            }
+                }
+            } catch (Exception e) {
+            	bException = true;
+                e.printStackTrace();
+                if (dbms2 != null) {
+                    try {
+                    	rm.abort(Geonet.Res.MAIN_DB, dbms2);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            } finally {
+                if (!bException && dbms2 != null) {
+                    try {
+                        rm.close(Geonet.Res.MAIN_DB, dbms2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+    		}
+        } else {
+            getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+    		return OperResult.OK;
         }
-
-        getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
-
-		return OperResult.OK;
+		return OperResult.ERROR;
 	}
 
 	//--------------------------------------------------------------------------
@@ -383,10 +459,10 @@ public abstract class AbstractHarvester
             else {
                 status = Status.ACTIVE;
             }
-            logger.info("Started harvesting from node : "+ nodeName);
+            System.out.println("Started harvesting at " + (new Date()).toString() +  " from node : " + nodeName);
             HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
             h.processWithFastIndexing();
-            logger.info("Ended harvesting from node : "+ nodeName);
+            System.out.println("Ended harvesting at " + (new Date()).toString() +  " from node : " + nodeName);
 
 			rm.close();
 		}
@@ -452,7 +528,7 @@ public abstract class AbstractHarvester
 		//--- 'running'
 
         if (ClusterConfig.isEnabled()) {
-            info.addContent(new Element("running").setText(settingMan.getValueAsBool("harvesting/id:"+id+"/info/clusterRunning")+""));
+            info.addContent(new Element("clusterRunning").setText(settingMan.getValueAsBool("harvesting/id:"+id+"/info/clusterRunning")+""));
 
         } else {
             info.addContent(new Element("running").setText(running+""));
@@ -511,8 +587,11 @@ public abstract class AbstractHarvester
 			{
 				dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 				//--- update lastRun
-				settingMan.setValue(dbms, "harvesting/id:"+ id +"/info/lastRun", lastRun);
-				logger.info("Started harvesting from node : "+ nodeName);
+				Map<String, Object> values = new HashMap<String, Object>();
+				values.put("harvesting/id:"+ id +"/info/lastRun", lastRun);
+				values.put("harvesting/id:"+ id +"/info/clusterRunning", "true");
+				settingMan.setValues(dbms, values);
+            	System.out.println("Started harvester with uuid " + getParams().uuid + " at " + lastRun + " on node " + nodeName  + " with id " + getNodeId());
             	doHarvest(logger, rm);
             } catch (Exception ex) {
             	error = ex;
@@ -525,12 +604,12 @@ public abstract class AbstractHarvester
                         ex.printStackTrace();
                     }
                 }
-				logger.info("Ended harvesting from node : "+ nodeName);
-				if (getParams().oneRunOnly)
-					stop(dbms);
+            	System.out.println("Ended harvester with uuid " + getParams().uuid + " at " + lastRun + " on node " + nodeName  + " with id " + getNodeId());
 				Dbms dbms2 = null;
 				try {
 					dbms2 = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+					if (getParams().oneRunOnly)
+						stop(dbms2);
 					Element result = getResult();
 					if (error != null) result = JeevesException.toElement(error);
 					HarvesterHistoryDao.write(dbms2, getType(), getParams().name, getParams().uuid, lastRun, getParams().node, result);
@@ -572,34 +651,6 @@ public abstract class AbstractHarvester
 		Logger logger = Log.createLogger(Geonet.HARVESTER);
 	    boolean bException = false;
 	    try {
-			Element result = getResult();
-            if(ClusterConfig.isEnabled()) {
-                if (getNodeId().equals(ClusterConfig.getClientID())) {
-        			Dbms dbms2 = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-		            try {
-		                settingMan.setValue(dbms2, "harvesting/id:"+id+"/info/clusterRunning", "true") ;
-		            } catch (Exception e) {
-		            	bException = true;
-		                e.printStackTrace();
-		                if (dbms2 != null) {
-		                    try {
-		                    	rm.abort(Geonet.Res.MAIN_DB, dbms2);
-		                    } catch (Exception ex) {
-		                        ex.printStackTrace();
-		                    }
-		                }
-		            } finally {
-		                if (!bException && dbms2 != null) {
-		                    try {
-		                        rm.close(Geonet.Res.MAIN_DB, dbms2);
-		                    } catch (Exception e) {
-		                        e.printStackTrace();
-		                    }
-		                }
-		    		}
-                }
-        	    bException = false;
-            }
 			HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
 			h.processWithFastIndexing();
 	    } catch(Throwable t) {
@@ -697,7 +748,6 @@ public abstract class AbstractHarvester
 		//--- setup stats node ----------------------------------------
 
 		settingMan.add(dbms, "id:"+infoId, "lastRun", "", false);
-        settingMan.add(dbms, "id:"+infoId, "clusterRunning", "false", false);
 
 		//--- store privileges and categories ------------------------
 

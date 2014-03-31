@@ -369,14 +369,6 @@ public class Geonetwork implements ApplicationHandler {
 		thesaurusMan = ThesaurusManager.getInstance(path, dataMan, context.getResourceManager(), thesauriDir);
 
 		//------------------------------------------------------------------------
-		//--- initialize harvesting subsystem
-
-		logger.info("  - Harvest manager...");
-
-		harvestMan = new HarvestManager(context, settingMan, dataMan);
-		dataMan.setHarvestManager(harvestMan);
-
-		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
 
 		logger.info("  - Catalogue services for the web...");
@@ -408,6 +400,13 @@ public class Geonetwork implements ApplicationHandler {
             ClusterConfig.setEnabled(false);
         }
 
+		//------------------------------------------------------------------------
+		//--- initialize harvesting subsystem
+
+		logger.info("  - Harvest manager...");
+
+		harvestMan = new HarvestManager(context, settingMan, dataMan);
+		dataMan.setHarvestManager(harvestMan);
 
         //------------------------------------------------------------------------
 		//--- return application context

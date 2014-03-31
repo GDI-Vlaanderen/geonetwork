@@ -30,6 +30,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.jms.ClusterConfig;
@@ -154,6 +156,9 @@ public class HarvestManager {
                 }
 	}
 
+
+	//---------------------------------------------------------------------------
+	//---
 	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
@@ -161,6 +166,53 @@ public class HarvestManager {
 	//---------------------------------------------------------------------------
 
     /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param id
+     * @param sort
+     * @return
+     * @throws Exception
+     */
+	public Element get(Dbms dbms, String id, String sort) throws Exception {
+		Element allResults = new Element("nodes");
+		for (AbstractHarvester ah : hmHarvesters.values()) {
+        	Element result = settingMan.get("harvesting/id:"+ah.getID(), -1);
+			if (ah.getID() != null)
+			{
+				if (result == null) {
+					continue;
+				}
+				result = transform(result);
+				addInfo(result);
+				Element historyResult = getLastResult(dbms,ah.getParams().uuid);
+				if (historyResult!=null) {
+					Element info = result.getChild("info");
+					if (info!=null) {
+						Element historyInfo = historyResult.getChild("info");
+						if (historyInfo!=null) {
+							Element infoResult = historyInfo.getChild("result");
+							if (infoResult!=null) {
+								info.removeChild("result");
+								info.addContent(infoResult.detach());
+							}
+							Element errorResult = historyInfo.getChild("error");
+							if (errorResult!=null) {
+								info.removeChild("error");
+								info.addContent(errorResult.detach());
+							}
+						}
+					}
+				}
+				allResults.addContent(result);
+			}
+		}
+		if (sort != null) allResults = transformSort(allResults,sort);
+		
+		return allResults;
+	}
+
+	/**
      * TODO javadoc.
      *
      * @param id
@@ -202,6 +254,25 @@ public class HarvestManager {
 
 		}
 
+		return result;
+	}
+
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public Element getLastResult(Dbms dbms, String id) throws Exception {
+		Element result = null;
+		if (StringUtils.isNotBlank(id)) {
+			result = HarvesterHistoryDao.retrieve(dbms, id);
+			if (result!=null && result.getChildren().size()>0) {
+				return (Element) result.getChildren().get(0);
+			}
+	    }
 		return result;
 	}
 
@@ -530,15 +601,14 @@ public class HarvestManager {
      * @param node
      */
 	private void addInfo(Element node) {
-
+/*
         System.out.println("HarvestManager addInfo for node with id " + node.getAttributeValue("id"));
-
         System.out.println("contents of hmHarvesters:");
         for(String i : hmHarvesters.keySet()) {
             System.out.println("id: " + i);
         }
 
-
+*/
 		String id = node.getAttributeValue("id");
 		hmHarvesters.get(id).addInfo(node);
 	}

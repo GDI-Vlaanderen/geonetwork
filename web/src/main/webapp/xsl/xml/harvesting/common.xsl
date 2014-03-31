@@ -50,7 +50,12 @@
 			
 			<info>
 				<lastRun><xsl:value-of select="$info/lastRun/value" /></lastRun>
-                <clusterRun><xsl:value-of select="$info/clusterRun/value" /></clusterRun>
+				<xsl:if test="$info/clusterRunning">
+                	<clusterRunning><xsl:value-of select="$info/clusterRunning/value" /></clusterRunning>
+                </xsl:if>
+				<xsl:if test="$info/running">
+	                <running><xsl:value-of select="$info/running/value" /></running>
+                </xsl:if>
 			</info>
 		</node>
 	</xsl:template>
