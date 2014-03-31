@@ -1177,7 +1177,7 @@
 		
 	</xsl:template>
 	
-	<xsl:template mode="elementFop-iso19139" match="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty" >
+	<xsl:template mode="elementFop-iso19139" match="gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty|gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty" >
 		<xsl:param name="schema" />
 		
 		<xsl:apply-templates mode="elementFop"
