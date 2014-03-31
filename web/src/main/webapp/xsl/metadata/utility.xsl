@@ -96,8 +96,9 @@
 			<xsl:with-param name="node" select="$node"/>
         </xsl:call-template>
     </xsl:variable>
-
+    
     <xsl:variable name="context" select="name($node/parent::node())"/>
+    <xsl:variable name="diffContext" select="replace(replace($fullContext,'response/source/', ''), 'response/target/', '')"/>
     <xsl:variable name="contextIsoType" select="$node/parent::node()/@gco:isoType"/>
     <xsl:variable name="title">
       <xsl:choose>
@@ -106,6 +107,10 @@
           <!-- Name with context in current schema (full) -->
           <xsl:variable name="schematitleWithContextFull"
             select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and (@context=$fullContext)]/label)"/>
+
+          <!-- Name with context in current schema (full) -->
+          <xsl:variable name="schematitleWithContextDiff"
+            select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and (@context=$diffContext)]/label)"/>
 
           <!-- Name with context in current schema (parent) -->
           <xsl:variable name="schematitleWithContextParent"
@@ -144,10 +149,13 @@
             <xsl:when
               test="normalize-space($schematitleWithContextFull)!=''"><xsl:value-of select="$schematitleWithContextFull"/>
             </xsl:when>
-               <xsl:when
+            <xsl:when
+              test="normalize-space($schematitleWithContextDiff)!=''"><xsl:value-of select="$schematitleWithContextDiff"/>
+            </xsl:when>
+            <xsl:when
               test="normalize-space($schematitleWithContextParent)!=''"><xsl:value-of select="$schematitleWithContextParent"/>
             </xsl:when>
-               <xsl:when
+            <xsl:when
               test="normalize-space($schematitleWithContextIsoType)!=''"><xsl:value-of select="$schematitleWithContextIsoType"/>
             </xsl:when>
 
@@ -158,7 +166,7 @@
             <xsl:when
               test="normalize-space($schematitleWithContextFullBase)!=''"><xsl:value-of select="$schematitleWithContextFullBase"/>
             </xsl:when>
-               <xsl:when
+            <xsl:when
               test="normalize-space($schematitleWithContextParentBase)!=''"><xsl:value-of select="$schematitleWithContextParentBase"/>
             </xsl:when>
                <xsl:when

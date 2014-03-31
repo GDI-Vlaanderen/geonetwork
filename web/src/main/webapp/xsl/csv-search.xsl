@@ -3,6 +3,8 @@
 						xmlns:geonet="http://www.fao.org/geonetwork" 
 						xmlns:exslt= "http://exslt.org/common"
 						xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+						xmlns:gmx="http://www.isotc211.org/2005/gmx"
+						xmlns:gmd="http://www.isotc211.org/2005/gmd"
 						xmlns:saxon="http://saxon.sf.net/"
 						extension-element-prefixes="saxon"
 						exclude-result-prefixes="xsl exslt geonet">
@@ -117,7 +119,7 @@
 	<!-- Create header using first row corresponding to current schema -->
 	<xsl:template name="csvHeader">
 		<xsl:param name="metadata"/>
-		<xsl:value-of select="concat('schema', $sep, 'type', $sep, 'uuid', $sep, 'id', $sep, 'title')"/>
+		<xsl:value-of select="concat('schema', $sep, 'uuid', $sep, 'id', $sep, 'title')"/>
 		
 		<xsl:for-each select="$metadata/*[name(.)!='geonet:info' and name(.)!='type' and name(.)!='gmd:title' and name(.)!='gmx:name']">
 			<xsl:choose>
@@ -137,8 +139,7 @@
 	<!-- Dump line -->
 	<xsl:template name="csvLine">
 		<xsl:param name="metadata"/>
-
-		<xsl:value-of select="concat($metadata/geonet:info/schema, $sep, $metadata/type, $sep,  $metadata/geonet:info/uuid, $sep, $metadata/geonet:info/id)"/>
+		<xsl:value-of select="concat($metadata/geonet:info/schema, $sep, $metadata/geonet:info/uuid, $sep, $metadata/geonet:info/id, $sep, normalize-space(concat($metadata/gmd:title, $metadata/gmx:name)))"/>
 
 		<xsl:for-each select="$metadata/*[name(.)!='geonet:info' and name(.)!='type' and name(.)!='gmd:title' and name(.)!='gmx:name']">
 			<xsl:value-of select="normalize-space(.)"/>

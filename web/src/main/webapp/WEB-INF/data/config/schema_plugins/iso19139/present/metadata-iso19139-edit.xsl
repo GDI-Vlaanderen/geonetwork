@@ -276,10 +276,23 @@
     <xsl:template mode="iso19139" match="gmd:LI_Lineage">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-		<xsl:apply-templates mode="elementEP" select="*[name()!='gmd:source']">
+		<xsl:apply-templates mode="elementEP" select="gmd:statement">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
         </xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='processStep' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:processStep)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:for-each select="gmd:processStep">
+       		<xsl:apply-templates mode="elementEP" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+		</xsl:for-each>
 		<xsl:if test="$edit=true()">
 			<xsl:apply-templates mode="addElement" select="geonet:child[@name='source' and @prefix='gmd']">
 	            <xsl:with-param name="schema" select="$schema"/>
@@ -2857,25 +2870,16 @@
 					<xsl:value-of select="/root/gui/strings/contentInfoTab"/>
                 </xsl:with-param>
                 <xsl:with-param name="content">
-                    <xsl:apply-templates mode="elementEP" select="gmd:abstract|geonet:child[string(@name)='abstract']
+                    <xsl:apply-templates mode="elementEP" select="
+           gmd:abstract|geonet:child[string(@name)='abstract']
           |gmd:purpose|geonet:child[string(@name)='purpose']
           |gmd:credit|geonet:child[string(@name)='credit']
           |gmd:status|geonet:child[string(@name)='status']
-          |gmd:spatialRepresentationType|geonet:child[string(@name)='spatialRepresentationType']
-          |gmd:spatialResolution|geonet:child[string(@name)='spatialResolution']
-		  |gmd:language|geonet:child[string(@name)='language']
-          |gmd:characterSet|geonet:child[string(@name)='characterSet']
-          |gmd:topicCategory|geonet:child[string(@name)='topicCategory']
-          |gmd:supplementalInformation|geonet:child[string(@name)='supplementalInformation']
-          |gmd:environmentDescription|geonet:child[string(@name)='environmentDescription']
-          |gmd:resourceMaintenance|geonet:child[string(@name)='resourceMaintenance']
           |gmd:pointOfContact|geonet:child[string(@name)='pointOfContact']
-          |gmd:resourceFormat|geonet:child[string(@name)='resourceFormat']
-          |gmd:resourceSpecificUsage|geonet:child[string(@name)='resourceSpecificUsage']
-          |gmd:aggregationInfo|geonet:child[string(@name)='aggregationInfo']
+          |gmd:resourceMaintenance|geonet:child[string(@name)='resourceMaintenance']
           |gmd:graphicOverview[not(name(..)='srv:SV_ServiceIdentification')]|geonet:child[string(@name)='graphicOverview' and not(name(..)='srv:SV_ServiceIdentification')]
+          |gmd:resourceFormat|geonet:child[string(@name)='resourceFormat']
           |gmd:descriptiveKeywords|geonet:child[string(@name)='descriptiveKeywords']
-          |srv:serviceType|srv:*[*/@codeList]|srv:containsOperations|srv:operatesOn|srv:coupledResource|srv:extent|gmd:extent|geonet:child[string(@name)='extent']
           ">
                         <xsl:with-param name="schema" select="$schema"/>
                         <xsl:with-param name="edit"   select="$edit"/>
@@ -2884,7 +2888,68 @@
 
                 </xsl:with-param>
             </xsl:call-template>
+            
+			<xsl:if test="$edit=true()">
+				<xsl:apply-templates mode="addElement" select="geonet:child[@name='resourceSpecificUsage' and @prefix='gmd']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		            <xsl:with-param name="visible"   select="count(gmd:resourceSpecificUsage)=0"/>
+				</xsl:apply-templates>
+			</xsl:if>
+	
+	        <xsl:apply-templates mode="elementEP" select="gmd:resourceSpecificUsage|geonet:child[string(@name)='resourceSpecificUsage']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="flat"   select="$flat"/>
+	        </xsl:apply-templates>
+	        
+	                    
+			<xsl:if test="$edit=true()">
+				<xsl:apply-templates mode="addElement" select="geonet:child[@name='aggregationInfo' and @prefix='gmd']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		            <xsl:with-param name="visible"   select="count(gmd:aggregationInfo)=0"/>
+				</xsl:apply-templates>
+			</xsl:if>
+	
+	        <xsl:apply-templates mode="elementEP" select="gmd:aggregationInfo|geonet:child[string(@name)='aggregationInfo']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="flat"   select="$flat"/>
+	        </xsl:apply-templates>
+	        
+
+            <xsl:call-template name="complexElementGuiWrapper">
+                <xsl:with-param name="title">
+					<xsl:value-of select="/root/gui/strings/contentInfoTab"/>
+                </xsl:with-param>
+                <xsl:with-param name="content">
+                    <xsl:apply-templates mode="elementEP" select="gmd:spatialRepresentationType|geonet:child[string(@name)='spatialRepresentationType']
+          |gmd:spatialResolution|geonet:child[string(@name)='spatialResolution']
+		  |gmd:language|geonet:child[string(@name)='language']
+          |gmd:characterSet|geonet:child[string(@name)='characterSet']
+          |gmd:topicCategory|geonet:child[string(@name)='topicCategory']
+          |gmd:supplementalInformation|geonet:child[string(@name)='supplementalInformation']
+          |gmd:environmentDescription|geonet:child[string(@name)='environmentDescription']
+          |srv:serviceType|srv:*[*/@codeList]|srv:containsOperations|srv:operatesOn|srv:coupledResource|srv:extent|gmd:extent|geonet:child[string(@name)='extent']
+          ">
+
+                        <xsl:with-param name="schema" select="$schema"/>
+                        <xsl:with-param name="edit"   select="$edit"/>
+                        <xsl:with-param name="flat"   select="$flat"/>
+                    </xsl:apply-templates>
+
+                </xsl:with-param>
+            </xsl:call-template>
         </xsl:for-each>
+
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='applicationSchemaInfo' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:applicationSchemaInfo)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
 
         <xsl:apply-templates mode="elementEP" select="gmd:applicationSchemaInfo|geonet:child[string(@name)='applicationSchemaInfo']">
             <xsl:with-param name="schema" select="$schema"/>
@@ -3174,6 +3239,44 @@
     </xsl:template>
 
     <xsl:template mode="iso19139" match="gmd:distributionInfo/gmd:MD_Distribution">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='distributionFormat' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:distributionFormat)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="elementEP" select="gmd:distributionFormat|geonet:child[string(@name)='distributionFormat']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='distributor' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:distributor)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="complexElement" select="gmd:distributor">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='transferOptions' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:transferOptions)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="elementEP" select="gmd:transferOptions">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+	</xsl:template>
+	
+    <xsl:template mode="iso19139" match="gmd:identificationInfo/gmd:MD_DataIdentification">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 		<xsl:if test="$edit=true()">
