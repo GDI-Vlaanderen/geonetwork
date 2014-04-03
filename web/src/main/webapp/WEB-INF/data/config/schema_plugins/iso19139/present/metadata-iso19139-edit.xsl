@@ -3465,7 +3465,7 @@
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
             <xsl:with-param name="content">
-		        <xsl:apply-templates mode="complexElement" select="gmd:measureIdentification">
+		        <xsl:apply-templates mode="complexElement" select=".">
 		            <xsl:with-param name="schema" select="$schema"/>
 		            <xsl:with-param name="edit"   select="$edit"/>
 		            <xsl:with-param name="title">

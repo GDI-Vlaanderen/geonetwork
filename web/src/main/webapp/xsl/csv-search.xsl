@@ -119,7 +119,7 @@
 	<!-- Create header using first row corresponding to current schema -->
 	<xsl:template name="csvHeader">
 		<xsl:param name="metadata"/>
-		<xsl:value-of select="concat('schema', $sep, 'uuid', $sep, 'id', $sep, 'title')"/>
+		<xsl:value-of select="concat('schema', $sep, 'metadata fileidentifier', $sep, 'resource identifier', $sep, 'title')"/>
 		
 		<xsl:for-each select="$metadata/*[name(.)!='geonet:info' and name(.)!='type' and name(.)!='gmd:title' and name(.)!='gmx:name']">
 			<xsl:choose>

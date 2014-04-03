@@ -52,6 +52,8 @@ import org.fao.geonet.jms.message.harvest.HarvestMessageHandler;
 import org.fao.geonet.jms.message.harvest.HarvesterActivateMessageHandler;
 import org.fao.geonet.jms.message.harvest.HarvesterDeactivateMessageHandler;
 import org.fao.geonet.jms.message.harvest.HarvesterMessageHandler;
+import org.fao.geonet.jms.message.harvest.HarvesterRemovedMessageHandler;
+import org.fao.geonet.jms.message.harvest.HarvesterUpdatedMessageHandler;
 import org.fao.geonet.jms.message.reindex.OptimizeIndexMessageHandler;
 import org.fao.geonet.jms.message.reindex.ReIndexMessageHandler;
 import org.fao.geonet.jms.message.reindex.ReloadLuceneConfigMessageHandler;
@@ -241,6 +243,8 @@ public class ClusterConfig {
             register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER_ACTIVATE, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER_DEACTIVATE, MessagingDomain.PUBLISH_SUBSCRIBE));
+            register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER_UPDATED, MessagingDomain.PUBLISH_SUBSCRIBE));
+            register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER_REMOVED, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION_RESPONSE, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageQueue.HARVEST, MessagingDomain.POINT_TO_POINT));
@@ -277,6 +281,10 @@ public class ClusterConfig {
                     new HarvesterActivateMessageHandler(context)));
             register(new Consumer(siteID, Geonet.ClusterMessageTopic.HARVESTER_DEACTIVATE, MessagingDomain.PUBLISH_SUBSCRIBE,
                     new HarvesterDeactivateMessageHandler(context)));
+            register(new Consumer(siteID, Geonet.ClusterMessageTopic.HARVESTER_UPDATED, MessagingDomain.PUBLISH_SUBSCRIBE,
+                    new HarvesterUpdatedMessageHandler(context)));
+            register(new Consumer(siteID, Geonet.ClusterMessageTopic.HARVESTER_REMOVED, MessagingDomain.PUBLISH_SUBSCRIBE,
+                    new HarvesterRemovedMessageHandler(context)));
             register(new Consumer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION, MessagingDomain.PUBLISH_SUBSCRIBE,
                     new SystemConfigurationMessageHandler(context)));
             systemConfigurationResponseMessageHandler = new SystemConfigurationResponseMessageHandler();

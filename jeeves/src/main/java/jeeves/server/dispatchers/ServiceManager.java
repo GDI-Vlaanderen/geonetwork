@@ -771,7 +771,7 @@ public class ServiceManager
                         }
 						//--- then we set the content-type and output the result
                         if (context.getService().equals("csv.present")) {
-                        	req.beginStream(outPage.getContentType(), -1, "attachment; filename=" + "export-summary-" + String.valueOf(Calendar.getInstance().getTimeInMillis()) + ".csv", cache);
+                        	req.beginStream(outPage.getContentType(), -1, "attachment; filename=" + "export-summary-" + String.valueOf(Calendar.getInstance().getTimeInMillis()) + ".txt", cache);
                         } else if (context.getService().equals("xml_iso19139_save") || context.getService().equals("xml_iso19110_save")) {
                             String uuid = rootElem.getChild("request").getChildText("uuid");
     						req.beginStream(outPage.getContentType(), -1, "attachment; filename=" + (StringUtils.isNotBlank(uuid) ? uuid : "metadata") + ".xml", cache);

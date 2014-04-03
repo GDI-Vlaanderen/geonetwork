@@ -2065,17 +2065,17 @@
           <xsl:otherwise>
 <!--			<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1' and not(../../@gco:nilReason='missing')) or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>-->
 			<xsl:variable name="mandatory" select="false()"/>
+			<xsl:variable name="agivmandatory">
+				<xsl:call-template name="getMandatoryType">
+					<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
+					<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
 			<xsl:variable name="onkeyup">
 				<xsl:choose>
 	                <!-- Custom validator -->
 	                <xsl:when test="$validator"><xsl:value-of select="$validator"/></xsl:when>
 	                <xsl:when test="name(.)='gco:Integer' or name(.)='gco:Decimal' or name(.)='gco:Real'">
-						<xsl:variable name="agivmandatory">
-							<xsl:call-template name="getMandatoryType">
-								<xsl:with-param name="name"><xsl:value-of select="name(.)"/></xsl:with-param>
-								<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
-							</xsl:call-template>
-						</xsl:variable>
 						<xsl:choose>
 							<xsl:when test="name(.)='gco:Integer'">validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory=''))"/>, false);</xsl:when>
 							<xsl:otherwise>validateNumber(this, <xsl:value-of select="not($mandatory or not($agivmandatory = ''))"/>, true);</xsl:otherwise>

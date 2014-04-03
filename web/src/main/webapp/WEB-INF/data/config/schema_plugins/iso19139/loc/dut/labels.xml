@@ -725,6 +725,7 @@
 	<element name="gmd:descriptiveKeywords">
 		<label>Trefwoorden</label>
 		<description>In het algemeen gebruikte woorden of geformaliseerde zinnen om een onderwerp te beschrijven.</description>
+		<help>Meer informatie betreffende de trefwoorden is te vinden in http://www.geopunt.be/~/media/Geopunt/Geowijzer/Metadata/documenten/GDI-Vlaanderen_Best_Practices_voor_Metadata-v1_0.pdf</help>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:descriptor">
@@ -943,6 +944,30 @@
 	<element name="gmd:electronicMailAddress">
 		<label>Email</label>
 		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 9.1: Email adres is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:sourceStep/gmd:LI_ProcessStep/gmd:processor/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 9.1: Email adres is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage/gmd:userContactInfo/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 9.1: Email adres is verplicht.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">

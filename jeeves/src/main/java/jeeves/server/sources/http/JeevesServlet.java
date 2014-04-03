@@ -267,7 +267,7 @@ public class JeevesServlet extends HttpServlet
 	                	}
 	                }
 	                String contactid = Util.getClaimValue(fp,"contactid"); 
-	                session.authenticate(contactid,contactid + "_" + Util.getClaimValue(fp,"name"), Util.getClaimValue(fp,"givenname"), Util.getClaimValue(fp,"surname"), profile!=null ? profile : "RegisteredUser", Util.getClaimValue(fp,"emailaddress"));
+	                session.authenticate(contactid,contactid/* + "_" + Util.getClaimValue(fp,"name")*/, Util.getClaimValue(fp,"givenname"), Util.getClaimValue(fp,"surname"), profile!=null ? profile : "RegisteredUser", Util.getClaimValue(fp,"emailaddress"));
 	                List<Map<String,String>> groups = new ArrayList<Map<String,String>>();
 	                Map<String,String> group = new HashMap<String,String>();
 	                String parentorganisationid = Util.getClaimValue(fp,"parentorganisationid");

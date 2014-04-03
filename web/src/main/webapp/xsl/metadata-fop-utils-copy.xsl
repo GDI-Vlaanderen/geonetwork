@@ -47,7 +47,7 @@
 								<xsl:with-param name="name">
 									<xsl:choose>
 										<xsl:when
-											test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+											test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19115'))">
 											<xsl:value-of select="name(.)" />
 										</xsl:when>
 										<xsl:when test="@codeList">
@@ -238,7 +238,7 @@
 				<xsl:with-param name="name">
 					<xsl:choose>
 						<xsl:when
-							test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+							test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19115'))">
 							<xsl:value-of select="name(.)" />
 						</xsl:when>
 						<xsl:when test="@codeList">
@@ -268,6 +268,7 @@
 		<xsl:param name="schema" />
 		<xsl:param name="title">
 			<xsl:call-template name="getTitle">
+				<xsl:with-param name="node" select="../.." />
 				<xsl:with-param name="name" select="name(../..)" />
 				<!-- Usually codelist -->
 				<xsl:with-param name="schema" select="$schema" />
@@ -433,7 +434,7 @@
 				<xsl:with-param name="name">
 					<xsl:choose>
 						<xsl:when
-							test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+							test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19115'))">
 							<xsl:value-of select="name(.)" />
 						</xsl:when>
 						<xsl:when test="@codeList">

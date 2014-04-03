@@ -110,20 +110,21 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         var colModel = new Ext.grid.ColumnModel({
             defaults: {
                 width: 120,
-                sortable: true
+                resizable: false,
+                menuDisabled: true,
+                sortable: false
             },
             columns: [expander, {
                 id: 'group',
                 header: OpenLayers.i18n('group'),
                 width: 60,
-                sortable: true,
+//                sortable: true,
                 hidden: true,
                 dataIndex: 'group'
             }, {
-                header: OpenLayers.i18n('status'),
+                header: /*OpenLayers.i18n('status')*/' ',
                 width: 10,
-                resizable: false,
-                sortable: true,
+//                sortable: true,
                 dataIndex: 'statusIcon'
             }, {
                 header: OpenLayers.i18n('title'),

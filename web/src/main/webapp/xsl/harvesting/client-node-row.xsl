@@ -28,19 +28,19 @@
 
 			<td class="padded" align="center">
 				<xsl:choose>
-					<xsl:when test="options/status = 'inactive'">
-						<img id="status" src="{/root/env/url}/images/fileclose.png" alt="I" />
+					<xsl:when test="info/running = 'true' or info/clusterRunning = 'true'">
+						<img id="status" src="{/root/env/url}/images/exec.png" alt="R" />
 					</xsl:when>
-					<xsl:when test="options/status = 'active'">
+					<xsl:otherwise>
 						<xsl:choose>
-							<xsl:when test="info/clusterRun = 'true'">
-								<img id="status" src="{/root/env/url}/images/exec.png" alt="R" />
+							<xsl:when test="options/status = 'inactive'">
+								<img id="status" src="{/root/env/url}/images/fileclose.png" alt="I" />
 							</xsl:when>
 							<xsl:otherwise>
 								<img id="status" src="{/root/env/url}/images/clock.png" alt="A" />
 							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:when>
+					</xsl:otherwise>
 				</xsl:choose>
 			</td>
 
@@ -48,10 +48,10 @@
 
 			<td class="padded" align="center">
 				<xsl:choose>
-					<xsl:when test="count(info/error/*) = 0">
+					<xsl:when test="info/running = 'true' or info/clusterRunning = 'true'">
 						<img id="error" src="{/root/env/url}/images/button_ok.png" alt="I" />
 					</xsl:when>
-					<xsl:when test="info/clusterRunning = 'true'">
+					<xsl:when test="count(info/error/*) = 0">
 						<img id="error" src="{/root/env/url}/images/button_ok.png" alt="I" />
 					</xsl:when>
 					<xsl:otherwise>

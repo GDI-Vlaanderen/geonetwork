@@ -234,7 +234,7 @@ GeoNetwork.Lang.nl = {
     'view': "Bekijk",
     'zoomTo': "Zoom naar",
     'saveXml': "Exporteer (XML)",
-    'exportCsv': "Exporteer (CSV)",
+    'exportCsv': "Exporteer (TXT)",
     'exportZip': "Exporteer (ZIP)",
     'printSel': "Exporteer (PDF)",
     'printSelWorkspaceCopy': 'Exporteer werkblad versie (PDF)',
