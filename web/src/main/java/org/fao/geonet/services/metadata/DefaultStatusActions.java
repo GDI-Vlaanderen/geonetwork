@@ -39,6 +39,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.apache.commons.lang.StringUtils;
@@ -216,9 +217,10 @@ public class DefaultStatusActions implements StatusActions {
 		try {
 
 			Set<String> unchanged = new HashSet<String>();
-			Map<String, Map> changedMmetadataIdsToInformEditors = new HashMap<String,Map>();
-			Map<String, Map> changedMmetadataIdsToInformReviewers = new HashMap<String,Map>();
-			Map<String, Map> changedMmetadataIdsToInformAdministrators = new HashMap<String,Map>();
+//			Map<String, Map<String,String>> changedMmetadataIdsToInformOwner = new HashMap<String,Map<String,String>>();
+			Map<String, Map<String,String>> changedMmetadataIdsToInformEditors = new HashMap<String,Map<String,String>>();
+			Map<String, Map<String,String>> changedMmetadataIdsToInformReviewers = new HashMap<String,Map<String,String>>();
+			Map<String, Map<String,String>> changedMmetadataIdsToInformAdministrators = new HashMap<String,Map<String,String>>();
 			// -- process the metadata records to set status
 			for (String mid : metadataIds) {
 				String currentStatus = dm.getCurrentStatus(dbms, mid);
@@ -279,6 +281,12 @@ public class DefaultStatusActions implements StatusActions {
 							case 0: //UNKNOWN
 								break;
 							case 1: //DRAFT
+/*
+								if (StringUtils.isNotBlank(lockedBy)) {
+									properties.put("lockedBy", mdInfo.lockedBy);
+					            	changedMmetadataIdsToInformOwner.put(mid,properties);
+					            }
+*/
 								changedMmetadataIdsToInformEditors.put(mid,properties);
 								break;
 							case 2: //APPROVED
@@ -377,6 +385,31 @@ public class DefaultStatusActions implements StatusActions {
 				informContentUsers(changedMmetadataIdsToInformEditors, changeDate,
 						changeMessage, Geonet.Profile.EDITOR, status, emailMetadataIdList);
 			}
+/*
+			if (changedMmetadataIdsToInformOwner.size()>0) {
+				String styleSheet = stylePath + Geonet.File.STATUS_CHANGE_EMAIL;
+				for (String metadataId : changedMmetadataIdsToInformOwner.keySet()) { 
+					String lockedBy = changedMmetadataIdsToInformOwner.get(metadataId).get("lockedBy");
+		            if (!StringUtils.isBlank(lockedBy)) {
+						List<Element> userList = dbms.select("SELECT email FROM Users WHERE id = '" + lockedBy + "'").getChildren();
+		        		Element user = (Element) userList.get(0);
+			            if (user!=null) {
+			        		user.detach();
+			        		String email = user.getChildText("email");
+				            if (!StringUtils.isBlank(lockedBy) && !emailMetadataIdList.contains(email + "_" + metadataId)) {
+				        		Element root = getNewRootElement(Params.Status.DRAFT, context.getServlet().getFromDescription(), session.getUserId());
+				    			Element metadata = new Element("metadata");
+				    			root.addContent(metadata);
+				    			metadata.addContent(new Element("url").setText(buildMetadataLink(metadataId)));
+								metadata.addContent(new Element("title").setText(changedMmetadataIdsToInformOwner.get(metadataId).get("title")));
+								metadata.addContent(new Element("currentStatus").setText(changedMmetadataIdsToInformOwner.get(metadataId).get("currentStatus")));
+								sendEmail(email, Xml.transform(root, styleSheet));
+				            }
+			            }
+		            }
+				}
+			}
+*/
 			return unchanged;
 		} catch (Throwable x) {
 			System.out.println("ERROR in statusChange " + x.getMessage());
@@ -792,8 +825,8 @@ public class DefaultStatusActions implements StatusActions {
 	 */
 	private void setAllOperationsForUserGroup(String mdId) throws Exception {
 		List<String> groups = am.getUserGroups(dbms, session, null);
-		for (Iterator i = groups.iterator(); i.hasNext();) {
-			String groupId = (String) i.next();
+		for (Iterator<String> i = groups.iterator(); i.hasNext();) {
+			String groupId = i.next();
 	        if(!(groupId.equals("-1") || groupId.equals("0") || groupId.equals("1"))) {
 				dm.setOperation(context, dbms, mdId, groupId,
 						AccessManager.OPER_VIEW);
@@ -839,7 +872,7 @@ public class DefaultStatusActions implements StatusActions {
 	 * @param profile
 	 *            Profile of users to be informed
 	 */
-	private void informContentUsers(Map<String,Map> metadataMap,
+	private void informContentUsers(Map<String,Map<String,String>> metadataMap,
 			String changeDate, String changeMessage, String profile, String status, List<String> emailMetadataIdList) throws Exception {
 
 		// --- get content reviewers (sorted on content reviewer userid)
@@ -870,7 +903,7 @@ public class DefaultStatusActions implements StatusActions {
 	 */
 	@SuppressWarnings("unchecked")
 	private void processList(Element contentUsers, String subject, String status,
-			String changeDate, String changeMessage, Map<String,Map> metadataMap, List<String> emailMetadataIdList)
+			String changeDate, String changeMessage, Map<String,Map<String,String>> metadataMap, List<String> emailMetadataIdList)
 			throws Exception {
 
 		String styleSheet = stylePath + Geonet.File.STATUS_CHANGE_EMAIL;
