@@ -780,7 +780,7 @@
                     <xsl:sort select="name"/>
                     <option>
                         <xsl:attribute name="value">
-                            <xsl:value-of select="id"/>
+                            <xsl:value-of select="name"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
                     </option>

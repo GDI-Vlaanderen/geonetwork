@@ -24,14 +24,19 @@
 package org.fao.geonet.services.login;
 
 import jeeves.utils.Log;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 //=============================================================================
 
@@ -71,6 +76,9 @@ class LDAPContext
 		profiles.add("Hoofdeditor");
 		profiles.add("Editor");
 		profiles.add("RegisteredUser");
+		profiles.add("UserAdmin");
+		profiles.add("Monitor");
+		profiles.add("Administrator");
 	}
 
 	//--------------------------------------------------------------------------
@@ -128,9 +136,9 @@ class LDAPContext
 				}
 				info.email = get(attr, emailAttr);
 
-                info.group = (groupAttr == null)
-										? defGroup
-										: get(attr, groupAttr);
+                info.groups = (groupAttr == null)
+										? new String[] {defGroup}
+										: getAll(attr, groupAttr);
 
 
 				if (!profiles.contains(info.profile))
@@ -188,6 +196,35 @@ class LDAPContext
 		return (obj == null) ? null : obj.toString();
 	}
 
+	private String[] getAll(Map<String, ? extends List<Object>> attr, String name)
+	{
+		List<Object> values = attr.get(name);
+
+		if (values == null)
+		{
+            if(Log.isDebugEnabled(Geonet.LDAP))
+			Log.debug(Geonet.LDAP, "Attribute '"+ name +"' does not exist");
+			return null;
+		}
+		
+		ArrayList<String> objs = new ArrayList<String>();
+		
+		for (Object obj: values) {
+			if (obj != null) {
+	            if(Log.isDebugEnabled(Geonet.LDAP)) {
+	            	Log.debug(Geonet.LDAP, "Attribute '"+ name +"' is of type : "+obj.getClass().getSimpleName());
+	            }
+	            objs.add(obj.toString());
+			} else {
+	            if(Log.isDebugEnabled(Geonet.LDAP)) {
+	            	Log.debug(Geonet.LDAP, "Attribute '"+ name +"' is null");
+	            }
+			}
+		}
+
+		return objs.toArray(new String[0]);
+	}
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -220,7 +257,7 @@ class LDAPInfo
 	public String profile;
 	public String name;
 	public String email;
-    public String group;
+    public String[] groups;
 }
 
 //=============================================================================
