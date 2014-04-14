@@ -1437,18 +1437,28 @@
                     	<xsl:choose>
                     		<xsl:when test="name(.)='gml:beginPosition' or name(.)='gml:endPosition'">
                     			<xsl:value-of select="."/>
-<!--                         		<xsl:apply-templates mode="localised" select=".">
+<!--
+                         		<xsl:apply-templates mode="localised" select=".">
                             		<xsl:with-param name="langId" select="$langId"></xsl:with-param>
                         		</xsl:apply-templates>
- -->                        	</xsl:when>
-                        	<xsl:otherwise>
+-->                        		
+							</xsl:when>
+<!-- Normaal is dit correct maar niet meer geactiveerd daar toch enkel DUT in gebruik is en de blok na deze commentaar toch nooit voorvalt  
+							<xsl:when test="name(.)='gco:CharacterString' or name(.)='gmd:PT_FreeText'">
                         		<xsl:apply-templates mode="localised" select="..">
                             		<xsl:with-param name="langId" select="$langId"></xsl:with-param>
                         		</xsl:apply-templates>
+                       		</xsl:when>
+ -->
+							<xsl:when test="gco:CharacterString or gmd:PT_FreeText">
+                        		<xsl:apply-templates mode="localised" select="..">
+                            		<xsl:with-param name="langId" select="$langId"></xsl:with-param>
+                        		</xsl:apply-templates>
+                       		</xsl:when>
+                        	<xsl:otherwise>
+			                    <xsl:value-of select="$value"/>
                         	</xsl:otherwise>
                         </xsl:choose>
-                        	
-                        	
                     </xsl:when>
                     <xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
                 </xsl:choose>

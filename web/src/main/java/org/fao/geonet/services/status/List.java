@@ -51,7 +51,7 @@ public class List implements Service
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		return Lib.local.retrieve(dbms, "StatusValues", null, "not(id in ('0','6'))", null, (Object[])null).setName(Jeeves.Elem.RESPONSE);
+		return Lib.local.retrieve(dbms, "StatusValues", null, "not(id in ('0','6','12','13','14'))", null, (Object[])null).setName(Jeeves.Elem.RESPONSE);
 	}
 }
 

@@ -2886,9 +2886,6 @@
                         <xsl:with-param name="flat"   select="$flat"/>
                     </xsl:apply-templates>
 
-                </xsl:with-param>
-            </xsl:call-template>
-            
 			<xsl:if test="$edit=true()">
 				<xsl:apply-templates mode="addElement" select="geonet:child[@name='resourceSpecificUsage' and @prefix='gmd']">
 		            <xsl:with-param name="schema" select="$schema"/>
@@ -2919,11 +2916,6 @@
 	        </xsl:apply-templates>
 	        
 
-            <xsl:call-template name="complexElementGuiWrapper">
-                <xsl:with-param name="title">
-					<xsl:value-of select="/root/gui/strings/contentInfoTab"/>
-                </xsl:with-param>
-                <xsl:with-param name="content">
                     <xsl:apply-templates mode="elementEP" select="gmd:spatialRepresentationType|geonet:child[string(@name)='spatialRepresentationType']
           |gmd:spatialResolution|geonet:child[string(@name)='spatialResolution']
 		  |gmd:language|geonet:child[string(@name)='language']
@@ -2938,9 +2930,9 @@
                         <xsl:with-param name="edit"   select="$edit"/>
                         <xsl:with-param name="flat"   select="$flat"/>
                     </xsl:apply-templates>
-
                 </xsl:with-param>
             </xsl:call-template>
+            
         </xsl:for-each>
 
 		<xsl:if test="$edit=true()">

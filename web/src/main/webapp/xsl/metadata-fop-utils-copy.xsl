@@ -375,7 +375,7 @@
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
 
- 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gmd:DQ_QuantitativeResult|gmd:role" >
+ 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gmd:DQ_QuantitativeResult|gmd:role|gmd:DQ_Scope/gmd:level|gmd:MD_LegalConstraints/gmd:accessConstraints|gmd:MD_LegalConstraints/gmd:useConstraints" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />

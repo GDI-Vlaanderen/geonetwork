@@ -725,7 +725,7 @@
 	<element name="gmd:descriptiveKeywords">
 		<label>Trefwoorden</label>
 		<description>In het algemeen gebruikte woorden of geformaliseerde zinnen om een onderwerp te beschrijven.</description>
-		<help>Meer informatie betreffende de trefwoorden is te vinden in http://www.geopunt.be/~/media/Geopunt/Geowijzer/Metadata/documenten/GDI-Vlaanderen_Best_Practices_voor_Metadata-v1_0.pdf</help>
+		<help>Meer informatie betreffende de trefwoorden is te vinden in http://www.geopunt.be/~/media/Geopunt/Geowijzer/Metadata/documenten/GDI-Vlaanderen_Best_Practices_voor_Metadata-v1_0.pdf.</help>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:descriptor">
@@ -979,6 +979,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+		<label>Email</label>
+		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 9.1: Email adres is verplicht.</mandatoryTooltip>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:electronicMailAddress" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:processor/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
 		<label>Email</label>
 		<description>Email adres van de verantwoordelijke organisatie of persoon.</description>
 		<condition>mandatory</condition>
@@ -1656,7 +1664,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Usage">
-		<label>Gebruik/Toepassing</label>
+		<label>Gebruik</label>
 		<description>Korte omschrijving van het gebruik van de dataset of toepassingen waarbij de dataset wordt gebruikt.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2071,7 +2079,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceSpecificUsage">
-		<label>Toepassing</label>
+		<label>Gebruik</label>
 		<description>Geeft informatie over de toepassingen waarvoor de data gebruikt kan worden.</description>
 	</element>
 	<!-- ==================================================== -->

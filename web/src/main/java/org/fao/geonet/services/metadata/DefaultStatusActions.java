@@ -447,9 +447,12 @@ public class DefaultStatusActions implements StatusActions {
 					case 0: //UNKNOWN
 						break;
 					case 1: //DRAFT
+						changeAllowed = false;
+/*
 						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
+*/
 						break;
 					case 2: //APPROVED
 						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED_FOR_RETIRE) || currentStatus.equals(Params.Status.REJECTED_FOR_REMOVE)) {
