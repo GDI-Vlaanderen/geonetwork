@@ -23,14 +23,27 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.OutputSchema;
@@ -39,6 +52,7 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
@@ -53,10 +67,6 @@ import org.jaxen.jdom.JDOMXPath;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.util.*;
 
 //=============================================================================
 
@@ -102,6 +112,18 @@ public class Transaction extends AbstractOperation implements CatalogService
 		// Response element
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 		
+		UserSession us = context.getUserSession();
+		
+		if (us.getUserId() == null)
+			throw new NoApplicableCodeEx("User not authenticated.");
+		
+		String profile = us.getProfile(); 
+		
+		// Only editors and above are allowed to insert metadata
+		if (/*!profile.equals(Geonet.Profile.EDITOR) && !profile.equals(Geonet.Profile.REVIEWER)
+				&& !profile.equals(Geonet.Profile.USER_ADMIN) &&*/ !profile.equals(Geonet.Profile.ADMINISTRATOR))
+			throw new NoApplicableCodeEx("User not allowed to execute transactions.");
+
 		List<String>	strFileIds = new ArrayList<String>();
 		
 		//process the transaction from the first to the last
@@ -112,6 +134,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 
         Set<String> toIndex = new HashSet<String>();
 
+		boolean bIsWorkspace = false;
 		try
 		{			
 			//process the childlist
@@ -144,7 +167,18 @@ public class Transaction extends AbstractOperation implements CatalogService
                                 }
                             }
 
-                            totalUpdated = updateTransaction( transRequest, metadata, context, toIndex );
+                            Element constr = (Element) transRequest.getChild("Constraint",Csw.NAMESPACE_CSW );
+                            if (constr!=null) {
+                            	constr = (Element) constr.clone();
+                                Element workspaceFilterValueElem = _searchController.getSearcher().filterToWorkspace(context, constr);
+                                if (workspaceFilterValueElem!=null) {
+                                	String isWorkspace = workspaceFilterValueElem.getText();
+                                	if (isWorkspace!=null) {
+                                		bIsWorkspace = isWorkspace.equalsIgnoreCase("true");
+                                	}
+                                }
+                            }
+                            totalUpdated = updateTransaction( transRequest, metadata, context, toIndex , constr, bIsWorkspace);
                     }
                     // Delete
                     else {
@@ -163,8 +197,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		finally
 		{
             try {
-                boolean workspace = false;
-                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null, workspace, true);
+                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null, bIsWorkspace, true);
             } catch (SQLException e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
@@ -283,7 +316,7 @@ public class Transaction extends AbstractOperation implements CatalogService
      * @return
 	 * @throws Exception
 	 */
-	private int updateTransaction(Element request, Element xml, ServiceContext context, Set<String> toIndex) throws Exception
+	private int updateTransaction(Element request, Element xml, ServiceContext context, Set<String> toIndex, Element constr, boolean bIsWorkspace) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
@@ -292,8 +325,6 @@ public class Transaction extends AbstractOperation implements CatalogService
 			throw new NoApplicableCodeEx("User not authenticated.");
 
 		int totalUpdated = 0;
-
-
 
         // Update full metadata
         if (xml != null) {
@@ -324,25 +355,46 @@ public class Transaction extends AbstractOperation implements CatalogService
             if (!gc.getAccessManager().canEdit(context, id))
                 throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
 
-            String changeDate = null;
-
-            boolean validate = false;
-            boolean ufo = false;
-            boolean index = false;
-            String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, changeDate, false);
-
+            boolean bStatusOk = false;
+            if (/*bIsLocked*/ bIsWorkspace) {
+				String currentStatus = dataMan.getCurrentStatus(dbms, id);
+				if (currentStatus.equals(Params.Status.APPROVED_BY_AGIV)) {
+					bStatusOk = true;
+				}
+            } else {
+            	bStatusOk = true;
+            }
+            if (bStatusOk) {
+	            String changeDate = null;
+	
+	            boolean validate = false;
+	            boolean ufo = false;
+	            boolean index = false;
+	            String language = context.getLanguage();
+	            if (/*bIsLocked*/ bIsWorkspace) {
+	                dataMan.updateMetadataWorkspace(context, dbms, id, xml, validate, ufo, index, language, changeDate, false, null, false);
+	                totalUpdated++;
+	            } else {
+					MdInfo mdInfo = dataMan.getMetadataInfo(dbms, id);
+                    boolean bIsLocked = false;
+                    if (mdInfo!=null) {
+                    	bIsLocked = mdInfo.isLocked;
+                    }
+                    if (!bIsLocked) {
+                    	dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, changeDate, false);
+                        totalUpdated++;
+                    }
+	            }
+            }
             dbms.commit();
-            toIndex.add(id);
-
-           totalUpdated++;
-
-           return totalUpdated;
+            if (totalUpdated>0) {
+            	toIndex.add(id);
+            }
+            return totalUpdated;
 
         // Update properties
         } else {
             //first, search the record in the database to get the record id
-            Element constr = (Element) request.getChild("Constraint",Csw.NAMESPACE_CSW ).clone();
             List<Element> results = getResultsFromConstraints(context, constr);
 
 
@@ -369,72 +421,98 @@ public class Transaction extends AbstractOperation implements CatalogService
 
                 if (!dataMan.getAccessManager().canEdit(context, id))
                     throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
-
-
-                Element metadata = dataMan.getMetadata(context, id, false, false, true);
-                metadata.removeChild("info", Edit.NAMESPACE);
-
-                // Retrieve the schema and Namespaces of metadata to update
-                String schemaId = gc.getDataManager().autodetectSchema(metadata);
-
-                if (schemaId == null) {
-                  throw new NoApplicableCodeEx("Can't identify metadata schema");
+                boolean bStatusOk = false;
+                if (/*bIsLocked*/ bIsWorkspace) {
+    				String currentStatus = dataMan.getCurrentStatus(dbms, id);
+    				if (currentStatus.equals(Params.Status.APPROVED_BY_AGIV)) {
+    					bStatusOk = true;
+    				}
+                } else {
+                	bStatusOk = true;
                 }
-
-                Map mapNs = retrieveNamepacesForSchema(gc.getDataManager().getSchema(schemaId));
-
-                boolean metadataChanged = false;
-
-                // Process properties to update
-                for(Element recordProperty : recordProperties) {
-                    Element propertyNameEl = recordProperty.getChild("Name" ,Csw.NAMESPACE_CSW );
-                    Element propertyValueEl = recordProperty.getChild("Value" ,Csw.NAMESPACE_CSW );
-
-                    String propertyName = propertyNameEl.getText();
-
-                    String propertyValue = propertyValueEl.getText();
-
-                    // Get XPath for queriable name, i provided in propertyName.
-                    // Otherwise assume propertyName contains full XPath to property to update
-                    String xpathProperty = FieldMapper.mapXPath(propertyName, schemaId);
-                    if (xpathProperty == null) {
-                        xpathProperty = propertyName;
+                if (bStatusOk) {
+                    Element metadata;
+                    if (bIsWorkspace) {
+                    	metadata = dataMan.getMetadataFromWorkspace(context, id, false, false, true, false);
+                    } else {
+                    	metadata = dataMan.getMetadata(context, id, false, false, true);
+                    }
+    /*
+                    Element info = metadata.getChild("info",Edit.NAMESPACE);
+                    boolean bIsLocked = false;
+                    if (info!=null) {
+                    	String isLocked = info.getChildText("isLocked");
+                    	bIsLocked = isLocked!=null && isLocked.equals("y");
+                    }
+                    if (bIsLocked) {
+                    	metadata = dataMan.getMetadataFromWorkspace(context, id, false, false, true, false);
+                    }
+    */
+                    metadata.removeChild("info", Edit.NAMESPACE);
+                    
+                    // Retrieve the schema and Namespaces of metadata to update
+                    String schemaId = gc.getDataManager().autodetectSchema(metadata);
+                    if (schemaId == null) {
+                      throw new NoApplicableCodeEx("Can't identify metadata schema");
                     }
 
-                    Log.info(Geonet.CSW, "Xpath of property: " + xpathProperty);
-                    XPath xpath = new JDOMXPath(xpathProperty);
-                    xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
+                    Map mapNs = retrieveNamepacesForSchema(gc.getDataManager().getSchema(schemaId));
 
-                    Object propEl = xpath.selectSingleNode(metadata);
-                    Log.info(Geonet.CSW, "XPath found in metadata: " + (propEl != null));
+                    boolean metadataChanged = false;
 
-                    // If a property is not found in metadata, just ignore it.
-                    if (propEl != null) {
-                        if (propEl instanceof Element) {
-                            ((Element) propEl).setText(propertyValue);
-                            metadataChanged = true;
+                    // Process properties to update
+                    for(Element recordProperty : recordProperties) {
+                        Element propertyNameEl = recordProperty.getChild("Name" ,Csw.NAMESPACE_CSW );
+                        Element propertyValueEl = recordProperty.getChild("Value" ,Csw.NAMESPACE_CSW );
 
-                        } else if (propEl instanceof Attribute) {
-                            ((Attribute) propEl).setValue(propertyValue);
-                            metadataChanged = true;
+                        String propertyName = propertyNameEl.getText();
+
+                        String propertyValue = propertyValueEl.getText();
+
+                        // Get XPath for queriable name, i provided in propertyName.
+                        // Otherwise assume propertyName contains full XPath to property to update
+                        String xpathProperty = FieldMapper.mapXPath(propertyName, schemaId);
+                        if (xpathProperty == null) {
+                            xpathProperty = propertyName;
                         }
+
+                        Log.info(Geonet.CSW, "Xpath of property: " + xpathProperty);
+                        XPath xpath = new JDOMXPath(xpathProperty);
+                        xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
+
+                        Object propEl = xpath.selectSingleNode(metadata);
+                        Log.info(Geonet.CSW, "XPath found in metadata: " + (propEl != null));
+
+                        // If a property is not found in metadata, just ignore it.
+                        if (propEl != null) {
+                            if (propEl instanceof Element) {
+                                ((Element) propEl).setText(propertyValue);
+                                metadataChanged = true;
+
+                            } else if (propEl instanceof Attribute) {
+                                ((Attribute) propEl).setValue(propertyValue);
+                                metadataChanged = true;
+                            }
+                        }
+
+                    } // for(Element recordProperty : recordProperties)
+
+                    // Update the metadata with changes
+                    if (metadataChanged) {
+                        boolean validate = false;
+                        boolean ufo = false;
+                        boolean index = false;
+                        String language = context.getLanguage();
+                        if (/*bIsLocked*/ bIsWorkspace) {
+                            dataMan.updateMetadataWorkspace(context, dbms, id, metadata, validate, ufo, index, language, changeDate, false, null, false);
+                        } else {
+                            dataMan.updateMetadata(context, dbms, id, metadata, validate, ufo, index, language, changeDate, false);
+                        }
+
+                        updatedMd.add(id);
+                        totalUpdated++;
                     }
-
-                } // for(Element recordProperty : recordProperties)
-
-                // Update the metadata with changes
-                if (metadataChanged) {
-                    boolean validate = false;
-                    boolean ufo = false;
-                    boolean index = false;
-                    String language = context.getLanguage();
-                    dataMan.updateMetadata(context, dbms, id, metadata, validate, ufo, index, language, changeDate, false);
-
-                    updatedMd.add(id);
-
-                    totalUpdated++;
                 }
-
             }
             dbms.commit();
             toIndex.addAll(updatedMd);

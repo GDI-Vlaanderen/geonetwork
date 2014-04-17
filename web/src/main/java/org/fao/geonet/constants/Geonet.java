@@ -84,6 +84,7 @@ public class Geonet {
 		 * Stylesheet to convert a CQL parameter to a filter.
 		 */
 		public static final String CQL_TO_FILTER       = "cql-to-filter.xsl";
+		public static final String FILTER_TO_WORKSPACE = "filter_to_workspace.xsl";
 		public static final String FILTER_TO_LUCENE    = "filter-to-lucene.xsl";
 		public static final String LICENSE_ANNEX       = "license-annex.html";
 		public static final String LICENSE_ANNEX_XSL   = "metadata-license-annex.xsl";

@@ -219,7 +219,7 @@
 
     <xsl:template mode="iso19139" match="gmd:DQ_DataQuality|gmd:identificationInfo|gmd:distributionInfo|gmd:thesaurusName|
               gmd:resourceConstraints|gmd:spatialRepresentationInfo|gmd:pointOfContact|
-              gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
+              gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|gmd:distributor|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
               gmd:geographicBox|gmd:EX_TemporalExtent|
               srv:serviceType|srv:containsOperations|srv:coupledResource|
@@ -3251,7 +3251,7 @@
 	            <xsl:with-param name="visible"   select="count(gmd:distributor)=0"/>
 			</xsl:apply-templates>
 		</xsl:if>
-        <xsl:apply-templates mode="complexElement" select="gmd:distributor">
+        <xsl:apply-templates mode="elementEP" select="gmd:distributor">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
         </xsl:apply-templates>
@@ -3457,6 +3457,7 @@
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
             <xsl:with-param name="content">
+<!--
 		        <xsl:apply-templates mode="complexElement" select=".">
 		            <xsl:with-param name="schema" select="$schema"/>
 		            <xsl:with-param name="edit"   select="$edit"/>
@@ -3484,6 +3485,19 @@
 			            </xsl:apply-templates>
 		            </xsl:with-param>
 		        </xsl:apply-templates>
+-->
+	            <xsl:apply-templates mode="elementEP" select="gmd:measureIdentification">
+	                <xsl:with-param name="schema"  select="$schema"/>
+	                <xsl:with-param name="edit"   select="$edit"/>
+	            </xsl:apply-templates>
+	            <xsl:apply-templates mode="elementEP" select="gmd:measureDescription">
+	                <xsl:with-param name="schema"  select="$schema"/>
+	                <xsl:with-param name="edit"   select="$edit"/>
+	            </xsl:apply-templates>
+	            <xsl:apply-templates mode="elementEP" select="gmd:dateTime">
+	                <xsl:with-param name="schema"  select="$schema"/>
+	                <xsl:with-param name="edit"   select="$edit"/>
+	            </xsl:apply-templates>
 	            <xsl:apply-templates mode="elementEP" select="gmd:result">
 	                <xsl:with-param name="schema"  select="$schema"/>
 	                <xsl:with-param name="edit"   select="$edit"/>

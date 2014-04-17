@@ -91,6 +91,7 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === all text === -->
+<!-- 
 			<Field name="any" store="false" index="true">
 				<xsl:attribute name="string">
 					<xsl:value-of
@@ -100,8 +101,9 @@
 						<xsl:value-of select="concat(., ' ')"/>
 					</xsl:for-each>
 				</xsl:attribute>
-			</Field>
-
+ 			</Field>
+-->
+ 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Metadata type (iso19110 is used to describe attribute datasets) === -->
 			<Field name="type" string="model" store="true" index="true"/>
@@ -118,6 +120,9 @@
 		<xsl:param name="index" select="'true'"/>
 
 		<Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}"/>
+		<xsl:if test="name(.)='title' or name(.)='abstract'">
+			<Field name="any" string="{string(.)}" store="{$store}" index="{$index}"/>
+		</xsl:if>
 	</xsl:template>
 
 </xsl:stylesheet>

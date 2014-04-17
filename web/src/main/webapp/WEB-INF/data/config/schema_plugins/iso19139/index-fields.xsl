@@ -92,6 +92,7 @@
 							<xsl:otherwise><xsl:value-of select="'-'"/></xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
+					<Field name="any" string="{string($title)}" store="true" index="true"/>
 					<Field name="title" string="{string($title)}" store="true" index="true"/>
                     <!-- not tokenized title for sorting -->
                     <Field name="_title" string="{lower-case(string($title))}" store="false" index="true"/>
@@ -99,6 +100,7 @@
 	
 				<xsl:for-each select="gmd:alternateTitle/gco:CharacterString">
 					<Field name="altTitle" string="{string(.)}" store="false" index="true"/>
+					<Field name="any" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date">
@@ -147,6 +149,7 @@
 	
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
 				<Field name="abstract" string="{string(.)}" store="true" index="true"/>
+				<Field name="any" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -181,6 +184,7 @@
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
                     <xsl:variable name="keywordLower" select="lower-case(.)"/>
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+					<Field name="any" string="{string($keywordLower)}" store="true" index="true"/>
 					
                     <xsl:if test="$inspire='true'">
                         <xsl:if test="string-length(.) &gt; 0">
@@ -531,7 +535,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === Free text search === -->		
-
+<!-- 
 		<Field name="any" store="false" index="true">
 			<xsl:attribute name="string">
 				<xsl:value-of select="normalize-space(string(.))"/>
@@ -541,7 +545,7 @@
 				</xsl:for-each>
 			</xsl:attribute>
 		</Field>
-				
+ -->				
 		<!--<xsl:apply-templates select="." mode="codeList"/>-->
 		
 	</xsl:template>

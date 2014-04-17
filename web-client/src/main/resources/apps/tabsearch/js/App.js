@@ -182,6 +182,33 @@ GeoNetwork.app = function(){
 //            name: 'E_orgName',
 //            fieldLabel: OpenLayers.i18n('org')
 //        });
+        // Multi select uuid field
+        var uuidStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+            url: services.opensearchSuggest,
+            rootId: 1,
+            baseParams: {
+                field: '_uuid'
+            }
+        });
+
+        var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{values.value}">{values.value}</div></tpl>';
+        var displayFieldTpl = '<tpl for="."><span ext:qtip="{values.value}">{values.value}</span></tpl>';
+        var uuidField = new Ext.ux.form.SuperBoxSelect({
+            hideLabel: false,
+            minChars: 0,
+            queryParam: 'q',
+            hideTrigger: false,
+            id: 'E__uuid',
+            name: 'E__uuid',
+            store: uuidStore,
+            valueField: 'value',
+            displayField: 'value',
+            valueDelimiter: ' or ',
+            displayFieldTpl: displayFieldTpl,
+            tpl: tpl,
+            fieldLabel: OpenLayers.i18n('uuid')
+        });
+
         // Multi select organisation field
         var orgNameStore = new GeoNetwork.data.OpenSearchSuggestionStore({
             url: services.opensearchSuggest,
@@ -192,7 +219,6 @@ GeoNetwork.app = function(){
         });
 
         var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{values.value}">{values.value}</div></tpl>';
-        var displayFieldTpl = '<tpl for="."><span ext:qtip="{values.value}">{values.value}</span></tpl>';
         var orgNameField = new Ext.ux.form.SuperBoxSelect({
             hideLabel: false,
             minChars: 0,
@@ -301,7 +327,7 @@ GeoNetwork.app = function(){
 
         // Disabled for AGIV
         //advancedCriteria.push(themekeyField, orgNameField, categoryField,
-        advancedCriteria.push(flandersKeywordField,themekeyField, orgNameField/*,
+        advancedCriteria.push(flandersKeywordField,themekeyField, uuidField, orgNameField/*,
             spatialTypes, denominatorField*/);
         if (GeoNetwork.Settings.nodeType.toLowerCase() != "agiv") {
         	advancedCriteria.push(catalogueField);

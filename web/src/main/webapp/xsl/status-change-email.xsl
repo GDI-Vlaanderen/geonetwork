@@ -104,7 +104,8 @@
 			<xsl:if test="$status='13' or $status='14'">
 				<xsl:text>&#10;&#13;&#10;&#13;De reden hiervoor is:</xsl:text>
 				<xsl:text>&#10;&#13;&#10;&#13;</xsl:text><xsl:value-of select="/root/changeMessage"/>
-				<xsl:text>&#10;&#13;&#10;&#13;De metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> werd</xsl:text><xsl:if test="$metadataCount>1">en</xsl:if><xsl:text> om die reden terug naar zijn oorspronkelijke status "Goedgekeurd door AGIV en gepubliceerd" gebracht.</xsl:text>
+<!-- 				<xsl:text>&#10;&#13;&#10;&#13;De metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> werd</xsl:text><xsl:if test="$metadataCount>1">en</xsl:if><xsl:text> om die reden terug naar zijn oorspronkelijke status "Goedgekeurd door AGIV en gepubliceerd" gebracht.</xsl:text>-->
+				<xsl:text>&#10;&#13;&#10;&#13;De metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> werd</xsl:text><xsl:if test="$metadataCount>1">en</xsl:if><xsl:text> om die reden terug naar zijn oorspronkelijke status</xsl:text><xsl:if test="$metadataCount=1"><xsl:call-template name="previousStatus"/></xsl:if><xsl:text> gebracht.</xsl:text>
 			</xsl:if>				
 		</xsl:if>
 	</xsl:template>
@@ -158,5 +159,27 @@
 			</xsl:when>
 			<xsl:otherwise><xsl:text>gewijzigd</xsl:text></xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="previousStatus">
+		<xsl:variable name="status" select="/root/metadata/previousStatus"/>
+		<xsl:text> "</xsl:text>
+		<xsl:choose>
+			<xsl:when test="$status='0'">Onbekend</xsl:when>
+			<xsl:when test="$status='1'">Ontwerp</xsl:when>
+			<xsl:when test="$status='2'">Goedgekeurd door AGIV en gepubliceerd</xsl:when>
+			<xsl:when test="$status='3'">Gedepubliceerd</xsl:when>
+			<xsl:when test="$status='4'">Intern ingediend</xsl:when>
+			<xsl:when test="$status='5'">Afgekeurd door Hoofdeditor</xsl:when>
+			<xsl:when test="$status='6'">Pas gecreëerd</xsl:when>
+			<xsl:when test="$status='7'">Intern goedgekeurd en ingediend bij AGIV</xsl:when>
+			<xsl:when test="$status='8'">klaar voor publicatie</xsl:when>
+			<xsl:when test="$status='9'">Afgekeurd door AGIV-validator</xsl:when>
+			<xsl:when test="$status='10'">Ingediend voor depubliceren</xsl:when>
+			<xsl:when test="$status='11'">Ingediend voor verwijderen</xsl:when>
+			<xsl:when test="$status='12'">Verwijderd</xsl:when>
+			<xsl:otherwise></xsl:otherwise>
+		</xsl:choose>
+		<xsl:text>"</xsl:text>
 	</xsl:template>
 </xsl:stylesheet>

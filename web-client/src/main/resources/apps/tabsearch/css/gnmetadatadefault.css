@@ -408,9 +408,11 @@ div.button {
 
 .tgRight {
   background-image : url(../../images/default/bullet_arrow_right.png);
+  cursor: pointer;
 }
 .tgDown {
   background-image : url(../../images/default/bullet_arrow_down.png);
+  cursor: pointer;
 }
 .edit {
   background-image : url(../../images/default/page_white.png) !important;
