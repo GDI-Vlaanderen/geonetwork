@@ -43,7 +43,6 @@
 					<xsl:call-template name="newBlock">
 						<xsl:with-param name="title">
 							<xsl:call-template name="getTitle">
-	
 								<xsl:with-param name="name">
 									<xsl:choose>
 										<xsl:when
@@ -121,7 +120,7 @@
 				</xsl:if>
 				<!-- existing attributes -->
 				<xsl:apply-templates mode="simpleElementFop"
-					select="*/@*">
+					select="*/@*[name(.)!='xsi:nil']">
 					<xsl:with-param name="schema" select="$schema" />
 				</xsl:apply-templates>
 

@@ -909,7 +909,7 @@
 			<xsl:with-param name="blockHeaders">
 				gmd:dataQualityInfo|gmd:DQ_DataQuality|gmd:DQ_ThematicClassificationCorrectness|gmd:DQ_AbsoluteExternalPositionalAccuracy|
 				gmd:DQ_CompletenessOmission|gmd:DQ_QuantitativeResult|gmd:DQ_QualitativeResult|
-				gmd:lineage|gmd_gmd:description|gmd:processStep|gmd:processor|gmd:valueUnit
+				gmd:lineage|gmd_gmd:description|gmd:processStep|gmd:processor|gmd:valueUnit|gmd:DQ_ConformanceResult|gmd:specification
 			</xsl:with-param>
 			<xsl:with-param name="skipTags">
 				gmd:DQ_DomainConsistency
