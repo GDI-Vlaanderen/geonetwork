@@ -60,9 +60,9 @@ Ext.BLANK_IMAGE_URL = '../js/ext/resources/images/default/s.gif';
 
 GeoNetwork.Settings.ratingEnabled = false;
 GeoNetwork.Settings.isProduction = false;
-GeoNetwork.Settings.nodeType = "AGIV";
-GeoNetwork.Settings.useSTS = true;
-GeoNetwork.Settings.ga = true;
+GeoNetwork.Settings.nodeType = "GDI";
+GeoNetwork.Settings.useSTS = false;
+GeoNetwork.Settings.ga = false;
 GeoNetwork.Settings.logoutUrlSTS = "https://auth." + (GeoNetwork.Settings.isProduction ? "" : "beta.") + "agiv.be/sts/";
-GeoNetwork.Settings.nodeFooterInfo = "Build: 11/04/2014 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
+GeoNetwork.Settings.nodeFooterInfo = "Build: 18/04/2014 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
 
