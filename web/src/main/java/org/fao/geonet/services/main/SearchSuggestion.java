@@ -73,7 +73,8 @@ public class SearchSuggestion implements Service {
 	 * Set default parameters
 	 */
 	public void init(String appPath, ServiceConfig config) throws Exception {
-		_threshold = Integer.valueOf(config.getValue("threshold"));
+//		_threshold = Integer.valueOf(config.getValue("threshold"));
+		_threshold = 1;
 		_maxNumberOfTerms = Integer.valueOf(config
 				.getValue("max_number_of_terms"));
 		_defaultSearchField = config.getValue("default_search_field");
@@ -95,18 +96,27 @@ public class SearchSuggestion implements Service {
 
 		List<SearchManager.TermFrequency> termList = sm.getTermsFequency(
 				fieldName, searchValue, _maxNumberOfTerms, _threshold);
+		boolean bAnyTerm = fieldName.equals("any");
 		Collections.sort(termList);
 		Collections.reverse(termList);
-
+		SearchManager.TermFrequency exactMatchFreq = null;
 		Iterator<SearchManager.TermFrequency> iterator = termList.iterator();
 		while (iterator.hasNext()) {
 			SearchManager.TermFrequency freq = (SearchManager.TermFrequency) iterator
 					.next();
-			suggestions.addContent(new Element("item").setAttribute("term",
-					freq.getTerm()).setAttribute("freq",
-					String.valueOf(freq.getFrequency())));
+			if (bAnyTerm && freq.getTerm().equals(searchValue)) {
+				exactMatchFreq = freq;
+			} else {
+				suggestions.addContent(new Element("item").setAttribute("term",
+						freq.getTerm()).setAttribute("freq",
+						String.valueOf(freq.getFrequency())));
+			}
 		}
-
+		if (exactMatchFreq!=null) {
+			suggestions.addContent(0,new Element("item").setAttribute("term",
+					" " + exactMatchFreq.getTerm()).setAttribute("freq",
+					String.valueOf(exactMatchFreq.getFrequency())));
+		}
 		// TODO : Could we output JSON directly from a Jeeves service
 		// whithout having the XSL transformation ?
 		return suggestions;

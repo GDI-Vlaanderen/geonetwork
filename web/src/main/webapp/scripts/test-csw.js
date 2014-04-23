@@ -123,7 +123,22 @@ function submit() {
 			// = response.responseXML;
 			// window.frames['response'].document
 
+		},
+		failure : function(response) {
+	    	if (response.status==408 || response.status==504) {
+		    	alert("Request timeout");
+	    	} else {
+			    if (response.responseText) {
+			        var errorMsg = response.responseText.match(/[.]*<message\>(.*)<\/message\>[.]*/);
+			        if (errorMsg!=null) {
+				    	alert(errorMsg[1]);
+			        } else {
+				    	alert(response.responseText);
+			        }
+			    } 
+	    	}
 		}
+		
 	});
 	var request = OpenLayers.Request.POST(opts);
 
@@ -168,4 +183,3 @@ function loginAndRun() {
 	});
 	request = OpenLayers.Request.POST(opts);
 }
-

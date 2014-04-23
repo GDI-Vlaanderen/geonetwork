@@ -363,6 +363,17 @@ span.buttons a.small span {
   height : 5px !important;
   background-repeat : no-repeat;
 }
+
+.buttons a:link {text-decoration:none;}
+.buttons a:visited {text-decoration:none;}
+.buttons a:hover {text-decoration:none;}
+.buttons a:active {text-decoration:none;}
+
+.buttons a.keyword span {
+  text-decoration:none;
+  padding-left : 15px !important;
+  background-image : url(../../images/default/info_small.png);
+}
 .buttons a.find span {
   padding-left : 15px !important;
   background-image : url(../../images/default/find.png);
@@ -397,9 +408,11 @@ div.button {
 
 .tgRight {
   background-image : url(../../images/default/bullet_arrow_right.png);
+  cursor: pointer;
 }
 .tgDown {
   background-image : url(../../images/default/bullet_arrow_down.png);
+  cursor: pointer;
 }
 .edit {
   background-image : url(../../images/default/page_white.png) !important;

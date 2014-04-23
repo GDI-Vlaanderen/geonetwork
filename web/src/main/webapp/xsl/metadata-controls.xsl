@@ -115,6 +115,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	
+			<xsl:if test="name(.)='gmd:descriptiveKeywords'">
+				<xsl:text> </xsl:text>
+				<a id="keywordHelpLink_{$id}" style="cursor:hand;cursor:pointer;" href="http://www.geopunt.be/~/media/Geopunt/Geowijzer/Metadata/documenten/GDI-Vlaanderen_Best_Practices_voor_Metadata-v1_0.pdf" target="_blank"><img src="{/root/gui/url}/images/info_small.png"/></a>
+			</xsl:if>
 			<!-- xsd and schematron validation error button -->
 			<xsl:if test="normalize-space($validationLink)">
 				<xsl:text> </xsl:text>

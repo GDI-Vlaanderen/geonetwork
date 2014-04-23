@@ -82,7 +82,8 @@ public class XmlUpdate implements Service
 		Element lockedbyRecords = new Element("lockedby");
 		response.addContent(lockedbyRecords);
 		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
-        if (!style.equals("_none_")) {
+		String scope      = Util.getParam(params, "scope", "0");
+        if (!style.equals("_none_") && !StringUtils.isBlank(scope) && (scope.equals("0") || scope.equals("1"))) {
 
     		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -90,37 +91,41 @@ public class XmlUpdate implements Service
 
 			DataManager dm = gc.getDataManager();
 	        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            Element result = dbms.select("SELECT id, uuid, lockedby FROM Metadata where istemplate='n' and schemaid = 'iso19139' ORDER BY id ASC");
+	        String[] tableNames = {"Metadata","Workspace"};
+            Element result = dbms.select("SELECT id, uuid, lockedby FROM " + tableNames[Integer.parseInt(scope)] + " where istemplate='n' and schemaid = 'iso19139' ORDER BY id ASC");
             for(int i = 0; i < result.getContentSize(); i++) {
                 Element record = (Element) result.getContent(i);
                 String id = record.getChildText("id");
                 String uuid = record.getChildText("uuid");
                 String lockedby = record.getChildText("lockedby");
-                if (StringUtils.isBlank(lockedby)) {
-	            	try {
-	                    Element md = dm.getMetadataNoInfo(context, id);
-	    	            if (md == null) {
-	    	                continue;
-	    	            }
-	    	            md.detach();
-	    	            int oldLength = Xml.getString(md).length();
-	    	            md = Xml.transform(md, stylePath +"/"+ style);
-	    	            int newLength = Xml.getString(md).length();
-	    	            if (newLength != oldLength) {
-	    	            	System.out.println("Updating record with uuid" + uuid);
-	    	                dm.getXmlSerializer().update(dbms, id, md, null, false, context);
-	    	                dbms.commit();
-		                    modifiedRecords.addContent(new Element(Params.UUID).setText(uuid + " (Aantal bytes gewijzigd van " + oldLength +  " naar " + newLength + ")"));
-	    	            } else {
-		            		unchangedRecords.addContent(new Element(Params.UUID).setText(uuid));
-	    	            }
-	                    //dm.indexInThreadPoolIfPossible(dbms, metadataId, workspace);
-	            	} catch (Exception e) {
-	            		unchangedByErrorRecords.addContent(new Element(Params.UUID).setText(uuid));
-	            	}
-                } else {
+                if (!StringUtils.isBlank(lockedby) && scope.equals("0")) {
                     lockedbyRecords.addContent(new Element(Params.UUID).setText(uuid));
                 }
+            	try {
+                    Element md = (scope.equals("0") ? dm.getMetadataNoInfo(context, id) : dm.getMetadataFromWorkspaceNoInfo(context, id));
+    	            if (md == null) {
+    	                continue;
+    	            }
+    	            md.detach();
+    	            int oldLength = Xml.getString(md).length();
+    	            md = Xml.transform(md, stylePath +"/"+ style);
+    	            int newLength = Xml.getString(md).length();
+    	            if (newLength != oldLength) {
+	            		System.out.println("Updating record with uuid" + uuid);
+	            		if (scope.equals("0")) {
+	    	                dm.getXmlSerializer().update(dbms, id, md, null, false, context);
+	            		} else {
+	    	                dm.getXmlSerializer().updateWorkspace(dbms, id, md, null, false, context, null, false);
+	            		}
+    	                dbms.commit();
+	                    modifiedRecords.addContent(new Element(Params.UUID).setText(uuid + " (Aantal bytes gewijzigd van " + oldLength +  " naar " + newLength + ")"));
+    	            } else {
+	            		unchangedRecords.addContent(new Element(Params.UUID).setText(uuid));
+    	            }
+                    //dm.indexInThreadPoolIfPossible(dbms, metadataId, workspace);
+            	} catch (Exception e) {
+            		unchangedByErrorRecords.addContent(new Element(Params.UUID).setText(uuid));
+            	}
             }
         }
 		return response;

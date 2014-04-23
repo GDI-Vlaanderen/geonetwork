@@ -224,7 +224,7 @@ public class DefaultStatusActions implements StatusActions {
 			// -- process the metadata records to set status
 			for (String mid : metadataIds) {
 				String currentStatus = dm.getCurrentStatus(dbms, mid);
-
+				String previousStatus = null;
 				// --- if the status is already set to value of status then do
 				// nothing
 				if (status.equals(currentStatus)) {
@@ -263,7 +263,8 @@ public class DefaultStatusActions implements StatusActions {
 						unsetAllOperations(mid);
 					}
 					if (status.equals(Params.Status.REJECTED_FOR_RETIRE) || status.equals(Params.Status.REJECTED_FOR_REMOVE)) {
-						dm.setStatus(context, dbms, mid, new Integer("2"),
+						previousStatus = dm.getLastBeforeCurrentStatus(dbms,mid);
+						dm.setStatus(context, dbms, mid, new Integer(/*"2"*/previousStatus),
 								new ISODate().toString(), changeMessage);
 					} else {
 						// --- set status, indexing is assumed to take place later
@@ -277,6 +278,9 @@ public class DefaultStatusActions implements StatusActions {
 						Map<String,String> properties = new HashMap<String,String>();
 						properties.put("title", dm.extractTitle(context, mdInfo.schemaId, mid));
 						properties.put("currentStatus", currentStatus);
+						if (previousStatus!=null) {
+							properties.put("previousStatus", previousStatus);
+						}
 						switch(Integer.parseInt(status)) {
 							case 0: //UNKNOWN
 								break;
@@ -447,9 +451,12 @@ public class DefaultStatusActions implements StatusActions {
 					case 0: //UNKNOWN
 						break;
 					case 1: //DRAFT
+						changeAllowed = false;
+/*
 						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
+*/
 						break;
 					case 2: //APPROVED
 						if (currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV) || currentStatus.equals(Params.Status.REJECTED_FOR_RETIRE) || currentStatus.equals(Params.Status.REJECTED_FOR_REMOVE)) {
@@ -488,12 +495,14 @@ public class DefaultStatusActions implements StatusActions {
 						}
 						break;
 					case 10: //RETIRED_FOR_AGIV
-						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
+//						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
+						if (!(currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV))) {
 							changeAllowed = false;
 						}
 						break;
 					case 11: //REMOVED_FOR_AGIV
-						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
+//						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
+						if (!(currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV))) {
 							changeAllowed = false;
 						}
 						break;
@@ -542,7 +551,7 @@ public class DefaultStatusActions implements StatusActions {
 							}*/
 							break;
 						case 5: //REJECTED
-							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {
+							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV)) {
 								changeAllowed = false;
 							}
 							break;
@@ -947,6 +956,9 @@ public class DefaultStatusActions implements StatusActions {
 				metadata.addContent(new Element("url").setText(buildMetadataLink(metadataId)));
 				metadata.addContent(new Element("title").setText(metadataMap.get(metadataId).get("title").toString()));
 				metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataId).get("currentStatus").toString()));
+				if (metadataMap.get(metadataId).get("previousStatus")!=null) {
+					metadata.addContent(new Element("previousStatus").setText(metadataMap.get(metadataId).get("previousStatus").toString()));
+				}
 			}
 		}
 

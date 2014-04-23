@@ -409,7 +409,7 @@ GeoNetwork.util.SearchTools = {
                 } else if (cur.isXType('combo')) {
                     if (cur.getValue && cur.getValue()) {
                         if (cur.id === "E_any") {
-                            result[cur.getName()] = cur.getValue();
+                            result[cur.getName()] = "*" + cur.getValue() + "*";
                         } else if (cur.id === "E_flanderskeyword") {
                         	var themekeyValue = result["E_themekey"];
                         	var flanderskeywordValue = result["E_flanderskeyword"];

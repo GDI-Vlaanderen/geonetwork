@@ -249,7 +249,7 @@ public class CatalogSearcher {
 		try {
 			Element result = Xml.transform(filterExpr, styleSheet);
 			removeEmptyBranches(result);
-            Log.info(Geonet.CSW_SEARCH,"filterToLucene result:\n" + Xml.getString(result));
+            System.out.println("filterToLucene result:\n" + Xml.getString(result));
             return result;
 
 		}
@@ -261,6 +261,35 @@ public class CatalogSearcher {
 					"Error during Filter to Lucene conversion : " + e);
 		}
 	}
+
+	/**
+	 * Use filter-to-workspace stylesheet to get isWorkspace filter value.
+	 * 
+	 * @return XML representation of isWorkspace value
+	 */
+	public Element filterToWorkspace(ServiceContext context, Element filterExpr)
+			throws NoApplicableCodeEx {
+		if (filterExpr == null)
+			return null;
+
+		String styleSheet = context.getAppPath() + Geonet.Path.CSW
+				+ Geonet.File.FILTER_TO_WORKSPACE;
+
+		try {
+			Element result = Xml.transform(filterExpr, styleSheet);
+            System.out.println("filterToWorkspace result:\n" + Xml.getString(result));
+            return result;
+
+		}
+        catch (Exception e) {
+			context.error("Error during Filter to Workspace conversion : " + e);
+			context.error("  (C) StackTrace\n" + Util.getStackTrace(e));
+
+			throw new NoApplicableCodeEx(
+					"Error during Filter to Workspace conversion : " + e);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
     private void removeEmptyBranches( Element element ) {
         List<Element> children = new ArrayList<Element>(element.getChildren());

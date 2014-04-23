@@ -39,11 +39,10 @@
 
 		<xsl:if test="not($skipTags) or not(contains($skipTags, node-name(current())))">
 			<xsl:choose>
-				<xsl:when test="contains($blockHeaders, node-name(current()))">
+				<xsl:when test="contains($blockHeaders, node-name(current())) or (name(.)='gmd:name' and name(..)='gmd:CI_OnlineResource')">
 					<xsl:call-template name="newBlock">
 						<xsl:with-param name="title">
 							<xsl:call-template name="getTitle">
-	
 								<xsl:with-param name="name">
 									<xsl:choose>
 										<xsl:when
@@ -121,7 +120,7 @@
 				</xsl:if>
 				<!-- existing attributes -->
 				<xsl:apply-templates mode="simpleElementFop"
-					select="*/@*">
+					select="*/@*[name(.)!='xsi:nil']">
 					<xsl:with-param name="schema" select="$schema" />
 				</xsl:apply-templates>
 
@@ -375,7 +374,7 @@
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
 
- 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gmd:DQ_QuantitativeResult|gmd:role" >
+ 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gmd:DQ_QuantitativeResult|gmd:role|gmd:DQ_Scope/gmd:level|gmd:MD_LegalConstraints/gmd:accessConstraints|gmd:MD_LegalConstraints/gmd:useConstraints|gmd:dateType|gmd:status|gmd:associationType|gmd:spatialRepresentationType|gmd:hierarchyLevel|gmd:MD_Medium/gmd:name" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />

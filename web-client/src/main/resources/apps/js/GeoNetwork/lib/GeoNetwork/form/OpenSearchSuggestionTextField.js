@@ -149,6 +149,9 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
                 q.query = q.query.toLowerCase();
             });
         }
+        this.on('select', function(combo, record, index){
+        	combo.setValue(combo.getValue().trim());
+        });
         this.store = new GeoNetwork.data.OpenSearchSuggestionStore({
             url: this.url,
             rootId: 1,

@@ -5,6 +5,7 @@
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" exclude-result-prefixes="#all">
 
+	<xsl:output method="xml"/>
 	<xsl:template match="/root">
 		<xsl:apply-templates select="gmd:MD_Metadata"/>
 	</xsl:template>
@@ -21,24 +22,23 @@
 	<xsl:template match="@*|node()">
 	    <xsl:copy>
 	        <xsl:apply-templates select="@*|node()"/>
-      </xsl:copy>
+		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template match="gmd:deliveryPoint/gco:CharacterString" priority="10">
-        <xsl:analyze-string select="lower-case(normalize-space(.))" regex=".*gebroeders.*van.*ey.*k.*16.*">
-            <xsl:matching-substring>
-				<gco:CharacterString>Koningin Maria Hendrikaplein 70 bus 110</gco:CharacterString>
-            </xsl:matching-substring>
-            <xsl:non-matching-substring>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-            </xsl:non-matching-substring>
-        </xsl:analyze-string>
+		<xsl:variable name="replaceDeliveryPoint">
+	        <xsl:analyze-string select="lower-case(normalize-space(.))" regex=".*gebroeders.*van.*ey.*k.*16.*">
+	            <xsl:matching-substring>1</xsl:matching-substring>
+	            <xsl:non-matching-substring>0</xsl:non-matching-substring>
+	        </xsl:analyze-string>
+		</xsl:variable>
+		<gco:CharacterString><xsl:if test="$replaceDeliveryPoint='1'">Koningin Maria Hendrikaplein 70 bus 110</xsl:if><xsl:if test="$replaceDeliveryPoint='0'"><xsl:value-of select="."/></xsl:if></gco:CharacterString>
 	</xsl:template>
 	
 	<xsl:template match="gmd:voice/gco:CharacterString" priority="10">
         <xsl:analyze-string select="normalize-space(.)" regex=".*9.*2.*6.*1.*5.*2.*0.*0.*">
             <xsl:matching-substring>
-				<gco:CharacterString>+3292761500</gco:CharacterString>
+				<gco:CharacterString>+32 9 276 15 00</gco:CharacterString>
             </xsl:matching-substring>
             <xsl:non-matching-substring>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
@@ -49,7 +49,7 @@
 	<xsl:template match="gmd:facsimile/gco:CharacterString" priority="10">
         <xsl:analyze-string select="normalize-space(.)" regex=".*9.*2.*6.*1.*5.*2.*9.*9.*">
             <xsl:matching-substring>
-				<gco:CharacterString>+3292761505</gco:CharacterString>
+				<gco:CharacterString>+32 9 276 15 05</gco:CharacterString>
             </xsl:matching-substring>
             <xsl:non-matching-substring>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>

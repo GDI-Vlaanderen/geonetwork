@@ -43,6 +43,15 @@
 				                </select>
 				            </td>
 				        </tr>
+				        <tr id="gn.scope">
+				            <th class="padded">Scope</th>
+				            <td class="padded">
+				                <select class="content" id="scope" name="scope" size="1">
+				                    <option value="0">Metadata tabel</option>
+				                    <option value="1">Workspace tabel</option>
+				                </select>
+				            </td>
+				        </tr>
 			        </table>
                     <table id="gn.result" style="display:none;">
 	                    <tr>
