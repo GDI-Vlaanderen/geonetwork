@@ -178,6 +178,7 @@ public class DefaultStatusActions implements StatusActions {
 
 	public void onCancelEdit(String id) throws Exception {
 
+/*
 		if (dm.getCurrentStatus(dbms, id).equals(Params.Status.DRAFT)) {
 
 			// String changeMessage =
@@ -194,7 +195,29 @@ public class DefaultStatusActions implements StatusActions {
 			dm.setStatus(context, dbms, id, new Integer(revertToThisStatus),
 					new ISODate().toString(), changeMessage);
 		}
+*/
+		String currentStatus = dm.getCurrentStatus(dbms, id);
+		if (!(Params.Status.APPROVED.equals(currentStatus) || Params.Status.RETIRED.equals(currentStatus) || Params.Status.RETIRED_FOR_AGIV.equals(currentStatus) || Params.Status.REJECTED_FOR_REMOVE.equals(currentStatus))) {
 
+			// String changeMessage =
+			// "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") canceled edit session for metadata record "+id;
+			String changeMessage = "GeoNetwork gebruiker "
+					+ session.getUserId() + " (" + session.getUsername()
+					+ ") heeft de editeersessie van metadata record met id "
+					+ id + " geannuleerd.";
+			// unsetAllOperations(id);
+			String revertToThisStatus = dm.getLastPublicStatusBeforeCurrentStatus(dbms, id);
+			if (StringUtils.isEmpty(revertToThisStatus)) {
+				String uuid = dm.getMetadataUuid(dbms,id);
+				backupFile(context, id, uuid, MEFLib.doExport(context, uuid, "full", false, true, false));
+				File pb = new File(Lib.resource.getMetadataDir(context, id));
+				FileCopyMgr.removeDirectoryOrFile(pb);
+				dm.deleteMetadata(context, dbms, id);
+			} else {
+				dm.setStatus(context, dbms, id, new Integer(revertToThisStatus),
+						new ISODate().toString(), changeMessage);
+			}
+		}
 	}
 
 	/**
@@ -496,13 +519,14 @@ public class DefaultStatusActions implements StatusActions {
 						break;
 					case 10: //RETIRED_FOR_AGIV
 //						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
-						if (!(currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV))) {
+//						if (currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.RETIRED) || currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.REMOVED_FOR_AGIV)) {
+						if (!currentStatus.equals(Params.Status.APPROVED)) {
 							changeAllowed = false;
 						}
 						break;
 					case 11: //REMOVED_FOR_AGIV
 //						if (isWorkspace || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
-						if (!(currentStatus.equals(Params.Status.DRAFT) || currentStatus.equals(Params.Status.SUBMITTED) || currentStatus.equals(Params.Status.REJECTED) || currentStatus.equals(Params.Status.REJECTED_BY_AGIV))) {
+						if (currentStatus.equals(Params.Status.SUBMITTED_FOR_AGIV) || currentStatus.equals(Params.Status.APPROVED_BY_AGIV) || currentStatus.equals(Params.Status.RETIRED_FOR_AGIV)) {
 							changeAllowed = false;
 						}
 						break;
@@ -541,7 +565,9 @@ public class DefaultStatusActions implements StatusActions {
 							}
 							break;
 						case 3: //RETIRED
-							changeAllowed = false;
+							if (context.getServlet().getNodeType().equalsIgnoreCase("agiv") || !currentStatus.equals(Params.Status.APPROVED)) {
+								changeAllowed = false;
+							}
 							break;
 						case 4: //SUBMITTED
 							if (currentStatus.equals(Params.Status.APPROVED) || currentStatus.equals(Params.Status.RETIRED)) {

@@ -289,6 +289,7 @@ GeoNetwork.Lang.nl = {
     'versioningTT': 'Eenmaal geactiveerd, zullen alle wijzigingen in het metadatarecord worden gelogd in de SVN repository',
     'setUnlock': 'Metadata editeersessie annuleren',
     'cancelEditSession': 'Annuleer editeersessie',
+    'cancelEditSessionConfirm': 'Indien dit metadatarecord ooit gepubliceerd werd, zal de status ervan teruggezet worden op gepubliceerd of gedepubliceerd. In alle andere gevallen zal het metadatarecord verwijderd worden.',
     'cancelEditSessionTT': 'Annuleert de editeersessie',
     'changeEditSessionOwner': 'Verander eigenaar editeersessie',
     'changeEditSessionOwnerTT': 'Verandert eigenaar van de editeersessie zodat een andere gebruiker verder kan editeren',

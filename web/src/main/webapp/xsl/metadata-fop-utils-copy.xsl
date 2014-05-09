@@ -6,6 +6,7 @@
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:gml="http://www.opengis.net/gml"
 	xmlns:saxon="http://saxon.sf.net/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	extension-element-prefixes="saxon"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -374,7 +375,7 @@
 	<xsl:template mode="simpleElementFop" match="gfc:FC_FeatureType/@*">
 	</xsl:template>
 
- 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gmd:DQ_QuantitativeResult|gmd:role|gmd:DQ_Scope/gmd:level|gmd:MD_LegalConstraints/gmd:accessConstraints|gmd:MD_LegalConstraints/gmd:useConstraints|gmd:dateType|gmd:status|gmd:associationType|gmd:spatialRepresentationType|gmd:hierarchyLevel|gmd:MD_Medium/gmd:name" >
+ 	<xsl:template mode="elementFop" match="gmd:MD_Keywords|gmd:CI_ResponsibleParty|gmd:RS_Identifier|gmd:language|gmd:DQ_QuantitativeResult|gmd:role|gmd:DQ_Scope/gmd:level|gmd:MD_LegalConstraints/gmd:accessConstraints|gmd:MD_LegalConstraints/gmd:useConstraints|gmd:dateType|gmd:status|gmd:associationType|gmd:spatialRepresentationType|gmd:hierarchyLevel|gmd:MD_Medium/gmd:name|gmd:classification" >
 		<xsl:param name="schema" />
 		<xsl:param name="blockHeaders" />
 		<xsl:param name="skipTags" />
@@ -462,7 +463,7 @@
 	<xsl:template mode="elementFop"
 		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors" />
 	<xsl:template mode="simpleElementFop"
-		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@xlink:type|gmd:pass[@gco:nilReason]|@gco:nilReason|gco:UnlimitedInteger/@*" />
+		match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@xlink:type|gmd:pass[@gco:nilReason]|@gco:nilReason|gco:UnlimitedInteger/@*|@xsi:type" />
 	<xsl:template mode="simpleElementFop"
 		match="gml:TimePeriod/@gml:id|gml:TimePeriod/@frame|gml:TimePeriod/*/@frame" />
 	<xsl:template mode="complexElementFop"

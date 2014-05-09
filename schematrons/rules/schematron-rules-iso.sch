@@ -459,4 +459,35 @@ USA.
 		</sch:rule>
 	</sch:pattern>
 
+
+	<sch:pattern>
+		<sch:title>$loc/strings/M100</sch:title>
+		<sch:rule context="//gmd:MD_DataIdentification|
+			//*[@gco:isoType='gmd:MD_DataIdentification']|
+			//srv:SV_ServiceIdentification|
+			//*[@gco:isoType='srv:SV_ServiceIdentification']">
+			<sch:let name="publicationDate" 
+				value="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*"/>
+			<sch:let name="creationDate" 
+				value="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='creation']/*/gmd:date/*"/>
+			<sch:let name="revisionDate" 
+				value="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*"/>
+			
+			<sch:assert test="$publicationDate!='' or $creationDate!='' or $revisionDate!=''">
+				<sch:value-of select="$loc/strings/alert.M100/div"/>
+			</sch:assert>
+			<sch:report test="$publicationDate!=''">
+				<sch:value-of select="$loc/strings/report.M100.publication/div"/>
+				<sch:value-of select="$publicationDate"/>
+			</sch:report>
+			<sch:report test="$revisionDate!=''">
+				<sch:value-of select="$loc/strings/report.M100.revision/div"/>
+				<sch:value-of select="$revisionDate"/>
+			</sch:report>
+			<sch:report test="$creationDate!=''">
+				<sch:value-of select="$loc/strings/report.M100.creation/div"/>
+				<sch:value-of select="$creationDate"/>
+			</sch:report>
+		</sch:rule>
+	</sch:pattern>
 </sch:schema>

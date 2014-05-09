@@ -406,7 +406,7 @@ USA.
 				<sch:value-of select="$loc/strings/alert.M42.creation/div"/>
 				</sch:assert>
 			
-			<sch:assert test="$publicationDate or $creationDate or $revisionDate or $temporalExtentBegin or $temporalExtentEnd">
+			<sch:assert test="$publicationDate!='' or $creationDate!='' or $revisionDate!='' or $temporalExtentBegin or $temporalExtentEnd">
 				<sch:value-of select="$loc/strings/alert.M42/div"/></sch:assert>
 			<sch:report test="$temporalExtentBegin">
 				<sch:value-of select="$loc/strings/report.M42.begin/div"/>
@@ -416,15 +416,15 @@ USA.
 				<sch:value-of select="$loc/strings/report.M42.end/div"/>
 				<sch:value-of select="$temporalExtentEnd"/>
 			</sch:report>
-			<sch:report test="$publicationDate">
+			<sch:report test="$publicationDate!=''">
 				<sch:value-of select="$loc/strings/report.M42.publication/div"/>
 				<sch:value-of select="$publicationDate"/>
 			</sch:report>
-			<sch:report test="$revisionDate">
+			<sch:report test="$revisionDate!=''">
 				<sch:value-of select="$loc/strings/report.M42.revision/div"/>
 				<sch:value-of select="$revisionDate"/>
 			</sch:report>
-			<sch:report test="$creationDate">
+			<sch:report test="$creationDate!=''">
 				<sch:value-of select="$loc/strings/report.M42.creation/div"/>
 				<sch:value-of select="$creationDate"/>
 			</sch:report>

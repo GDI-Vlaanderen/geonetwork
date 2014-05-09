@@ -413,6 +413,16 @@
             <xsl:apply-templates/>
          </svrl:active-pattern>
          <xsl:apply-templates select="/" mode="M29"/>
+         <svrl:active-pattern>
+            <xsl:attribute name="document">
+               <xsl:value-of select="document-uri(/)"/>
+            </xsl:attribute>
+            <xsl:attribute name="name">
+               <xsl:value-of select="$loc/strings/M100"/>
+            </xsl:attribute>
+            <xsl:apply-templates/>
+         </svrl:active-pattern>
+         <xsl:apply-templates select="/" mode="M30"/>
       </svrl:schematron-output>
    </xsl:template>
 
@@ -1685,5 +1695,105 @@
    <xsl:template match="text()" priority="-1" mode="M29"/>
    <xsl:template match="@*|node()" priority="-2" mode="M29">
       <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M29"/>
+   </xsl:template>
+
+   <!--PATTERN $loc/strings/M100-->
+<svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
+      <xsl:copy-of select="$loc/strings/M100"/>
+   </svrl:text>
+
+	  <!--RULE -->
+<xsl:template match="//gmd:MD_DataIdentification|    //*[@gco:isoType='gmd:MD_DataIdentification']|    //srv:SV_ServiceIdentification|    //*[@gco:isoType='srv:SV_ServiceIdentification']"
+                 priority="1000"
+                 mode="M30">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="//gmd:MD_DataIdentification|    //*[@gco:isoType='gmd:MD_DataIdentification']|    //srv:SV_ServiceIdentification|    //*[@gco:isoType='srv:SV_ServiceIdentification']"/>
+      <xsl:variable name="publicationDate"
+                    select="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*"/>
+      <xsl:variable name="creationDate"
+                    select="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='creation']/*/gmd:date/*"/>
+      <xsl:variable name="revisionDate"
+                    select="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*"/>
+
+		    <!--ASSERT -->
+<xsl:choose>
+         <xsl:when test="$publicationDate!='' or $creationDate!='' or $revisionDate!=''"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
+                                test="$publicationDate!='' or $creationDate!='' or $revisionDate!=''">
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>
+				              <xsl:text/>
+                  <xsl:copy-of select="$loc/strings/alert.M100/div"/>
+                  <xsl:text/>
+			            </svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--REPORT -->
+<xsl:if test="$publicationDate!=''">
+         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
+                                 test="$publicationDate!=''">
+            <xsl:attribute name="location">
+               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+            </xsl:attribute>
+            <svrl:text>
+				           <xsl:text/>
+               <xsl:copy-of select="$loc/strings/report.M100.publication/div"/>
+               <xsl:text/>
+				           <xsl:text/>
+               <xsl:copy-of select="$publicationDate"/>
+               <xsl:text/>
+			         </svrl:text>
+         </svrl:successful-report>
+      </xsl:if>
+
+		    <!--REPORT -->
+<xsl:if test="$revisionDate!=''">
+         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
+                                 test="$revisionDate!=''">
+            <xsl:attribute name="location">
+               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+            </xsl:attribute>
+            <svrl:text>
+				           <xsl:text/>
+               <xsl:copy-of select="$loc/strings/report.M100.revision/div"/>
+               <xsl:text/>
+				           <xsl:text/>
+               <xsl:copy-of select="$revisionDate"/>
+               <xsl:text/>
+			         </svrl:text>
+         </svrl:successful-report>
+      </xsl:if>
+
+		    <!--REPORT -->
+<xsl:if test="$creationDate!=''">
+         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
+                                 test="$creationDate!=''">
+            <xsl:attribute name="location">
+               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+            </xsl:attribute>
+            <svrl:text>
+				           <xsl:text/>
+               <xsl:copy-of select="$loc/strings/report.M100.creation/div"/>
+               <xsl:text/>
+				           <xsl:text/>
+               <xsl:copy-of select="$creationDate"/>
+               <xsl:text/>
+			         </svrl:text>
+         </svrl:successful-report>
+      </xsl:if>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M30"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M30"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M30">
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M30"/>
    </xsl:template>
 </xsl:stylesheet>

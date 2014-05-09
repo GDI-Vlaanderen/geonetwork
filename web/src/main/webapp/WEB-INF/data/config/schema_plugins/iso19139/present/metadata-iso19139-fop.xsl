@@ -1011,6 +1011,25 @@
 					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:for-each>
+			<xsl:for-each select="./gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_SecurityConstraints">
+				<xsl:call-template name="newBlock">
+					<xsl:with-param name="title">
+						<xsl:call-template name="getTitle">
+							<xsl:with-param name="name">
+								<xsl:value-of
+									select="name(.)" />
+							</xsl:with-param>
+							<xsl:with-param name="schema" select="$schema" />
+						</xsl:call-template>
+					</xsl:with-param>
+					<xsl:with-param name="content">
+						<xsl:apply-templates mode="elementFop"
+							select=".">
+							<xsl:with-param name="schema" select="$schema" />
+						</xsl:apply-templates>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:for-each>
 		</xsl:with-param>
 	</xsl:call-template>
 
@@ -1139,10 +1158,31 @@
 						</xsl:call-template>
 					</xsl:with-param>
 					<xsl:with-param name="content">
-						<xsl:apply-templates mode="elementFop"
-							select="./gmd:CI_Citation/gmd:title">
-							<xsl:with-param name="schema" select="$schema" />
-						</xsl:apply-templates>
+						<xsl:variable name="value">
+							<xsl:call-template name="getMetadataTitle">
+							    <xsl:with-param name="uuid" select="./@uuidref"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<xsl:choose>
+							<xsl:when test="$value!=./@uuidref">
+								<xsl:call-template name="info-blocks">
+									<xsl:with-param name="label" select="'Naam van de catalogus'" />
+									<xsl:with-param name="value" select="$value" />
+								</xsl:call-template>
+							</xsl:when>
+							<xsl:when test="./gmd:CI_Citation/gmd:title">
+								<xsl:apply-templates mode="elementFop"
+									select="./gmd:CI_Citation/gmd:title">
+									<xsl:with-param name="schema" select="$schema" />
+								</xsl:apply-templates>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="info-blocks">
+									<xsl:with-param name="label" select="'Naam van de catalogus'" />
+									<xsl:with-param name="value" select="./@uuidref" />
+								</xsl:call-template>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:apply-templates mode="elementFop"
 							select="./@uuidref">
 							<xsl:with-param name="schema" select="$schema" />
@@ -1179,7 +1219,7 @@
 	
 	</xsl:template>
 	
-	<xsl:template mode="elementFop-iso19139" match="gmd:CI_ResponsibleParty/gmd:role|gmd:DQ_Scope/gmd:level|gmd:MD_LegalConstraints/gmd:accessConstraints|gmd:MD_LegalConstraints/gmd:useConstraints|gmd:dateType|gmd:status|gmd:associationType|gmd:spatialRepresentationType|gmd:hierarchyLevel|gmd:MD_Medium/gmd:name" >
+	<xsl:template mode="elementFop-iso19139" match="gmd:CI_ResponsibleParty/gmd:role|gmd:DQ_Scope/gmd:level|gmd:MD_LegalConstraints/gmd:accessConstraints|gmd:MD_LegalConstraints/gmd:useConstraints|gmd:dateType|gmd:status|gmd:associationType|gmd:spatialRepresentationType|gmd:hierarchyLevel|gmd:MD_Medium/gmd:name|gmd:classification" >
 		<xsl:param name="schema" />
 		<xsl:variable name="codeList"><xsl:value-of select="*/@codeListValue"/></xsl:variable>
 		<xsl:if test="$codeList!=''">

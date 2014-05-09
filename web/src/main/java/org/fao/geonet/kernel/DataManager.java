@@ -3341,7 +3341,21 @@ public class DataManager {
         }
     }
 
-    /**
+	public String getLastPublicStatusBeforeCurrentStatus(Dbms dbms, String id) throws Exception {
+        String query = "SELECT statusId, userId, changeDate, changeMessage FROM MetadataStatus WHERE metadataId=? ORDER BY changeDate DESC";
+        Element states = dbms.select(query, id);
+        List results = states.getChildren(Jeeves.Elem.RECORD);
+        for(Iterator i = results.iterator(); i.hasNext();) {
+            Element r = (Element)i.next();
+            String statusId = r.getChildText("statusid");
+            if (Params.Status.APPROVED.equals(statusId) || Params.Status.RETIRED.equals(statusId)) {
+            	return statusId;
+            }
+        }
+        return null;
+    }
+
+	/**
      * Return status of metadata id.
      *
      * @param dbms

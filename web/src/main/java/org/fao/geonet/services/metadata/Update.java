@@ -144,6 +144,12 @@ public class Update implements Service {
                 if(Params.Status.JUSTCREATED.equals(statusId)) {
                     dataMan.deleteFromWorkspace(dbms, id);
                     dataMan.deleteMetadata(context, dbms, id);
+                } else if(Params.Status.APPROVED.equals(statusId) || Params.Status.RETIRED.equals(statusId)) {
+                    AccessManager accessManager = gc.getAccessManager();
+                    if(accessManager.unlockAllowed(session.getUserId(), id, dbms)) {
+                        dataMan.unLockMetadata(dbms, id);
+                        dataMan.deleteFromWorkspace(dbms, id);
+                    }
                 }
             }
 		}

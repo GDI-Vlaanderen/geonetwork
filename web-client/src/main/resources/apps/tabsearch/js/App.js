@@ -183,6 +183,7 @@ GeoNetwork.app = function(){
 //            fieldLabel: OpenLayers.i18n('org')
 //        });
         // Multi select uuid field
+/*
         var uuidStore = new GeoNetwork.data.OpenSearchSuggestionStore({
             url: services.opensearchSuggest,
             rootId: 1,
@@ -208,7 +209,31 @@ GeoNetwork.app = function(){
             tpl: tpl,
             fieldLabel: OpenLayers.i18n('uuid')
         });
-
+		var uuidField = new Ext.form.TextField({
+            name: 'E__uuid',
+            id: 'E__uuid',
+            fieldLabel: OpenLayers.i18n("uuid"),
+			style: {
+		    	width: '99%',
+	        	height:'29px'
+	        }
+        });
+*/
+  		var uuidField = new GeoNetwork.form.OpenSearchSuggestionTextField({
+			hideLabel: false,
+			field: '_uuid',
+			name: 'E__uuid',
+			fieldLabel: OpenLayers.i18n("uuid"),
+			anchor: '100%',
+			style: {
+				height: '29px'
+			},
+			minChars: 1,
+			loadingText: '...',
+			hideTrigger: true,
+			url: catalogue.services.opensearchSuggest
+        });
+        
         // Multi select organisation field
         var orgNameStore = new GeoNetwork.data.OpenSearchSuggestionStore({
             url: services.opensearchSuggest,
@@ -219,6 +244,7 @@ GeoNetwork.app = function(){
         });
 
         var tpl = '<tpl for="."><div class="x-combo-list-item" ext:qtip="{values.value}">{values.value}</div></tpl>';
+        var displayFieldTpl = '<tpl for="."><span ext:qtip="{values.value}">{values.value}</span></tpl>';
         var orgNameField = new Ext.ux.form.SuperBoxSelect({
             hideLabel: false,
             minChars: 0,

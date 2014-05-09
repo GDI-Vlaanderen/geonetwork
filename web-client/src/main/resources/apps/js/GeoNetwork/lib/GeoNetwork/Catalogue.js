@@ -1583,18 +1583,24 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var url = this.services.mdStatus + "?id=" + id;
         this.modalAction(OpenLayers.i18n('setStatus'), url, undefined, catalogue.onAfterStatusChange.bind(catalogue));
     },
+
+    metadataCancelEditSession: function(id){
+        Ext.Msg.confirm(OpenLayers.i18n('cancelEditSession'), OpenLayers.i18n('cancelEditSessionConfirm'), this.metadataCancelEditSessionDo, id);
+    },
+
     /** api: method[cancelEditSession]
      *  Cancels an edit session for a metadata record, unlocking it
      */
-    metadataCancelEditSession: function(id){
-        var params = {
-            id: id
-        };
-
-        catalogue.doAction(catalogue.services.mdCancelEditSession, params,
-            OpenLayers.i18n('unlockRecordSuccess'),
-            OpenLayers.i18n('unlockRecordFailure'),
-            catalogue.onAfterUnlock.bind(catalogue));
+    metadataCancelEditSessionDo: function(btn){
+        if (btn === 'yes') {
+            var params = {
+                id: this
+            };
+	        catalogue.doAction(catalogue.services.mdCancelEditSession, params,
+	            OpenLayers.i18n('unlockRecordSuccess'),
+	            OpenLayers.i18n('unlockRecordFailure'),
+	            catalogue.onAfterUnlock.bind(catalogue));
+        }
     },
     /** api: method[cancelEditSession]
      *  Cancels an edit session for a metadata record, unlocking it

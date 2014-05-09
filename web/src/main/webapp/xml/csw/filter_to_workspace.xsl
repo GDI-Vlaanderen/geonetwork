@@ -7,13 +7,13 @@
 		<xsl:choose>
 			<!-- Applied default criteria to exclude template from results -->
 			<xsl:when test="//*[name(.)='ogc:PropertyIsEqualTo' and ogc:PropertyName='_isWorkspace']">
-				<isWorkspace><xsl:call-template name="//*[name(.)='ogc:PropertyIsEqualTo' and ogc:PropertyName='_isWorkspace'][1]"/></isWorkspace>
+				<isWorkspace><xsl:apply-templates select="//*[name(.)='ogc:PropertyIsEqualTo' and ogc:PropertyName='_isWorkspace'][1]"/></isWorkspace>
 			</xsl:when>
 			<xsl:otherwise>
 				<isWorkspace>false</isWorkspace>
 			</xsl:otherwise>
 		</xsl:choose>
-		<isWorkspace><xsl:apply-templates select="//*[ogc:PropertyName='_isWorkspace']"/></isWorkspace>
+<!-- 		<isWorkspace><xsl:apply-templates select="//*[ogc:PropertyName='_isWorkspace']"/></isWorkspace> -->
 	</xsl:template>
 
 	<xsl:template match="ogc:PropertyIsEqualTo">

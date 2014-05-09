@@ -1288,11 +1288,11 @@
 
 		    <!--ASSERT -->
 <xsl:choose>
-         <xsl:when test="$publicationDate or $creationDate or $revisionDate or $temporalExtentBegin or $temporalExtentEnd"/>
+         <xsl:when test="$publicationDate!='' or $creationDate!='' or $revisionDate!='' or $temporalExtentBegin or $temporalExtentEnd"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
                                 parent="#_{geonet:element/@parent}"
-                                test="$publicationDate or $creationDate or $revisionDate or $temporalExtentBegin or $temporalExtentEnd">
+                                test="$publicationDate!='' or $creationDate!='' or $revisionDate!='' or $temporalExtentBegin or $temporalExtentEnd">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
@@ -1344,10 +1344,10 @@
       </xsl:if>
 
 		    <!--REPORT -->
-<xsl:if test="$publicationDate">
+<xsl:if test="$publicationDate!=''">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
                                  parent="#_{geonet:element/@parent}"
-                                 test="$publicationDate">
+                                 test="$publicationDate!=''">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
             </xsl:attribute>
@@ -1363,10 +1363,10 @@
       </xsl:if>
 
 		    <!--REPORT -->
-<xsl:if test="$revisionDate">
+<xsl:if test="$revisionDate!=''">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
                                  parent="#_{geonet:element/@parent}"
-                                 test="$revisionDate">
+                                 test="$revisionDate!=''">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
             </xsl:attribute>
@@ -1382,10 +1382,10 @@
       </xsl:if>
 
 		    <!--REPORT -->
-<xsl:if test="$creationDate">
+<xsl:if test="$creationDate!=''">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
                                  parent="#_{geonet:element/@parent}"
-                                 test="$creationDate">
+                                 test="$creationDate!=''">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
             </xsl:attribute>

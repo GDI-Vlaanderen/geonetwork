@@ -100,4 +100,9 @@
     <report.M30>Check point beschrijving is gedocumenteerd.</report.M30>
     <alert.M61><div>Naam van het hiërarchisch niveau moet gedefinieerd zijn als het hiërarchisch niveau niet gelijk is aan 'dataset'</div></alert.M61>
     <report.M61>Naam van het hiërarchisch niveau is :</report.M61>
+    <M100>Er moet minstens een creatie-, wijzigings- of publicatiedatum ingevuld zijn.</M100>
+    <alert.M100><div><h2>Creatie-, wijzigings- of publicatiedatum ontbreekt.</h2></div></alert.M100>
+    <report.M100.publication><div>Datum van publicatie aanwezig:</div></report.M100.publication>
+    <report.M100.creation><div>Datum van creatie aanwezig:</div></report.M100.creation>
+    <report.M100.revision><div>Datum van laatste wijziging aanwezig:</div></report.M100.revision>
 </strings>
