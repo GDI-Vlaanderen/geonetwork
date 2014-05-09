@@ -40,6 +40,7 @@ import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 //=============================================================================
@@ -139,23 +140,27 @@ public class Login implements Service
      * @throws UserLoginEx 
      */
 	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info) throws SQLException, UserLoginEx {
-        boolean groupProvided = ((info.group != null) && (!(info.group.equals(""))));
-        String groupId = "-1";
+        boolean groupsProvided = ((info.groups != null) && (info.groups.length != 0));
+        ArrayList<String> groupIds = new ArrayList<String>();
         String userId = "-1";
 
         //--- Create group retrieved from LDAP if it's new
-        if (groupProvided) {
-            String query = "SELECT id FROM Groups WHERE name=?";
-            List list  = dbms.select(query, info.group).getChildren();
-
-            if (list.isEmpty()) {
-                groupId = IDFactory.newID();
-			    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-                dbms.execute(query, groupId, info.group);
-                Lib.local.insert(dbms, "Groups", groupId, info.group);
-            } else {
-                groupId = ((Element) list.get(0)).getChildText("id");
-            }
+        if (groupsProvided) {
+        	String groupId;
+        	for (String group: info.groups) {
+	            String query = "SELECT id FROM Groups WHERE name=?";
+	            List list  = dbms.select(query, group).getChildren();
+	
+	            if (list.isEmpty()) {
+	                groupId = IDFactory.newID();
+				    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+	                dbms.execute(query, groupId, group);
+	                Lib.local.insert(dbms, "Groups", groupId, group);
+	            } else {
+	                groupId = ((Element) list.get(0)).getChildText("id");
+	            }
+	            groupIds.add(groupId);
+        	}
         }
 
 		//--- update user information into the database
@@ -206,9 +211,11 @@ public class Login implements Service
 
 		dbms.execute(query, userId);
 
-        if (groupProvided) {
-            query = "INSERT INTO UserGroups(userId, groupId) VALUES(?,?)";
-            dbms.execute(query, userId, groupId);
+        if (groupsProvided) {
+        	for (String groupId: groupIds) {
+        		query = "INSERT INTO UserGroups(userId, groupId) VALUES(?,?)";
+        		dbms.execute(query, userId, groupId);
+        	}
         }
 
         dbms.commit();
