@@ -18,7 +18,7 @@ INSERT INTO dbo.statusvaluesdes VALUES ('2','dut','Intern goedgekeurd en gepubli
 INSERT INTO dbo.statusvaluesdes VALUES ('3','dut','Gedepubliceerd');
 INSERT INTO dbo.statusvaluesdes VALUES ('4','dut','Intern ingediend');
 INSERT INTO dbo.statusvaluesdes VALUES ('5','dut','Afgekeurd door Hoofdeditor');
-INSERT INTO dbo.statusvaluesdes VALUES ('6','dut','Pas gecreëerd');
+INSERT INTO dbo.statusvaluesdes VALUES ('6','dut','Pas gecreÃ«erd');
 --INSERT INTO dbo.statusvaluesdes VALUES ('12','dut','Verwijderd');
 
 ALTER TABLE dbo.StatusValues ADD CONSTRAINT statusvalues_pk PRIMARY KEY NONCLUSTERED(id);

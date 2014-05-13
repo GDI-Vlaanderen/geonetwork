@@ -401,8 +401,9 @@ CREATE TABLE StatusValues
   (
     id        varchar(36) not null,
     name      varchar(32)   not null,
-    reserved  char(1)       default 'n' not null,
-    primary key(id)
+    reserved  char(1)       default 'n' not null
+--    reserved  char(1)       default 'n' not null,
+--    primary key(id)
   );
 
 -- ======================================================================
@@ -426,7 +427,7 @@ CREATE TABLE MetadataStatus
     changeMessage   varchar(2048) not null,
     primary key(metadataId,statusId,userId,changeDate),
     foreign key(metadataId) references Metadata(id),
-    foreign key(statusId)   references StatusValues(id),
+--    foreign key(statusId)   references StatusValues(id),
     foreign key(userId)     references Users(id)
 
   );

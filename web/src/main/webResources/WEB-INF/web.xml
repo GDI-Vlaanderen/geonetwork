@@ -157,8 +157,8 @@
           -->
         <init-param>
 		    <param-name>NODE_TYPE</param-name>
- 			<param-value>AGIV</param-value>
-<!-- 		<param-value>Geopunt</param-value>-->
+<!-- 			<param-value>AGIV</param-value>-->
+	 		<param-value>Geopunt</param-value>
         </init-param>
         <init-param>
 		    <param-name>FROM_DESCRIPTION</param-name>
@@ -349,31 +349,4 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-	<security-role>
-		<role-name>AGIV Metadata Editor</role-name>
-		<role-name>AGIV Metadata Admin</role-name>
-		<role-name>AGIV Metadata Hoofdeditor</role-name>
-<!-- 
-		<role-name>Geopunt Metadata Editor</role-name>
-		<role-name>Geopunt Metadata Admin</role-name>
-		<role-name>Geopunt Metadata Hoofdeditor</role-name>
--->
-		<role-name>Authenticated</role-name>
-	</security-role>
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>Protected Area</web-resource-name>
-			<url-pattern>/srv/dut/user.agiv.login</url-pattern>
-			<url-pattern>/srv/fre/user.agiv.login</url-pattern>
-			<url-pattern>/srv/eng/user.agiv.login</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>*</role-name>
-		</auth-constraint>
-	</security-constraint>
-
-	<login-config>
-		<auth-method>WSFED</auth-method>
-		<realm-name>WSFED</realm-name>
-	</login-config>
 </web-app>

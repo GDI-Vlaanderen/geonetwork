@@ -299,7 +299,7 @@
 					jdbc:postgresql_postGIS://host:port/database
 					
 				-->
-			  <url>jdbc:postgresql://localhost:5432/geonetwork</url>
+			  <url>jdbc:postgresql://localhost:5432/geonetworkgeopunt</url>
 				<poolSize>20</poolSize>
         <validationQuery>SELECT 1</validationQuery>
 			</config>
@@ -960,7 +960,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+ <!--
 		<service name="user.agiv.login">
 			<class name=".services.login.AgivLogin" />
 
@@ -970,9 +970,9 @@
 				<xml name="error" file="xml/login-error.xml" />
 			</error>
 		</service>
+-->
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
- <!--
 		<service name="user.login">
 			<class name=".services.login.Login" />
 
@@ -982,7 +982,7 @@
 				<xml name="error" file="xml/login-error.xml" />
 			</error>
 		</service>
--->
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="shib.user.login">
