@@ -21,5 +21,5 @@ INSERT INTO statusvaluesdes VALUES ('5','dut','Afgekeurd door Hoofdeditor');
 INSERT INTO statusvaluesdes VALUES ('6','dut','Pas gecreëerd');
 --INSERT INTO statusvaluesdes VALUES ('12','dut','Verwijderd');
 
-ALTER TABLE StatusValues ADD CONSTRAINT statusvalues_pk PRIMARY KEY NONCLUSTERED(id);
+ALTER TABLE StatusValues ADD CONSTRAINT statusvalues_pk PRIMARY KEY(id);
 ALTER TABLE metadatastatus ADD CONSTRAINT metadatastatus_statusid_fkey FOREIGN KEY (statusid) REFERENCES statusvalues (id);

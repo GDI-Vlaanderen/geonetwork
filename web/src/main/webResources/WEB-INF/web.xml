@@ -5,7 +5,7 @@
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0" metadata-complete="true">
 
-    <display-name>zoekdienst</display-name>
+    <display-name>geonetwork</display-name>
     <!--<context-param>-->
         <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
         <!--<param-value>Joe</param-value>-->
@@ -180,11 +180,11 @@
              The folder stores schema plugins, logos 
         -->  
         <init-param>
-            <param-name>zoekdienst.drivemapping</param-name>
+            <param-name>geonetwork.drivemapping</param-name>
             <param-value>net use z: \\PCPB359\zoekdienst_data_shared /PERSISTENT:NO</param-value>
         </init-param>
         <init-param>
-            <param-name>zoekdienst.dir</param-name>
+            <param-name>geonetwork.dir</param-name>
 			<param-value>z:</param-value>
         </init-param>
         <!-- Local folders for each node: 
@@ -193,19 +193,19 @@
                 * cluster configuration 
         -->
         <init-param>
-            <param-name>zoekdienst.lucene.dir</param-name>
+            <param-name>geonetwork.lucene.dir</param-name>
             <param-value>C:\zoekdienst_data\lucene</param-value>
         </init-param>
         <init-param>
-            <param-name>zoekdienst.svn.dir</param-name>
+            <param-name>geonetwork.svn.dir</param-name>
             <param-value>C:\zoekdienst_data\svn</param-value>
         </init-param>
         <init-param>
-            <param-name>zoekdienst.clusterconfig.dir</param-name>
+            <param-name>geonetwork.clusterconfig.dir</param-name>
             <param-value>C:\zoekdienst_data\cluster</param-value>
         </init-param>
         <init-param>
-            <param-name>zoekdienst.resources.dir</param-name>
+            <param-name>geonetwork.resources.dir</param-name>
             <param-value>z:</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
