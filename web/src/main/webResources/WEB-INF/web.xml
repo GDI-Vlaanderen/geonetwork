@@ -162,8 +162,7 @@
         </init-param>
         <init-param>
 		    <param-name>FROM_DESCRIPTION</param-name>
-            <param-value>AGIV-Metadatacenter (beta)</param-value>
-<!--            <param-value>Geopunt-Metadatacenter</param-value>-->
+            <param-value>Geopunt-Metadatacenter</param-value>
         </init-param>
 		<init-param>
 			<param-name>jeeves.configuration.overrides.file</param-name>
@@ -181,12 +180,13 @@
         -->  
         <init-param>
             <param-name>geonetwork.drivemapping</param-name>
-            <param-value>net use z: \\PCPB359\zoekdienst_data_shared /PERSISTENT:NO</param-value>
+            <param-value>net use y: \\PCPB399\zoekdienst_data_shared /PERSISTENT:NO</param-value>
         </init-param>
-        <init-param>
+        <!--<init-param>
             <param-name>geonetwork.dir</param-name>
-			<param-value>z:</param-value>
-        </init-param>
+			<param-value>y:</param-value>
+        </init-param>-->
+        
         <!-- Local folders for each node: 
                 * lucene, 
                 * svn and 
@@ -206,7 +206,7 @@
         </init-param>
         <init-param>
             <param-name>geonetwork.resources.dir</param-name>
-            <param-value>z:</param-value>
+            <param-value>y:</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
