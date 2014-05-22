@@ -120,7 +120,7 @@
 		<xsl:param name="index" select="'true'"/>
 
 		<Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}"/>
-		<xsl:if test="name(.)='title' or name(.)='abstract'">
+		<xsl:if test="$name='title' or $name='abstract'">
 			<Field name="any" string="{string(.)}" store="{$store}" index="{$index}"/>
 		</xsl:if>
 	</xsl:template>
