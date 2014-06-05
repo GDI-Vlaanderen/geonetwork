@@ -67,7 +67,7 @@ public class JeevesServlet extends HttpServlet
     public static final String FROM_DESCRIPTION = "FROM_DESCRIPTION";
 	private JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
-	private String nodeType = "AGIV";
+	private String nodeType = "Geopunt";
 	private String fromDescription = "Metadata Workflow";
 
 	//---------------------------------------------------------------------------
