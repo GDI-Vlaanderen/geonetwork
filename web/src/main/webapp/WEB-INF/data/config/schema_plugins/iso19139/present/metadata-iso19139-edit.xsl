@@ -317,6 +317,84 @@
 		</xsl:for-each>
 	</xsl:template>
 	
+    <xsl:template mode="iso19139" match="gmd:MD_Constraints|gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints ">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='useLimitation' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:useLimitation)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:for-each select="gmd:useLimitation">
+       		<xsl:apply-templates mode="elementEP" select=".">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+		</xsl:for-each>
+		<xsl:if test="name(.)='gmd:MD_LegalConstraints'">
+			<xsl:if test="$edit=true()">
+				<xsl:apply-templates mode="addElement" select="geonet:child[@name='accessConstraints' and @prefix='gmd']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		            <xsl:with-param name="visible"   select="count(gmd:accessConstraints)=0"/>
+				</xsl:apply-templates>
+			</xsl:if>
+	        <xsl:for-each select="gmd:accessConstraints">
+	       		<xsl:apply-templates mode="elementEP" select=".">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:for-each>
+			<xsl:if test="$edit=true()">
+				<xsl:apply-templates mode="addElement" select="geonet:child[@name='useConstraints' and @prefix='gmd']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		            <xsl:with-param name="visible"   select="count(gmd:useConstraints)=0"/>
+				</xsl:apply-templates>
+			</xsl:if>
+	        <xsl:for-each select="gmd:useConstraints">
+	       		<xsl:apply-templates mode="elementEP" select=".">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:for-each>
+			<xsl:if test="$edit=true()">
+				<xsl:apply-templates mode="addElement" select="geonet:child[@name='otherConstraints' and @prefix='gmd']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		            <xsl:with-param name="visible"   select="count(gmd:otherConstraints)=0"/>
+				</xsl:apply-templates>
+			</xsl:if>
+	        <xsl:for-each select="gmd:otherConstraints">
+	       		<xsl:apply-templates mode="elementEP" select=".">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:for-each>
+		</xsl:if>
+		<xsl:if test="name(.)='gmd:MD_SecurityConstraints'">
+			<xsl:if test="$edit=true()">
+				<xsl:apply-templates mode="addElement" select="geonet:child[@name='classification' and @prefix='gmd']">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+		            <xsl:with-param name="visible"   select="count(gmd:classification)=0"/>
+				</xsl:apply-templates>
+			</xsl:if>
+	        <xsl:for-each select="gmd:classification">
+	       		<xsl:apply-templates mode="elementEP" select=".">
+		            <xsl:with-param name="schema" select="$schema"/>
+		            <xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:for-each>
+       		<xsl:apply-templates mode="elementEP" select="*[not(name()='gmd:useLimitation' or name()='gmd:classification')]">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+		</xsl:if>
+	</xsl:template>
+	
     <!-- ===================================================================== -->
     <!-- some gco: elements and gmx:MimeFileType are swallowed -->
     <!-- ===================================================================== -->

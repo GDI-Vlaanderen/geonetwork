@@ -23,6 +23,14 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.NotAllowedToDeleteEx;
 import jeeves.exceptions.OperationNotAllowedEx;
@@ -32,6 +40,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,15 +49,12 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.List;
 
 //=============================================================================
 
@@ -66,7 +73,8 @@ public class Delete implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager settingManager = gc.getSettingManager();
 		DataManager dataMan = gc.getDataManager();
 		AccessManager accessMan = gc.getAccessManager();
 		UserSession session = context.getUserSession();
@@ -89,7 +97,7 @@ public class Delete implements Service
             throw new OperationNotAllowedEx("You can not delete this because you are not authorized to edit this metadata.");
         } else if(info.isLocked && !info.lockedBy.equals(userId)) {
             throw new OperationNotAllowedEx("You can not delete this because this metadata is locked and you do not own the lock.");
-        } else if (context.getServlet().getNodeType().equalsIgnoreCase("agiv") && Geonet.Profile.EDITOR.equals(session.getProfile())){
+        } else if (context.getServlet().getNodeType().equalsIgnoreCase("agiv") && (Geonet.Profile.EDITOR.equals(session.getProfile()) || Geonet.Profile.REVIEWER.equals(session.getProfile()))){
             boolean isAlreadyApproved = false; 
     		List<Element> kids = dataMan.getStatus(dbms, id).getChildren();
     		for (Element kid : kids) {
@@ -99,7 +107,34 @@ public class Delete implements Service
     			}
     		}
     		if (isAlreadyApproved) {
-                throw new NotAllowedToDeleteEx();
+    			if (Geonet.Profile.EDITOR.equals(session.getProfile())) {
+                    throw new NotAllowedToDeleteEx();
+    			} else {  // is reviewer
+    				boolean isAllowed = false;
+    	            List<String> userGroups = gc.getAccessManager().getUserGroups(dbms, session, context.getIpAddress());
+    	            String[] canDeleteGroupIds = context.getServlet().getCanDeleteGroupIds().split(",");
+    	            for (String canDeleteGroupId : canDeleteGroupIds) {
+    	            	if (!StringUtils.isEmpty(canDeleteGroupId) && userGroups.contains(canDeleteGroupId)) {
+    	            		isAllowed = true;
+    	            		break;
+    	            	}
+    	            }
+    	            if (!isAllowed) {
+                        throw new NotAllowedToDeleteEx();
+    	            } else {
+    	    			String currentStatus = dataMan.getCurrentStatus(dbms, id);
+    	    			Map<String,String> properties = new HashMap<String,String>();
+    	    			properties.put("title", dataMan.extractTitle(context, info.schemaId, id));
+    	    			properties.put("currentStatus", currentStatus);
+    	    			Map<String, Map<String,String>> changedMmetadataIdsToInform = new HashMap<String,Map<String,String>>();
+    	    			changedMmetadataIdsToInform.put(id,properties);
+    	    			List<String> emailMetadataIdList = new ArrayList<String>();
+    	    			informContentUsers(context, dbms, accessMan.getContentAdmins(dbms, changedMmetadataIdsToInform.keySet()), changedMmetadataIdsToInform, new ISODate().toString(),
+    	    					"", Params.Status.REMOVED, emailMetadataIdList);
+    	    			informContentUsers(context, dbms, accessMan.getContentUsers(dbms, changedMmetadataIdsToInform.keySet(), Geonet.Profile.ADMINISTRATOR), changedMmetadataIdsToInform, new ISODate().toString(),
+    	    					"", Params.Status.REMOVED, emailMetadataIdList);
+    	            }
+    			}
     		}
         }
 		//-----------------------------------------------------------------------
@@ -153,6 +188,32 @@ public class Delete implements Service
 
 		new File(file).delete();
 	}
+
+	private void informContentUsers(ServiceContext context, Dbms dbms, Element contentUsers, Map<String,Map<String,String>> metadataMap,
+			String changeDate, String changeMessage, String status, List<String> emailMetadataIdList) throws Exception {
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager settingManager = gc.getSettingManager();
+		DataManager dataMan = gc.getDataManager();
+
+		UserSession session = context.getUserSession();
+		String replyTo = session.getEmailAddr();
+		String replyToDescr = null;
+		if (replyTo != null) {
+			replyToDescr = session.getName() + " " + session.getSurname();
+		} else {
+			replyTo = settingManager.getValue("system/feedback/email");
+			replyToDescr = context.getServlet().getFromDescription();
+		}
+
+		// --- get content reviewers (sorted on content reviewer userid)
+		String subject = "Status metadata record(s) gewijzigd naar '" + dataMan.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
+					+ replyToDescr + ") op " + changeDate;
+
+		//processList(contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
+		Utils.processList(context, dbms, replyTo, replyToDescr, contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
+	}
+
 }
 
 //=============================================================================
