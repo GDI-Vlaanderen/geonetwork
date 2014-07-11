@@ -378,11 +378,11 @@ public class DataManager {
      * @throws Exception hmm
      */
     public void indexInThreadPoolIfPossible(Dbms dbms, String id, boolean workspace) throws Exception {
-        if(ServiceContext.get() == null ) {
+//        if(ServiceContext.get() == null ) {
             indexMetadata(dbms, id, false, workspace, true);
-        } else {
-            indexInThreadPool(ServiceContext.get(), id, dbms, workspace, true);
-        }
+//        } else {
+//            indexInThreadPool(ServiceContext.get(), id, dbms, workspace, true);
+//        }
     }
 
     /**
