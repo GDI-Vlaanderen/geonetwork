@@ -479,7 +479,7 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="gmd:parentIdentifier">
+	<xsl:template match="gmd:parentIdentifier|gmd:voice|gmd:facsimile">
 	    <xsl:copy>
 			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
 			<xsl:if test="normalize-space(gco:CharacterString)=''">

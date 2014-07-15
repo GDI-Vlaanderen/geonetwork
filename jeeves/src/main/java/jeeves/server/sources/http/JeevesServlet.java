@@ -63,10 +63,12 @@ import com.yammer.metrics.core.HealthCheckRegistry;
 @SuppressWarnings("serial")
 public class JeevesServlet extends HttpServlet
 {
+    public static final String CAN_DELETE_GROUP_IDS = "CAN_DELETE_GROUP_IDS";
     public static final String NODE_TYPE = "NODE_TYPE";
     public static final String FROM_DESCRIPTION = "FROM_DESCRIPTION";
 	private JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
+	private String canDeleteGroupIds = "";
 	private String nodeType = "AGIV";
 	private String fromDescription = "Metadata Workflow";
 
@@ -78,6 +80,10 @@ public class JeevesServlet extends HttpServlet
 
 	public void init() throws ServletException
 	{
+        String canDeleteGroupIds = getServletConfig().getInitParameter(CAN_DELETE_GROUP_IDS);
+        if(canDeleteGroupIds != null) {
+        	this.canDeleteGroupIds = canDeleteGroupIds;
+        }
         String nodeType = getServletConfig().getInitParameter(NODE_TYPE);
         if(nodeType != null) {
         	this.nodeType = nodeType;
@@ -288,6 +294,8 @@ public class JeevesServlet extends HttpServlet
 	}
 
 	public boolean isInitialized() { return initialized; }
+
+	public String getCanDeleteGroupIds() { return canDeleteGroupIds;	}
 
 	public String getNodeType() { return nodeType;	}
 

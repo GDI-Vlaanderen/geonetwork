@@ -31,6 +31,10 @@
 				<td><xsl:value-of select="/root/gui/info/notchangedByErrors"/></td>
 				<td style="text-align: center;"><xsl:value-of select="/root/response/notChangedByErrors"/></td>
 			</tr>
+			<tr>
+				<td><xsl:value-of select="/root/gui/info/notdeletedByRights"/></td>
+				<td style="text-align: center;"><xsl:value-of select="/root/response/notDeletedByRights"/></td>
+			</tr>
 			<xsl:if test="/root/gui/reqService='metadata.batch.processing'">
 				<tr>
 					<td><xsl:value-of select="/root/gui/info/notProcessFound"/></td>

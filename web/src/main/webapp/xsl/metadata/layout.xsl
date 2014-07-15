@@ -572,7 +572,11 @@
         select="concat('doRemoveElementAction(', $apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
        <xsl:if test="not(geonet:element/@del='true') or ($currTab = 'simple' and ($siblingsCount = 0))">
 <!-- 		<xsl:if test="not(geonet:element/@del='true')"> -->
-        <xsl:text>!OPTIONAL</xsl:text>
+			<xsl:if test="$schema!='iso19139' or (name(.) != 'gmd:useLimitation' and
+				name(.) != 'gmd:accessConstraints' and name(.) != 'gmd:useConstraints'and
+				name(.) != 'gmd:otherConstraints')">
+        	<xsl:text>!OPTIONAL</xsl:text>
+        </xsl:if>
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="upLink">
@@ -2412,7 +2416,10 @@
 		<xsl:variable name="name" select="concat(@prefix,':',@name)"/>
 		<xsl:variable name="qname"><xsl:value-of select="concat(@prefix,'COLON',@name)"/></xsl:variable>
 	    <xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
+<!--
 	    <xsl:variable name="max" select="if (../geonet:element/@max) then ../geonet:element/@max else @max"/>
+		<xsl:variable name="elemId" select="@uuid"/>
+-->
 		<xsl:variable name="isXLinked" select="false()"/>
 		<xsl:variable name="text">
 			<xsl:variable name="options">
@@ -2492,8 +2499,13 @@
 			</select>
 		</xsl:variable>
 		<xsl:variable name="addLink">
-			<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
-			<xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value,',$ommitNameTag,');')"/>
+			<xsl:choose>
+				<xsl:when test="$name='gmd:useLimitation' or $name='gmd:accessConstraints' or $name='gmd:useConstraints' or $name='gmd:otherConstraints' or $name='gmd:classification'"><xsl:value-of select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,'_',$parentName,'_',$name,'_subtemplate_row',$apos,',',$apos,'add',$apos,',',@max,');')"/></xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
+					<xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value,',$ommitNameTag,');')"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="helpLink">
 			<xsl:call-template name="getHelpLink">

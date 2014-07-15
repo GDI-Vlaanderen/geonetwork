@@ -141,6 +141,7 @@
       </plugin>
 
       <!-- This plugin Allows to deploy several webapps into a specific container (ie. jetty) -->
+<!-- 
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven2-plugin</artifactId>
@@ -158,7 +159,6 @@
           <configuration>
             <home>${project.build.directory}/test-server</home>
             <properties>
-              <!-- Cargo VMARGS are not working. FIXME -->
               <cargo.jvmargs>-Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m</cargo.jvmargs>
               <cargo.servlet.port>8080</cargo.servlet.port>
             </properties>
@@ -167,10 +167,6 @@
                 <location>${project.build.directory}/../web/target/geonetwork.war</location>
                 <type>war</type>
               </deployable>
-<!--              <deployable>
-                <location>${project.build.directory}/../intermap/target/intermap.war</location>
-                <type>war</type>
-              </deployable> -->
               <deployable>
                 <location>${project.build.directory}/../geoserver/target/geoserver.war</location>
                 <type>war</type>
@@ -179,7 +175,7 @@
           </configuration>
         </configuration>
       </plugin>
-
+-->
       <!-- artifact assembly -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -832,12 +828,14 @@
   </modules>
   
   <profiles>
+<!-- 
     <profile>
       <id>itests</id>
       <modules>
         <module>web-itest</module>
       </modules>
     </profile>
+
     <profile>
       <id>gast</id>
       <activation>
@@ -849,6 +847,7 @@
     <module>gast</module>
   </modules>
     </profile>
+-->
   </profiles>
 <!--
   <distributionManagement>

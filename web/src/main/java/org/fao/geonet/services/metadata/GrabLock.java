@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.io.File;
-import java.sql.SQLException;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
@@ -36,7 +34,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -45,7 +42,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.MailSender;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 import org.tuckey.web.filters.urlrewrite.utils.StringUtils;
 
@@ -74,8 +71,9 @@ public class GrabLock implements Service {
         String targetUserId = Util.getParam(params, Params.USER_ID);
 
         // current user executing this service
-        String userId = context.getUserSession().getUserId();
-        String userProfile = context.getUserSession().getProfile();
+    	UserSession session = context.getUserSession();
+        String userId = session.getUserId();
+        String userProfile = session.getProfile();
 
         if (userProfile == null) {
             throw new OperationNotAllowedEx("Unauthorized user " + userId + " attempted to grab lock");
@@ -103,13 +101,22 @@ public class GrabLock implements Service {
         		List<Element> userList = dbms.select("SELECT email FROM Users WHERE id = '" + lockedBy + "'").getChildren();
         		Element user = (Element) userList.get(0);
         		user.detach();
-        		Element root = getNewRootElement(context, dbms, Params.Status.DRAFT, context.getServlet().getFromDescription(), userId);
+        		Element root = Utils.getNewRootElement(context, dbms, Params.Status.DRAFT, context.getServlet().getFromDescription(), userId);
     			Element metadata = new Element("metadata");
     			root.addContent(metadata);
-    			metadata.addContent(new Element("url").setText(buildMetadataLink(context, metadataId)));
+    			metadata.addContent(new Element("url").setText(Utils.buildMetadataLink(context, metadataId)));
     			metadata.addContent(new Element("title").setText(dataMan.extractTitle(context, info.schemaId, metadataId)));
     			metadata.addContent(new Element("currentStatus").setText(""));
-				sendEmail(context, user.getChildText("email"), root);
+    			String replyTo = session.getEmailAddr();
+    			String replyToDescr = null;
+    			if (replyTo != null) {
+    				replyToDescr = session.getName() + " " + session.getSurname();
+    			} else {
+    				replyTo = settingManager.getValue("system/feedback/email");
+    				replyToDescr = context.getServlet().getFromDescription();
+    			}
+    			Utils.sendEmail(context, user.getChildText("email"), replyTo, replyToDescr, root);
+//				sendEmail(context, user.getChildText("email"), root);
             }
         }
         else {
@@ -119,7 +126,7 @@ public class GrabLock implements Service {
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		return elResp;
     }
-
+/*
 	private Element getNewRootElement(ServiceContext context, Dbms dbms, String status, String changeMessage, String userId) throws SQLException {
 		Element root = new Element("root");
 		List<Element> userList = dbms.select("SELECT surname, name FROM Users WHERE id = '" + userId + "'").getChildren();
@@ -155,8 +162,8 @@ public class GrabLock implements Service {
 				Geonet.Settings.SERVER_HOST);
 		String port = gc.getSettingManager().getValue(
 				Geonet.Settings.SERVER_PORT);
-		return /*protocol + */"https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port)
-				+ context.getBaseUrl();
+//		return protocol + "://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port) + context.getBaseUrl();
+		return "https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port) + context.getBaseUrl();
 	}
 
 	private void sendEmail(ServiceContext context, String sendTo, Element params)
@@ -208,4 +215,5 @@ public class GrabLock implements Service {
 					emailElement.getChildText("message"));
 		}
 	}
+*/
 }

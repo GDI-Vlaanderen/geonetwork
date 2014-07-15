@@ -156,6 +156,10 @@
         	system parameter is not specified.
           -->
         <init-param>
+		    <param-name>CAN_DELETE_GROUP_IDS</param-name>
+ 			<param-value></param-value>
+        </init-param>
+        <init-param>
 		    <param-name>NODE_TYPE</param-name>
 <!-- 			<param-value>AGIV</param-value>-->
 	 		<param-value>Geopunt</param-value>

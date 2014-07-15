@@ -1,13 +1,27 @@
 package org.fao.geonet.services;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
 public class Utils {
@@ -74,4 +88,164 @@ public class Utils {
 			ServiceContext context) throws Exception {
 		return getIdentifierFromParameters(params, context, Params.UUID, Params.ID);
 	}
+
+	public static Element getNewRootElement(ServiceContext context, Dbms dbms, String status, String changeMessage, String userId) throws SQLException {
+		Element root = new Element("root");
+		List<Element> userList = dbms.select("SELECT surname, name FROM Users WHERE id = '" + userId + "'").getChildren();
+		Element user = (Element) userList.get(0);
+		user.detach();
+		user.setName("user");
+		root.addContent(user);
+		List<Element> groupList = dbms.select("SELECT description FROM groups as g, usergroups as ug WHERE ug.userid = '" + userId + "' AND ug.groupid = g.id").getChildren();
+		for (Element group : groupList) {
+			root.addContent(new Element("group").setText(group.getChildText("description")));
+		}
+		root.addContent(new Element("node").setText(context.getServlet().getNodeType().toLowerCase()));
+		root.addContent(new Element("siteUrl").setText(getContextUrl(context)));
+		root.addContent(new Element("metadatacenter").setText(context.getServlet().getFromDescription()));
+		root.addContent(new Element("status").setText(status));
+		root.addContent(new Element("changeMessage").setText(changeMessage));
+		return root;
+	}
+
+	public static String buildMetadataLink(ServiceContext context, String metadataId) {
+		// TODO: hack voor AGIV
+		return getContextUrl(context)
+//				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
+				+ "/apps/tabsearch/index.html?id=" + metadataId + "&external=true";
+	}
+
+	public static String getContextUrl(ServiceContext context) {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		String protocol = gc.getSettingManager().getValue(
+				Geonet.Settings.SERVER_PROTOCOL);
+		String host = gc.getSettingManager().getValue(
+				Geonet.Settings.SERVER_HOST);
+		String port = gc.getSettingManager().getValue(
+				Geonet.Settings.SERVER_PORT);
+		return /*protocol + */"https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port)
+				+ context.getBaseUrl();
+	}
+
+	public static void sendEmail(ServiceContext context, String sendTo, String replyTo, String replyToDescr, Element params)
+			throws Exception {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+		AccessManager am = gc.getAccessManager();
+
+		String host = sm.getValue("system/feedback/mailServer/host");
+		String port = sm.getValue("system/feedback/mailServer/port");
+		boolean emailNotes = true;
+		String from = sm.getValue("system/feedback/email");
+
+		if (host.length() == 0) {
+			context.error("Mail server host not configured, email notifications won't be sent.");
+			emailNotes = false;
+		}
+
+		if (port.length() == 0) {
+			context.error("Mail server port not configured, email notifications won't be sent.");
+			emailNotes = false;
+		}
+
+		if (from.length() == 0) {
+			context.error("Mail feedback address not configured, email notifications won't be sent.");
+			emailNotes = false;
+		}
+
+		if (!emailNotes) {
+			context.info("Would send email with message grablock service but no email server configured");
+		} else {
+			String fromDescr = context.getServlet().getFromDescription();
+			String styleSheet = context.getAppPath() + 	File.separator + Geonet.Path.STYLESHEETS + File.separator + Geonet.File.STATUS_CHANGE_EMAIL;
+			Element emailElement = Xml.transform(params, styleSheet);
+			MailSender sender = new MailSender(context);
+			sender.sendWithReplyTo(host, Integer.parseInt(port), from,
+					fromDescr, sendTo, null, replyTo, replyToDescr, emailElement.getChildText("subject"),
+					emailElement.getChildText("message"));
+		}
+	}
+
+	/**
+	 * Process the users and metadata records for emailing notices.
+	 *
+	 * @param context
+	 *            The service context
+	 * @param dbms
+	 *            The dbms
+	 * @param replyTo
+	 *            The replyTo email
+	 * @param replyToDescr
+	 *            The replyTo description configured in the web.xml
+	 * @param records
+	 *            The selected set of records
+	 * @param subject
+	 *            Subject to be used for email notices
+	 * @param status
+	 *            The status being set
+	 * @param changeDate
+	 *            Datestamp of status change
+	 */
+	@SuppressWarnings("unchecked")
+	public static void processList(ServiceContext context, Dbms dbms, String replyTo, String replyToDescr, Element contentUsers, String subject, String status,
+			String changeDate, String changeMessage, Map<String,Map<String,String>> metadataMap, List<String> emailMetadataIdList)
+			throws Exception {
+		String styleSheet = context.getAppPath() + 	File.separator + Geonet.Path.STYLESHEETS + File.separator + Geonet.File.STATUS_CHANGE_EMAIL;
+
+		Set<String> metadataIds = new HashSet<String>();
+		String currentUserId = null;
+		String userId = null;
+		String currentEmail = null;
+		List<Element> records = contentUsers.getChildren();
+		Iterator<Element> recordsIterator = records.iterator();
+		Element root = null;
+		Element metadata = null;
+		while(recordsIterator.hasNext()) {
+			Element record = recordsIterator.next();
+			String metadataId = record.getChildText("metadataid");
+			userId = record.getChildText("userid");
+			if (currentUserId==null) {
+				currentUserId = userId;
+				currentEmail = record.getChildText("email");
+				if (currentEmail!=null) {
+					currentEmail = currentEmail.toLowerCase();
+				}
+				root = getNewRootElement(context, dbms, status, changeMessage, context.getUserSession().getUserId());
+			} else if (!currentUserId.equals(userId)) {
+				if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
+					sendEmail(context, currentEmail, replyTo, replyToDescr, root);
+//					sendEmail(currentEmail, Xml.transform(root, styleSheet));
+//					sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
+					metadataIds.clear();
+				}
+				currentUserId = userId;
+				currentEmail = record.getChildText("email");
+				if (currentEmail!=null) {
+					currentEmail = currentEmail.toLowerCase();
+				}
+				root = getNewRootElement(context, dbms, status, changeMessage, context.getUserSession().getUserId());
+			}
+			if (StringUtils.isNotBlank(currentEmail) && !emailMetadataIdList.contains(currentEmail + "_" + metadataId)) {
+				emailMetadataIdList.add(currentEmail + "_" + metadataId);
+				metadataIds.add(metadataId);
+				metadata = new Element("metadata");
+				root.addContent(metadata);
+				metadata.addContent(new Element("url").setText(buildMetadataLink(context, metadataId)));
+				metadata.addContent(new Element("title").setText(metadataMap.get(metadataId).get("title").toString()));
+				metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataId).get("currentStatus").toString()));
+				if (metadataMap.get(metadataId).get("previousStatus")!=null) {
+					metadata.addContent(new Element("previousStatus").setText(metadataMap.get(metadataId).get("previousStatus").toString()));
+				}
+			}
+		}
+
+		if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
+			sendEmail(context, currentEmail, replyTo, replyToDescr, root);
+//			sendEmail(currentEmail, Xml.transform(root, styleSheet));
+//			sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
+		}
+	}
+
 }

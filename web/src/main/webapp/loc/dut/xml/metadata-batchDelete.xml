@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<notfound>Metadata Records niet gevonden</notfound>
-	<notowner>Metadata Records die niet konden worden verwijderd omdat u niet de eigenaar bent</notowner>
-	<updated>Metadata Records verwijderd</updated>
+	<notfound>Metadata records niet gevonden</notfound>
+	<notowner>Metadata records die niet konden worden verwijderd omdat u niet de eigenaar bent</notowner>
+	<updated>Metadata records verwijderd</updated>
+	<notdeletedByRights>Metadata records die niet konden worden verwijderd aangezien u niet de rechten hebt</notdeletedByRights>
 </strings>
