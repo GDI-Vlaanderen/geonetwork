@@ -378,11 +378,11 @@ public class DataManager {
      * @throws Exception hmm
      */
     public void indexInThreadPoolIfPossible(Dbms dbms, String id, boolean workspace) throws Exception {
-//        if(ServiceContext.get() == null ) {
+        if(ServiceContext.get() == null ) {
             indexMetadata(dbms, id, false, workspace, true);
-//        } else {
-//            indexInThreadPool(ServiceContext.get(), id, dbms, workspace, true);
-//        }
+        } else {
+            indexInThreadPool(ServiceContext.get(), id, dbms, workspace, true);
+        }
     }
 
     /**
@@ -1944,6 +1944,7 @@ public class DataManager {
 
     public void saveWorkspace(Dbms dbms, String id) throws Exception {
         xmlSerializer.copyToWorkspace(dbms, id);
+        dbms.commit();
     }
 
 	//--------------------------------------------------------------------------
@@ -2086,6 +2087,7 @@ public class DataManager {
         args.add(userId);
         args.add(metadataId);
         dbms.execute(query, args.toArray());
+        dbms.commit();
 /*
         boolean workspace = false;
         indexMetadata(dbms, metadataId, false, workspace, true);
@@ -2109,7 +2111,7 @@ public class DataManager {
         Vector<Serializable> args = new Vector<Serializable>();
         args.add(metadataId);
         dbms.execute(query, args.toArray());
-
+        dbms.commit();        
         boolean workspace = false;
         indexMetadata(dbms, metadataId, false, workspace, true);
         workspace = true;
@@ -2128,6 +2130,7 @@ public class DataManager {
         if(isLocked(dbms, metadataId)) {
             String query = "UPDATE Metadata set owner = '" + userId + "', lockedBy = '" + userId + "' WHERE id=?";
             dbms.execute(query, metadataId);
+            dbms.commit();
             boolean workspace = false;
             indexMetadata(dbms, metadataId, false, workspace, true);
             query = "UPDATE Workspace set owner = '" + userId + "', lockedBy = '" + userId + "' WHERE id=?";
@@ -2441,6 +2444,7 @@ public class DataManager {
 //        System.out.println("** At begin of synchronized method deleteFromWorkspace.");
         Log.debug(Geonet.DATA_MANAGER, "deleting metadata from workspace");
         xmlSerializer.deleteFromWorkspace(dbms, id);
+        dbms.commit();
         boolean workspace = true;
         searchMan.delete(LuceneIndexField._ID, id, workspace);
 //        System.out.println("** At end of synchronized method deleteFromWorkspace.");
