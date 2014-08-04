@@ -9,6 +9,7 @@ import org.jdom.Element;
 import org.jdom.Text;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.junit.Ignore;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -22,6 +23,7 @@ import java.io.StringReader;
 /**
  * @author heikki doeleman
  */
+@Ignore
 public class DifferenceAnnotatorTest extends TestCase {
 
     private XMLOutputter outputter = new XMLOutputter(Format.getRawFormat());
