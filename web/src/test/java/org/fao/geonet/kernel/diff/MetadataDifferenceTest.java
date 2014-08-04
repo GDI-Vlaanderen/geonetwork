@@ -7,6 +7,7 @@ import org.fao.geonet.test.TestCase;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.junit.Ignore;
 
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import java.util.Set;
  * @author heikki doeleman
  *
  */
+@Ignore
 public class MetadataDifferenceTest extends TestCase {
 
     private XMLOutputter outputter = new XMLOutputter(Format.getRawFormat());
