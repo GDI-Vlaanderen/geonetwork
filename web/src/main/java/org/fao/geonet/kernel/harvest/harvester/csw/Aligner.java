@@ -223,7 +223,7 @@ public class Aligner
 		dataMan.setStatusExt(context, dbms, id, new Integer(Params.Status.APPROVED),
 				new ISODate().toString(), "Status veranderd na harvesting");
 
-		dbms.commit();
+//		dbms.commit();
         boolean workspace = false;
         dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		result.addedMetadata++;
@@ -337,7 +337,7 @@ public class Aligner
 				dataMan.setStatusExt(context, dbms, id, new Integer(Params.Status.APPROVED),
 						new ISODate().toString(), "Status veranderd na harvesting");
 
-				dbms.commit();
+//				dbms.commit();
                 boolean workspace = false;
                 dataMan.indexMetadataGroup(dbms, id, workspace, true);
 				result.updatedMetadata++;
