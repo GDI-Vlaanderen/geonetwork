@@ -49,8 +49,20 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
     }, {
         name: 'type',
         mapping: '@type'
-    }];
+    }, {
+	    name: 'workspace',
+	    convert: getWorkspace
+	}];
     
+    function getWorkspace(v, record){
+		var isWorkspace = Ext.DomQuery.selectValue("isWorkspace",record);
+        if (isWorkspace) {
+            return isWorkspace;
+        } else {
+            return 'false';
+        }
+    }
+
     if (grouping) {
         var reader = new Ext.data.XmlReader({
             record: 'relation',

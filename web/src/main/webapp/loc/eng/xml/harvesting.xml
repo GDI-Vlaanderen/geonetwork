@@ -402,6 +402,7 @@
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>
+	<running>Running</running>
 	
 	<tips>
 		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->

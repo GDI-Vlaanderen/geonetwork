@@ -185,7 +185,7 @@
         -->  
         <init-param>
             <param-name>zoekdienst.drivemapping</param-name>
-            <param-value>net use z: \\PCPB359\zoekdienst_data_shared /PERSISTENT:NO</param-value>
+            <param-value>net use z: \\PCPB615\zoekdienst_data_shared /PERSISTENT:NO</param-value>
         </init-param>
         <init-param>
             <param-name>zoekdienst.dir</param-name>

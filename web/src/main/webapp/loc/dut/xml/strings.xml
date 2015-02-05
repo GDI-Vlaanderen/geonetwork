@@ -409,6 +409,18 @@
 	<categoryManagement>Categorie beheer</categoryManagement>
 	<categoryManDes>Toevoegen/wijzigen/verwijderen of bekijken van categorieen</categoryManDes>
 	<categoryNameMandatory>Een categorie moet worden ingevuld.</categoryNameMandatory>
+	<xslChoice value="1">XPATH expressie voor element</xslChoice>
+	<xslChoice value="2">Xsl bestand op de server</xslChoice>
+	<xpathExpressionHelper>XPATH expressie voor element</xpathExpressionHelper>
+	<xpathExpression>XPATH expressie</xpathExpression>
+	<filterChoice value="1">Filteren op komma gescheiden UUID's</filterChoice>
+	<filterChoice value="2">Filteren op groep</filterChoice>
+	<filterChoice value="3">Geen filter (alle metadata records wijzigen)</filterChoice>
+	<uuids>Komma gescheiden UUID's</uuids>
+	<updateValue>Nieuwe waarde</updateValue>
+	<tooltipOr>of</tooltipOr>
+	<isMandatory>Onderstaande velden zijn verplicht</isMandatory>
+	<updateAllMetadata>Ben je zeker dat je alle metadata records wilt wijzigen?</updateAllMetadata>
 	<changeDate>Metadata change date</changeDate>
 	<checkusername>Check</checkusername>
   <choice>Choice</choice>
@@ -676,7 +688,7 @@
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>Metadata</metadata>
     <metametadata>Meta-metadata</metametadata>
-    <metadataAdded>Metadata met ID: %1 is opgenomen in de database</metadataAdded>
+    <metadataAdded>Metadata met databank ID: %1 is opgeslagen in de databank</metadataAdded>
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
 	<metadataUpdateResults>Results of Metadata Update</metadataUpdateResults>
@@ -781,6 +793,8 @@
 	<protocolChoice show='-' value='OGC:WMTS'>OGC-WMTS Web Map Tile Service (endpoint)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WMTS-1.0.0-http-get-capabilities'>OGC-WMTS GetCapabilities operatie (ver 1.0.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WMTS-1.0.0-http-get-tile'>OGC-WMTS GetTile operatie (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
+	<protocolChoice show="-" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
 	<protocolChoice show='-' value='WWW:DOWNLOAD-1.0-ftp--download'>Bestand ter directe download over FTP</protocolChoice>
 	<protocolChoice show='-' value='WWW:DOWNLOAD-1.0-http--download'>Bestand ter directe download over HTTP</protocolChoice>
 	<protocolChoice show='-' value='LINK download-store'>Indirecte link naar download-store (URL)</protocolChoice>

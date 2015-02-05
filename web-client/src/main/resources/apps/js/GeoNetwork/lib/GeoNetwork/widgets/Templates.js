@@ -452,8 +452,15 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate('');
 
 GeoNetwork.Templates.Relation = {
         SHORT: ['<div class="{type}">',
-                   '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\',\'{istemplate}\');return false;" title="{abstract}">{title}</a>',
-                 '</div>']
+                   '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\',\'{istemplate}\');return false;" title="{abstract}"',
+		                   '<tpl if="values.workspace==\'true\'">',
+								' style="color:red"',
+		                   '</tpl>',
+		                   '>{title}',
+							'<tpl if="values.workspace==\'true\'">',
+							      ' (niet publieke versie)',
+							'</tpl>',
+                 '</a></div>']
 };
 
 

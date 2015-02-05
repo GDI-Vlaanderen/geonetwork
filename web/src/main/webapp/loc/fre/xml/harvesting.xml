@@ -401,7 +401,8 @@
 	</tipHeader>
 	
 	<notRun>En attente du premier lancement</notRun>
-	
+	<running>En cours</running>
+
 	<tips>
 		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		

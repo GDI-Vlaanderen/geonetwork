@@ -1674,6 +1674,7 @@ public class DataManager {
 		String value = (harvestUuid != null) ? "y" : "n";
 		String query = "UPDATE Metadata SET isHarvested=?, harvestUuid=?, harvestUri=? WHERE id=?";
 		dbms.execute(query, value, harvestUuid, harvestUri, id);
+		dbms.commit();
 	}
 
     /**
@@ -1686,8 +1687,7 @@ public class DataManager {
 		String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 		String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
 		String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/en";
-
-		return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
+		return /*protocol + */"https://" + host + (("80".equals(port) || "443".equals(port)) ? "" : ":" + port) + locServ;
 	}
 
     /**
@@ -3039,11 +3039,13 @@ public class DataManager {
 		env.addContent(new Element("ext").setText(ext));
 
         // heikki: manually merged https://github.com/geonetwork/core-geonetwork/commit/ff1b9bff031620e8ec7083249e11109cb219d9cd here
+        String protocol = settingMan.getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host = settingMan.getValue(Geonet.Settings.SERVER_HOST);
         String port = settingMan.getValue(Geonet.Settings.SERVER_PORT);
         String baseUrl = context.getBaseUrl();
+        env.addContent(new Element("protocol").setText(protocol));
         env.addContent(new Element("host").setText(host));
-        env.addContent(new Element("port").setText(port));
+        env.addContent(new Element("port").setText(("80".equals(port) || "443".equals(port)) ? "" : ":" + port));
         env.addContent(new Element("baseUrl").setText(baseUrl));
         // end merge
 
@@ -3532,15 +3534,15 @@ public class DataManager {
         	String query = "SELECT uuid, isTemplate FROM Metadata WHERE id = ?";
             Element rec = dbms.select(query, id).getChild("record");
             Boolean isTemplate = rec != null && !rec.getChildText("istemplate").equals("n");
-            
-            // don't process templates
+/*            
             if(isTemplate) {
                 if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
                 return md;
             }
             else {
-                uuid = uuid == null ? rec.getChildText("uuid") : uuid;
+*/
+            	uuid = uuid == null ? rec.getChildText("uuid") : uuid;
                 
                 //--- setup environment
                 Element env = new Element("env");
@@ -3571,7 +3573,7 @@ public class DataManager {
                 String styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
                 result = Xml.transform(result, styleSheet);
                 return result;
-            }
+//            }
         }
         else {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -3949,7 +3951,7 @@ public class DataManager {
         String protocol = settingMan.getValue(Geonet.Settings.SERVER_PROTOCOL);
 		String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 		String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
-		addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + (port == "80" ? "" : ":" + port) + baseURL);
+		addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + (("80".equals(port) || "443".equals(port)) ? "" : ":" + port) + baseURL);
 		addElement(info, Edit.Info.Elem.LOCSERV, "/srv/en" );
 		return info;
 	}

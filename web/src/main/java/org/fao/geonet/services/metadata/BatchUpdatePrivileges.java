@@ -127,6 +127,7 @@ public class BatchUpdatePrivileges implements Service
 			}
 		}
 		}
+		dbms.commit();
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");

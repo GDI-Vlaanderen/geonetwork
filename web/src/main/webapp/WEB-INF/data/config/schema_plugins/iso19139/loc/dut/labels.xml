@@ -2066,6 +2066,21 @@
 	<element name="gmd:resourceConstraints">
 		<label>Beperkingen van de omschreven data</label>
 		<description>Geeft informatie over de beperkingen van de beschreven databron.</description>
+		<subtemplate>
+            <option value="Invuloplossing0" title="Invuloplossing 0">Licentie Niet Gespecifieerd</option>
+<!-- 
+            <option value="Invuloplossing1" title="Invuloplossing 1">CC0-verklaring v1.0</option>
+            <option value="Invuloplossing2" title="Invuloplossing 2">Gratis Open Data Licentie v1.0</option>
+            <option value="Invuloplossing2b" title="Invuloplossing 2b">Gratis Open Data Licentie voor gegevens niet toegevoegd aan de GDI v1.0</option>
+            <option value="Invuloplossing3" title="Invuloplossing 3">Open Data Licentie tegen Billijke Vergoeding v1.0</option>
+            <option value="Invuloplossing4" title="Invuloplossing 4">Gratis Open Data Licentie voor Niet-Commercieel Hergebruik en Open Data Licentie voor Commercieel Hergebruik v1.0</option>
+            <option value="Invuloplossing5" title="Invuloplossing 5">CC0-verklaring v1.2</option>
+            <option value="Invuloplossing6" title="Invuloplossing 6">Gratis Open Data Licentie v1.2</option>
+            <option value="Invuloplossing6b" title="Invuloplossing 6b">Gratis Open Data Licentie voor gegevens niet toegevoegd aan de GDI v1.2</option>
+            <option value="Invuloplossing7" title="Invuloplossing 7">Open Data Licentie tegen Billijke Vergoeding v1.2</option>
+            <option value="Invuloplossing8" title="Invuloplossing 8">Gratis Open Data Licentie voor Niet-Commercieel Hergebruik en Open Data Licentie voor Commercieel Hergebruik v1.2</option>
+-->
+		</subtemplate>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceFormat">

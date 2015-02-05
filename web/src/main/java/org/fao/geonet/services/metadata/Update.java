@@ -85,6 +85,7 @@ public class Update implements Service {
 			}
             if (isTemplate.equals("y")) {
 				unsetAllOperations(dataMan, dbms, context, id);
+				dbms.commit();
             }
             dataMan.indexMetadata(dbms, id, false, false, true);
         }

@@ -95,8 +95,8 @@ public class ClusterConfig {
 
     /**
      * URL to ActiveMQ broker.
-     * 
-     * See http://activemq.apache.org/uri-protocols.html for options. Default value here is for ActiveMQ on same machine 
+     *
+     * See http://activemq.apache.org/uri-protocols.html for options. Default value here is for ActiveMQ on same machine
      * as this GeoNetwork node, but not in the same JVM (same as ActiveMQConnection.DEFAULT_BROKER_URL).
      */
     private static String brokerURL = "failover://tcp://localhost:61616";
@@ -247,7 +247,7 @@ public class ClusterConfig {
             register(new Producer(siteID, Geonet.ClusterMessageTopic.HARVESTER_REMOVED, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION, MessagingDomain.PUBLISH_SUBSCRIBE));
             register(new Producer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION_RESPONSE, MessagingDomain.PUBLISH_SUBSCRIBE));
-            register(new Producer(siteID, Geonet.ClusterMessageQueue.HARVEST, MessagingDomain.POINT_TO_POINT));
+            register(new Producer(siteID, Geonet.ClusterMessageQueue.HARVEST, MessagingDomain.PUBLISH_SUBSCRIBE));
 
             Log.info(Geonet.JMS, "registered # " + producerMap.size() + " producers");
 
@@ -290,7 +290,7 @@ public class ClusterConfig {
             systemConfigurationResponseMessageHandler = new SystemConfigurationResponseMessageHandler();
             register(new Consumer(siteID, Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION_RESPONSE, MessagingDomain.PUBLISH_SUBSCRIBE,
                     systemConfigurationResponseMessageHandler));
-            register(new Consumer(siteID, Geonet.ClusterMessageQueue.HARVEST, MessagingDomain.POINT_TO_POINT,
+            register(new Consumer(siteID, Geonet.ClusterMessageQueue.HARVEST, MessagingDomain.PUBLISH_SUBSCRIBE,
                     new HarvestMessageHandler(context)));
 
             Log.info(Geonet.JMS, "registered # " + jmsActors.size() + " producers and consumers");
@@ -332,7 +332,7 @@ public class ClusterConfig {
                 // If node-id is not configured, create it
                 if (StringUtils.isEmpty(clientID) || clientID.toUpperCase().equals("CHANGEME")) {
                     clientID = UUID.randomUUID().toString();
-                    
+
                     jms.getChild("clientID").setText(clientID);
 
                     Xml.writeResponse(new Document((Element)cConfig.detach()), new BufferedOutputStream(
@@ -349,6 +349,7 @@ public class ClusterConfig {
                 initJMSActors(serviceContext);
 
                 verifyClusterConfig();
+//                ClusterConfig.enabled = true;
             }
             else {
                 ClusterConfig.enabled = false;

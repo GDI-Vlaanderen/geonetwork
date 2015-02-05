@@ -107,13 +107,15 @@
 				$s/wms:ContactInformation|
                    ows:ServiceProvider|
 				owsg:ServiceProvider|
-				ows11:ServiceProvider">
+				ows11:ServiceProvider|
+				Service/ContactInformation">
 				<xsl:for-each select="$s/wms:ContactInformation|
 					$s/wfs:ContactInformation|
 					$s/wms:ContactInformation|
                        ows:ServiceProvider|
 					owsg:ServiceProvider|
-					ows11:ServiceProvider">
+					ows11:ServiceProvider|
+					Service/ContactInformation">
 					<pointOfContact>
 						<CI_ResponsibleParty>
 							<xsl:apply-templates select="." mode="RespParty"/>

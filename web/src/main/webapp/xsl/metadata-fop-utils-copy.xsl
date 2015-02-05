@@ -211,17 +211,10 @@
 				<xsl:with-param name="schema" select="$schema" />
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:variable name="UPPER">
-			ABCDEFGHIJKLMNOPQRSTUVWXYZ
-		</xsl:variable>
-		<xsl:variable name="LOWER">
-			abcdefghijklmnopqrstuvwxyz
-		</xsl:variable>
 		<xsl:variable name="text">
 			<xsl:call-template name="translatedString">
 				<xsl:with-param name="schema" select="$schema" />
-				<xsl:with-param name="langId"
-					select="concat('#',translate(substring(/root/gui/language,1,2),$LOWER,$UPPER))" />
+				<xsl:with-param name="langId" select="concat('#',upper-case(/root/gui/language))"/>
 			</xsl:call-template>
 		</xsl:variable>
 

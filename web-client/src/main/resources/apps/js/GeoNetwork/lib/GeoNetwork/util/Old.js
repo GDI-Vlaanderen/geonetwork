@@ -58,7 +58,7 @@ function clearAll(id){
  *  Modal box with checkbox validation
  *
  */
-function checkBoxModalUpdate(div, service, modalbox, title,button){
+function checkBoxModalUpdate(div, service, modalbox, title, button){
     var boxes = Ext.DomQuery.select('input[type="checkbox"]');
     var pars = "?";
     var params = {};
@@ -102,11 +102,13 @@ function checkBoxModalUpdate(div, service, modalbox, title,button){
     	} else {
 	    	getError(response);
     	}
-    	button.disabled=false;
+    	if (button) {
+        	button.disabled=false;
+    	}
     });
 }
 
-function radioModalUpdate(div, service, modalbox, title,button) {
+function radioModalUpdate(div, service, modalbox, title, button) {
     var pars = '?';
     var inputs = Ext.DomQuery.select('input[type="hidden"],textarea,select', div);
     Ext.each(inputs, function(s) {
@@ -144,7 +146,9 @@ function radioModalUpdate(div, service, modalbox, title,button) {
     	} else {
 	    	getError(response);
     	}
-    	button.disabled=false;
+    	if (button) {
+        	button.disabled=false;
+    	}
     });
 }
 

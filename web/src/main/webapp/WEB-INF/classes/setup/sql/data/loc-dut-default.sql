@@ -1,4 +1,4 @@
-INSERT INTO Languages VALUES ('dut','Nederlands', 'y', 'n');
+INSERT INTO Languages VALUES ('dut','Nederlands', 'y', 'y');
 
 -- Take care to table ID (related to other loc files)
 INSERT INTO CswServerCapabilitiesInfo VALUES ('9', 'dut', 'title', '');

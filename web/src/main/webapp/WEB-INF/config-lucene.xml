@@ -162,6 +162,7 @@
     <Field name="_cat" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
 
     <Field name="keyword" analyzer="org.fao.geonet.kernel.search.LowerCaseKeywordAnalyzer"/>
+    <Field name="inspiretheme" analyzer="org.fao.geonet.kernel.search.LowerCaseKeywordAnalyzer"/>
     <Field name="inspirerelated" analyzer="org.fao.geonet.kernel.search.LowerCaseKeywordAnalyzer"/>
     <Field name="orgName" analyzer="org.fao.geonet.kernel.search.LowerCaseKeywordAnalyzer"/>
 
@@ -249,6 +250,7 @@
 
     <Field name="orgName"/>
     <Field name="keyword"/>
+    <Field name="inspiretheme"/>
   </tokenized>
 
   <!-- All Lucene numeric fields.

@@ -127,7 +127,7 @@ public class Delete implements Service
     	    			properties.put("title", dataMan.extractTitle(context, info.schemaId, id));
     	    			properties.put("currentStatus", currentStatus);
     	    			Map<String, Map<String,String>> changedMmetadataIdsToInform = new HashMap<String,Map<String,String>>();
-    	    			changedMmetadataIdsToInform.put(id,properties);
+    	    			changedMmetadataIdsToInform.put(info.uuid,properties);
     	    			List<String> emailMetadataIdList = new ArrayList<String>();
     	    			informContentUsers(context, dbms, accessMan.getContentAdmins(dbms, changedMmetadataIdsToInform.keySet()), changedMmetadataIdsToInform, new ISODate().toString(),
     	    					"", Params.Status.REMOVED, emailMetadataIdList);
@@ -210,7 +210,6 @@ public class Delete implements Service
 		String subject = "Status metadata record(s) gewijzigd naar '" + dataMan.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
 					+ replyToDescr + ") op " + changeDate;
 
-		//processList(contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
 		Utils.processList(context, dbms, replyTo, replyToDescr, contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
 	}
 

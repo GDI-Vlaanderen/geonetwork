@@ -400,6 +400,16 @@
 	<categoryManagement>Category management</categoryManagement>
 	<categoryManDes>Add/modify/delete and show categories</categoryManDes>
 	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
+	<xpathExpressionHelper>XPATH expression for element</xpathExpressionHelper>
+	<xpathExpression>XPATH expression</xpathExpression>
+	<filterChoice value="1">Filter by comma separated UUIDs</filterChoice>
+	<filterChoice value="2">Filter by group</filterChoice>
+	<filterChoice value="3">No filter (Update all metadata records)</filterChoice>
+	<uuids>Comma separated UUIDs</uuids>
+	<updateValue>New value</updateValue>
+	<tooltipOr>or</tooltipOr>
+	<isMandatory>Next fields are mandatory</isMandatory>
+	<updateAllMetadata>Are you sure that you want to update all metadata records?</updateAllMetadata>
 	<changeDate>Metadata change date</changeDate>
 	<checkusername>Check</checkusername>
 	<choose>-Choose-</choose>

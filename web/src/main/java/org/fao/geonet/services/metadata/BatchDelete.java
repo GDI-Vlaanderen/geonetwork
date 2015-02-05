@@ -145,7 +145,7 @@ public class BatchDelete implements Service
 			    	    			Map<String,String> properties = new HashMap<String,String>();
 			    	    			properties.put("title", dataMan.extractTitle(context, info.schemaId, id));
 			    	    			properties.put("currentStatus", currentStatus);
-			    	    			changedMmetadataIdsToInform.put(id,properties);
+			    	    			changedMmetadataIdsToInform.put(info.uuid,properties);
 			    	            }
 			    			}
 			    		}
@@ -247,7 +247,6 @@ public class BatchDelete implements Service
 		String subject = "Status metadata record(s) gewijzigd naar '" + dm.getStatusDes(dbms, status, context.getLanguage()) + "' door " + replyTo + " ("
 					+ replyToDescr + ") op " + changeDate;
 
-		//processList(contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
 		Utils.processList(context, dbms, replyTo, replyToDescr, contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
 	}
 }

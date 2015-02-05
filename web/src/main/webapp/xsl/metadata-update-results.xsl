@@ -17,20 +17,20 @@
           <tr>
             <td align="left">
               <xsl:choose>
-                <xsl:when test="/root/response/modified">
-                	<b>UUID's van gewijzigde records:</b><br/>
+                <xsl:when test="count(/root/response/modified/uuid) + count(/root/response/unchanged/uuid) + count(/root/unchangedbyerror/uuid) + count(/root/response/lockedby/uuid) > 0">
+                	<b>UUID's van gewijzigde records:</b><br/><br/>
                 	<xsl:for-each select="/root/response/modified/uuid">
 						<xsl:value-of select="."/><br/>
                 	</xsl:for-each>
-                	<b>UUID's van ongewijzigde records:</b><br/>
+                	<br/><b>UUID's van ongewijzigde records:</b><br/><br/>
                 	<xsl:for-each select="/root/response/unchanged/uuid">
 						<xsl:value-of select="."/><br/>
                 	</xsl:for-each>
-                	<b>UUID's van ongewijzigde records vanwege een fout tijdens het updaten:</b><br/>
+                	<br/><b>UUID's van ongewijzigde records vanwege een fout tijdens het updaten:</b><br/><br/>
                 	<xsl:for-each select="/root/response/unchangedbyerror/uuid">
 						<xsl:value-of select="."/><br/>
                 	</xsl:for-each>
-                	<b>UUID's van locked records:</b><br/>
+                	<br/><b>UUID's van locked records:</b><br/><br/>
                 	<xsl:for-each select="/root/response/lockedby/uuid">
 						<xsl:value-of select="."/><br/>
                 	</xsl:for-each>

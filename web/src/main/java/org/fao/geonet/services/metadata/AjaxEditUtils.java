@@ -116,7 +116,7 @@ public class AjaxEditUtils extends EditUtils {
             
             Element el = editLib.findElement(md, ref);
             if (el == null) {
-                Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+//                Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                 continue;
             }
             

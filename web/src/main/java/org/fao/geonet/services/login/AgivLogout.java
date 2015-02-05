@@ -57,7 +57,7 @@ public class AgivLogout implements Service
         String protocol = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
 		String host    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
 		String port    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
-		String url = protocol + "://" + host + (port == "80" ? "" : ":" + port) + this.context.getBaseUrl() + "/apps/tabsearch/images/???.png;
+		String url = protocol + "://" + host + (("80".equals(port) || "443".equals(port)) ? "" : ":" + port) + this.context.getBaseUrl() + "/apps/tabsearch/images/???.png;
 */
 /*		
 		URL url = new URL("https://auth.beta.agiv.be/sts/?wa=wsignout1.0&wreply=");

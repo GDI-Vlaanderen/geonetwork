@@ -25,11 +25,15 @@ package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
@@ -105,6 +109,9 @@ public class Import implements Service {
             result = new Element(Jeeves.Elem.RESPONSE);
             if ((fileType.equals("single") && (id.size() == 1))) {
                 result.addContent(new Element(Params.ID).setText(id.get(0) +""));
+        		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);               DataManager dm = gc.getDataManager();
+                Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+                result.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(dbms, id.get(0) +""))));
             } else {
                 result.addContent(new Element("records").setText(id.size() +""));
 

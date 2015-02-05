@@ -102,6 +102,9 @@ public class GetRelated implements Service {
         DataManager dm = gc.getDataManager();
         Dbms dbms = null;
 
+        String fromWorkspaceParam = Util.getParam(params, "fromWorkspace", "false");
+        boolean fromWorkspace = Boolean.parseBoolean(fromWorkspaceParam);
+        params.removeChild("fromWorkspace");
         if (info == null) {
             String mdId = Utils.getIdentifierFromParameters(params, context);
             if (mdId == null)
@@ -129,7 +132,11 @@ public class GetRelated implements Service {
         if (type.equals("") || type.contains("parent")) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             if(md == null) {
-                md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+            	if (fromWorkspace) {
+                    md = gc.getDataManager().getMetadataFromWorkspace(context, id, forEditing, withValidationErrors, keepXlinkAttributes, true);            		
+            	} else {
+                    md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+            	}
             }
             if (md != null) {
                 Element parent = md.getChild("parentIdentifier", gmd);
@@ -138,15 +145,15 @@ public class GetRelated implements Service {
 
                     if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
                     String parentId = dm.getMetadataId(dbms, parentUuid);
-
-                    try {
-                        Lib.resource.checkPrivilege(context, parentId, AccessManager.OPER_VIEW);
-                        Element content = dm.getMetadata(context, parentId, forEditing, withValidationErrors,
-                                keepXlinkAttributes);
-                        relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(content)));
-                    }
-                    catch (Exception e) {
-                        Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata " + parentId + " record is not visible for user.");
+                    if (!StringUtils.isBlank(parentId)) {
+                        try {
+                            Lib.resource.checkPrivilege(context, parentId, AccessManager.OPER_VIEW);
+                            Element content = gc.getDataManager().getMetadata(context, parentId, forEditing, withValidationErrors, keepXlinkAttributes);
+                            relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(content)));
+                        }
+                        catch (Exception e) {
+                            Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata " + parentId + " record is not visible for user.");
+                        }
                     }
                 }
             }
@@ -158,7 +165,11 @@ public class GetRelated implements Service {
         if (type.equals("") || type.contains("dataset") || type.contains("fcat") || type.contains("source")) {
             boolean forEditing = false, withValidationErrors = false;
             if(md == null) {
-                md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors, false);
+            	if (fromWorkspace) {
+                    md = gc.getDataManager().getMetadataFromWorkspace(context, String.valueOf(id), forEditing, withValidationErrors, false, true);            		
+            	} else {
+                    md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors, false);
+            	}
             }
 
             // Get datasets related to service search

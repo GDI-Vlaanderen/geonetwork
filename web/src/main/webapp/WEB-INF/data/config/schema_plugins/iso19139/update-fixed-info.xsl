@@ -441,7 +441,7 @@
 
 	<xsl:template match="srv:serviceType">
 	    <xsl:copy>
-			<xsl:if test="normalize-space(gco:localName)=''">
+			<xsl:if test="normalize-space(gco:LocalName)=''">
 				<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
 			</xsl:if>
 			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>

@@ -551,7 +551,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     //TODO : use this.maxOfMembers
                     //var store = new GeoNetwork.data.MetadataResultsFastStore();
                     var store = new GeoNetwork.data.MetadataRelationStore(
-                            this.catalogue.services.mdRelation + '?type=' + relationTypes + '&fast=false&uuid=' + escape(r.get('uuid')) , null, true);
+                            this.catalogue.services.mdRelation + '?type=' + relationTypes + '&fast=false&fromWorkspace=' + r.get('workspace') + '&uuid=' + escape(r.get('uuid')) , null, true);
                     store.load();
                     store.on('load', function(store, records){
                         Ext.each(records, function(md) {

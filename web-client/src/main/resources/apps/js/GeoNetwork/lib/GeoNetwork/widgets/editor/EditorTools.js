@@ -705,7 +705,13 @@ function isException(el) {
                       'stip.iso19139|gmd:aggregationInfo|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo||gmd:aggregationInfo',
                       'stip.iso19139|gmd:applicationSchemaInfo|gmd:MD_Metadata|gmd:MD_Metadata/gmd:applicationSchemaInfo||gmd:applicationSchemaInfo',
                       'stip.iso19139|gmd:processStep|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep||gmd:processStep',
-                      'stip.iso19139|gmd:source|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source||gmd:source'
+                      'stip.iso19139|gmd:source|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source||gmd:source',
+					  'stip.iso19139|gmd:processor|gmd:LI_ProcessStep|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:processor||gmd:processor',
+					  'stip.iso19139|gmd:distributionOrderProcess|gmd:MD_Distributor|gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributionOrderProcess||gmd:distributionOrderProcess',
+					  'stip.iso19139|gmd:EX_TemporalExtent|gmd:temporalElement|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent||gmd:EX_TemporalExtent',
+					  'stip.iso19139|gmd:verticalElement|gmd:EX_Extent|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:verticalElement||gmd:verticalElement',
+					  'stip.iso19139|gmd:resourceConstraints|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints||gmd:resourceConstraints',
+					  'stip.iso19139|gmd:EX_GeographicBoundingBox|gmd:geographicElement|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox||gmd:EX_GeographicBoundingBox'
                       ];
 	for (var i = 0; i < exceptions.length; i++) {
 		if (el.dom.getElementsByTagName('legend').length > 0 && el.dom.getElementsByTagName('legend')[0].getAttribute('id').startsWith(exceptions[i])) {
@@ -723,23 +729,21 @@ function isException(el) {
  */
 function topControls(el, min){
     var elDescs = getControlsFromElement(el);
-    var exceptions = ['stip.iso19139|gmd:resourceSpecificUsage|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceSpecificUsage||gmd:resourceSpecificUsage',
-                      'stip.iso19139|gmd:aggregationInfo|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo||gmd:aggregationInfo',
-                      'stip.iso19139|gmd:applicationSchemaInfo|gmd:MD_Metadata|gmd:MD_Metadata/gmd:applicationSchemaInfo||gmd:applicationSchemaInfo',
-                      'stip.iso19139|gmd:processStep|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep||gmd:processStep',
-                      'stip.iso19139|gmd:source|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source||gmd:source'
-                      ];
-    
     
     // Check addXmlFragment control
     var index = 0;
-    if (elDescs.length == 5) index = 1;
+    if (elDescs[0]!=null && elDescs[0].id!=null && elDescs[0].id.indexOf('remove_')==0) {
+    	index = -1;
+	}
+    if (elDescs.length >= 5) index = 1;
     
     // sort out +
-    if (bottomElement(el) && !orElement(el)) 
-        elDescs[0].show();
-    else 
-        elDescs[0].hide();
+    if (index!=-1) {
+	    if (bottomElement(el) && !orElement(el)) 
+	        elDescs[0].show();
+	    else 
+	        elDescs[0].hide();
+    }
     
     // sort out +/x (addXmlFragment)
     if (index == 1) {

@@ -20,6 +20,9 @@
                 <xsl:when test="/root/response/id">
                   <xsl:value-of
                     select="replace(/root/gui/strings/metadataAdded,'%1',/root/response/id)"/>
+                   <xsl:if test="normalize-space(/root/response/uuid)!=''">
+                   	<xsl:value-of select="concat(' (Fileidentifier: ',/root/response/uuid,')')"/>                   	
+                   </xsl:if>
                   <br/>
                   <br/>
                 </xsl:when>

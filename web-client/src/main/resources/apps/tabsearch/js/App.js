@@ -402,13 +402,13 @@ GeoNetwork.app = function(){
 
         catalogue.on('afterLogin', function(){
             Ext.each(loggedInFields, function(item){
-            	item.setVisible(user && !Ext.isEmpty(user.role));
+            	item.setVisible(catalogue.identifiedUser && !Ext.isEmpty(catalogue.identifiedUser.role));
             });
             Ext.each(reviewerFields, function(item){
-                item.setVisible(user && (user.role=='Hoofdeditor' || user.role=='Administrator'));
+                item.setVisible(catalogue.identifiedUser && (catalogue.identifiedUser.role=='Hoofdeditor' || catalogue.identifiedUser.role=='Administrator'));
             });
             Ext.each(adminFields, function(item){
-                item.setVisible(user && user.role=='Administrator');
+                item.setVisible(catalogue.identifiedUser && catalogue.identifiedUser.role=='Administrator');
             });
             GeoNetwork.util.SearchFormTools.reload(this);
             Ext.getCmp('searchForm').doLayout();
@@ -1215,10 +1215,14 @@ GeoNetwork.app = function(){
                 }
             }
             if (urlParameters.uuid !== undefined) {
-                catalogue.metadataShow(urlParameters.uuid, true);
+            	if (urlParameters.external !== undefined || window.location.href.indexOf("index_login.html")>-1) {
+                	app.metadataShowByIdOrUUIDInTab(null, urlParameters.uuid);
+            	} else {
+	                catalogue.metadataShow(urlParameters.uuid, true);
+            	}
             } else if (urlParameters.id !== undefined) {
             	if (urlParameters.external !== undefined || window.location.href.indexOf("index_login.html")>-1) {
-                	app.metadataShowByIdInTab(urlParameters.id, true);
+                	app.metadataShowByIdOrUUIDInTab(urlParameters.id, null);
             	} else {
                 	catalogue.metadataShowById(urlParameters.id, true);
             	}
@@ -1249,15 +1253,18 @@ GeoNetwork.app = function(){
             });
         },
         
-        metadataShowByIdInTab: function(id){
-            //console.log(uuid);
-            var url = catalogue.services.mdView + '?id=' + id + '&fromWorkspace=true', record;
+        metadataShowByIdOrUUIDInTab: function(id, uuid){
+//            var url = catalogue.services.mdView + '?id=' + id + '&fromWorkspace=true', record;
             
             var store = GeoNetwork.data.MetadataResultsFastStore();
-            catalogue.kvpSearch("fast=index&_id=" + id, null, null, null, true, store, null, false);
-            record = store.getAt(store.find('id', id));
+            catalogue.kvpSearch("fast=index&" + (id!=null ? ("_id=" + id) : ("_uuid=" + uuid)), null, null, null, true, store, null, false);
+            if (id!=null) {
+    	        record = store.getAt(store.find('id', id));
+            } else {
+	            record = store.getAt(store.find('uuid', uuid));
+            }
             if(record){
-            	var uuid = record.get('uuid');
+            	uuid = record.get('uuid');
                 var any = Ext.getDom('E_any');
                 if (any) {
                 	any.value = uuid;
