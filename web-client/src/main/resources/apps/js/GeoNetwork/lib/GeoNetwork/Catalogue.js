@@ -735,15 +735,34 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var app = this;
         var i = 0;
         
-//        for (i = 0; i < uuids.length; i++) {
+		if (uuids.length>0) {
+            OpenLayers.Request.POST({
+                url: this.services.mdSelect,
+                data: OpenLayers.Util.getParameterString({
+                    id: uuids.join(","),
+                    selected: type
+                }),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                success: function(response){
+                    var nb = response.responseXML.documentElement.getElementsByTagName("Selected")[0].childNodes[0].nodeValue;
+                    if (nb) {
+                        app.setSelectedRecords(nb);
+                    }
+                },
+                failure: function(response){
+                    Ext.Msg.alert('Selection failed', response.responseText);
+                }
+            });
+        }
+/*
 		if (uuids.length>0) {
 	        Ext.Ajax.request({
                 url: this.services.mdSelect,
 	            method: 'POST', 
-//            OpenLayers.Request.GET({
-//                url: this.services.mdSelect,
                 params: {
-                    id: uuids.join(",")/*[i]*/,
+                    id: uuids.join(","),
                     selected: type
                 },
                 success: function(response){
@@ -757,6 +776,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             });
         }
+*/
     },
     /** api: method[metadataRate]
      *  :param uuid: ``String`` Metadata identifier
@@ -1272,9 +1292,44 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
 	        scope.loadingMask.show();
         }
-	        Ext.Ajax.request({
-	            method: 'POST', 
-//        OpenLayers.Request.GET({
+
+        OpenLayers.Request.POST({
+            url: url,
+            data: OpenLayers.Util.getParameterString(params),
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            success: function(response){
+		        if (scope!=null && scope.loadingMask !== null) {
+		            scope.loadingMask.hide();
+		        }
+                if (msgSuccess) {
+                    Ext.Msg.alert(msgSuccess, response.responseText);
+                }
+                
+                if (onSuccess) {
+                    onSuccess(response);
+                }
+            },
+            failure: function(response){
+		        if (scope!=null && scope.loadingMask !== null) {
+		            scope.loadingMask.hide();
+		        }
+                if (msgFailure) {
+                    Ext.Msg.alert(msgFailure, response.responseText);
+                }
+                if (onFailure) {
+                    onFailure(response);
+                }
+            }
+        });
+
+/*
+*	This version gives problems with non existing status property on response object, status is used later in onSuccess and onFailure methods
+*/
+/*
+		Ext.Ajax.request({
+	    	method: 'POST', 
             url: url,
             params: params,
             success: function(response){
@@ -1301,6 +1356,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             }
         });
+*/
     },
     /** api: method[getUserSession]
      * 
@@ -1675,10 +1731,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 	            node = response.responseXML.getElementsByTagName("alternateTitle");
 	            if (node && node[0] && node[0].childNodes[0]) {
 	            	mdAggregatedInfo["alternateTitle"] = node[0].childNodes[0].nodeValue;
+                } else {
+	            	mdAggregatedInfo["alternateTitle"] = "";
                 }
 	            node = response.responseXML.getElementsByTagName("edition");
 	            if (node && node[0] && node[0].childNodes[0]) {
 	            	mdAggregatedInfo["edition"] = node[0].childNodes[0].nodeValue;
+                } else {
+	            	mdAggregatedInfo["edition"] = "";
                 }
                 var dateValue = null;
                 var dateTypeValue = null;

@@ -505,21 +505,21 @@ public class AccessManager {
         return dbms.select(query);
     }
 
-    public Element getContentUsers(Dbms dbms, Set<String> metadataIds, String profile) throws Exception {
+    public Element getContentUsers(Dbms dbms, Set<String> metadataUUIDs, String profile) throws Exception {
 
-        StringBuffer metadataIdsList = new StringBuffer();
-        for (Iterator i = metadataIds.iterator(); i.hasNext(); ) {
-            String metadataId = (String) i.next();
-            metadataIdsList.append('\'' + metadataId + '\'');
+        StringBuffer metadataUUIDsList = new StringBuffer();
+        for (Iterator i = metadataUUIDs.iterator(); i.hasNext(); ) {
+            String metadataUUID = (String) i.next();
+            metadataUUIDsList.append('\'' + metadataUUID + '\'');
 
             if(i.hasNext()) {
-                metadataIdsList.append(", ");
+                metadataUUIDsList.append(", ");
             }
         }
 
         String query =
-        "SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m, Users u "+
-                "WHERE m.id IN (" + metadataIdsList + ") "+
+        "SELECT m.id as metadataid, m.uuid as metadatauuid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m, Users u "+
+                "WHERE m.uuid IN (" + metadataUUIDsList + ") "+
                 "AND m.id IN (SELECT metadataid FROM OperationAllowed WHERE operationid = '2' AND groupid IN (SELECT groupid FROM UserGroups WHERE userid=u.id)) "+
                 "AND u.profile = '"+ profile +"' "+
                 "ORDER BY u.id";
@@ -528,21 +528,21 @@ public class AccessManager {
         return dbms.select(query);
     }
 
-    public Element getContentAdmins(Dbms dbms, Set<String> metadataIds) throws Exception {
+    public Element getContentAdmins(Dbms dbms, Set<String> metadataUUIDs) throws Exception {
 
-        StringBuffer metadataIdsList = new StringBuffer();
-        for (Iterator<String> i = metadataIds.iterator(); i.hasNext(); ) {
-            String metadataId = (String) i.next();
-            metadataIdsList.append('\'' + metadataId + '\'');
+        StringBuffer metadataUUIDsList = new StringBuffer();
+        for (Iterator<String> i = metadataUUIDs.iterator(); i.hasNext(); ) {
+            String metadataUUID = (String) i.next();
+            metadataUUIDsList.append('\'' + metadataUUID + '\'');
 
             if(i.hasNext()) {
-                metadataIdsList.append(", ");
+            	metadataUUIDsList.append(", ");
             }
         }
 
         String query =
-        "SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m, Users u "+
-                "WHERE m.id IN (" + metadataIdsList + ") "+
+        "SELECT m.id as metadataid, m.uuid as metadatauuid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m, Users u "+
+                "WHERE m.uuid IN (" + metadataUUIDsList + ") "+
                 "AND u.profile = '"+Geonet.Profile.ADMINISTRATOR+"' "+
                 "ORDER BY u.id";
 

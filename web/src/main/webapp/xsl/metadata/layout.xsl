@@ -572,9 +572,9 @@
         select="concat('doRemoveElementAction(', $apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',$minCardinality,');')"/>
        <xsl:if test="not(geonet:element/@del='true') or ($currTab = 'simple' and ($siblingsCount = 0))">
 <!-- 		<xsl:if test="not(geonet:element/@del='true')"> -->
-			<xsl:if test="$schema!='iso19139' or (name(.) != 'gmd:useLimitation' and
+			<xsl:if test="$schema!='iso19139' or (name(.) != 'gmd:supplementalInformation' and name(.) != 'gmd:useLimitation' and
 				name(.) != 'gmd:accessConstraints' and name(.) != 'gmd:useConstraints'and
-				name(.) != 'gmd:otherConstraints')">
+				name(.) != 'gmd:otherConstraints' and name(.) != 'gmd:transferSize')">
         	<xsl:text>!OPTIONAL</xsl:text>
         </xsl:if>
       </xsl:if>
@@ -878,7 +878,12 @@
 			name(.) != 'gmd:applicationSchemaInfo'  and
 			name(.) != 'gmd:aggregationInfo'  and
 			name(.) != 'gmd:processStep'  and
-			name(.) != 'gmd:source')">
+			name(.) != 'gmd:source' and
+			name(.) != 'gmd:processor' and 
+			name(.) != 'gmd:distributionOrderProcess' and
+			name(.) != 'gmd:EX_TemporalExtent' and
+			name(.) != 'gmd:verticalElement' and
+			name(.) != 'gmd:resourceConstraints')">
 	        	<xsl:text>!OPTIONAL</xsl:text>
         	</xsl:if>
       	</xsl:if>
@@ -2445,6 +2450,9 @@
 									<xsl:with-param name="schema" select="$schema"/>
 								</xsl:call-template>
 							</option>
+							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:resourceConstraints']/subtemplate/option">
+								<option name="{concat('gmd:resourceConstraints;',@value)}" title="{@title}"><xsl:value-of select="normalize-space(.)"/></option>
+							</xsl:for-each>
 						</xsl:when>
 						<xsl:when test="$name='gmd:report'">
 				        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
@@ -2494,13 +2502,13 @@
 				</xsl:if>
 				<xsl:for-each select="exslt:node-set($options)//option">
 					<xsl:sort select="."/>
-					<option value="{@name}"><xsl:value-of select="."/></option>
+					<option value="{@name}" title="{@title}"><xsl:value-of select="."/></option>
 				</xsl:for-each>
 			</select>
 		</xsl:variable>
 		<xsl:variable name="addLink">
 			<xsl:choose>
-				<xsl:when test="$name='gmd:useLimitation' or $name='gmd:accessConstraints' or $name='gmd:useConstraints' or $name='gmd:otherConstraints' or $name='gmd:classification'"><xsl:value-of select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,'_',$parentName,'_',$name,'_subtemplate_row',$apos,',',$apos,'add',$apos,',',@max,');')"/></xsl:when>
+				<xsl:when test="$name='gmd:supplementalInformation' or $name='gmd:useLimitation' or $name='gmd:accessConstraints' or $name='gmd:useConstraints' or $name='gmd:otherConstraints' or $name='gmd:classification'"><xsl:value-of select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,'_',$parentName,'_',$name,'_subtemplate_row',$apos,',',$apos,'add',$apos,',',@max,');')"/></xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
 					<xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value,',$ommitNameTag,');')"/>

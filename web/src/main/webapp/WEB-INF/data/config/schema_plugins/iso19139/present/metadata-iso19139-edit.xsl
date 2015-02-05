@@ -54,7 +54,7 @@
                                                 then $fileName
                                                 else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
 -->                                                
-			<xsl:variable name="isUploadedThumb" select="(string($fileDescr)='large_thumbnail' or string($fileDescr)='thumbnail') and contains($fileName,concat('http://',/root/gui/env/server/host))"/>
+			<xsl:variable name="isUploadedThumb" select="(string($fileDescr)='large_thumbnail' or string($fileDescr)='thumbnail') and (contains($fileName,concat('http://',/root/gui/env/server/host)) or contains($fileName,concat('https://',/root/gui/env/server/host)))"/>
 
 	        <xsl:apply-templates mode="iso19139" select="." >
 	            <xsl:with-param name="schema" select="$schema"/>
@@ -544,7 +544,7 @@
 					<xsl:with-param name="content">
 						<tr>
 							<th class="main {$className}"><label class="" for="_"><xsl:value-of select="$label"/></label></th>
-							<td>
+							<td id="title_linked_dataset_{geonet:element/@ref}">
 								<xsl:call-template name="getMetadataTitle">
 								    <xsl:with-param name="uuid" select="$uuid"/>
 								</xsl:call-template>
@@ -3019,10 +3019,27 @@
 		  |gmd:language|geonet:child[string(@name)='language']
           |gmd:characterSet|geonet:child[string(@name)='characterSet']
           |gmd:topicCategory|geonet:child[string(@name)='topicCategory']
-          |gmd:supplementalInformation|geonet:child[string(@name)='supplementalInformation']
           |gmd:environmentDescription|geonet:child[string(@name)='environmentDescription']
-          |srv:serviceType|srv:*[*/@codeList]|srv:containsOperations|srv:operatesOn|srv:coupledResource|srv:extent|gmd:extent|geonet:child[string(@name)='extent']
           ">
+
+                        <xsl:with-param name="schema" select="$schema"/>
+                        <xsl:with-param name="edit"   select="$edit"/>
+                        <xsl:with-param name="flat"   select="$flat"/>
+                    </xsl:apply-templates>
+					<xsl:if test="$edit=true()">
+						<xsl:apply-templates mode="addElement" select="geonet:child[@name='supplementalInformation' and @prefix='gmd']">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+				            <xsl:with-param name="visible"   select="count(gmd:supplementalInformation)=0"/>
+						</xsl:apply-templates>
+					</xsl:if>
+                    <xsl:apply-templates mode="elementEP" select="gmd:supplementalInformation|geonet:child[string(@name)='supplementalInformation']">
+
+                        <xsl:with-param name="schema" select="$schema"/>
+                        <xsl:with-param name="edit"   select="$edit"/>
+                        <xsl:with-param name="flat"   select="$flat"/>
+                    </xsl:apply-templates>
+                    <xsl:apply-templates mode="elementEP" select="srv:serviceType|srv:*[*/@codeList]|srv:containsOperations|srv:operatesOn|srv:coupledResource|srv:extent|gmd:extent|geonet:child[string(@name)='extent']">
 
                         <xsl:with-param name="schema" select="$schema"/>
                         <xsl:with-param name="edit"   select="$edit"/>
@@ -3498,6 +3515,42 @@
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit"   select="$edit"/>
         </xsl:apply-templates>
+	</xsl:template>
+
+    <xsl:template mode="iso19139" match="gmd:MD_Distributor" priority="2">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+        <xsl:for-each select="gmd:distributorContact">
+			<xsl:apply-templates mode="elementEP" select=".">
+                <xsl:with-param name="schema"  select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+            </xsl:apply-templates>
+		</xsl:for-each>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='distributionOrderProcess' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:distributionOrderProcess)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:for-each select="gmd:distributionOrderProcess">
+			<xsl:apply-templates mode="elementEP" select=".">
+                <xsl:with-param name="schema"  select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+            </xsl:apply-templates>
+		</xsl:for-each>
+        <xsl:for-each select="gmd:distributorFormat">
+			<xsl:apply-templates mode="elementEP" select=".">
+                <xsl:with-param name="schema"  select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+            </xsl:apply-templates>
+		</xsl:for-each>
+        <xsl:for-each select="gmd:distributorTransferOptions">
+			<xsl:apply-templates mode="elementEP" select=".">
+                <xsl:with-param name="schema"  select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+            </xsl:apply-templates>
+		</xsl:for-each>
 	</xsl:template>
 
     <!-- ============================================================================= -->
@@ -4266,11 +4319,6 @@
                 <xsl:element name="link">
                     <xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
                     <xsl:attribute name="href" select="$linkage"/>
-<!--
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
-                    </xsl:attribute>
--->                    
                     <xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
                     <xsl:attribute name="type">application/vnd.google-earth.kml+xml<xsl:value-of select="$protocol"/></xsl:attribute>
                 </xsl:element>
@@ -4708,7 +4756,7 @@
 	                </xsl:if>
 					<xsl:if test="name(.)='gmd:code'">
 	                    <img src="../../images/find.png" alt="{/root/gui/strings/aggregateSearch}" title="{/root/gui/strings/aggregateSearch}"
-	                         onclick="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '', '', true,'title={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title/gco:CharacterString/geonet:element/@ref},alternateTitle={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString/geonet:element/@ref},edition={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:edition/gco:CharacterString/geonet:element/@ref},mduuid={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/geonet:element/@ref},date={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date/geonet:element/@ref},dateType={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/geonet:element/@ref}_codeListValue');"/>
+	                         onclick="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '', '', true,'title={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title/gco:CharacterString/geonet:element/@ref},alternateTitle={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString/geonet:element/@ref},edition={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:edition/gco:CharacterString/geonet:element/@ref},mduuid={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/geonet:element/@ref},date={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date/geonet:element/@ref},dateType={../../../gmd:aggregateDataSetName/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/geonet:element/@ref}');"/>
                     </xsl:if>
                 </xsl:variable>
 

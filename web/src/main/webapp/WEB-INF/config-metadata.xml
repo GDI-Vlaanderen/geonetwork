@@ -36,6 +36,18 @@
 			</error>
 
 		</service>
+
+		<service name="metadata.xmlchildelementtextupdate">
+			<class name=".services.metadata.XmlChildElementTextUpdate"/>
+			<output sheet="metadata-update-results.xsl"/>
+
+			<error sheet="error.xsl">
+				<xml name="error" file="xml/validation-error.xml" />
+				<xml name="validation" file="xml/metadata-validate.xml" />
+			</error>
+
+		</service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.show">
@@ -625,6 +637,12 @@
 			</output>
 		</service>
 
+		<service name="metadata.xmlchildelementtextupdate.form">
+			<output sheet="metadata-childelementtext-update-form.xsl">
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="updateStyleSheets" class=".guiservices.util.GetUpdateXSLs"/>
+			</output>
+		</service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.batchimport.form">

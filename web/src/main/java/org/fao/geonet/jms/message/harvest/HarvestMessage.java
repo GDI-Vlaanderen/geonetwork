@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.jms.message.harvest;
 
+import org.fao.geonet.jms.ClusterConfig;
 import org.fao.geonet.jms.message.Message;
 
 import java.beans.XMLDecoder;
@@ -43,6 +44,7 @@ public class HarvestMessage extends Message {
     }
 
     private String id;
+    private String senderClientID;
 
     public String getId() {
         return id;
@@ -51,4 +53,13 @@ public class HarvestMessage extends Message {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getSenderClientID() {
+        return senderClientID;
+    }
+
+    public void setSenderClientID(String senderClientID) {
+        this.senderClientID = senderClientID;
+    }
+
 }

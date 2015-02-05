@@ -142,6 +142,7 @@ public class Geonet {
      * Resource directory and search configuration file.
      */
 	public class Path {
+		public static final String SUBTEMPLATES		  = Jeeves.Path.XML + "subtemplates/";
 		public static final String SCHEMAS            = Jeeves.Path.XML + "schemas/";
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";

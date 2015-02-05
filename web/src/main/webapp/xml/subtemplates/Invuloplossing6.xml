@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invuloplossing2 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+	xmlns:gco="http://www.isotc211.org/2005/gco">
+	<gmd:resourceConstraints>
+		<gmd:MD_Constraints>
+			<gmd:useLimitation>
+				<gco:CharacterString>De gegevens zijn auteursrechtelijk beschermd. Voor hergebruik (decreet Hergebruik van Overheidsinformatie) is Gratis Open Data licentie v1.2 van toepassing. De informatie is openbaar en eenieder heeft inzagerecht conform het decreet openbaarheid van bestuur. Het gebruik voor taken van algemeen belang door instanties (openbare instellingen), is geregeld door het Decreet betreffende de Geografische Data-Infrastructuur Vlaanderen. Voor elk ander gebruik dient de gebruiker zich te wenden tot de eigenaar van de gegevens. Bronvermelding dient te gebeuren conform de werkwijze opgegeven door de eigenaar.</gco:CharacterString>
+			</gmd:useLimitation>
+		</gmd:MD_Constraints>
+	</gmd:resourceConstraints>
+	<gmd:resourceConstraints>
+		<gmd:MD_LegalConstraints>
+			<gmd:accessConstraints>
+				<gmd:MD_RestrictionCode
+					codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode"
+					codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
+			</gmd:accessConstraints>
+			<gmd:otherConstraints>
+				<gco:CharacterString>Geen beperkingen</gco:CharacterString>
+			</gmd:otherConstraints>
+		</gmd:MD_LegalConstraints>
+	</gmd:resourceConstraints>
+</Invuloplossing2>

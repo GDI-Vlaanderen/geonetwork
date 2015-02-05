@@ -125,10 +125,11 @@
                 <gmd:fileName>
                     <!-- heikki: manually merged https://github.com/geonetwork/core-geonetwork/commit/ff1b9bff031620e8ec7083249e11109cb219d9cd here -->
                     <xsl:variable name="metadataId"   select="/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()" />
+                    <xsl:variable name="serverProtocol" select="/root/env/protocol" />
                     <xsl:variable name="serverHost"   select="/root/env/host" />
                     <xsl:variable name="serverPort"   select="/root/env/port" />
                     <xsl:variable name="baseUrl"   select="/root/env/baseUrl" />
-                    <xsl:variable name="serverPrefix" select="concat('http://',$serverHost,':',$serverPort, $baseUrl, '/srv/eng/resources.get?')"/>
+                    <xsl:variable name="serverPrefix" select="concat($serverProtocol,'://',$serverHost,$serverPort, $baseUrl, '/srv/eng/resources.get?')"/>
                     <gco:CharacterString>
                         <xsl:value-of select="$serverPrefix"/><xsl:text>uuid=</xsl:text><xsl:value-of select="$metadataId" /><xsl:text>&amp;fname=</xsl:text><xsl:value-of select="/root/env/file"/>
                     </gco:CharacterString>

@@ -55,10 +55,10 @@
 										<td align="center" colspan="2">
 											<xsl:choose>
 												<xsl:when test="contains(/root/gui/reqService,'metadata.batch')">
-													<button class="content" onclick="checkBoxModalUpdate('categories','metadata.batch.update.categories','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/batchUpdateCategoriesTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+													<button class="content" onclick="checkBoxModalUpdate('categories','metadata.batch.update.categories','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/batchUpdateCategoriesTitle)}',this);this.disabled=true;"><xsl:value-of select="/root/gui/strings/submit"/></button>
 												</xsl:when>
 												<xsl:otherwise>
-													<button class="content" onclick="checkBoxModalUpdate('categories','metadata.category');"><xsl:value-of select="/root/gui/strings/submit"/></button>
+													<button class="content" onclick="checkBoxModalUpdate('categories','metadata.category',false,null,this);this.disabled=true;"><xsl:value-of select="/root/gui/strings/submit"/></button>
 												</xsl:otherwise>
 											</xsl:choose>
 										</td>

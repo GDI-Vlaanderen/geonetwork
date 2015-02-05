@@ -470,7 +470,7 @@
 				select="./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:edition">
 				<xsl:with-param name="schema" select="$schema" />
 			</xsl:apply-templates>
- -->
+
 			<!-- Coupling Type -->
 <!-- 			<xsl:apply-templates mode="elementFop"
 				select="./gmd:identificationInfo/*/srv:couplingType/srv:SV_CouplingType/@codeListValue">
@@ -533,7 +533,7 @@
 			
 			
 			<!-- Voorbeeld weergave -->
-			<xsl:for-each select="./gmd:identificationInfo/*/gmd:graphicOverview">
+			<xsl:for-each select="./gmd:identificationInfo/*/gmd:graphicOverview[normalize-space(./gmd:MD_BrowseGraphic/gmd:fileName)!='']">
 				<fo:table>
 					<fo:table-column column-width="5cm" />
 					<fo:table-column />
@@ -553,29 +553,31 @@
 								</xsl:call-template>
 							</fo:block>						
 						</fo:table-cell>
+						<xsl:variable name="fileName" select="normalize-space(gmd:MD_BrowseGraphic/gmd:fileName)"/>
 						<fo:table-cell color="{$font-color}" padding-top="4pt"
 							padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
 	 						<fo:block linefeed-treatment="preserve">
 					            <fo:external-graphic content-width="4.6cm">
-					              <xsl:variable name="urlTemp" select="/root/gui/imageLinks/link[starts-with(@url,normalize-space(./gmd:MD_BrowseGraphic/gmd:fileName))]"/>
+					              <xsl:variable name="urlTemp" select="/root/gui/imageLinks/link[starts-with(@url,$fileName)]"/>
 					              <xsl:variable name="url">
 									<xsl:choose>
 										<xsl:when test="not($urlTemp) or $urlTemp=''">
-											<xsl:value-of select="./gmd:MD_BrowseGraphic/gmd:fileName" />
+											<xsl:value-of select="$fileName" />
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="$urlTemp" />
 										</xsl:otherwise>
 									</xsl:choose>
 					              </xsl:variable>
-								  
 					              <xsl:attribute name="src">
 					                <xsl:text>url('</xsl:text>
-					               		<xsl:value-of select="$url" disable-output-escaping="yes"/> 
+					               		<xsl:value-of select="replace($url,'amp;','')" disable-output-escaping="yes"/> 
 					                <xsl:text>')"</xsl:text>
 					              </xsl:attribute>
 								</fo:external-graphic>
-								<xsl:value-of select="./gmd:MD_BrowseGraphic/gmd:fileName" />
+							</fo:block>
+							<fo:block>
+								<xsl:value-of select="$fileName" />
 							</fo:block>
 						</fo:table-cell>
 						</fo:table-row>
@@ -1331,7 +1333,7 @@
 					<xsl:with-param name="name">
 						<xsl:choose>
 							<xsl:when
-								test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
+								test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19115'))">
 								<xsl:value-of select="name(..)" />
 							</xsl:when>
 							<xsl:when test="@codeList">

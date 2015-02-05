@@ -38,6 +38,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
 /**
@@ -49,8 +50,11 @@ public class Get implements Service {
 
     private static final char SEPARATOR = '~';
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
-    }
+	private String subtemplatesPath;
+
+	public void init(String appPath, ServiceConfig params) throws Exception {
+		this.subtemplatesPath = appPath + Geonet.Path.SUBTEMPLATES;
+	}
 
     /**
      * Execute the service and return the sub template. 
@@ -77,6 +81,7 @@ public class Get implements Service {
     	String uuid = null;
     	String root = null;
     	String child = null;
+    	String title = null;
     	Element param = params.getChild(Params.UUID);
     	if (param!=null) {
             uuid = param.getTextTrim();
@@ -84,6 +89,11 @@ public class Get implements Service {
     	param = params.getChild(Params.ROOT);
     	if (param!=null) {
     		root = param.getTextTrim();
+    		int iPos = root.indexOf(";");
+    		if (iPos>-1) {
+        		title = root.substring(iPos+1);
+        		root = root.substring(0,iPos);
+    		}
         	param = params.getChild(Params.CHILD);
         	if (param!=null) {
         		child = param.getTextTrim();
@@ -97,17 +107,54 @@ public class Get implements Service {
             if (StringUtils.isNotBlank(child)) {
             	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND root = ? AND data like ?", root, "%" + child + "%");
             } else {
+/*
+            	if (!StringUtils.isBlank(title)) {
+                	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND root = ? AND title = ?", root, title);            	
+            	} else {
+*/
             	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND root = ?", root);            	
+//            	}
             }
         } else {
         	rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND uuid = ?", uuid);
         }
+        Element tpl = null; 
+		if (StringUtils.isBlank(title)) {
+	        String xmlData = null;
+	        List<Element> records = rec.getChildren(Jeeves.Elem.RECORD);
+	        if (records.size() > 0) {
+	//			if (StringUtils.isBlank(title)) {
+		            xmlData = records.get(0).getChildText("data");
+		            rec = Xml.loadString(xmlData, false);
+		            tpl = (Element) rec.detach();
+		            processMd(tpl, params, rec);
+	/*
+	        	} else {
+	    			tpl = new Element(title);
+	    			for (Element record : records) {
+		    			xmlData = record.getChildText("data");
+			            rec = Xml.loadString(xmlData, false);
+			            tpl.addContent((Element) rec.detach());
+	    			}
+				}
+	*/
+	        } else {
+	/*
+	        	if (!StringUtils.isBlank(title)) {
+					tpl = new Element(title);
+				} else {
+	*/
+	        	int iPos2 = root.indexOf(":");
+		        	tpl = (iPos2 > -1 ? new Element(root.substring(iPos2+1)) : new Element(root));
+				}
+	//        }
+		} else {
+			tpl = Xml.loadFile(subtemplatesPath + title + ".xml");
+		}
+        return tpl;
+    }
 
-        String xmlData = rec.getChild(Jeeves.Elem.RECORD).getChildText("data");
-        rec = Xml.loadString(xmlData, false);
-        Element tpl = (Element) rec.detach();
-        
-        
+	private void processMd(Element tpl, Element params, Element rec) throws Exception {
         // Processing parameters process=xpath~value.
         // xpath must point to an Element or an Attribute.
         List<?> replaceList = params.getChildren(Params.PROCESS);
@@ -133,7 +180,5 @@ public class Get implements Service {
                 }
             }
         }
-        
-        return tpl;
-    }
+	}
 }

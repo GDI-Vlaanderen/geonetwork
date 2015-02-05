@@ -3,9 +3,10 @@ package org.fao.geonet.util;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -223,5 +224,43 @@ public final class XslUtil
         
         return "";
     }
+	public static String getCurrentDate(String dateFormat) {
+		return new SimpleDateFormat(dateFormat).format(new Date());
+	}
+
+	public static String getCurrentDateTime(String dateFormat, String timeFormat) {
+		return new SimpleDateFormat(dateFormat + "'T'" + timeFormat).format(new Date());
+	}
+
+	public static String formatNumber(String sNumber, String decimals) {
+		NumberFormat nf = NumberFormat.getInstance(Locale.US);
+		nf.setGroupingUsed(false);
+		nf.setMinimumFractionDigits(Integer.parseInt(decimals));
+		nf.setMaximumFractionDigits(Integer.parseInt(decimals));
+		double dNumber = 0.0;
+		try {
+			dNumber = Double.parseDouble(sNumber);
+		} catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to format number: " + e.getMessage());
+		}
+		return nf.format(dNumber);
+	}
+
+	public static String multiply(String sNumber1, String sNumber2) {
+		double dNumber1 = 0.0;
+		double dNumber2 = 0.0;
+		try {
+			dNumber1 = Double.parseDouble(sNumber1);
+		} catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to format number: " + e.getMessage());
+		}
+		try {
+			dNumber2 = Double.parseDouble(sNumber2);
+		} catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to format number: " + e.getMessage());
+		}
+		return Long.toString(Math.round(dNumber1 * dNumber2));
+	}
+
 
 }

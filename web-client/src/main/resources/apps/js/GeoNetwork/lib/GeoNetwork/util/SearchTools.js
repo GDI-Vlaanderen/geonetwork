@@ -425,7 +425,7 @@ GeoNetwork.util.SearchTools = {
                         	}
                         } else {
                         	if (cur.id != "E_themekey" || !bSkipThemekey) {
-	                            var value = cur.getValue();
+	                            var value = (cur.id=="inspiretheme" ? cur.getValue().toLowerCase() : cur.getValue());
 	                            // Check if value is a string or an array
 	                            if (value.split) {
 	                                // Use phase query

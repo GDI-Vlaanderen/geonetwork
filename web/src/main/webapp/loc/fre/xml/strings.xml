@@ -410,6 +410,16 @@
 	<categoryManagement>Gestion des catégories</categoryManagement>
 	<categoryManDes>Ajouter/Modifier/Supprimer et visualiser les catégories</categoryManDes>
 	<categoryNameMandatory>Le nom de la catégorie est obligatoire.</categoryNameMandatory>
+	<xpathExpressionHelper>Expression XPATH pour élément</xpathExpressionHelper>
+	<xpathExpression>Expression XPATH</xpathExpression>
+	<filterChoice value="1">Filtrer par liste des UUIDs séparés par virgules</filterChoice>
+	<filterChoice value="2">Filtrer par groupe</filterChoice>
+	<filterChoice value="3">Aucun filtre (modifier toutes les métadonnées)</filterChoice>
+	<uuids>Liste des UUIDs séparés par virgules</uuids>
+	<updateValue>Nouvelle valeur</updateValue>
+	<tooltipOr>ou</tooltipOr>
+	<isMandatory>Les champs suivants sont obligatoire</isMandatory>
+	<updateAllMetadata>Êtes-vous sûr d'appliquer le changement sur toutes les métadonnées?</updateAllMetadata>
 	<changeDate>Date de mise à jour des métadonnées</changeDate>
 	<checkusername>Vérification</checkusername>
 	<choose>- Choisir -</choose>

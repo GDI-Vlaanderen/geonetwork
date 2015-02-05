@@ -237,10 +237,10 @@ public class DefaultStatusActions implements StatusActions {
 		try {
 
 			Set<String> unchanged = new HashSet<String>();
-//			Map<String, Map<String,String>> changedMmetadataIdsToInformOwner = new HashMap<String,Map<String,String>>();
-			Map<String, Map<String,String>> changedMmetadataIdsToInformEditors = new HashMap<String,Map<String,String>>();
-			Map<String, Map<String,String>> changedMmetadataIdsToInformReviewers = new HashMap<String,Map<String,String>>();
-			Map<String, Map<String,String>> changedMmetadataIdsToInformAdministrators = new HashMap<String,Map<String,String>>();
+//			Map<String, Map<String,String>> changedMetadataIdsToInformOwner = new HashMap<String,Map<String,String>>();
+			Map<String, Map<String,String>> changedMetadataIdsToInformEditors = new HashMap<String,Map<String,String>>();
+			Map<String, Map<String,String>> changedMetadataIdsToInformReviewers = new HashMap<String,Map<String,String>>();
+			Map<String, Map<String,String>> changedMetadataIdsToInformAdministrators = new HashMap<String,Map<String,String>>();
 			// -- process the metadata records to set status
 			for (String mid : metadataIds) {
 				String currentStatus = dm.getCurrentStatus(dbms, mid);
@@ -266,7 +266,7 @@ public class DefaultStatusActions implements StatusActions {
 				if (!currentStatus.equals(status) && statusChangeAllowedByUser(currentStatus, status, mid, isWorkspace) && (isTemplate ||
 					!(status.equals(Params.Status.SUBMITTED_FOR_AGIV) || status.equals(Params.Status.APPROVED_BY_AGIV) ||
 					 status.equals(Params.Status.APPROVED)) || statusChangeAllowed(currentStatus, status, mid))) {
-					System.out.println("Change status of metadata " + mid
+					System.out.println("Change status of metadata with uuid " + mdInfo.uuid
 							+ " from " + currentStatus + " to " + status);
 					if (status.equals(Params.Status.APPROVED)) {
 						if (isTemplate && (session.getProfile().equals(Geonet.Profile.REVIEWER) || session.getProfile().equals(Geonet.Profile.ADMINISTRATOR))) {
@@ -308,77 +308,77 @@ public class DefaultStatusActions implements StatusActions {
 /*
 								if (StringUtils.isNotBlank(lockedBy)) {
 									properties.put("lockedBy", mdInfo.lockedBy);
-					            	changedMmetadataIdsToInformOwner.put(mid,properties);
+					            	changedMetadataIdsToInformOwner.put(mdInfo.uuid,properties);
 					            }
 */
-								changedMmetadataIdsToInformEditors.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
 								break;
 							case 2: //APPROVED
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							case 3: //RETIRED
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
 								if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
-									changedMmetadataIdsToInformAdministrators.put(mid,properties);
+									changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								}
 								break;
 							case 4: //SUBMITTED
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
 								break;
 							case 5: //REJECTED
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
 								break;
 							case 6: //JUSTCREATED
 								break;
 							case 7: //SUBMITTED_FOR_AGIV
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							case 8: //APPROVED_BY_AGIV
 								if (session.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && currentStatus.equals(Params.Status.DRAFT)) {
-									changedMmetadataIdsToInformEditors.put(mid,properties);
-									changedMmetadataIdsToInformReviewers.put(mid,properties);
+									changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+									changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
 								}
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							case 9: //REJECTED_BY_AGIV
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							case 10: //RETIRED_FOR_AGIV
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							case 11: //REMOVED_FOR_AGIV
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							case 12: //REMOVED
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
 								if (context.getServlet().getNodeType().equalsIgnoreCase("agiv")) {
-									changedMmetadataIdsToInformAdministrators.put(mid,properties);
+									changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								}
 								recordsToBeDeleted.put(mid, mdInfo.uuid);
 								break;
 							case 13: //REJECTED_FOR_RETIRE
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							case 14: //REJECTED_FOR_REMOVE
-								changedMmetadataIdsToInformEditors.put(mid,properties);
-								changedMmetadataIdsToInformReviewers.put(mid,properties);
-								changedMmetadataIdsToInformAdministrators.put(mid,properties);
+								changedMetadataIdsToInformEditors.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformReviewers.put(mdInfo.uuid,properties);
+								changedMetadataIdsToInformAdministrators.put(mdInfo.uuid,properties);
 								break;
 							default:
 								break;
@@ -391,49 +391,24 @@ public class DefaultStatusActions implements StatusActions {
 						unchanged.add("!" + mid);
 					}
 					System.out
-							.println("Status change not allowed for metadata "
-									+ mid + " from " + currentStatus + " to "
+							.println("Status change not allowed for metadata with uuid "
+									+ mdInfo.uuid + " from " + currentStatus + " to "
 									+ status);
 				}
 			}
 			List<String> emailMetadataIdList = new ArrayList<String>();
-			if (changedMmetadataIdsToInformAdministrators.size()>0) {
-				informContentUsers(changedMmetadataIdsToInformAdministrators, changeDate,
+			if (changedMetadataIdsToInformAdministrators.size()>0) {
+				informContentUsers(changedMetadataIdsToInformAdministrators, changeDate,
 						changeMessage, Geonet.Profile.ADMINISTRATOR, status, emailMetadataIdList);
 			}
-			if (changedMmetadataIdsToInformReviewers.size()>0) {
-				informContentUsers(changedMmetadataIdsToInformReviewers, changeDate,
+			if (changedMetadataIdsToInformReviewers.size()>0) {
+				informContentUsers(changedMetadataIdsToInformReviewers, changeDate,
 						changeMessage, Geonet.Profile.REVIEWER, status, emailMetadataIdList);
 			}
-			if (changedMmetadataIdsToInformEditors.size()>0) {
-				informContentUsers(changedMmetadataIdsToInformEditors, changeDate,
+			if (changedMetadataIdsToInformEditors.size()>0) {
+				informContentUsers(changedMetadataIdsToInformEditors, changeDate,
 						changeMessage, Geonet.Profile.EDITOR, status, emailMetadataIdList);
 			}
-/*
-			if (changedMmetadataIdsToInformOwner.size()>0) {
-				String styleSheet = stylePath + Geonet.File.STATUS_CHANGE_EMAIL;
-				for (String metadataId : changedMmetadataIdsToInformOwner.keySet()) { 
-					String lockedBy = changedMmetadataIdsToInformOwner.get(metadataId).get("lockedBy");
-		            if (!StringUtils.isBlank(lockedBy)) {
-						List<Element> userList = dbms.select("SELECT email FROM Users WHERE id = '" + lockedBy + "'").getChildren();
-		        		Element user = (Element) userList.get(0);
-			            if (user!=null) {
-			        		user.detach();
-			        		String email = user.getChildText("email");
-				            if (!StringUtils.isBlank(lockedBy) && !emailMetadataIdList.contains(email + "_" + metadataId)) {
-				        		Element root = getNewRootElement(Params.Status.DRAFT, context.getServlet().getFromDescription(), session.getUserId());
-				    			Element metadata = new Element("metadata");
-				    			root.addContent(metadata);
-				    			metadata.addContent(new Element("url").setText(buildMetadataLink(metadataId)));
-								metadata.addContent(new Element("title").setText(changedMmetadataIdsToInformOwner.get(metadataId).get("title")));
-								metadata.addContent(new Element("currentStatus").setText(changedMmetadataIdsToInformOwner.get(metadataId).get("currentStatus")));
-								sendEmail(email, Xml.transform(root, styleSheet));
-				            }
-			            }
-		            }
-				}
-			}
-*/
 			return unchanged;
 		} catch (Throwable x) {
 			System.out.println("ERROR in statusChange " + x.getMessage());
@@ -806,7 +781,7 @@ public class DefaultStatusActions implements StatusActions {
 				}
 				// check that iso schematron validation succeeded
 				if (record.getChildText("valtype").equals(
-						"schematron-rules-iso") || record.getChildText("valtype").equals("schematron-rules-inspire")) {
+						"schematron-rules-iso") || record.getChildText("valtype").equals("schematron-rules-geonetwork")) {
 					if (!record.getChildText("status").equals("1")/*
 							&& (status
 									.equals(Params.Status.SUBMITTED_FOR_AGIV) || status
@@ -815,7 +790,7 @@ public class DefaultStatusActions implements StatusActions {
 						System.out
 								.println("Metadata with id "
 										+ mid
-										+ " failed ISO Schematron and/of INSPIRE Schematron validation: status change not allowed");
+										+ " failed ISO Schematron and/of geonetwork Schematron validation: status change not allowed");
 						return false;
 					}
 				}
@@ -920,191 +895,6 @@ public class DefaultStatusActions implements StatusActions {
 
 		//processList(contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
 		Utils.processList(context, dbms, replyTo, replyToDescr, contentUsers, subject, status, changeDate, changeMessage, metadataMap, emailMetadataIdList);
-	}
-
-	/**
-	 * Process the users and metadata records for emailing notices.
-	 *
-	 * @param records
-	 *            The selected set of records
-	 * @param subject
-	 *            Subject to be used for email notices
-	 * @param status
-	 *            The status being set
-	 * @param changeDate
-	 *            Datestamp of status change
-	 */
-	@SuppressWarnings("unchecked")
-/*
-	private void processList(Element contentUsers, String subject, String status,
-			String changeDate, String changeMessage, Map<String,Map<String,String>> metadataMap, List<String> emailMetadataIdList)
-			throws Exception {
-
-		String styleSheet = stylePath + Geonet.File.STATUS_CHANGE_EMAIL;
-		Set<String> metadataIds = new HashSet<String>();
-		String currentUserId = null;
-		String userId = null;
-		String currentEmail = null;
-		List<Element> records = contentUsers.getChildren();
-		Iterator<Element> recordsIterator = records.iterator();
-		Element root = null;
-		Element metadata = null;
-		while(recordsIterator.hasNext()) {
-			Element record = recordsIterator.next();
-			String metadataId = record.getChildText("metadataid");
-			userId = record.getChildText("userid");
-			if (currentUserId==null) {
-				currentUserId = userId;
-				currentEmail = record.getChildText("email");
-				if (currentEmail!=null) {
-					currentEmail = currentEmail.toLowerCase();
-				}
-				root = Utils.getNewRootElement(context, dbms, status, changeMessage, context.getUserSession().getUserId());
-			} else if (!currentUserId.equals(userId)) {
-				if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
-					Utils.sendEmail(context, currentEmail, replyTo, replyToDescr, Xml.transform(root, styleSheet));
-//					sendEmail(currentEmail, Xml.transform(root, styleSheet));
-//					sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
-					metadataIds.clear();
-				}
-				currentUserId = userId;
-				currentEmail = record.getChildText("email");
-				if (currentEmail!=null) {
-					currentEmail = currentEmail.toLowerCase();
-				}
-				root = Utils.getNewRootElement(context, dbms, status, changeMessage, context.getUserSession().getUserId());
-			}
-			if (StringUtils.isNotBlank(currentEmail) && !emailMetadataIdList.contains(currentEmail + "_" + metadataId)) {
-				emailMetadataIdList.add(currentEmail + "_" + metadataId);
-				metadataIds.add(metadataId);
-				metadata = new Element("metadata");
-				root.addContent(metadata);
-				metadata.addContent(new Element("url").setText(Utils.buildMetadataLink(context, metadataId)));
-				metadata.addContent(new Element("title").setText(metadataMap.get(metadataId).get("title").toString()));
-				metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataId).get("currentStatus").toString()));
-				if (metadataMap.get(metadataId).get("previousStatus")!=null) {
-					metadata.addContent(new Element("previousStatus").setText(metadataMap.get(metadataId).get("previousStatus").toString()));
-				}
-			}
-		}
-
-		if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
-			Utils.sendEmail(context, currentEmail, replyTo, replyToDescr, Xml.transform(root, styleSheet));
-//			sendEmail(currentEmail, Xml.transform(root, styleSheet));
-//			sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
-		}
-	}
-
-	private Element getNewRootElement(String status, String changeMessage, String userId) throws SQLException {
-		Element root = new Element("root");
-		List<Element> userList = dbms.select("SELECT surname, name FROM Users WHERE id = '" + userId + "'").getChildren();
-		Element user = (Element) userList.get(0);
-		user.detach();
-		user.setName("user");
-		root.addContent(user);
-		List<Element> groupList = dbms.select("SELECT description FROM groups as g, usergroups as ug WHERE ug.userid = '" + userId + "' AND ug.groupid = g.id").getChildren();
-		for (Element group : groupList) {
-			root.addContent(new Element("group").setText(group.getChildText("description")));
-		}
-		root.addContent(new Element("node").setText(context.getServlet().getNodeType().toLowerCase()));
-		root.addContent(new Element("siteUrl").setText(getContextUrl()));
-		root.addContent(new Element("metadatacenter").setText(context.getServlet().getFromDescription()));
-		root.addContent(new Element("status").setText(status));
-		root.addContent(new Element("changeMessage").setText(changeMessage));
-		return root;
-	}
-*/
-	
-	/**
-	 * Send the email message about change of status on a group of metadata
-	 * records.
-	 *
-	 * @param sendTo
-	 *            The recipient email address
-	 * @param subject
-	 *            Subject to be used for email notices
-	 * @param status
-	 *            The status being set on the records
-	 * @param changeDate
-	 *            Datestamp of status change
-	 * @param changeMessage
-	 *            The message indicating why the status has changed
-	 */
-	/*
-	private void sendEmail(String sendTo, String subject, String status,
-			String changeDate, String changeMessage, Set<String> metadataIds)
-			throws Exception {
-
-		if (metadataIds.size() > 1) {
-			changeMessage += "\n\nDe metadatarecords zijn beschikbaar via de volgende URL's:\n";
-		} else {
-			changeMessage += "\n\nHet metadatarecord is beschikbaar via de volgende URL:\n";
-		}
-		for (String metadataId : metadataIds) {
-			changeMessage += "\n" + buildMetadataLink(metadataId);
-		}
-
-		if (!emailNotes) {
-			context.info("Would send email with message:\n" + changeMessage);
-		} else {
-			MailSender sender = new MailSender(context);
-			sender.sendWithReplyTo(host, Integer.parseInt(port), from,
-					fromDescr, sendTo, null, replyTo, replyToDescr, subject,
-					changeMessage);
-		}
-	}*/
-/*
-	private void sendEmail(String sendTo, Element emailElement)
-			throws Exception {
-		MailSender sender = new MailSender(context);
-		sender.sendWithReplyTo(host, Integer.parseInt(port), from,
-				fromDescr, sendTo, null, replyTo, replyToDescr, emailElement.getChildText("subject"),
-				emailElement.getChildText("message"));
-	}
-*/	
-
-	/**
-	 * Build search link to metadata that has had a change of status.
-	 *
-	 * @param metadataId
-	 *            The id of the metadata
-	 * @return string Search link to metadata
-	 */
-/*
-	private String buildMetadataLink(String metadataId) {
-		// TODO: hack voor AGIV
-		return getContextUrl()
-//				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
-				+ "/apps/tabsearch/index.html?id=" + metadataId + "&external=true";
-	}
-	private String getContextUrl() {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		String protocol = gc.getSettingManager().getValue(
-				Geonet.Settings.SERVER_PROTOCOL);
-		String host = gc.getSettingManager().getValue(
-				Geonet.Settings.SERVER_HOST);
-		String port = gc.getSettingManager().getValue(
-				Geonet.Settings.SERVER_PORT);
-//		return protocol + "://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port) + context.getBaseUrl();
-		return "https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port) + context.getBaseUrl();
-	}
-*/
-
-	/**
-	 * Build search link to metadata that has had a change of status.
-	 *
-	 * @param status
-	 *            The status of the metadata
-	 * @param changeDate
-	 *            The date the status has been set on the metadata
-	 * @return string Search link to metadata
-	 */
-	private String buildMetadataSearchLink(String status, String metadataId,
-			String changeDate) {
-		// FIXME : hard coded link to main.search
-		return siteUrl + "/main.search?_status=" + status
-				+ "&_statusChangeDate=" + changeDate;
 	}
 
 	private void backupFile(ServiceContext context, String id, String uuid, String file)

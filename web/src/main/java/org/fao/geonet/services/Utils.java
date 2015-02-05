@@ -91,15 +91,7 @@ public class Utils {
 
 	public static Element getNewRootElement(ServiceContext context, Dbms dbms, String status, String changeMessage, String userId) throws SQLException {
 		Element root = new Element("root");
-		List<Element> userList = dbms.select("SELECT surname, name FROM Users WHERE id = '" + userId + "'").getChildren();
-		Element user = (Element) userList.get(0);
-		user.detach();
-		user.setName("user");
-		root.addContent(user);
-		List<Element> groupList = dbms.select("SELECT description FROM groups as g, usergroups as ug WHERE ug.userid = '" + userId + "' AND ug.groupid = g.id").getChildren();
-		for (Element group : groupList) {
-			root.addContent(new Element("group").setText(group.getChildText("description")));
-		}
+		addUserContent(dbms, root, userId, "user", "group");
 		root.addContent(new Element("node").setText(context.getServlet().getNodeType().toLowerCase()));
 		root.addContent(new Element("siteUrl").setText(getContextUrl(context)));
 		root.addContent(new Element("metadatacenter").setText(context.getServlet().getFromDescription()));
@@ -108,11 +100,21 @@ public class Utils {
 		return root;
 	}
 
-	public static String buildMetadataLink(ServiceContext context, String metadataId) {
-		// TODO: hack voor AGIV
+	public static void addUserContent(Dbms dbms, Element root, String userId, String userElementName, String groupElementName) throws SQLException {
+		List<Element> userList = dbms.select("SELECT surname, name FROM Users WHERE id = '" + userId + "'").getChildren();
+		Element user = (Element) userList.get(0);
+		user.detach();
+		user.setName(userElementName);
+		root.addContent(user);
+		List<Element> groupList = dbms.select("SELECT description FROM groups as g, usergroups as ug WHERE ug.userid = '" + userId + "' AND ug.groupid = g.id").getChildren();
+		for (Element group : groupList) {
+			root.addContent(new Element(groupElementName).setText(group.getChildText("description")));
+		}		
+	}
+
+	public static String buildMetadataLink(ServiceContext context, String metadataUUID) {
 		return getContextUrl(context)
-//				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
-				+ "/apps/tabsearch/index.html?id=" + metadataId + "&external=true";
+				+ "/apps/tabsearch/index.html?uuid=" + metadataUUID + "&external=true";
 	}
 
 	public static String getContextUrl(ServiceContext context) {
@@ -192,8 +194,6 @@ public class Utils {
 	public static void processList(ServiceContext context, Dbms dbms, String replyTo, String replyToDescr, Element contentUsers, String subject, String status,
 			String changeDate, String changeMessage, Map<String,Map<String,String>> metadataMap, List<String> emailMetadataIdList)
 			throws Exception {
-		String styleSheet = context.getAppPath() + 	File.separator + Geonet.Path.STYLESHEETS + File.separator + Geonet.File.STATUS_CHANGE_EMAIL;
-
 		Set<String> metadataIds = new HashSet<String>();
 		String currentUserId = null;
 		String userId = null;
@@ -205,6 +205,7 @@ public class Utils {
 		while(recordsIterator.hasNext()) {
 			Element record = recordsIterator.next();
 			String metadataId = record.getChildText("metadataid");
+			String metadataUUID = record.getChildText("metadatauuid");
 			userId = record.getChildText("userid");
 			if (currentUserId==null) {
 				currentUserId = userId;
@@ -216,8 +217,6 @@ public class Utils {
 			} else if (!currentUserId.equals(userId)) {
 				if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
 					sendEmail(context, currentEmail, replyTo, replyToDescr, root);
-//					sendEmail(currentEmail, Xml.transform(root, styleSheet));
-//					sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
 					metadataIds.clear();
 				}
 				currentUserId = userId;
@@ -232,19 +231,17 @@ public class Utils {
 				metadataIds.add(metadataId);
 				metadata = new Element("metadata");
 				root.addContent(metadata);
-				metadata.addContent(new Element("url").setText(buildMetadataLink(context, metadataId)));
-				metadata.addContent(new Element("title").setText(metadataMap.get(metadataId).get("title").toString()));
-				metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataId).get("currentStatus").toString()));
-				if (metadataMap.get(metadataId).get("previousStatus")!=null) {
-					metadata.addContent(new Element("previousStatus").setText(metadataMap.get(metadataId).get("previousStatus").toString()));
+				metadata.addContent(new Element("url").setText(buildMetadataLink(context, metadataUUID)));
+				metadata.addContent(new Element("title").setText(metadataMap.get(metadataUUID).get("title").toString()));
+				metadata.addContent(new Element("currentStatus").setText(metadataMap.get(metadataUUID).get("currentStatus").toString()));
+				if (metadataMap.get(metadataUUID).get("previousStatus")!=null) {
+					metadata.addContent(new Element("previousStatus").setText(metadataMap.get(metadataUUID).get("previousStatus").toString()));
 				}
 			}
 		}
 
 		if (StringUtils.isNotBlank(currentEmail) && metadataIds.size()>0) {
 			sendEmail(context, currentEmail, replyTo, replyToDescr, root);
-//			sendEmail(currentEmail, Xml.transform(root, styleSheet));
-//			sendEmail(currentEmail, subject, status, changeDate, changeMessage, metadataIds);
 		}
 	}
 

@@ -101,10 +101,11 @@ public class GrabLock implements Service {
         		List<Element> userList = dbms.select("SELECT email FROM Users WHERE id = '" + lockedBy + "'").getChildren();
         		Element user = (Element) userList.get(0);
         		user.detach();
-        		Element root = Utils.getNewRootElement(context, dbms, Params.Status.DRAFT, context.getServlet().getFromDescription(), userId);
-    			Element metadata = new Element("metadata");
+        		Element root = Utils.getNewRootElement(context, dbms, Params.Status.DRAFT, null, userId);
+        		Utils.addUserContent(dbms, root, targetUserId, "targetUser", "targetGroup");
+        		Element metadata = new Element("metadata");
     			root.addContent(metadata);
-    			metadata.addContent(new Element("url").setText(Utils.buildMetadataLink(context, metadataId)));
+    			metadata.addContent(new Element("url").setText(Utils.buildMetadataLink(context, info.uuid)));
     			metadata.addContent(new Element("title").setText(dataMan.extractTitle(context, info.schemaId, metadataId)));
     			metadata.addContent(new Element("currentStatus").setText(""));
     			String replyTo = session.getEmailAddr();
@@ -126,94 +127,4 @@ public class GrabLock implements Service {
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		return elResp;
     }
-/*
-	private Element getNewRootElement(ServiceContext context, Dbms dbms, String status, String changeMessage, String userId) throws SQLException {
-		Element root = new Element("root");
-		List<Element> userList = dbms.select("SELECT surname, name FROM Users WHERE id = '" + userId + "'").getChildren();
-		Element user = (Element) userList.get(0);
-		user.detach();
-		user.setName("user");
-		root.addContent(user);
-		List<Element> groupList = dbms.select("SELECT description FROM groups as g, usergroups as ug WHERE ug.userid = '" + userId + "' AND ug.groupid = g.id").getChildren();
-		for (Element group : groupList) {
-			root.addContent(new Element("group").setText(group.getChildText("description")));
-		}
-		root.addContent(new Element("node").setText(context.getServlet().getNodeType().toLowerCase()));
-		root.addContent(new Element("siteUrl").setText(getContextUrl(context)));
-		root.addContent(new Element("metadatacenter").setText(context.getServlet().getFromDescription()));
-		root.addContent(new Element("status").setText(status));
-		root.addContent(new Element("changeMessage").setText(changeMessage));
-		return root;
-	}
-
-	private String buildMetadataLink(ServiceContext context, String metadataId) {
-		// TODO: hack voor AGIV
-		return getContextUrl(context)
-//				+ "/apps/tabsearch/index_login.html?id=" + metadataId;
-				+ "/apps/tabsearch/index.html?id=" + metadataId + "&external=true";
-	}
-
-	private String getContextUrl(ServiceContext context) {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		String protocol = gc.getSettingManager().getValue(
-				Geonet.Settings.SERVER_PROTOCOL);
-		String host = gc.getSettingManager().getValue(
-				Geonet.Settings.SERVER_HOST);
-		String port = gc.getSettingManager().getValue(
-				Geonet.Settings.SERVER_PORT);
-//		return protocol + "://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port) + context.getBaseUrl();
-		return "https://" + host + ((port.equals("80") || port.equals("443")) ? "" : ":" + port) + context.getBaseUrl();
-	}
-
-	private void sendEmail(ServiceContext context, String sendTo, Element params)
-			throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getSettingManager();
-		AccessManager am = gc.getAccessManager();
-
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
-		boolean emailNotes = true;
-		String from = sm.getValue("system/feedback/email");
-
-		if (host.length() == 0) {
-			context.error("Mail server host not configured, email notifications won't be sent.");
-			emailNotes = false;
-		}
-
-		if (port.length() == 0) {
-			context.error("Mail server port not configured, email notifications won't be sent.");
-			emailNotes = false;
-		}
-
-		if (from.length() == 0) {
-			context.error("Mail feedback address not configured, email notifications won't be sent.");
-			emailNotes = false;
-		}
-
-		if (!emailNotes) {
-			context.info("Would send email with message grablock service but no email server configured");
-		} else {
-			String fromDescr = context.getServlet().getFromDescription();
-	
-			UserSession session = context.getUserSession();
-			String replyTo = session.getEmailAddr();
-			String replyToDescr = null;
-			if (replyTo != null) {
-				replyToDescr = session.getName() + " " + session.getSurname();
-			} else {
-				replyTo = from;
-				replyToDescr = fromDescr;
-			}
-			String styleSheet = context.getAppPath() + 	File.separator + Geonet.Path.STYLESHEETS + File.separator + Geonet.File.STATUS_CHANGE_EMAIL;
-			Element emailElement = Xml.transform(params, styleSheet);
-			MailSender sender = new MailSender(context);
-			sender.sendWithReplyTo(host, Integer.parseInt(port), from,
-					fromDescr, sendTo, null, replyTo, replyToDescr, emailElement.getChildText("subject"),
-					emailElement.getChildText("message"));
-		}
-	}
-*/
 }

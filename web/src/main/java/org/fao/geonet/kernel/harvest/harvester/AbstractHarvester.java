@@ -210,7 +210,7 @@ public abstract class AbstractHarvester
                     message.setId(getID());
                     message.setSenderClientID(ClusterConfig.getClientID());
                     Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER_ACTIVATE);
-                    harvesterProducer.produce(message);      
+                    harvesterProducer.produce(message);
                 }
                 catch (ClusterException x) {
                     Log.error(Geonet.HARVESTER, x.getMessage());
@@ -240,7 +240,7 @@ public abstract class AbstractHarvester
                     message.setId(getID());
                     message.setSenderClientID(ClusterConfig.getClientID());
                     Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER_DEACTIVATE);
-                    harvesterProducer.produce(message);      
+                    harvesterProducer.produce(message);
                 }
                 catch (ClusterException x) {
                     Log.error(Geonet.HARVESTER, x.getMessage());
@@ -274,7 +274,7 @@ public abstract class AbstractHarvester
      * @throws Exception
      */
 	public synchronized void destroy(Dbms dbms) throws Exception {
-		
+
                 doUnschedule();
 
 		//--- remove all harvested metadata
@@ -373,6 +373,7 @@ public abstract class AbstractHarvester
 	                Log.info(Geonet.HARVESTER, "clustering enabled, creating harvest message");
 	                HarvestMessage message = new HarvestMessage();
 	                message.setId(getID());
+	                message.setSenderClientID(ClusterConfig.getClientID());
 	                Producer harvestProducer = ClusterConfig.get(Geonet.ClusterMessageQueue.HARVEST);
 	                harvestProducer.produce(message);
 	        		return OperResult.OK;
@@ -477,9 +478,9 @@ public abstract class AbstractHarvester
 		if (status == Status.ACTIVE) {
 			reschedule = true;
 		}
-		
+
 		doUnschedule();
-		
+
 		doUpdate(dbms, id, node);
 
 		error      = null;
@@ -557,11 +558,11 @@ public abstract class AbstractHarvester
 		@Override
 		public void process() throws Exception {
 			String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
-	
+
 			error = null;
-	
+
 			String lastRun = new ISODate(System.currentTimeMillis()).toString();
-	
+
 			boolean bException = false;
 			Dbms dbms = null;
 			try

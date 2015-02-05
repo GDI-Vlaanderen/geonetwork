@@ -546,6 +546,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     if (single) {
                     	var scope = this;
                         if (this.ref !== null) {
+                        	var titleValue = null;
                         	var uuidValue = metadata[0].data.uuid;
                         	if (!(useUuid || this.mode=='iso19110')) {
                             	panel.catalogue.getMdUuid(metadata[0].data.uuid, function(mduuid){
@@ -553,9 +554,15 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
 		                                Ext.get('_' + scope.ref + (name !== '' ? '_' + name : '')).dom.value = mduuid;
                                 	}
                             	});
+                            	titleValue = metadata[0].data.title;
                         	}
                         	if (useUuid || this.mode=='iso19110' || otherRefs!=null) {
                         		Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = uuidValue;
+                            	titleValue = metadata[0].data.title;
+                        	}
+                        	if (otherRefs==null && !Ext.isEmpty(titleValue)) {
+								var titleDomElement = Ext.get("title_linked_dataset_" + scope.ref);
+								titleDomElement.dom.innerHTML = titleValue;
                         	}
                         	if (otherRefs!=null) {
                             	panel.catalogue.getMdAggegatedInfo(metadata[0].data.uuid, function(mdAggregatedInfo){
@@ -564,10 +571,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                 		for (var i = 0;i<otherRefsArray.length;i++) {
                                 			var otherRefsPropertyArray = otherRefsArray[i].split("=");
                                 			var xmlLocalName = otherRefsPropertyArray[0];
-                                			var cmpRef = '_' + otherRefsPropertyArray[1]; 
-                                			if (Ext.get(cmpRef)!=null && mdAggregatedInfo[xmlLocalName]!=null) {
-				                                Ext.get(cmpRef).dom.value = mdAggregatedInfo[xmlLocalName];
+                                			var suffix = (xmlLocalName=="dateType" ? "_codeListValue" : "");
+                                			var cmpRefArray = otherRefsPropertyArray[1].split(" "); 
+                                			if (Ext.get("_" + cmpRefArray[0] + suffix)!=null && mdAggregatedInfo[xmlLocalName]!=null) {
+				                                Ext.get("_" + cmpRefArray[0] + suffix).dom.value = mdAggregatedInfo[xmlLocalName];
                                 			}
+                                			for (var j=1;j<cmpRefArray.length;j++) {
+	                                			if (Ext.get("_" + cmpRefArray[j] + suffix)!=null) {
+					                                Ext.get("_" + cmpRefArray[j] + suffix).dom.value = "";
+	                                			}
+                                			} 
                                 		}
                                 	}
                             	});
@@ -1491,9 +1504,20 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             method: 'GET',
             scope: this,
             success: function(response){
-                var st = response.responseText;
+                var st = null;
                 var subtemplates = [];
-                subtemplates.push((ommitNameTag ? "" : ("<" + name + self.generateNamespaceDeclaration() + ">"))  + response.responseText + (ommitNameTag ? "" : "</" + name + ">"))
+                var rootArray = elementNameArray[0].split(";");
+	            if (rootArray.length==2) {
+	            	st = response.responseXML;
+ 	            	for (var i =0;i<st.childNodes[0].childNodes.length;i++) {
+ 	            		if (st.childNodes[0].childNodes[i].nodeName==name) {
+			                subtemplates.push((ommitNameTag ? "" : ("<" + name + self.generateNamespaceDeclaration() + ">"))  + st.childNodes[0].childNodes[i].innerHTML + (ommitNameTag ? "" : "</" + name + ">"))
+		                }
+	            	}
+	            } else {
+	            	st = response.responseText;
+	                subtemplates.push((ommitNameTag ? "" : ("<" + name + self.generateNamespaceDeclaration() + ">"))  + response.responseText + (ommitNameTag ? "" : "</" + name + ">"))
+	            }
                 GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref:ref,name:name}, subtemplates, self);
             },
             failure: self.getError

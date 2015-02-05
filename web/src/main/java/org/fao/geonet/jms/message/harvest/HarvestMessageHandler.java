@@ -38,29 +38,32 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 public class HarvestMessageHandler implements MessageHandler {
 
     private ServiceContext context;
-    
+
     public HarvestMessageHandler(ServiceContext context) {
         this.context = context;
     }
-    
+
     public void process(String msg) throws ClusterException{
-        try {
-            System.out.println("HarvestMessageHandler received message '" + msg + "'\nin node " + ClusterConfig.getClientID());
             Log.debug(Geonet.CLUSTER, "HarvestMessageHandler received message '" + msg + "'\nin node " + ClusterConfig.getClientID());
 
-            HarvestMessage message = new HarvestMessage();
-            message = message.decode(msg);        
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            HarvestManager harvestManager = gc.getHarvestManager();
-            String id = message.getId();
-            Common.OperResult result =  harvestManager.invoke(context.getResourceManager(), id);
+            HarvestMessage harvestMessage = new HarvestMessage();
+            harvestMessage = harvestMessage.decode(msg);
+            if(harvestMessage.getSenderClientID().equals(ClusterConfig.getClientID())) {
+                Log.debug(Geonet.CLUSTER, "HarvesterRemovedMessageHandler ignoring message from self");
+            } else {
+                try {
+                    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                    HarvestManager harvestManager = gc.getHarvestManager();
+                    String id = harvestMessage.getId();
+                    Common.OperResult result =  harvestManager.invoke(context.getResourceManager(), id);
 
-            Log.debug(Geonet.CLUSTER, "HarvestMessageHandler result: " + result.name());
-        }
-        catch (Exception x) {
-            Log.error(Geonet.CLUSTER, "Error processing HarvestMessageHandler message: " + x.getMessage());
-            x.printStackTrace();
-            throw new ClusterException(x.getMessage(), x);
-        }
+                    Log.debug(Geonet.CLUSTER, "HarvestMessageHandler result: " + result.name());
+                }
+                catch (Exception x) {
+                    Log.error(Geonet.CLUSTER, "Error processing HarvestMessageHandler message: " + x.getMessage());
+                    x.printStackTrace();
+                    throw new ClusterException(x.getMessage(), x);
+                }
+            }
     }
 }

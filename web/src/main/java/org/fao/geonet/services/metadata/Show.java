@@ -187,7 +187,7 @@ public class Show implements Service
 			dm.increasePopularity(context, id);
 
 		if(cache) {
-		    cache(context.getUserSession(), elMd, id);
+//		    cache(context.getUserSession(), elMd, id);
 		}
 		if (removeSchemaLocation) {
 		    elMd.removeAttribute("schemaLocation", Xml.xsiNS);
