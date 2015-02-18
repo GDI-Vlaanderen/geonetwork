@@ -588,7 +588,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
 	                            var xlinkHref = Ext.get('_' + this.ref + '_xlinkCOLONhref');
 	                            if (xlinkHref) {
 	                            	if (Ext.isEmpty(xlinkHref.dom.value)) {
-	                            		xlinkHref.dom.value = panel.catalogue.services.rootUrl + 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=' + uuidValue;
+										xlinkHref.dom.value = panel.catalogue.services.rootUrl + 'csw?service=CSW&request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/gmd&elementSetName=full&id=' + uuidValue;
 	                            	} else {
 	                                	var parameters = GeoNetwork.Util.getParameters(xlinkHref.dom.value);
 	                                	var id = parameters["id"];
@@ -1508,12 +1508,20 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 var subtemplates = [];
                 var rootArray = elementNameArray[0].split(";");
 	            if (rootArray.length==2) {
+	            	st = response.responseXML.documentElement;
+ 	            	for (var i =0;i<st.childNodes.length;i++) {
+ 	            		if (st.childNodes[i].nodeName==name) {
+			                subtemplates.push(st.childNodes[i].outerHTML ? st.childNodes[i].outerHTML : st.childNodes[i].xml);
+						}
+					}
+/*
 	            	st = response.responseXML;
  	            	for (var i =0;i<st.childNodes[0].childNodes.length;i++) {
  	            		if (st.childNodes[0].childNodes[i].nodeName==name) {
 			                subtemplates.push((ommitNameTag ? "" : ("<" + name + self.generateNamespaceDeclaration() + ">"))  + st.childNodes[0].childNodes[i].innerHTML + (ommitNameTag ? "" : "</" + name + ">"))
 		                }
 	            	}
+*/
 	            } else {
 	            	st = response.responseText;
 	                subtemplates.push((ommitNameTag ? "" : ("<" + name + self.generateNamespaceDeclaration() + ">"))  + response.responseText + (ommitNameTag ? "" : "</" + name + ">"))

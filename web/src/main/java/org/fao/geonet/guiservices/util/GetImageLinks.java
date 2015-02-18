@@ -38,15 +38,18 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
+import org.tuckey.web.filters.urlrewrite.utils.StringUtils;
 
 //=============================================================================
 
@@ -73,43 +76,48 @@ public class GetImageLinks implements Service
 		List<Element> nodes = (List<Element>) Xml.selectNodes(params, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString", namespaces);
 		for (Element node: nodes) {
 			try {
+		        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		        DataManager   dataMan = gc.getDataManager();
 				URL url = new URL(node.getText());
-				Map<String, String> parameters = new HashMap<String, String>();
-				if (url.getQuery() != null) {
-					for (String keyvalue: url.getQuery().split("&")) {
-						if (keyvalue.contains("=")) {
-							String[] parts = keyvalue.split("=");
-							parameters.put(parts[0], parts[1]);
+				String host = url.getHost();
+				if (!StringUtils.isBlank(host) && dataMan.getHost().equals(host)) {
+					Map<String, String> parameters = new HashMap<String, String>();
+					if (url.getQuery() != null) {
+						for (String keyvalue: url.getQuery().split("&")) {
+							if (keyvalue.contains("=")) {
+								String[] parts = keyvalue.split("=");
+								parameters.put(parts[0], parts[1]);
+							}
 						}
-					}
-					String fname = parameters.get("fname");
-					String uuid = parameters.get("uuid");
-					String access = Params.Access.PUBLIC;
-					
-					
-					Element request = new Element("request");
-					request.addContent(new Element(Params.UUID).setText(uuid));
-					request.addContent(new Element(Params.FNAME).setText(fname));
-					
-					String id = Utils.getIdentifierFromParameters(request, context);
+						String fname = parameters.get("fname");
+						String uuid = parameters.get("uuid");
+						String access = Params.Access.PUBLIC;
+						
+						
+						Element request = new Element("request");
+						request.addContent(new Element(Params.UUID).setText(uuid));
+						request.addContent(new Element(Params.FNAME).setText(fname));
+						
+						String id = Utils.getIdentifierFromParameters(request, context);
+			
+						if (fname.contains("..")) {
+							throw new BadParameterEx("Invalid character found in resource name.", fname);
+						}
+						
+						if (access.equals(Params.Access.PRIVATE))
+						{
+							Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+						}
 		
-					if (fname.contains("..")) {
-						throw new BadParameterEx("Invalid character found in resource name.", fname);
+						// Build the response
+						File dir = new File(Lib.resource.getDir(context, access, id));
+						File file= new File(dir, fname);
+						
+						Element fileMap = new Element("link");
+						fileMap.setAttribute("url", url.toString());
+						fileMap.setText(file.getAbsolutePath());
+						root.addContent(fileMap);
 					}
-					
-					if (access.equals(Params.Access.PRIVATE))
-					{
-						Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
-					}
-	
-					// Build the response
-					File dir = new File(Lib.resource.getDir(context, access, id));
-					File file= new File(dir, fname);
-					
-					Element fileMap = new Element("link");
-					fileMap.setAttribute("url", url.toString());
-					fileMap.setText(file.getAbsolutePath());
-					root.addContent(fileMap);
 				}
 			} catch (Exception e) {
 				// File could not be found, don't put it in the list of mapped urls

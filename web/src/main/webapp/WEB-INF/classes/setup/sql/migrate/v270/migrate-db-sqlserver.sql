@@ -1,5 +1,6 @@
 ALTER TABLE "Settings" ALTER COLUMN "value" varchar(max);
 ALTER TABLE "Metadata" ALTER COLUMN "data" XML;
+ALTER TABLE "Workspace" ALTER COLUMN "data" XML;
 ALTER TABLE "MetadataNotifications" ALTER COLUMN "errormsg" varchar(max);
 ALTER TABLE "CswServerCapabilitiesInfo" ALTER COLUMN "label" varchar(max);
 

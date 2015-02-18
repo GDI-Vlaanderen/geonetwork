@@ -303,11 +303,15 @@
 			</xsl:for-each>
 			
 			<xsl:for-each select="srv:operatesOn">
-<!--				<xsl:variable name="mduuidValue" select="./@uuidref"/>-->
-				<xsl:variable name="idParamValue" select="substring-after(./@xlink:href,';id=')"/>
 				<xsl:variable name="uuid">
-					<xsl:if test="contains($idParamValue,';')"><xsl:value-of select="substring-before($idParamValue,';')"/></xsl:if>
-					<xsl:if test="not(contains($idParamValue,';'))"><xsl:value-of select="$idParamValue"/></xsl:if>
+			       	<xsl:variable name="url" select="./@xlink:href"/>
+					<xsl:variable name="paramName" select="'id'"/>
+					<xsl:variable name="paramValue"><xsl:choose><xsl:when test="contains($url,concat('&amp;amp;',$paramName,'='))"><xsl:value-of select="substring-after($url,concat('&amp;amp;',$paramName,'='))"/></xsl:when><xsl:when test="contains($url,concat('&amp;',$paramName,'='))"><xsl:value-of select="substring-after($url,concat('&amp;',$paramName,'='))"/></xsl:when></xsl:choose></xsl:variable>
+					<xsl:choose>
+						<xsl:when test="contains($paramValue,'&amp;')"><xsl:value-of select="substring-before($paramValue,'&amp;')"/></xsl:when>
+						<xsl:when test="contains($paramValue,'&amp;amp;')"><xsl:value-of select="substring-before($paramValue,'&amp;amp;')"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="$paramValue"/></xsl:otherwise>
+					</xsl:choose>
 				</xsl:variable>
                 <Field  name="operatesOn" string="{string($uuid)}" store="false" index="true"/>
             </xsl:for-each>

@@ -1691,6 +1691,15 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
+     *
+     * @return
+     */
+	public String getHost() {
+		return settingMan.getValue(Geonet.Settings.SERVER_HOST);
+	}
+
+    /**
      * Checks autodetect elements in installed schemas to determine whether the metadata record belongs to that schema.
      * Use this method when you want the default schema from the geonetwork config to be returned when no other match
      * can be found.
@@ -2814,7 +2823,7 @@ public class DataManager {
      * @param id
      * @throws Exception
      */
-	public void deleteMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
+	public synchronized void deleteMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
         String uuid = getMetadataUuid(dbms, id);
         String isTemplate = getMetadataTemplate(dbms, id);
 
@@ -2832,11 +2841,11 @@ public class DataManager {
 
         //--- remove metadata
         xmlSerializer.delete(dbms, "Metadata", id, context);
-
         // Notifies the metadata change to metatada notifier service
-        if (isTemplate.equals("n")) {
+        if (!StringUtils.isBlank(isTemplate) && isTemplate.equals("n")) {
             notifyMetadataDelete(dbms, id, uuid);
         }
+        dbms.commit();
 
         if(ClusterConfig.isEnabled()) {
             // to delete metadata from index
@@ -3043,7 +3052,7 @@ public class DataManager {
         String host = settingMan.getValue(Geonet.Settings.SERVER_HOST);
         String port = settingMan.getValue(Geonet.Settings.SERVER_PORT);
         String baseUrl = context.getBaseUrl();
-        env.addContent(new Element("protocol").setText(protocol));
+        env.addContent(new Element("protocol").setText((servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) ? "https" : protocol));
         env.addContent(new Element("host").setText(host));
         env.addContent(new Element("port").setText(("80".equals(port) || "443".equals(port)) ? "" : ":" + port));
         env.addContent(new Element("baseUrl").setText(baseUrl));

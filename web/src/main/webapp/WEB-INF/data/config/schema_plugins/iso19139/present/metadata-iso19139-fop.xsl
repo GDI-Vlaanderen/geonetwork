@@ -558,7 +558,7 @@
 							padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
 	 						<fo:block linefeed-treatment="preserve">
 					            <fo:external-graphic content-width="4.6cm">
-					              <xsl:variable name="urlTemp" select="/root/gui/imageLinks/link[starts-with(@url,$fileName)]"/>
+					              <xsl:variable name="urlTemp" select="/root/gui/imageLinks/link[starts-with(@url,$fileName)]/text()"/>
 					              <xsl:variable name="url">
 									<xsl:choose>
 										<xsl:when test="not($urlTemp) or $urlTemp=''">
@@ -577,7 +577,12 @@
 								</fo:external-graphic>
 							</fo:block>
 							<fo:block>
-								<xsl:value-of select="$fileName" />
+								<xsl:if test="starts-with(normalize-space($fileName),'http')">
+									<fo:basic-link external-destination="url('{replace($fileName,'amp;','')}')"><xsl:value-of select="replace($fileName,'=','=&#x200b;')"/></fo:basic-link>
+								</xsl:if>
+								<xsl:if test="not(starts-with(normalize-space($fileName),'http'))">
+									<xsl:value-of select="replace($fileName,'amp;','')" />
+								</xsl:if>
 							</fo:block>
 						</fo:table-cell>
 						</fo:table-row>
@@ -853,18 +858,15 @@
 								<xsl:text>Datasetnaam waarop de service opereert</xsl:text>
 							</xsl:with-param>
 							<xsl:with-param name="value">
-								<xsl:variable name="idParamValue" select="substring-after(./@xlink:href,';id=')"/>
 								<xsl:variable name="uuid">
-									<xsl:call-template name="getUuidRelatedMetadata">
-										<xsl:with-param name="mduuidValue" select="./@xlink:href"/>
-										<xsl:with-param name="idParamValue" select="$idParamValue"/>
+		                    		<xsl:call-template name="getParamFromUrl">
+								       	<xsl:with-param name="url" select="./@xlink:href"/>
+										<xsl:with-param name="paramName" select="'id'"/>
 									</xsl:call-template>
 								</xsl:variable>
-								
 								<xsl:call-template name="getMetadataTitle">
 									<xsl:with-param name="uuid" select="$uuid"/>
 								</xsl:call-template>
-									
 							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:apply-templates mode="elementFop" select="./@uuidref">

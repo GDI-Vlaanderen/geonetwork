@@ -326,7 +326,7 @@ public class ClusterConfig {
             boolean enabled = settingManager.getValueAsBool("system/clustering/enable", false);
             if(enabled) {
                 Log.info(Geonet.JMS, "clustering enabled");
-                ClusterConfig.enabled = true;
+//                ClusterConfig.enabled = true;
                 clientID = jms.getChildText("clientID");
 
                 // If node-id is not configured, create it
@@ -349,7 +349,7 @@ public class ClusterConfig {
                 initJMSActors(serviceContext);
 
                 verifyClusterConfig();
-//                ClusterConfig.enabled = true;
+                ClusterConfig.enabled = true;
             }
             else {
                 ClusterConfig.enabled = false;

@@ -521,7 +521,7 @@
         </tr>
         <xsl:for-each-group select="descendant::gmd:onLine[gmd:CI_OnlineResource/gmd:linkage/gmd:URL!='']" group-by="gmd:CI_OnlineResource/gmd:protocol">
          <xsl:choose>
-           <xsl:when test="contains(current-grouping-key(), 'WMS') or contains(current-grouping-key(), 'WMTS')">
+           <xsl:when test="contains(current-grouping-key(), 'WMS') or contains(current-grouping-key(), 'WMTS') or contains(current-grouping-key(), 'WFS')">
            
             <tr>
 	          <td class="main">

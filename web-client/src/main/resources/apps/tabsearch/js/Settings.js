@@ -8,8 +8,8 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); 
 
   //ga('create', 'UA-47782343-2', 'gim.be'); 
-  ga('create', 'UA-28664104-7', 'agiv.be');
-  //ga('create', 'UA-36710880-2', 'geopunt.be');
+  //ga('create', 'UA-28664104-7', 'agiv.be');
+  ga('create', 'UA-36710880-2', 'geopunt.be');
   
   ga('send', 'pageview'); 
 */
@@ -77,7 +77,7 @@ GeoNetwork.Settings.ratingEnabled = false;
 GeoNetwork.Settings.isProduction = false;
 GeoNetwork.Settings.nodeType = "AGIV";
 GeoNetwork.Settings.useSTS = true;
-GeoNetwork.Settings.ga = false;
+GeoNetwork.Settings.ga = true;
 GeoNetwork.Settings.logoutUrlSTS = "https://auth." + (GeoNetwork.Settings.isProduction ? "" : "beta.") + "agiv.be/sts/";
-GeoNetwork.Settings.nodeFooterInfo = "Build: 04/02/2015 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
+GeoNetwork.Settings.nodeFooterInfo = "Build: 18/02/2015 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
 

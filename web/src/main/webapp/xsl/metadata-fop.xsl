@@ -468,7 +468,12 @@
 						<fo:table-cell color="{$font-color}" padding-top="4pt"
 							padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
  							<fo:block linefeed-treatment="preserve">
-								<xsl:value-of select="$value" />
+								<xsl:if test="starts-with(normalize-space($value),'http')">
+									<fo:basic-link external-destination="url('{replace($value,'amp;','')}')"><xsl:value-of select="replace($value,'=','=&#x200b;')"/></fo:basic-link>
+								</xsl:if>
+								<xsl:if test="not(starts-with(normalize-space($value),'http'))">
+									<xsl:value-of select="$value" />
+								</xsl:if>
 								<xsl:copy-of select="$content" />
 							</fo:block>
 						</fo:table-cell>
