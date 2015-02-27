@@ -18,7 +18,8 @@
                                         xmlns:gml="http://www.opengis.net/gml"
 										xmlns:math="http://exslt.org/math"
 										xmlns:exslt="http://exslt.org/common"
-										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml">
+										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml"
+										exclude-result-prefixes="#all">
 
 	<!-- ============================================================================= -->
 

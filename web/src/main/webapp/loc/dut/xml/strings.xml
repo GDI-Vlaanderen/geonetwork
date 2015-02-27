@@ -788,6 +788,7 @@
 	<protocolChoice show='-' value='OGC:WFS-1.1.0-http-getgmlobject'>OGC-WFS GetGmlObject operatie (ver 1.1.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WFS-2.0.0-http-get-capabilities'>OGC-WFS GetCapabilities operatie (ver 2.0.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WFS-2.0.0-http-get-feature'>OGC-WFS GetFeature operatie (ver 2.0.0)</protocolChoice>
+	<protocolChoice show='-' value='OGC:WFS-2.0.0-http-describefeaturetype'>OGC-WFS DescribeFeatureType operatie (ver 2.0.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WCS'>OGC-WCS Web Coverage Service (endpoint)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WCS-1.0.0-http-get-capabilities'>OGC-WCS GetCapabilities operatie (ver 1.0.0)</protocolChoice>  
 	<protocolChoice show='-' value='OGC:WCS-1.0.0-http-get-coverage'>OGC-WCS GetCoverage operatie (ver 1.0.0)</protocolChoice>  

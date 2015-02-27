@@ -282,7 +282,6 @@
 							<xsl:value-of select="/root/gui/strings/linkedDatasetMetadata"/></h3>
 						<ul>
 							<xsl:for-each select="$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn[@uuidref!='']">
-								<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
 		                    	<xsl:variable name="childUuid">
 					           		<xsl:call-template name="getParamFromUrl">
 								       	<xsl:with-param name="url" select="@xlink:href"/>

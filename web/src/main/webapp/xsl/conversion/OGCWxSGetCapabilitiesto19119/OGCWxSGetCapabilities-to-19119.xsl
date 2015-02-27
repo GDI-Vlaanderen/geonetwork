@@ -86,9 +86,11 @@ Mapping between :
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<language>
-				<gco:CharacterString><xsl:value-of select="$lang"/></gco:CharacterString>
-				<!-- English is default. Not available in GetCapabilities. 
-				Selected by user from GUI -->
+				<LanguageCode
+					codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#LanguageCode"
+					codeListValue="{$lang}">
+					<xsl:value-of select="$lang" />
+				</LanguageCode>
 			</language>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

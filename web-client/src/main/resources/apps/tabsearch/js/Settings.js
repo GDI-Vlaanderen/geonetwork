@@ -8,8 +8,8 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); 
 
   //ga('create', 'UA-47782343-2', 'gim.be'); 
-  //ga('create', 'UA-28664104-7', 'agiv.be');
-  ga('create', 'UA-36710880-2', 'geopunt.be');
+  ga('create', 'UA-28664104-7', 'agiv.be');
+  //ga('create', 'UA-36710880-2', 'geopunt.be');
   
   ga('send', 'pageview'); 
 */
