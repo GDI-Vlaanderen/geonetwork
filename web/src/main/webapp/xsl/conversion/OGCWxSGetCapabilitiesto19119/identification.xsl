@@ -18,7 +18,8 @@
                                         xmlns:gml="http://www.opengis.net/gml"
 										xmlns:math="http://exslt.org/math"
 										xmlns:exslt="http://exslt.org/common"
-										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml">
+										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml"
+										exclude-result-prefixes="#all">
 
 	<!-- ============================================================================= -->
 
@@ -26,31 +27,20 @@
 		<xsl:param name="topic"/>
 		<xsl:param name="ogctype"/>
 		<xsl:param name="ows"/>
+		<xsl:param name="wfs"/>
 		<xsl:variable name="s" select="Service|wfs:Service|wms:Service|ows:ServiceIdentification|ows11:ServiceIdentification|wcs:Service"/>
 		
 		<citation>
 			<CI_Citation>
 				<title>
-					<gco:CharacterString>
-						<xsl:choose>
-							<xsl:when test="$ows='true'">
-								<xsl:value-of select="ows:ServiceIdentification/ows:Title|
-													ows11:ServiceIdentification/ows11:Title"/>
-							</xsl:when>
-							<xsl:when test="name(.)='WFS_Capabilities'">
-								<xsl:value-of select="wfs:Service/wfs:Title"/>
-							</xsl:when>
-							<xsl:when test="name(.)='WMS_Capabilities'">
-								<xsl:value-of select="wms:Service/wms:Title"/>
-							</xsl:when>
-							<xsl:when test="name(.)='WMT_MS_Capabilities'">
-								<xsl:value-of select="Service/Title"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="wcs:Service/wcs:label"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</gco:CharacterString>
+					<xsl:variable name="title">
+						<xsl:call-template name="get-title">
+							<xsl:with-param name="ows">
+								<xsl:value-of select="$ows" />
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:variable>
+					<gco:CharacterString><xsl:value-of select="normalize-space($title)"/></gco:CharacterString>
 				</title>
 				<date>
 					<CI_Date>
@@ -71,26 +61,14 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<abstract>
-			<gco:CharacterString>
-				<xsl:choose>
-					<xsl:when test="$ows='true'">
-						<xsl:value-of select="ows:ServiceIdentification/ows:Abstract|
-											ows11:ServiceIdentification/ows11:Abstract"/>
-					</xsl:when>
-					<xsl:when test="name(.)='WFS_Capabilities'">
-						<xsl:value-of select="wfs:Service/wfs:Abstract"/>
-					</xsl:when>
-					<xsl:when test="name(.)='WMS_Capabilities'">
-						<xsl:value-of select="wms:Service/wms:Abstract"/>
-					</xsl:when>
-					<xsl:when test="name(.)='WMT_MS_Capabilities'">
-						<xsl:value-of select="Service/Abstract"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="wcs:Service/wcs:description"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</gco:CharacterString>
+			<xsl:variable name="abstract">
+				<xsl:call-template name="get-abstract">
+					<xsl:with-param name="ows">
+						<xsl:value-of select="$ows" />
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
+			<gco:CharacterString><xsl:value-of select="normalize-space($abstract)"/></gco:CharacterString>
 		</abstract>
 
 		<!--idPurp-->
@@ -146,7 +124,13 @@
 		<descriptiveKeywords>
 			<MD_Keywords>
 				<keyword>
-					<gco:CharacterString>infoMapAccessService</gco:CharacterString>
+					<xsl:variable name="keyword">
+						<xsl:choose>
+							<xsl:when test="$wfs=true()">infoFeatureAccessService</xsl:when>
+							<xsl:otherwise>infoMapAccessService</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<gco:CharacterString><xsl:value-of select="$keyword"/></gco:CharacterString>
 				</keyword>
 				<thesaurusName>
 					<CI_Citation>
@@ -184,7 +168,12 @@
 		<resourceConstraints>
 			<MD_Constraints>
 				<useLimitation>
-					<gco:CharacterString><xsl:value-of select="concat($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees,'. ',$s/wms:AccessConstraints)"/></gco:CharacterString>
+					<gco:CharacterString>
+						<xsl:call-template name="get-accessConstraint">
+							<xsl:with-param name="type" select="1"/>
+							<xsl:with-param name="accessConstraint" select="concat(normalize-space($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees),'. ',normalize-space($s/AccessConstraints|$s/wms:AccessConstraints|$s/wfs:AccessConstraints|$s/ows:AccessConstraints|$s/ows11:AccessConstraints))"/>
+						</xsl:call-template>
+					</gco:CharacterString>
 				</useLimitation>
 			</MD_Constraints>
 		</resourceConstraints>
@@ -203,7 +192,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		
 		<srv:serviceType>
-			<gco:LocalName>view</gco:LocalName>
+			<xsl:variable name="serviceType">
+				<xsl:choose>
+					<xsl:when test="$wfs=true()">download</xsl:when>
+					<xsl:otherwise>view</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<gco:LocalName><xsl:value-of select='$serviceType'/></gco:LocalName>
 		</srv:serviceType>
 		<srv:serviceTypeVersion>
 			<gco:CharacterString><xsl:value-of select='@version'/></gco:CharacterString>
@@ -213,7 +208,7 @@
 		<srv:accessProperties>
 			<MD_StandardOrderProcess>
 				<fees>
-					<gco:CharacterString><xsl:value-of select="$s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees"/></gco:CharacterString>
+					<gco:CharacterString><xsl:value-of select="normalize-space($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees)"/></gco:CharacterString>
 				</fees>
 			</MD_StandardOrderProcess>
 		</srv:accessProperties>
@@ -354,7 +349,8 @@
 						<gco:CharacterString><xsl:value-of select="$operationName"/></gco:CharacterString>
 					</srv:operationName>
 					<!--  CHECKME : DCPType/SOAP ? -->
-					<xsl:for-each select="DCPType/HTTP/*|wfs:DCPType/wfs:HTTP/*|wms:DCPType/wms:HTTP/*|
+<!--
+						<xsl:for-each select="DCPType/HTTP/*|wfs:DCPType/wfs:HTTP/*|wms:DCPType/wms:HTTP/*|
 							wcs:DCPType/wcs:HTTP/*|ows:DCP/ows:HTTP/*|ows11:DCP/ows11:HTTP/*">
 						<srv:DCP>
 							<srv:DCPList codeList="./resources/codeList.xml#DCPList">
@@ -371,7 +367,10 @@
 							</srv:DCPList>
 						</srv:DCP>
 					</xsl:for-each>
-          
+-->          
+					<srv:DCP gco:nilReason="missing">
+						<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue=""/>
+					</srv:DCP>
                     <xsl:if test="name(.)='wps:Process' or name(.)='wps11:ProcessOfferings'">
                       <srv:operationDescription>
                           <gco:CharacterString><xsl:value-of select="ows:Abstract|ows11:Title"/></gco:CharacterString> 
@@ -380,20 +379,27 @@
                           <gco:CharacterString><xsl:value-of select="ows:Identifier|ows11:Identifier"/></gco:CharacterString> 
                       </srv:invocationName> 
                     </xsl:if>
-                    <xsl:variable name="formats" select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']"/>
+                    <xsl:variable name="formats">
+			<xsl:choose>
+                    		<xsl:when test="$operationName='GetGmlObject'"><xsl:value-of select="../ows:Operation[@name='GetFeature']/ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value[contains(upper-case(.),'GML')]"/></xsl:when>
+                    		<xsl:otherwise><xsl:value-of select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value"/></xsl:otherwise>
+			</xsl:choose> 
+                   </xsl:variable>
                     <xsl:if test="count($formats)>0">
 						<srv:connectPoint>
 							<CI_OnlineResource>
 								<linkage>
-									<URL>
+									<xsl:variable name="urls">
 										<xsl:choose>
-											<xsl:when test="$ows='true'">
-												<xsl:value-of select=".//ows:Get[1]/@xlink:href"/><!-- FIXME supposed at least one Get -->
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select=".//OnlineResource[1]/@xlink:href|.//wms:OnlineResource[1]/@xlink:href"/>
-											</xsl:otherwise>
+											<xsl:when test="$ows='true'"><xsl:value-of select=".//ows:Get[1]/@xlink:href"/></xsl:when>
+											<xsl:otherwise><xsl:value-of select=".//Get/OnlineResource[1]/@xlink:href|.//wms:Get/wms:OnlineResource[1]/@xlink:href"/></xsl:otherwise>
 										</xsl:choose>
+									</xsl:variable>
+									<xsl:if test="normalize-space($urls[1])=''">
+										<xsl:attribute name="gco:nilReason" select="'missing'"/>
+									</xsl:if>
+									<URL>
+										<xsl:value-of select="$urls[1]"/><xsl:if test="not(contains($urls[1],'?'))">?</xsl:if>
 									</URL>
 								</linkage>
 								<protocol>
@@ -406,7 +412,15 @@
 												</xsl:call-template>
 											</xsl:when>
 											<xsl:when test="$ows='true'">
-												<xsl:value-of select="$formats[1]/ows:Value"/>
+												<xsl:choose>
+													<xsl:when test="$operationName='GetCapabilities' or $operationName='DescribeFeatureType' or $operationName='GetFeature' or $operationName='GetGmlObject'">
+														<xsl:call-template name="get-protocol-by-operation">
+															<xsl:with-param name="operationName" select="$operationName"/>
+															<xsl:with-param name="ogctype" select="$ogctype"/>
+														</xsl:call-template>
+													</xsl:when>
+													<xsl:otherwise><xsl:value-of select="$formats[1]"/></xsl:otherwise>
+												</xsl:choose>												
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="$formats[1]"/>
@@ -438,7 +452,13 @@
 						<srv:connectPoint>
 							<CI_OnlineResource>
 								<linkage>
-									<URL><xsl:value-of select="..//wfs:Get[1]/@onlineResource"/></URL>
+									<xsl:variable name="urls" select="..//wfs:Get[1]/@onlineResource"/>
+									<xsl:if test="normalize-space($urls[1])=''">
+										<xsl:attribute name="gco:nilReason" select="'missing'"/>
+									</xsl:if>
+									<URL>
+										<xsl:value-of select="$urls[1]"/><xsl:if test="not(contains($urls[1],'?'))">?</xsl:if>
+									</URL>
 								</linkage>
 								<protocol>
 									<gco:CharacterString><xsl:value-of select="name($wfsformats[1])"/></gco:CharacterString>
@@ -596,7 +616,7 @@
 		
 		
 		<xsl:choose>
-		 	<xsl:when test="//wfs:FeatureType">
+		 	<xsl:when test="//wfs:FeatureType|FeatureType">
 				<spatialRepresentationType>
 					<MD_SpatialRepresentationTypeCode codeList="./resources/codeList.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" />
 				</spatialRepresentationType>
@@ -756,9 +776,12 @@
 	<xsl:template match="*" mode="Keywords">
 		<!-- TODO : tokenize WFS 100 keywords list -->
 		<xsl:for-each select="Keyword|wms:Keyword|ows:Keyword|ows11:Keyword|wfs:Keywords|wcs:keyword">
-			<keyword>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</keyword>
+			<xsl:variable name="keywordValue" select="normalize-space(.)" />
+			<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
+				<keyword>
+					<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+				</keyword>
+			</xsl:if>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -778,16 +801,115 @@
                		<xsl:when test="$ogctype='WMTS1.0.0'">OGC:WMTS-1.0.0-http-get-capabilities</xsl:when>
                		<xsl:when test="$ogctype='WMS1.1.1'">OGC:WMS-1.1.1-http-get-capabilities</xsl:when>
                		<xsl:when test="$ogctype='WMS1.3.0'">OGC:WMS-1.3.0-http-get-capabilities</xsl:when>
+               		<xsl:when test="$ogctype='WFS1.0.0'">OGC:WFS-1.1.0-http-get-capabilities</xsl:when>
+               		<xsl:when test="$ogctype='WFS1.1.0'">OGC:WFS-1.1.0-http-get-capabilities</xsl:when>
                		<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
                	</xsl:choose>
             </xsl:when>
-			<xsl:when test="$operationName='GetMap' or $operationName='GetFeatureInfo'">
+			<xsl:when test="$operationName='GetMap'">
                	<xsl:choose>
                		<xsl:when test="$ogctype='WMS1.1.1'">OGC:WMS-1.1.1-http-get-map</xsl:when>
                		<xsl:when test="$ogctype='WMS1.3.0'">OGC:WMS-1.3.0-http-get-map</xsl:when>
 					<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
                	</xsl:choose>
 			</xsl:when>
+			<xsl:when test="$operationName='GetFeatureInfo'">
+               	<xsl:choose>
+               		<xsl:when test="$ogctype='WMS1.1.1'">OGC:WMS-1.1.1-http-get-featureinfo</xsl:when>
+               		<xsl:when test="$ogctype='WMS1.3.0'">OGC:WMS-1.3.0-http-get-featureinfo</xsl:when>
+					<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
+               	</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$operationName='GetFeature'">
+               	<xsl:choose>
+               		<xsl:when test="$ogctype='WFS1.0.0'">OGC:WFS-1.0.0-http-get-feature</xsl:when>
+               		<xsl:when test="$ogctype='WFS1.1.0'">OGC:WFS-1.1.0-http-get-feature</xsl:when>
+					<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
+               	</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$operationName='DescribeFeatureType'">
+               	<xsl:choose>
+               		<xsl:when test="$ogctype='WFS1.0.0'">OGC:WFS-1.0.0-http-describefeaturetype</xsl:when>
+               		<xsl:when test="$ogctype='WFS1.1.0'">OGC:WFS-1.1.0-http-describefeaturetype</xsl:when>
+					<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
+               	</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$operationName='GetGmlObject'">
+               	<xsl:choose>
+               		<xsl:when test="$ogctype='WFS1.1.0'">OGC:WFS-1.1.0-http-getgmlobject</xsl:when>
+					<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
+               	</xsl:choose>
+			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
+
+	<xsl:template name="get-accessConstraint">
+		<xsl:param name="type"/>
+		<xsl:param name="accessConstraint"/>
+		<xsl:choose>
+			<xsl:when test="string-length($accessConstraint) > 2"><xsl:value-of select="$accessConstraint"/></xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="$type=1">Geen voorwaarde van toepassing. Vrij gebruik onder voorbehoud van vermelding van de bron en de datum van de laatste wijziging.</xsl:if>
+				<xsl:if test="$type=2">Geen publieke toegangsrestricties volgens INSPIRE.</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="get-abstract">
+		<xsl:param name="ows"/>
+		<xsl:choose>
+			<xsl:when test="$ows='true'">
+				<xsl:value-of select="ows:ServiceIdentification/ows:Abstract|
+									ows11:ServiceIdentification/ows11:Abstract"/>
+			</xsl:when>
+			<xsl:when test="name(.)='WFS_Capabilities'">
+				<xsl:value-of select="wfs:Service/wfs:Abstract|Service/Abstract"/>
+			</xsl:when>
+			<xsl:when test="name(.)='WMS_Capabilities' or name(.)='WMT_MS_Capabilities'">
+				<xsl:value-of select="wms:Service/wms:Abstract|Service/Abstract"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="wcs:Service/wcs:description"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="get-title">
+		<xsl:param name="ows"/>
+		<xsl:choose>
+			<xsl:when test="$ows='true'">
+				<xsl:value-of select="ows:ServiceIdentification/ows:Title|
+									ows11:ServiceIdentification/ows11:Title"/>
+			</xsl:when>
+			<xsl:when test="name(.)='WFS_Capabilities'">
+				<xsl:value-of select="wfs:Service/wfs:Title|Service/Title"/>
+			</xsl:when>
+			<xsl:when test="name(.)='WMS_Capabilities' or name(.)='WMT_MS_Capabilities'">
+				<xsl:value-of select="wms:Service/wms:Title|Service/Title"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="wcs:Service/wcs:label"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="get-name">
+		<xsl:param name="ows"/>
+		<xsl:choose>
+			<xsl:when test="$ows='true'">
+				<xsl:value-of select="ows:ServiceIdentification/ows:Name|
+									ows11:ServiceIdentification/ows11:Name"/>
+			</xsl:when>
+			<xsl:when test="name(.)='WFS_Capabilities'">
+				<xsl:value-of select="wfs:Service/wfs:Name|Service/Name"/>
+			</xsl:when>
+			<xsl:when test="name(.)='WMS_Capabilities' or name(.)='WMT_MS_Capabilities'">
+				<xsl:value-of select="wms:Service/wms:Name|Service/Name"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="wcs:Service/wcs:label"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 </xsl:stylesheet>

@@ -490,16 +490,14 @@
 	<xsl:template mode="iso19139" match="srv:operatesOn|gmd:featureCatalogueCitation" priority="99">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-		<xsl:variable name="mduuidValue" select="./@uuidref"/>
-		<xsl:variable name="idParamValue" select="substring-after(./@xlink:href,';id=')"/>
 		<xsl:variable name="uuid">
 			<xsl:if test="name(.)='gmd:featureCatalogueCitation'">
 				<xsl:value-of select="@uuidref" />
 			</xsl:if>
 			<xsl:if test="not(name(.)='gmd:featureCatalogueCitation')">
-				<xsl:call-template name="getUuidRelatedMetadata">
-					<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
-					<xsl:with-param name="idParamValue" select="$idParamValue"/>
+           		<xsl:call-template name="getParamFromUrl">
+			       	<xsl:with-param name="url" select="./@xlink:href"/>
+					<xsl:with-param name="paramName" select="'id'"/>
 				</xsl:call-template>
 			</xsl:if>
 		</xsl:variable>                    	
@@ -678,30 +676,14 @@
                             <xsl:value-of select="/root/gui/strings/noOperatesOn"/>
                         </xsl:when>
                         <xsl:otherwise>
-<!--
-                                <xsl:for-each select="../../../srv:operatesOn[@xlink:href!='' and @uuidref=$currentMduuidValue]">
-									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
-			                    	<xsl:variable name="uuid">
-			                    		xsl:call-template name="getUuidRelatedMetadata">
-									       	<xsl:with-param name="mduuidValue" select="$currentMduuidValue"/>
-											<xsl:with-param name="idParamValue" select="$idParamValue"/>
-										</xsl:call-template>
-			                   		</xsl:variable>
-			                   		<xsl:text> </xsl:text><xsl:value-of select="$uuid"/>                    	
-                                    <xsl:call-template name="getMetadataTitle">
-                                        <xsl:with-param name="uuid" select="$uuid"/>
-                                    </xsl:call-template>
-                                </xsl:for-each>
--->
                             <select onchange="javascript:Ext.getDom('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
                                 <option></option>
                                 <xsl:for-each select="../../../srv:operatesOn[@xlink:href!='' and @uuidref!='']">
 									<xsl:variable name="mduuidValue" select="@uuidref"/>
-									<xsl:variable name="idParamValue" select="substring-after(@xlink:href,';id=')"/>
 			                    	<xsl:variable name="uuid">
-			                    		<xsl:call-template name="getUuidRelatedMetadata">
-									       	<xsl:with-param name="mduuidValue" select="$mduuidValue"/>
-											<xsl:with-param name="idParamValue" select="$idParamValue"/>
+			                    		<xsl:call-template name="getParamFromUrl">
+									       	<xsl:with-param name="url" select="@xlink:href"/>
+											<xsl:with-param name="paramName" select="'id'"/>
 										</xsl:call-template>
 			                   		</xsl:variable>                    	
                                     <option value="{$mduuidValue}">

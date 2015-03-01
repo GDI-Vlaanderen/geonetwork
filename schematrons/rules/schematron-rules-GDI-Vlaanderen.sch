@@ -59,6 +59,18 @@
 			</sch:report>
 		</sch:rule>
 	</sch:pattern>
+	<!-- GDI-Vlaanderen SC4 -->
+	<sch:pattern>
+		<sch:title>GDI-Vlaanderen SC-4: Objectencatalogus is onderdeel van de dataset (= aangevinkt) (ISO-element 236). Objectencatalogus identifier mag daarom niet leeg zijn.</sch:title>
+		<sch:rule context="//gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset">
+			<sch:let name="uuidrefValueArray" value="../gmd:featureCatalogueCitation/@uuidref"/>
+			<sch:let name="uuidrefValue" value="normalize-space($uuidrefValueArray[1])"/>
+			<sch:let name="uuidrefIsValid" value="not(normalize-space(gco:Boolean)='true') or $uuidrefValue!=''"/>
+			<sch:assert test="$uuidrefIsValid">Het element 'Objectencatalogus identificator' ontbreekt of is leeg.</sch:assert>
+			<sch:report test="$uuidrefIsValid">Het element 'Objectencatalogus identificator' is aanwezig : <sch:value-of select="$uuidrefValue"/>
+			</sch:report>
+		</sch:rule>
+	</sch:pattern>
 	<!-- GDI-Vlaanderen SC5 -->
 	<sch:pattern>
 		<sch:title>Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)</sch:title>

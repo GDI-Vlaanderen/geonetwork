@@ -31,6 +31,8 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -39,6 +41,7 @@ import org.jdom.Element;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -83,17 +86,22 @@ public class Set implements Service
 		for (ConfigEntry ce : entries)
 			ce.eval(values, params);
 
+		String newUuid = (String)values.get("system/site/siteId");
+
+        if (!currentUuid.equals(newUuid)) {
+            if(StringUtils.isNotEmpty(newUuid) && newUuid.equals("CHANGEME") || StringUtils.isEmpty(newUuid)) {
+            	newUuid = UUID.randomUUID().toString();
+            	values.put("system/site/siteId",newUuid);
+            }
+			dbms.execute("UPDATE Metadata SET source=? WHERE isHarvested='n'", newUuid);
+			dbms.execute("UPDATE Workspace SET source=? WHERE isHarvested='n'", newUuid);
+			dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
+        }
 		if (!sm.setValues(dbms, values))
 			throw new OperationAbortedEx("Cannot set all values");
 
         // Update inspire property in SearchManager
         gc.getSearchmanager().setInspireEnabled(new Boolean((String) values.get("system/inspire/enable"))); 
-		String newUuid = (String)values.get("system/site/siteId");
-
-        if (!currentUuid.equals(newUuid)) {
-			dbms.execute("UPDATE Metadata SET source=? WHERE isHarvested='n'", newUuid);
-			dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
-        }
         
 		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}

@@ -239,7 +239,7 @@ CREATE TABLE Workspace
     lockedBy     varchar(36),
     createDate   varchar(30)    not null,
     changeDate   varchar(30)    not null,
-    data         text    not null,
+    data         XML       not null,
     source       varchar(250)   not null,
     title        varchar(255),
     root         varchar(255),

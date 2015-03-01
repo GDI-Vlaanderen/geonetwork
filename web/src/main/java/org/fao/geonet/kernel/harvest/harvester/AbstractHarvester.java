@@ -286,7 +286,7 @@ public abstract class AbstractHarvester
 			String  id = el.getChildText("id");
 
 			dataMan.deleteMetadata(context, dbms, id);
-			dbms.commit();
+//			dbms.commit();
 		}
 
 		doDestroy(dbms);

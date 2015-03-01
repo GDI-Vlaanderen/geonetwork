@@ -90,7 +90,7 @@ public class Aligner
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id="+ id);
 				dataMan.deleteMetadata(context, dbms, id);
-				dbms.commit();
+//				dbms.commit();
 				this.result.locallyRemoved++;
 			}
 

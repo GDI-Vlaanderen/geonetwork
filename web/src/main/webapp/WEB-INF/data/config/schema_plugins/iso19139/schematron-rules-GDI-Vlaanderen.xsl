@@ -218,10 +218,18 @@
             <xsl:attribute name="document">
                <xsl:value-of select="document-uri(/)"/>
             </xsl:attribute>
-            <xsl:attribute name="name">Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)</xsl:attribute>
+            <xsl:attribute name="name">GDI-Vlaanderen SC-4: Objectencatalogus is onderdeel van de dataset (= aangevinkt) (ISO-element 236). Objectencatalogus identifier mag daarom niet leeg zijn.</xsl:attribute>
             <xsl:apply-templates/>
          </svrl:active-pattern>
          <xsl:apply-templates select="/" mode="M11"/>
+         <svrl:active-pattern>
+            <xsl:attribute name="document">
+               <xsl:value-of select="document-uri(/)"/>
+            </xsl:attribute>
+            <xsl:attribute name="name">Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)</xsl:attribute>
+            <xsl:apply-templates/>
+         </svrl:active-pattern>
+         <xsl:apply-templates select="/" mode="M12"/>
       </svrl:schematron-output>
    </xsl:template>
 
@@ -400,13 +408,63 @@
       <xsl:apply-templates select="*" mode="M10"/>
    </xsl:template>
 
+   <!--PATTERN GDI-Vlaanderen SC-4: Objectencatalogus is onderdeel van de dataset (= aangevinkt) (ISO-element 236). Objectencatalogus identifier mag daarom niet leeg zijn.-->
+<svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">GDI-Vlaanderen SC-4: Objectencatalogus is onderdeel van de dataset (= aangevinkt) (ISO-element 236). Objectencatalogus identifier mag daarom niet leeg zijn.</svrl:text>
+
+	  <!--RULE -->
+<xsl:template match="//gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset"
+                 priority="1000"
+                 mode="M11">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="//gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset"/>
+      <xsl:variable name="uuidrefValueArray" select="../gmd:featureCatalogueCitation/@uuidref"/>
+      <xsl:variable name="uuidrefValue" select="normalize-space($uuidrefValueArray[1])"/>
+      <xsl:variable name="uuidrefIsValid"
+                    select="not(normalize-space(gco:Boolean)='true') or $uuidrefValue!=''"/>
+
+		    <!--ASSERT -->
+<xsl:choose>
+         <xsl:when test="$uuidrefIsValid"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                parent="#_{geonet:element/@parent}"
+                                test="$uuidrefIsValid">
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>Het element 'Objectencatalogus identificator' ontbreekt of is leeg.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--REPORT -->
+<xsl:if test="$uuidrefIsValid">
+         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
+                                 parent="#_{geonet:element/@parent}"
+                                 test="$uuidrefIsValid">
+            <xsl:attribute name="location">
+               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+            </xsl:attribute>
+            <svrl:text>Het element 'Objectencatalogus identificator' is aanwezig : <xsl:text/>
+               <xsl:copy-of select="$uuidrefValue"/>
+               <xsl:text/>
+			         </svrl:text>
+         </svrl:successful-report>
+      </xsl:if>
+      <xsl:apply-templates select="*" mode="M11"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M11"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M11">
+      <xsl:apply-templates select="*" mode="M11"/>
+   </xsl:template>
+
    <!--PATTERN Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)-->
 <svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">Er moet minstens één Nederlandstalig trefwoord aanwezig zijn uit de thesaurus ‘GEMET - INSPIRE thema’s, versie 1.0’ met als datum 2008-06-01 indien de MD_Metadata.language gelijk is aan NL (ISO-element 55)</svrl:text>
 
 	  <!--RULE -->
 <xsl:template match="//gmd:MD_DataIdentification[/gmd:MD_Metadata/gmd:language/*/text()='dut']"
                  priority="1000"
-                 mode="M11">
+                 mode="M12">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
                        context="//gmd:MD_DataIdentification[/gmd:MD_Metadata/gmd:language/*/text()='dut']"/>
       <xsl:variable name="inspire-thesaurus"
@@ -466,10 +524,10 @@
 			</svrl:text>
          </svrl:successful-report>
       </xsl:if>
-      <xsl:apply-templates select="*" mode="M11"/>
+      <xsl:apply-templates select="*" mode="M12"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M11"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M11">
-      <xsl:apply-templates select="*" mode="M11"/>
+   <xsl:template match="text()" priority="-1" mode="M12"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M12">
+      <xsl:apply-templates select="*" mode="M12"/>
    </xsl:template>
 </xsl:stylesheet>

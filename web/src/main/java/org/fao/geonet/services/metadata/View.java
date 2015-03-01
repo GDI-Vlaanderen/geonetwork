@@ -139,7 +139,7 @@ public class View implements Service {
 				String schemaLocation;
 				// if document has srv namespace then add srv schemaLocation
 				if (elMd.getNamespace("srv") != null) {
-					schemaLocation = " http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd";
+					schemaLocation = "http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd";
 				}
 				// otherwise add gmd schemaLocation
 				// (but not both! as that is invalid, the schemas describe

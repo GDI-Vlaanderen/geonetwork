@@ -189,7 +189,7 @@
 		<xsl:variable name="changeMessage" select="normalize-space(/root/changeMessage)"/>
 		<xsl:if test="$changeMessage!='Beschrijf hier extra informatie' and $changeMessage!=''">
 			<xsl:text>&#10;&#13;&#10;&#13;Extra informatie hierover:</xsl:text>
-			<xsl:text>&#10;&#13;&#10;&#13;</xsl:text><xsl:value-of select="/root/changeMessage"/>
+			<xsl:text>&#10;&#13;</xsl:text><xsl:value-of select="/root/changeMessage"/><xsl:text>&#10;&#13;</xsl:text>
 		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
