@@ -881,7 +881,7 @@
 			name(.) != 'gmd:source' and
 			name(.) != 'gmd:processor' and 
 			name(.) != 'gmd:distributionOrderProcess' and
-			name(.) != 'gmd:EX_TemporalExtent' and
+			name(.) != 'gmd:temporalElement' and
 			name(.) != 'gmd:verticalElement' and
 			name(.) != 'gmd:resourceConstraints')">
 	        	<xsl:text>!OPTIONAL</xsl:text>

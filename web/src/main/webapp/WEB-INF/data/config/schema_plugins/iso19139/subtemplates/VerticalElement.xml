@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:verticalElement xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+	<gmd:EX_VerticalExtent>
+		<gmd:minimumValue/>
+		<gmd:maximumValue/>
+		<gmd:verticalCRS>
+			<gml:VerticalCRS gml:id="">
+				<gml:identifier codeSpace=""/>
+				<gml:scope/>
+				<gml:verticalCS nilReason="missing"/>
+				<gml:verticalDatum nilReason="missing"/>
+			</gml:VerticalCRS>
+		</gmd:verticalCRS>
+	</gmd:EX_VerticalExtent>
+</gmd:verticalElement>
