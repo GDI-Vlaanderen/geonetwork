@@ -224,7 +224,7 @@
               gmd:resourceConstraints|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|gmd:distributor|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
-              gmd:geographicBox|gmd:EX_TemporalExtent|
+              gmd:geographicBox|gmd:temporalElement|
               srv:serviceType|srv:containsOperations|srv:coupledResource|
               gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:aggregationInfo|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
               gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS|gmd:onLine|gmd:processor">
@@ -317,6 +317,41 @@
 		</xsl:for-each>
 	</xsl:template>
 	
+    <xsl:template mode="iso19139" match="gmd:EX_Extent">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+        <xsl:apply-templates mode="elementEP" select="gmd:description">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates mode="elementEP" select="gmd:geographicElement">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='temporalElement' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:temporalElement)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="elementEP" select="gmd:temporalElement">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+		<xsl:if test="$edit=true()">
+			<xsl:apply-templates mode="addElement" select="geonet:child[@name='verticalElement' and @prefix='gmd']">
+	            <xsl:with-param name="schema" select="$schema"/>
+	            <xsl:with-param name="edit"   select="$edit"/>
+	            <xsl:with-param name="visible"   select="count(gmd:verticalElement)=0"/>
+			</xsl:apply-templates>
+		</xsl:if>
+        <xsl:apply-templates mode="elementEP" select="gmd:verticalElement">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:apply-templates>
+	</xsl:template>
+
     <xsl:template mode="iso19139" match="gmd:MD_Constraints|gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints ">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>

@@ -708,7 +708,8 @@ function isException(el) {
                       'stip.iso19139|gmd:source|gmd:LI_Lineage|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source||gmd:source',
 					  'stip.iso19139|gmd:processor|gmd:LI_ProcessStep|gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:processor||gmd:processor',
 					  'stip.iso19139|gmd:distributionOrderProcess|gmd:MD_Distributor|gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributionOrderProcess||gmd:distributionOrderProcess',
-					  'stip.iso19139|gmd:EX_TemporalExtent|gmd:temporalElement|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent||gmd:EX_TemporalExtent',
+//					  'stip.iso19139|gmd:EX_TemporalExtent|gmd:temporalElement|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent||gmd:EX_TemporalExtent',
+					  'stip.iso19139|gmd:temporalElement|gmd:EX_Extent|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement||gmd:temporalElement',
 					  'stip.iso19139|gmd:verticalElement|gmd:EX_Extent|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:verticalElement||gmd:verticalElement',
 					  'stip.iso19139|gmd:resourceConstraints|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints||gmd:resourceConstraints',
 					  'stip.iso19139|gmd:EX_GeographicBoundingBox|gmd:geographicElement|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox||gmd:EX_GeographicBoundingBox'
@@ -903,7 +904,8 @@ function validateNonEmpty(input){
  * input - {Object} Form element
  */
 function validateEmail(input){
-    if (!Ext.form.VTypes.email(input.value)) {
+	var email = /^(\w+)([-+.][\w]+)*@(\w[-\w]*\.){1,5}([A-Za-z])+$/;
+    if (!email.test(input.value)) {
         Ext.get(input).addClass('error');
         return false;
     } else {
