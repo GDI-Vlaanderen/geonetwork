@@ -236,11 +236,11 @@ public class AccessManager {
 
 		// add All (1) network group
 		hs.add("1");
-
+/*
         if(ip != null && isIntranet(ip)) {
             hs.add("0");
         }
-
+*/
 		// get other groups
 		if (usrSess.isAuthenticated()) {
 			// add (-1) GUEST group 
