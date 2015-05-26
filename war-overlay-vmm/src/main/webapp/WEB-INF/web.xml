@@ -66,7 +66,7 @@
           -->
         <init-param>
             <param-name>jeeves.configuration.overrides.file</param-name>
-            <param-value>${system.specific.overrides},${web.xml.main.config.overrides},${web.xml.widget.config.overrides}</param-value>
+            <param-value>/WEB-INF/config-overrides-prod.xml,/WEB-INF/config-overrides-widgettab.xml</param-value>
         </init-param>
     </filter>
 
@@ -156,32 +156,18 @@
         	system parameter is not specified.
           -->
         <init-param>
-		    <param-name>CAN_DELETE_GROUP_IDS</param-name>
- 			<param-value></param-value>
-        </init-param>
-        <init-param>
 		    <param-name>NODE_TYPE</param-name>
 <!-- 			<param-value>AGIV</param-value>-->
-	 		<param-value>VMM</param-value>
+	 		<param-value>Geopunt</param-value>
         </init-param>
         <init-param>
 		    <param-name>FROM_DESCRIPTION</param-name>
-            <param-value>Geopunt-Metadatacenter</param-value>
+            <param-value>VMM-Metadatacenter</param-value>
         </init-param>
 		<init-param>
 			<param-name>jeeves.configuration.overrides.file</param-name>
-			<param-value>${system.specific.overrides},${web.xml.main.config.overrides},${web.xml.widget.config.overrides}</param-value>
+			<param-value>/WEB-INF/config-overrides-prod.xml,/WEB-INF/config-overrides-widgettab.xml</param-value>
 		</init-param>
-        
-                <!--
-            Specified what geonetwork data directory to use.
-            <init-param>
-            <param-name>geonetwork.dir</param-name>
-            <param-value>/app/geonetwork_data_dir</param-value>
-        </init-param>-->
-       <!-- Shared folder: common for all instances of the cluster 
-             The folder stores schema plugins, logos 
-        -->  
         <init-param>
             <param-name>geonetwork.drivemapping</param-name>
             <param-value>net use z: \\PCPB615\zoekdienst_data_shared /PERSISTENT:NO</param-value>
@@ -190,12 +176,6 @@
             <param-name>geonetwork.dir</param-name>
 			<param-value>z:</param-value>
         </init-param>
-        
-        <!-- Local folders for each node: 
-                * lucene, 
-                * svn and 
-                * cluster configuration 
-        -->
         <init-param>
             <param-name>geonetwork.lucene.dir</param-name>
             <param-value>C:\zoekdienst_data\lucene</param-value>
