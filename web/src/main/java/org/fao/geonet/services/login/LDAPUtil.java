@@ -23,23 +23,26 @@
 
 package org.fao.geonet.services.login;
 
-import jeeves.utils.Log;
-import org.fao.geonet.constants.Geonet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
 
 //=============================================================================
 
@@ -55,6 +58,7 @@ public class LDAPUtil
 	{
 		try
 		{
+			Log.info(Geonet.LDAP, "LDAP search with full userDN " + username + " on " + url);
 			Log.info(Geonet.LDAP, "Opening LDAP context on :"+ url);
 
 			Hashtable<String,String> env = new Hashtable<String,String>();
@@ -76,25 +80,56 @@ public class LDAPUtil
 
 	public static String findUserDN(String url, String uidFilter, String userDN) throws NamingException
 	{
+		DirContext connection = null;
+		SearchControls ctls = null;
 		try
 		{
 			Hashtable<String,String> env = new Hashtable<String,String>();
-			DirContext dc = new InitialDirContext(env);
-			DirContext connection = (DirContext) dc.lookup(url);
-
-			NamingEnumeration<SearchResult> results = connection.search(userDN, uidFilter, null);
-
-
+		    String securityPrincipal = InitialContext.doLookup("java:comp/env/zoekdienstLDAPReaderUsername");
+		    String securityCredential = InitialContext.doLookup("java:comp/env/zoekdienstLDAPReaderPassword");
+		    if (securityCredential!=null && securityPrincipal!=null) {
+				Log.info(Geonet.LDAP, "LDAP with system user used");
+			    env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+			    env.put(Context.PROVIDER_URL, url);
+			    env.put(Context.SECURITY_PRINCIPAL, securityPrincipal); 
+			    env.put(Context.SECURITY_CREDENTIALS, securityCredential); 
+			    connection = new InitialDirContext(env);
+				ctls = new SearchControls();
+				ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		    } else {
+				Log.info(Geonet.LDAP, "LDAP without system user used");
+				DirContext dc = new InitialDirContext(env);
+				connection = (DirContext) dc.lookup(url);
+		    }		    	
+			NamingEnumeration<SearchResult> results = connection.search(userDN, uidFilter, ctls);
 			String usersRealDN = "";
-			while (results.hasMore()) {
+			int counter=0;
+			while (results.hasMoreElements()) {
 				usersRealDN = (results.nextElement().getNameInNamespace());
+				Log.info(Geonet.LDAP, "User found with DN:" + usersRealDN);
+				counter++;
 			}
-
-			return usersRealDN;
+			switch (counter) {
+				case 0:
+					Log.info(Geonet.LDAP, "No user found");
+					break;
+				case 1:
+					Log.info(Geonet.LDAP, "One user found");
+					return usersRealDN;
+				default:
+					Log.info(Geonet.LDAP, "More users found");
+			}
+			return null;
 		}
 		catch(NamingException e)
 		{
+			e.printStackTrace();
 			throw e;
+		}
+		finally {
+			if (connection!=null) {
+				connection.close();
+			}
 		}
 	}
 

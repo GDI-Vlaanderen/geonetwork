@@ -137,7 +137,7 @@ class LDAPContext
 				info.email = get(attr, emailAttr);
 
                 info.groups = (groupAttr == null)
-										? new String[] {defGroup}
+										? (defGroup!=null && defGroup.length()>0 ? new String[] {defGroup} : new String[]{}) 
 										: getAll(attr, groupAttr);
 
 

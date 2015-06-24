@@ -1,7 +1,7 @@
 body {
   /*font-family : helvetica, tahoma, verdana, sans-serif;*/
   font-family : "Helvetica Neue", sans-serif;
-  color: #888888;
+  color: #227799;
   padding : 20px;
   padding-top : 32px;
   font-size : 12px;
@@ -177,52 +177,31 @@ ul.main {
 .x-panel-body {
 	padding:5px;
 }
-/*
-.x-tab-strip-active{
-	background: red;
-}
-
-.x-tab-strip{
-	background: blue;
-}
-*/
 .x-panel-mc {
-  font-family: Verdana,Helvetica,Arial,sans-serif;
-/*  font-size: 95%;*/
-  font-size: 85%;
-/*  background: #FFFFFF;*/
+  font-family : "Helvetica Neue", sans-serif;
+  font-size: 95%;
+/*  font-size: 85%;*/
+/*  background: #eeeeee;*/
 }
 .breadcrumb .x-panel-body {
 	padding:0px;
 }
 .x-panel-header, .x-panel-tbar {
-  background: #FFFFFF;
-  background: -moz-linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%,#FFFFFF), color-stop(100%,#668833));
-  background: -webkit-linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  background: -o-linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  background: -ms-linear-gradient(left, #FFFFFF 0%, #668833 100%);
+  background: #eeeeee;
 }
 .metadata-panel-header {
-  background: #FFFFFF;
-  background: -moz-linear-gradient(left, #FFFFFF 0%, #668833 50%, #FFFFFF 100%);
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%,#FFFFFF), color-stop(50%,#668833), color-stop(100%,#FFFFFF));
-  background: -webkit-linear-gradient(left, #FFFFFF 0%, #668833 50%, #FFFFFF 100%);
-  background: -o-linear-gradient(left, #FFFFFF 0%, #668833 50%, #FFFFFF 100%);
-  background: -ms-linear-gradient(left, #FFFFFF 0%, #668833 50%, #FFFFFF 100%);
+  background: #eeeeee;
+}
+
+#header div.mn-main {
+  float : left;
+  width : auto;
+  display : inline;
+  background: #1a6f8c;
 }
 
 #header div {
-  background: #FFFFFF;
-  background: -moz-linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%,#FFFFFF), color-stop(100%,#668833));
-  background: -webkit-linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  background: -o-linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  background: -ms-linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#668833',GradientType=1 );
-  -ms-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#668833',GradientType=1 );
-  background: linear-gradient(left, #FFFFFF 0%, #668833 100%);
-  border-color: #227799;
+  background: #1a6f8c;
   float : left;
   width : auto;
   display : inline;
@@ -277,8 +256,9 @@ table.related * a,
 #mn-top div a,
 .mn-main {
   color : #0076A1;
-  font-family : "Lucida Sans", "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
-  color: #888888;
+  font-family : "Helvetica Neue", sans-serif;
+/*font-family : "Lucida Sans", "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;*/
+  color: #227799;
   text-decoration : none;
 }
 #mn-top div a,
@@ -286,7 +266,7 @@ table.related * a,
   font-size : 1.2em;
   font-weight : bold;
   position : relative;
-  top : 2px;
+  top : 6px;
 }
 
 table.related * a:hover,
@@ -419,13 +399,13 @@ table.related * a:hover,
 
 #loading .loading-indicator {
   background : url(../../images/default/spinner.gif) no-repeat;
-  color : #555;
+  color : #227799;
   text-align : center;
   height : 40px;
   width : 100px;
 }
 span.madeBy {
-  color : #555;
+  color : #227799;
   font-size : 85%;
 }
 span.madeBy img {
@@ -438,6 +418,7 @@ span.madeBy a {
 .loginInfo {
   text-align: right;
   padding: 1px;
+  color: #FFFFFF
 }
 
 .xmltag {

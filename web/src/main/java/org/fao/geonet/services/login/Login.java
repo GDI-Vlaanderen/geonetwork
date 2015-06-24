@@ -75,15 +75,15 @@ public class Login implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		LDAPContext lc = new LDAPContext(sm);
-
-		if (!isAdmin(dbms, username) && lc.isInUse())
+		boolean bIsAdminUser = isAdmin(dbms, username);
+		if (lc.isInUse())
 		{
 			LDAPInfo info = lc.lookUp(username, password);
 
 			if (info == null)
 				throw new UserLoginEx(username);
 
-			updateUser(context, dbms, info);
+			updateUser(context, dbms, info, bIsAdminUser);
 		}
 
 		//--- attempt to load user from db
@@ -139,7 +139,7 @@ public class Login implements Service
      * @throws SQLException
      * @throws UserLoginEx 
      */
-	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info) throws SQLException, UserLoginEx {
+	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info, boolean bIsAdminUser) throws SQLException, UserLoginEx {
         boolean groupsProvided = ((info.groups != null) && (info.groups.length != 0));
         ArrayList<String> groupIds = new ArrayList<String>();
         String userId = "-1";
@@ -164,11 +164,8 @@ public class Login implements Service
         }
 
 		//--- update user information into the database
-
-		String query = "UPDATE Users SET password=?, name=?, profile=? WHERE username=?";
-
-		int res = dbms.execute(query, Util.scramble(info.password), info.name, info.profile, info.username);
-
+        String query = "UPDATE Users SET password=?, name=?, email=? WHERE username=?";
+        int res = dbms.execute(query, Util.scramble(info.password), info.name, info.email, info.username);
 		//--- if the user was not found --> add it
 /*
 		if (res == 0)
@@ -195,9 +192,9 @@ public class Login implements Service
 		if (res == 0)
 		{
 			userId = IDFactory.newID();
-			query = "INSERT INTO Users(id, username, password, surname, name, profile) VALUES(?,?,?,?,?,?)";
+			query = "INSERT INTO Users(id, username, password, surname, name, profile, email) VALUES(?,?,?,?,?,?,?)";
 
-			dbms.execute(query, userId, info.username, Util.scramble(info.password), "(LDAP)", info.name, info.profile);
+			dbms.execute(query, userId, info.username, Util.scramble(info.password), "(LDAP)", info.name, info.profile, info.email);
 		} else {
 			query = "SELECT id FROM Users WHERE username=?";
             List list  = dbms.select(query, info.username).getChildren();
@@ -207,11 +204,10 @@ public class Login implements Service
 		if (StringUtils.isBlank(userId)) {
 			throw new UserLoginEx(userId);
 		}
-    	query = "DELETE FROM UserGroups WHERE userId=?";
-
-		dbms.execute(query, userId);
 
         if (groupsProvided) {
+        	query = "DELETE FROM UserGroups WHERE userId=?";
+    		dbms.execute(query, userId);
         	for (String groupId: groupIds) {
         		query = "INSERT INTO UserGroups(userId, groupId) VALUES(?,?)";
         		dbms.execute(query, userId, groupId);

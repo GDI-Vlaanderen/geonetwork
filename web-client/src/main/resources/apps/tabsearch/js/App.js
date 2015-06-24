@@ -961,7 +961,7 @@ GeoNetwork.app = function(){
 
     function createHeader(){
         var info = catalogue.getInfo();
-        Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/logo' + GeoNetwork.Settings.nodeType.toLowerCase() + '.gif" title="'  + info.name + '"/>';
+        Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/logo' + GeoNetwork.Settings.nodeType.toLowerCase() + (GeoNetwork.Settings.nodeType.toLowerCase() != "vmm" ? '.gif' : '.png') + '" title="'  + info.name + '"/>';
         document.title = info.name;
     }
 
