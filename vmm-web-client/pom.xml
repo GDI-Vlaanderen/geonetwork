@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.geonetwork-opensource</groupId>
+    <artifactId>geonetwork</artifactId>
+    <version>2.8.1.3-Geopunt</version>
+  </parent>
+
+  <groupId>org.geonetwork-opensource</groupId>
+  <artifactId>vmm-geonetwork-client</artifactId>
+  <packaging>jar</packaging>
+  <name>VMM GeoNetwork web client module</name>
+  <description>GUI components in order to easily build applications based on GeoNetwork server module.</description>
+
+  <licenses>
+    <license>
+      <name>General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+
+  <!-- FIXME set common dependencies to the root pom.xml  -->
+  <dependencies> </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <!--  mvn net.alchim31.maven:yuicompressor-maven-plugin:compress -->
+        <executions>
+          <execution>
+            <!-- 
+                This phase does not belong to the default lifecycle for a jar/war packaging.
+                It has to be run explicitely as mvn command argument for generating obfuscated js. 
+             -->
+            <phase>initialize</phase>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+          <!--          <execution>
+            <id>gn-jslint</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>jslint</goal>
+            </goals>
+          </execution>-->
+        </executions>
+        <configuration>
+          <nosuffix>true</nosuffix>
+          <gzip>false</gzip>
+          <force>true</force>
+          <nomunge>true</nomunge>
+          <jswarn>${minify.verbose}</jswarn>
+          <excludes>
+            <exclude>src/main/resources/apps/tabsearch/js/App-mini.js</exclude>
+            <exclude>**/*.css</exclude>
+          </excludes>
+          <aggregations>
+            <aggregation>
+              <output>src/main/resources/apps/tabsearch/js/App-mini.js</output>
+              <includes>
+                <include>${project.build.directory}/../../web-client/src/main/resources/apps/js/GeoNetwork-mini.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/Settings.js</include>
+                <include>${project.build.directory}/../../web-client/target/classes/apps/tabsearch/js/map/Settings.js</include>
+                <include>${project.build.directory}/../../web-client/target/classes/apps/tabsearch/js/map/MapApp.js</include>
+                <include>${project.build.directory}/../../web-client/target/classes/apps/tabsearch/js/Shortcuts.js</include>
+                <include>${project.build.directory}/../../web-client/target/classes/apps/tabsearch/js/App.js</include>
+              </includes>
+            </aggregation>
+          </aggregations>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <properties>
+    <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
+    <minify.verbose>false</minify.verbose>
+  </properties>
+</project>

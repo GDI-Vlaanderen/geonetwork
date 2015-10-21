@@ -13,6 +13,7 @@
         <include>geonetwork.war</include>
       </includes>
     </fileSet>
+<!--
     <fileSet>     
       <directory>geoserver/target</directory>
       <outputDirectory/>
@@ -20,6 +21,7 @@
         <include>geoserver.war</include>
       </includes>
     </fileSet>
+-->
    <!-- licenses -->
    <fileSet>
      <directory>release</directory>

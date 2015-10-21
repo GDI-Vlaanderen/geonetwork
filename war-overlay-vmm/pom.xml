@@ -13,30 +13,51 @@
   
   <dependencies>
   	<dependency>
-  		<groupId>org.geonetwork-opensource</groupId>
-  		<artifactId>geonetwork</artifactId>
-	    <version>2.8.1.3-Geopunt</version>
+		<groupId>org.geonetwork-opensource</groupId>
+		<artifactId>geonetwork-main</artifactId>
+		<version>2.8.1.3-Geopunt</version>
   		<type>war</type>
+  	</dependency>
+	<dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>vmm-geonetwork-client</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
   	</dependency>
   </dependencies>
   
   
   <build>
       <finalName>vmm-geonetwork-${project.version}</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/webapp</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
 	  <plugins>
-		  <plugin>  
-		     <groupId>org.apache.maven.plugins</groupId>  
-		     <artifactId>maven-war-plugin</artifactId>  
-		     <version>2.1.1</version>  
-		     <configuration>  
-		       <overlays>  
-		         <overlay>  
-		           <groupId>org.geonetwork-opensource</groupId>  
-			  	 	<artifactId>geonetwork</artifactId>
-		         </overlay>  
-		       </overlays>  
-		     </configuration>  
-		    </plugin>  
-	    </plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1.1</version>  
+        <configuration>  
+          <overlays>
+            <overlay>
+              <id>vmm-geonetwork-overlay1</id>
+			  <groupId>org.geonetwork-opensource</groupId>
+			  <artifactId>geonetwork-main</artifactId>
+			  <excludes>  
+              	<exclude>WEB-INF/lib/web.xml</exclude>  
+              </excludes>  
+            </overlay>
+            <overlay>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>vmm-geonetwork-client</artifactId>
+              <type>jar</type>
+            </overlay>
+          </overlays>
+        </configuration>
+      </plugin>
+    </plugins>
 	</build>
 </project>

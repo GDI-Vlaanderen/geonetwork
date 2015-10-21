@@ -13,14 +13,16 @@
     <include>**/*</include>
    </includes>
   </fileSet>
-  <fileSet>
    <!-- the geoserver webapp -->
+<!--
+  <fileSet>
    <directory>geoserver/target</directory>
    <outputDirectory>geonetwork/web</outputDirectory>
    <includes>
     <include>*.war</include>
    </includes>
   </fileSet>
+-->
   <fileSet>
    <!-- the data directory -->
    <directory>release/data</directory>
@@ -63,7 +65,7 @@
     <include>README.txt</include>
    </includes>
   </fileSet>-->
-  <fileSet>
+<!--  <fileSet>-->
    <!-- Dependency configuration 
    <directory>web/target/dependency/jetty</directory>
    <outputDirectory>geonetwork/jetty</outputDirectory>
@@ -73,11 +75,13 @@
   </fileSet>
   <fileSet>-->
    <!-- jetty configuration -->
+<!--
    <directory>release/jetty</directory>
    <outputDirectory>geonetwork/jetty</outputDirectory>
    <includes>
     <include>**/*</include>
    </includes>
   </fileSet>
+-->
  </fileSets>
 </assembly>

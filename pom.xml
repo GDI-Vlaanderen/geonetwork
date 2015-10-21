@@ -823,6 +823,7 @@
     <module>oaipmh</module>
 <!--    <module>sde</module> -->
     <module>web-client</module>
+    <module>vmm-web-client</module>
     <module>web</module>
 <!--        <module>geoserver</module> -->
   </modules>
