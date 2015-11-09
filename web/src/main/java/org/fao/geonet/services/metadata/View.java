@@ -28,18 +28,17 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
-import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 /**
  * Retrieves a particular metadata. Access is restricted
@@ -123,36 +122,9 @@ public class View implements Service {
 			elMd = dm.enumerateTree(elMd);
 		}
 
-		//
-		// setting schemaLocation
-		// TODO currently it's only set for ISO metadata - this should all move
-		// to
-		// the updatefixedinfo.xsl for each schema
-
-		// do not set schemaLocation if it is already there
-		if (elMd.getAttribute("schemaLocation", Csw.NAMESPACE_XSI) == null) {
-			Namespace gmdNs = elMd.getNamespace("gmd");
-			// document has ISO root element and ISO namespace
-			if (gmdNs != null
-					&& gmdNs.getURI()
-							.equals("http://www.isotc211.org/2005/gmd")) {
-				String schemaLocation;
-				// if document has srv namespace then add srv schemaLocation
-				if (elMd.getNamespace("srv") != null) {
-					schemaLocation = "http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd";
-				}
-				// otherwise add gmd schemaLocation
-				// (but not both! as that is invalid, the schemas describe
-				// partially the same schema types)
-				else {
-					schemaLocation = "http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
-				}
-				Attribute schemaLocationA = new Attribute("schemaLocation",
-						schemaLocation, Csw.NAMESPACE_XSI);
-				elMd.setAttribute(schemaLocationA);
-			}
-		}
-
+		SchemaManager sm = gc.getSchemamanager();
+		sm.updateSchemaLocation(elMd, context);
+		
 		// --- increase metadata popularity
 		if (!skipPopularity)
 			dm.increasePopularity(context, id);

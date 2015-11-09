@@ -61,8 +61,10 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.metadata.validation.agiv.AGIVValidation;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.IDFactory;
@@ -196,7 +198,7 @@ class Harvester
         UUIDMapper localUuids = new UUIDMapper(dbms, params.uuid);
 
 
-        String requestParams = "SERVICE=" + params.ogctype.substring(0,3) + "&VERSION=" + params.ogctype.substring(3) + "&REQUEST=" + GETCAPABILITIES;
+        String requestParams = "SERVICE=" + params.ogctype.substring(0,params.ogctype.length()-5) + "&VERSION=" + params.ogctype.substring(params.ogctype.length()-5) + "&REQUEST=" + GETCAPABILITIES;
         // Try to load capabilities document
 		this.capabilitiesUrl = getBaseUrl(params.url) + requestParams;
 		
@@ -302,7 +304,7 @@ class Harvester
 							Geonet.Path.CONVERT_STYLESHEETS
 							+ "/OGCWxSGetCapabilitiesto19119/" 
 							+ "/OGC"
-							+ params.ogctype.substring(0,3)
+							+ (params.ogctype.startsWith("WMTS") ? "WMS" : params.ogctype.substring(0,3))
 							+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
 
          if(log.isDebugEnabled()) log.debug ("  - XSLT transformation using " + styleSheet);
@@ -330,7 +332,7 @@ class Harvester
 			
 			//--- Select layers, featureTypes and Coverages (for layers having no child named layer = not take group of layer into account) 
 			// and add the metadata
-			XPath xp = XPath.newInstance ("//Layer[count(./*[name(.)='Layer'])=0] | " + 
+			XPath xp = XPath.newInstance ("//Layer[count(./*[name(.)='Layer'])=0] | //wmts:Layer[count(./*[local-name(.)='Layer'])=0] | " + 
 											"//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
 											"//wfs:FeatureType | " +
 											"//wcs:CoverageOfferingBrief | " +
@@ -338,6 +340,7 @@ class Harvester
 			xp.addNamespace("wfs", "http://www.opengis.net/wfs");
 			xp.addNamespace("wcs", "http://www.opengis.net/wcs");
 			xp.addNamespace("wms", "http://www.opengis.net/wms");
+			xp.addNamespace("wmts", "http://www.opengis.net/wmts/1.0");
 			xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
 										
 			List<Element> layers = xp.selectNodes(capa);
@@ -362,6 +365,22 @@ class Harvester
 		String codeListUpdateStyleSheet = dataMan.getSchemaDir(schema) + Geonet.File.UPDATE_HARVEST_INFO;
 		md = Xml.transform(md, codeListUpdateStyleSheet);
 
+        if ("iso19139".equals(schema)) {
+//        	if (context.getServlet().getNodeType().toLowerCase().equals("agiv") || context.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
+                MetadataSchema metadataSchema = dataMan.getSchema(schema);
+                String[] schematronFilenames = {AGIVValidation.INSPIRE_SCHEMATRON_KEY + ".xsl", AGIVValidation.AGIV_SCHEMATRON_KEY + ".xsl"};
+                Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+                try {
+    			    dataMan.getEditLib().enumerateTree(md);
+                    Element schematronError = dataMan.getSchemaTronXmlReport(metadataSchema, schematronFilenames, md, context.getLanguage(), valTypeAndStatus);
+        	        // remove editing info added by enumerateTree
+                    dataMan.getEditLib().removeEditingInfo(md);
+        			md = new AGIVValidation(context).addConformKeywords(md, valTypeAndStatus, schema);
+                } catch (Exception e) {
+                    log.error("Ignoring schematron erros for AGIVValidation with metadata with uuid " + uuid /*+ " : " + ex*/);
+                }
+//        	}
+        }
         // Save iso19119 metadata in DB
 		log.info("Adding metadata for services with " + uuid);
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
@@ -456,7 +475,7 @@ class Harvester
 				Element operation = new Element ("operationName", srv);
 				Element operationValue = new Element ("CharacterString", gco);
 				
-				if (params.ogctype.startsWith("WMS"))
+				if (params.ogctype.startsWith("WMS") || params.ogctype.startsWith("WMTS"))
 					operationValue.setText("GetMap"); 
 				else if (params.ogctype.startsWith("WFS"))
 					operationValue.setText("GetFeature");
@@ -538,7 +557,7 @@ class Harvester
 								Geonet.Path.CONVERT_STYLESHEETS +
 								"/OGCWxSGetCapabilitiesto19119/" + 
 								"/OGC" +
-								params.ogctype.substring(0,3) + 
+								(params.ogctype.startsWith("WMTS") ? "WMS" : params.ogctype.substring(0,3)) + 
 								"GetCapabilitiesLayer-to-19139.xsl";
 		Element xml 		= null;
 		
@@ -553,6 +572,14 @@ class Harvester
 			} else {
 				reg.name 	= layer.getChild ("Name").getValue ();
 			}
+		} else if (params.ogctype.startsWith("WMTS")) {
+			Namespace ows11 = Namespace.getNamespace("http://www.opengis.net/ows/1.1");
+			Element identifierElement = layer.getChild("Identifier", ows11);
+			if (identifierElement==null) {
+				Namespace ows = Namespace.getNamespace("http://www.opengis.net/ows");
+				identifierElement = layer.getChild("Identifier", ows);
+			}
+			reg.name = identifierElement.getValue();
 		} else if (params.ogctype.substring(0,3).equals("WFS")) {
 			Namespace wfs = Namespace.getNamespace("http://www.opengis.net/wfs");
 			reg.name 	= layer.getChild ("Name", wfs).getValue ();
@@ -574,28 +601,35 @@ class Harvester
 			log.info("MetadataUrl harvester only supported for WMS layers.");
 		}
 		
+		boolean bIsWMTS = params.ogctype.startsWith("WMTS");
 		boolean bIsWMS = params.ogctype.substring(0,3).equals("WMS");
 		boolean bIsWFS = params.ogctype.substring(0,3).equals("WFS");
-		if (/*params.useLayerMd && */ bIsWMS|| bIsWFS) {
+		if (/*params.useLayerMd && */ bIsWMS || bIsWFS || bIsWMTS) {
 			
 			Namespace xlink 	= Namespace.getNamespace ("http://www.w3.org/1999/xlink");
 			
 			// Get metadataUrl xlink:href
 			// TODO : add support for WCS & WFS metadataUrl element.
 
-			Element onLineSrc = getMetadataURL(layer, bIsWMS, bIsWFS);
-            if (onLineSrc != null) {
+			Element onLineSrc = null;
+			Element identifier = null;
+			if (bIsWMTS) {
+				identifier = getMetadataIdentifier(layer);
+			} else {
+				onLineSrc = getMetadataURL(layer, bIsWMS, bIsWFS);
+			}
+			
+            if (onLineSrc != null || identifier!=null) {
 				org.jdom.Attribute href = null;
 
 				if (bIsWMS) {
 					href = onLineSrc.getAttribute ("href", xlink);
 				}
 
-				if ((bIsWMS && href != null) || (bIsWFS && onLineSrc.getValue()!=null)) {	// No metadataUrl attribute for that layer
+				if ((bIsWMS && href != null) || (bIsWFS && onLineSrc.getValue()!=null) || bIsWMTS) {
 					if(log.isDebugEnabled()) log.debug("===Processing layer " + reg.name);
-					mdXml = (bIsWMS ? href.getValue() : onLineSrc.getValue());
+					mdXml = (bIsWMTS ? dataMan.getSiteURL() + "/csw?Service=CSW&version=2.0.2&Request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementSetName=full&id=" + identifier.getValue() : (bIsWMS ? href.getValue() : onLineSrc.getValue()));
 					try {
-
 						GetRecordByIdRequest request = new GetRecordByIdRequest(this.context);
 						request.setElementSetName(ElementSetName.FULL);
 						request.setUrl(new URL(mdXml));
@@ -818,8 +852,9 @@ class Harvester
 	/** 
      * Get the MetadataURL to be used for getting de identifier of the dataset
      *  
-     * @param bIsWMS   check for WMS or WFS harvesting
-     * @param format   request format for MetadataURL
+     * @param layer		layer xml element
+     * @param bIsWMS	check for WMS harvesting
+     * @param bIsWFS	check for WFS harvesting
 	 * @throws JDOMException 
      *                   
      */
@@ -828,22 +863,49 @@ class Harvester
         String dummyNsPrefix = "";
         boolean addNsPrefix = !layer.getNamespace().equals(Namespace.NO_NAMESPACE);
         if (addNsPrefix) dummyNsPrefix = "x:";
-	    XPath mdUrl = null;
+	    XPath mdUrlXPath = null;
 	    String[] preferedFormatOrder = {"text/xml","application/xml","text/plain","text/html"};
 	    for (String format : preferedFormatOrder)
 	    {
 		    if (bIsWMS) {
-		    	mdUrl = XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='TC211' or @type='FGDC' or @type='ISO19115:2005' or @type='ISO19115:2003') and " + dummyNsPrefix + "Format='" + format + "']/" + dummyNsPrefix + "OnlineResource");
+		    	mdUrlXPath = XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='TC211' or @type='FGDC' or @type='ISO19115:2005' or @type='ISO19115:2003') and " + dummyNsPrefix + "Format='" + format + "']/" + dummyNsPrefix + "OnlineResource");
 		    } else if (bIsWFS) {
-		    	mdUrl = XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='TC211' or @type='FGDC' or @type='19115' or @type='19139') and " + dummyNsPrefix + "Format='" + format + "']");
+		    	mdUrlXPath = XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='TC211' or @type='FGDC' or @type='19115' or @type='19139') and " + dummyNsPrefix + "Format='" + format + "']");
 		    }
-		    if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
-		    onLineSrc = (Element) mdUrl.selectSingleNode (layer);
+		    if (addNsPrefix) mdUrlXPath.addNamespace("x", layer.getNamespace().getURI());
+		    onLineSrc = (Element) mdUrlXPath.selectSingleNode (layer);
 		    if (onLineSrc!=null) {
 		    	break;
 		    }
 	    }
 	    return onLineSrc;
+	}
+
+	/** 
+     * Get the identifier
+     *  
+     * @param layer		layer xml element
+	 * @throws JDOMException 
+     *                   
+     */
+	private Element getMetadataIdentifier (Element layer) throws JDOMException {
+		Element identifierElement = null;
+        String dummyNsPrefix = "";
+//        boolean addNsPrefix = !layer.getNamespace().equals(Namespace.NO_NAMESPACE);
+//        if (addNsPrefix) dummyNsPrefix = "x:";
+	    XPath identifierXPath = XPath.newInstance ("./ows:DatasetDescriptionSummary/ows:Identifier|./ows11:DatasetDescriptionSummary/ows11:Identifier");
+//	    if (addNsPrefix) identifierXPath.addNamespace("x", layer.getNamespace().getURI());
+	    identifierXPath.addNamespace("ows11", "http://www.opengis.net/ows/1.1");
+	    identifierXPath.addNamespace("ows", "http://www.opengis.net/ows");
+	    identifierElement = (Element) identifierXPath.selectSingleNode (layer); 
+	    if (identifierElement==null) {
+		    identifierXPath = XPath.newInstance ("./ows:Identifier|./ows11:Identifier");
+//		    if (addNsPrefix) identifierXPath.addNamespace("x", layer.getNamespace().getURI());
+		    identifierXPath.addNamespace("ows11", "http://www.opengis.net/ows/1.1");
+		    identifierXPath.addNamespace("ows", "http://www.opengis.net/ows");
+		    identifierElement = (Element) identifierXPath.selectSingleNode (layer); 
+	    }
+	    return identifierElement;
 	}
 
 	/** 
@@ -867,8 +929,8 @@ class Harvester
 		// 		LAYERS=gn:world&WIDTH=200&HEIGHT=200&FORMAT=image/png&BBOX=-180,-90,180,90&STYLES=
 		String url = 
         		getBaseUrl(params.url) +
-        		"&SERVICE=" + params.ogctype.substring(0,3) +
-        		"&VERSION=" + params.ogctype.substring(3) +
+        		"&SERVICE=" + params.ogctype.substring(0,params.ogctype.length() - 5) +
+        		"&VERSION=" + params.ogctype.substring(params.ogctype.length() - 5) +
         		"&REQUEST=" + GETMAP + 
         		"&FORMAT=" + IMAGE_FORMAT + 
         		"&WIDTH=" + WIDTH +

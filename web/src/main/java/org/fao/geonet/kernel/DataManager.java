@@ -1850,7 +1850,10 @@ public class DataManager {
 		if (!isTemplate.equals("s")) {
 		    xml = updateFixedInfo(schema, id, uuid, xml, parentUuid, DataManager.UpdateDatestamp.yes, dbms, true);
 		}
-		
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager sm = gc.getSchemamanager();
+		sm.updateSchemaLocation(xml, context);
 		//--- store metadata
 		//***
 		// xmlSerializer.insert(dbms, schema, xml, id, source, uuid, null, null, isTemplate, null, owner, groupOwner, "", context);
@@ -1868,7 +1871,6 @@ public class DataManager {
             setCategory(context, dbms, id, catId);
         }
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
         StatusActions sa = saf.createStatusActions(context, dbms);
         saf.onCreate(sa, id);
@@ -2028,6 +2030,9 @@ public class DataManager {
 
         Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id);
 		if (md == null) return null;
+		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager sm = gc.getSchemamanager();
+		sm.updateSchemaLocation(md, srvContext);
 
 		if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
 			if (doXLinks) Processor.processXLink(md); 
@@ -2189,7 +2194,9 @@ public class DataManager {
         if (md == null) {
             return null;
         }
-
+		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager sm = gc.getSchemamanager();
+		sm.updateSchemaLocation(md, srvContext);
         String version = null;
 
         if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor

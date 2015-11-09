@@ -218,12 +218,14 @@ public abstract class AbstractHarvester
                 }
             }
     	} else {
-            JobDetail jobDetail = getParams().getJob();
-            Trigger trigger = getParams().getTrigger();
-            if (scheduler.checkExists(jobDetail.getKey())) {
-        		scheduler.deleteJob(jobDetail.getKey());
-            }
-           	scheduler.scheduleJob(jobDetail, trigger);
+    		if (context.getServlet().getStartHarvesterJobs().equals("1")) {
+	    		JobDetail jobDetail = getParams().getJob();
+	            Trigger trigger = getParams().getTrigger();
+	            if (scheduler.checkExists(jobDetail.getKey())) {
+	        		scheduler.deleteJob(jobDetail.getKey());
+	            }
+	           	scheduler.scheduleJob(jobDetail, trigger);
+    		}
     	}
     }
 

@@ -83,7 +83,6 @@ public class Show implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-        System.out.println("*********** metadata show:\n" + Xml.getString(params));
 		UserSession session = context.getUserSession();
 
 		//-----------------------------------------------------------------------
@@ -129,7 +128,6 @@ public class Show implements Service
                 // only allow in same conditions as when View Workspace is displayed in Other Actions (i.e., when
                 // geonet:info/edit is true:
                 if (am.canEdit(context, id)) {
-                    System.out.println("******** Show: getting md from workspace1");
                     elMd = gc.getDataManager().getMetadataFromWorkspace(context, id, addEditing, withValidationErrors, keepXlinkAttributes, withInfo);
                 }
                 else {
@@ -138,7 +136,6 @@ public class Show implements Service
             }
             // if not found in workspace, or if not requested from workspace, retrieve from metadata
             if(elMd == null) {
-                System.out.println("******** Show: getting md from metadata");
                 elMd = gc.getDataManager().getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
             }
 		}
@@ -146,7 +143,6 @@ public class Show implements Service
             if(fromWorkspace) {
                 if (am.canEdit(context, id)) {
                     boolean withValidationErrors = false, keepXlinkAttributes = false, withInfo = false;
-                    System.out.println("******** Show: getting md from workspace2");
                     elMd = gc.getDataManager().getMetadataFromWorkspace(context, id, addEditing, withValidationErrors, keepXlinkAttributes, withInfo);
                 }
                 else {
@@ -155,7 +151,6 @@ public class Show implements Service
             }
             // if not found in workspace, or if not requested from workspace, retrieve from metadata
             if(elMd == null) {
-                System.out.println("******** Show: getting md from metadata2");
                 elMd = dm.getMetadataNoInfo(context, id);
             }
 		}
@@ -174,40 +169,27 @@ public class Show implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
 
-		if (elMd.getAttribute("schemaLocation", Csw.NAMESPACE_XSI) == null) {
-			Namespace gmdNs = elMd.getNamespace("gmd");
-			// document has ISO root element and ISO namespace
-			if (gmdNs != null
-					&& gmdNs.getURI()
-							.equals("http://www.isotc211.org/2005/gmd")) {
-				String schemaLocation;
-				// if document has srv namespace then add srv schemaLocation
-				if (elMd.getNamespace("srv") != null) {
-					schemaLocation = "http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd";
-				}
-				// otherwise add gmd schemaLocation
-				// (but not both! as that is invalid, the schemas describe
-				// partially the same schema types)
-				else {
-					schemaLocation = "http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
-				}
-				Attribute schemaLocationA = new Attribute("schemaLocation",
-						schemaLocation, Csw.NAMESPACE_XSI);
-				elMd.setAttribute(schemaLocationA);
-			}
-		}
-/*
 		Attribute schemaLocAtt = sm.getSchemaLocation(mdInfo.schemaId, context);
 		if (schemaLocAtt != null) {
 			if (elMd.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
+				
+				if (mdInfo.schemaId.equals("iso19139")) {
+					// if document has srv namespace then add srv schemaLocation
+					if (elMd.getNamespace("srv") != null) {
+						schemaLocAtt = new Attribute("schemaLocation", /*"http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd", Csw.NAMESPACE_XSI);
+					} else {
+						schemaLocAtt = new Attribute("schemaLocation", /*"http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd " + */ "http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd", Csw.NAMESPACE_XSI);
+					}
+				}
 				elMd.setAttribute(schemaLocAtt);
-				// make sure namespace declaration for schemalocation is present -
-				// remove it first (does nothing if not there) then add it
 				elMd.removeNamespaceDeclaration(schemaLocAtt.getNamespace()); 
 				elMd.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+				// make sure namespace declaration for schemalocation is present -
+				// remove it first (does nothing if not there) then add it
 			}
 		}
-*/
+		sm.updateSchemaLocation(elMd, context);
+
 		//--- increase metadata popularity
 		if (!skipPopularity)
 			dm.increasePopularity(context, id);

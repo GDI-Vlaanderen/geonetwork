@@ -65,10 +65,12 @@ public class JeevesServlet extends HttpServlet
 {
     public static final String CAN_DELETE_GROUP_IDS = "CAN_DELETE_GROUP_IDS";
     public static final String NODE_TYPE = "NODE_TYPE";
+    public static final String START_HARVESTER_JOBS = "START_HARVESTER_JOBS";
     public static final String FROM_DESCRIPTION = "FROM_DESCRIPTION";
 	private JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
 	private String canDeleteGroupIds = "";
+	private String startHarvesterJobs = "1";
 	private String nodeType = "AGIV";
 	private String fromDescription = "Metadata Workflow";
 
@@ -87,6 +89,10 @@ public class JeevesServlet extends HttpServlet
         String nodeType = getServletConfig().getInitParameter(NODE_TYPE);
         if(nodeType != null) {
         	this.nodeType = nodeType;
+        }
+        String startHarvesterJobs = getServletConfig().getInitParameter(START_HARVESTER_JOBS);
+        if(startHarvesterJobs != null) {
+        	this.startHarvesterJobs = startHarvesterJobs;
         }
         String fromDescription = getServletConfig().getInitParameter(FROM_DESCRIPTION);
         if(fromDescription != null) {
@@ -296,6 +302,8 @@ public class JeevesServlet extends HttpServlet
 	public boolean isInitialized() { return initialized; }
 
 	public String getCanDeleteGroupIds() { return canDeleteGroupIds;	}
+
+	public String getStartHarvesterJobs() { return startHarvesterJobs;	}
 
 	public String getNodeType() { return nodeType;	}
 

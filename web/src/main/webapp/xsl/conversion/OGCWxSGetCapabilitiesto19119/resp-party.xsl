@@ -9,6 +9,7 @@
                                         xmlns:owsg="http://www.opengeospatial.net/ows"
                                         xmlns:ows11="http://www.opengis.net/ows/1.1"
                                         xmlns:wms="http://www.opengis.net/wms"
+										xmlns:wmts="http://www.opengis.net/wmts/1.0"
 										xmlns:wcs="http://www.opengis.net/wcs"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										extension-element-prefixes="wcs ows wfs owsg ows11" 
@@ -83,13 +84,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<xsl:for-each select="ContactAddress|wms:ContactAddress|
-							wcs:contactInfo|
+							wcs:contactInfo/wcs:address|
 							ows:ServiceContact/ows:ContactInfo/ows:Address|
 							ows11:ServiceContact/ows11:ContactInfo/ows11:Address">
 			<address>
 				<CI_Address>
 					<xsl:apply-templates select="." mode="Address"/>
-					<xsl:for-each select="../ContactElectronicMailAddress|../wms:ContactElectronicMailAddress|../wcs:address/wcs:electronicMailAddress|../ows:ElectronicMailAddress|../ows11:ElectronicMailAddress">
+					<xsl:for-each select="../ContactElectronicMailAddress|../wms:ContactElectronicMailAddress|../wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
 						<electronicMailAddress>
 							<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
 						</electronicMailAddress>

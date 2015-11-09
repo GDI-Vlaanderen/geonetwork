@@ -1,4 +1,3 @@
-/*
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -12,7 +11,7 @@
   //ga('create', 'UA-36710880-2', 'geopunt.be');
   
   ga('send', 'pageview'); 
-*/
+
 GeoNetwork.Settings = {};
 
 // Default to absolute path without apps/search
@@ -79,5 +78,5 @@ GeoNetwork.Settings.nodeType = "AGIV";
 GeoNetwork.Settings.useSTS = true;
 GeoNetwork.Settings.ga = true;
 GeoNetwork.Settings.logoutUrlSTS = "https://auth." + (GeoNetwork.Settings.isProduction ? "" : "beta.") + "agiv.be/sts/";
-GeoNetwork.Settings.nodeFooterInfo = "Build: 18/02/2015 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
+GeoNetwork.Settings.nodeFooterInfo = "Build: 04/11/2015 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
 

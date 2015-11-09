@@ -25,6 +25,7 @@ Mapping between :
                                         xmlns:ows="http://www.opengis.net/ows"
 										xmlns:owsg="http://www.opengeospatial.net/ows"
                                         xmlns:ows11="http://www.opengis.net/ows/1.1"
+                                        xmlns:wmts="http://www.opengis.net/wmts/1.0"
                                         xmlns:wps="http://www.opengeospatial.net/wps"
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
 										extension-element-prefixes="wcs ows wfs ows11 wps wps1 owsg">
@@ -54,13 +55,13 @@ Mapping between :
 	<!-- ============================================================================= -->
 
 	<xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|wcs:WCS_Capabilities|
-	       wps:Capabilities|wps1:Capabilities|wms:WMS_Capabilities">
+	       wps:Capabilities|wps1:Capabilities|wms:WMS_Capabilities|wmts:Capabilities">
 	
 		<xsl:variable name="ows">
 			<xsl:choose>
 				<xsl:when
 					test="(local-name(.)='WFS_Capabilities' and (namespace-uri(.)='http://www.opengis.net/wfs' or namespace-uri(.)='http://www.opengis.net/ows') and @version='1.1.0') 
-					or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengeospatial.net/wps')
+					or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0') or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengeospatial.net/wps')
 					or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/1.0.0')"><xsl:value-of select="true()"/></xsl:when>
 				<xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
 			</xsl:choose>
@@ -211,6 +212,8 @@ Mapping between :
 																			   count(//ows11:Operation[@name='GetMap']) +
 																			   count(//wms:GetMap) +
 																			   count(//GetMap)" />
+							<xsl:variable name="GetTile" select="count(//ows:Operation[@name='GetTile']) +
+																			   count(//ows11:Operation[@name='GetTile'])" />
 							<xsl:variable name="GetFeatureInfo" select="count(//ows:Operation[@name='GetFeatureInfo']) +
 																			   count(//ows11:Operation[@name='GetFeatureInfo']) +
 																			   count(//wms:GetFeatureInfo) +
@@ -262,9 +265,7 @@ Mapping between :
 							</xsl:variable>
 							<xsl:variable name="version">
 								<xsl:choose>
-<!--
 									<xsl:when test="$ogctype='WMTS1.0.0' or $ogctype='WFS1.0.0'">1.0.0</xsl:when>
--->									
 									<xsl:when test="$ogctype='WFS1.1.0'">1.1.0</xsl:when>
 									<xsl:when test="$ogctype='WMS1.1.1'">1.1.1</xsl:when>
 									<xsl:when test="$ogctype='WMS1.3.0'">1.3.0</xsl:when>
@@ -293,6 +294,15 @@ Mapping between :
 										<xsl:with-param name="service" select="$service"/>
 										<xsl:with-param name="version" select="$version"/>
 										<xsl:with-param name="request" select="'GetMap'"/>
+		                        	</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="$GetTile>0">
+		                        	<xsl:call-template name="get-onlines">
+										<xsl:with-param name="ows" select="$ows"/>
+										<xsl:with-param name="url" select="$url"/>
+										<xsl:with-param name="service" select="$service"/>
+										<xsl:with-param name="version" select="$version"/>
+										<xsl:with-param name="request" select="'GetTile'"/>
 		                        	</xsl:call-template>
 								</xsl:if>
 								<xsl:if test="$GetFeatureInfo>0">

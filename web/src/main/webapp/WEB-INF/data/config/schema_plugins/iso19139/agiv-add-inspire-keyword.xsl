@@ -2,6 +2,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco">
 
     <xsl:template match="/root">
@@ -9,7 +10,7 @@
     </xsl:template>
 
     <!-- match descriptiveKeywords elements -->
-    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
+    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords | gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords">
         <xsl:choose>
             <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Trefwoorden'  -->
             <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Trefwoorden'">
@@ -40,9 +41,9 @@
     </xsl:template>
 
     <!-- in case gmd:MD_DataIdentification does not have a gmd:descriptiveKeywords using  'GDI-Vlaanderen Trefwoorden', insert it at correct position -->
-    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification[count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[normalize-space(gco:CharacterString) = 'GDI-Vlaanderen Trefwoorden']) = 0]">
+    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification[count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[normalize-space(gco:CharacterString) = 'GDI-Vlaanderen Trefwoorden']) = 0] | gmd:identificationInfo/srv:SV_ServiceIdentification[count(gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title[normalize-space(gco:CharacterString) = 'GDI-Vlaanderen Trefwoorden']) = 0]">
          <!-- all elements allowed to follow descriptiveKeywords in MD_DataIdentification -->
-         <xsl:variable name="elements-after" select="gmd:resourceSpecificUsage|gmd:resourceConstraints|gmd:aggregationInfo|gmd:spatialRepresentationType|gmd:spatialResolution|gmd:language|gmd:characterSet|gmd:topicCategory|gmd:environmentDescription|gmd:extent|gmd:supplementalInformation"/>
+         <xsl:variable name="elements-after" select="gmd:resourceSpecificUsage|gmd:resourceConstraints|gmd:aggregationInfo|gmd:spatialRepresentationType|gmd:spatialResolution|gmd:language|gmd:characterSet|gmd:topicCategory|gmd:environmentDescription|gmd:extent|gmd:supplementalInformation|srv:*"/>
          <xsl:copy>
              <xsl:copy-of select="* except $elements-after"/>
              <gmd:descriptiveKeywords>

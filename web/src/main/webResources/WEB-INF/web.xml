@@ -165,6 +165,10 @@
 <!-- 		<param-value>Geopunt</param-value>-->
         </init-param>
         <init-param>
+		    <param-name>START_HARVESTER_JOBS</param-name>
+ 			<param-value>1</param-value>
+        </init-param>
+        <init-param>
 		    <param-name>FROM_DESCRIPTION</param-name>
             <param-value>AGIV-Metadatacenter (beta)</param-value>
 <!--            <param-value>Geopunt-Metadatacenter</param-value>-->

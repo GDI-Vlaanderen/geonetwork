@@ -258,7 +258,7 @@ public class Info implements Service
 	private String getGetCapXSLPath(String serviceType) {
 		return Geonet.Path.OGC_STYLESHEETS 
 				+ "/OGC"
-				+ serviceType.substring(0,3)
+				+ (serviceType.startsWith("WMTS") ? "WMS" : serviceType.substring(0,3))
 				+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
 	}
 
