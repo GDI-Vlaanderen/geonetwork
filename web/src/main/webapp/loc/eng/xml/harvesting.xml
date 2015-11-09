@@ -83,16 +83,17 @@
 
 	<wxstype>Type of OGC webservice</wxstype>
 	<wxstypes>
-		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
+<!--		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>-->
 		<type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
 		<type value="WMS1.3.0">OGC Web Map Service (WMS) Version 1.3.0</type>
+		<type value="WMTS1.0.0">OGC Web Map Tile Service (WMTS) Version 1.0.0</type>
 		<type value="WFS1.0.0">OGC Web Feature Service (WFS) Version 1.0.0</type>
 		<type value="WFS1.1.0">OGC Web Feature Service (WFS) Version 1.1.0 - preferred</type>
-		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
+<!--		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
         <type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
         <type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>
 		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Version 2.0.2</type>
-		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>
+		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>-->
 	</wxstypes>
 	
 	<wxslang>Metadata language</wxslang>

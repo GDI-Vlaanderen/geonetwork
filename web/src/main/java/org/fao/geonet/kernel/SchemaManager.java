@@ -27,12 +27,29 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
@@ -48,21 +65,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * Class that handles all functions relating to metadata schemas. This 
@@ -1628,6 +1630,43 @@ public class SchemaManager {
 		return defaultSchema;
 	}
 
+	public void updateSchemaLocation(Element md, ServiceContext context) {
+		Attribute existingSchemaLocation = md.getAttribute("schemaLocation", Csw.NAMESPACE_XSI);
+		String schemaLocation;
+		if (existingSchemaLocation == null) {
+			Namespace gmdNs = md.getNamespace("gmd");
+			// document has ISO root element and ISO namespace
+			if (gmdNs != null
+					&& gmdNs.getURI()
+							.equals("http://www.isotc211.org/2005/gmd")) {
+				// if document has srv namespace then add srv schemaLocation
+				if (md.getNamespace("srv") != null) {
+					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd";					
+				}
+				// otherwise add gmd schemaLocation
+				// (but not both! as that is invalid, the schemas describe
+				// partially the same schema types)
+				else {
+					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
+				}
+				Attribute schemaLocationA = new Attribute("schemaLocation",
+						schemaLocation, Csw.NAMESPACE_XSI);
+				md.setAttribute(schemaLocationA);
+			}
+		} else {
+			schemaLocation = existingSchemaLocation.getValue();
+			if (schemaLocation!=null && (schemaLocation.contains("gmd.xsd") || schemaLocation.contains("srv.xsd"))) {
+				md.removeAttribute(existingSchemaLocation);
+				if (md.getNamespace("srv") != null) {
+					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd";					
+				} else {
+					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
+				}
+				md.setAttribute(new Attribute("schemaLocation", schemaLocation, Csw.NAMESPACE_XSI));
+			}
+		}
+	}
+
 	/**
      * Copy the schema.xsd file and the schema directory from the schema plugin directory to the webapp.
 	 *
@@ -1674,18 +1713,15 @@ public class SchemaManager {
      * @return
      */
     public Element getSchemasAndTheirSchematrons() {
-        System.out.println("********* getSchemasAndTheirSchematrons");
         Element schemas = new Element("schemas");
         Set<String> schemaNames = getSchemas();
         for(String schemaName : schemaNames) {
-            System.out.println("********* processing schema: " + schemaName);
             Element schema = new Element("schema");
             MetadataSchema metadataSchema = getSchema(schemaName);
             Element schemaNameE = new Element("schemaname");
             schemaNameE.setText(schemaName);
             schema.addContent(schemaNameE);
             String[] schematronNames = metadataSchema.getSchematronRules();
-            System.out.println("********* # of schematrons: " + schematronNames.length);
             for(String schematronName : schematronNames) {
                 Element schematronNameE = new Element("schematronname");
                 schematronNameE.setText(schematronName);
@@ -1693,7 +1729,6 @@ public class SchemaManager {
             }
             schemas.addContent(schema);
         }
-        System.out.println("********* getSchemasAndTheirSchematrons returns\n"+Xml.getString(schemas));
         return schemas;
     }
 

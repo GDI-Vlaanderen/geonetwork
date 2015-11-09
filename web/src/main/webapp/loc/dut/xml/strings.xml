@@ -799,6 +799,7 @@
 	<protocolChoice show='-' value='OGC:WMTS'>OGC-WMTS Web Map Tile Service (endpoint)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WMTS-1.0.0-http-get-capabilities'>OGC-WMTS GetCapabilities operatie (ver 1.0.0)</protocolChoice>
 	<protocolChoice show='-' value='OGC:WMTS-1.0.0-http-get-tile'>OGC-WMTS GetTile operatie (ver 1.0.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMTS-1.0.0-http-get-featureinfo">OGC-WMTS GetFeatureInfo operatie (ver 1.0.0)</protocolChoice>
 	<protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
 	<protocolChoice show="-" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
 	<protocolChoice show='-' value='WWW:DOWNLOAD-1.0-ftp--download'>Bestand ter directe download over FTP</protocolChoice>

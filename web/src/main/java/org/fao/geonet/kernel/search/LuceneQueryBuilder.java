@@ -225,7 +225,6 @@ public class LuceneQueryBuilder {
             Log.debug(Geonet.LUCENE, "no language set, not adding locale query");
         }
 
-        System.out.println("***** LuceneQueryBuilder returns " + query.toString());
         return query;
     }
 

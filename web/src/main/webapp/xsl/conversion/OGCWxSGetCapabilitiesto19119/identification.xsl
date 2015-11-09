@@ -13,6 +13,7 @@
 										xmlns:ows11="http://www.opengis.net/ows/1.1"
 										xmlns:wcs="http://www.opengis.net/wcs"
 										xmlns:wms="http://www.opengis.net/wms"
+										xmlns:wmts="http://www.opengis.net/wmts/1.0"
                                         xmlns:wps="http://www.opengeospatial.net/wps"
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
                                         xmlns:gml="http://www.opengis.net/gml"
@@ -251,15 +252,14 @@
 						<EX_GeographicBoundingBox>
 							<xsl:choose>
 								<xsl:when test="$ows='true' or name(.)='WCS_Capabilities'">
-					
 									<xsl:variable name="boxes">
 										<xsl:choose>
 											<xsl:when test="$ows='true'">
-												<xsl:for-each select="//ows:WGS84BoundingBox/ows:LowerCorner">
+												<xsl:for-each select="//ows:WGS84BoundingBox/ows:LowerCorner|//ows11:WGS84BoundingBox/ows11:LowerCorner">
 													<xmin><xsl:value-of	select="substring-before(., ' ')"/></xmin>
 													<ymin><xsl:value-of	select="substring-after(., ' ')"/></ymin>
 												</xsl:for-each>
-												<xsl:for-each select="//ows:WGS84BoundingBox/ows:UpperCorner">
+												<xsl:for-each select="//ows:WGS84BoundingBox/ows:UpperCorner|//ows11:WGS84BoundingBox/ows11:UpperCorner">
 													<xmax><xsl:value-of	select="substring-before(., ' ')"/></xmax>
 													<ymax><xsl:value-of	select="substring-after(., ' ')"/></ymax>
 												</xsl:for-each>
@@ -276,7 +276,6 @@
 											</xsl:when>
 										</xsl:choose>
 									</xsl:variable>
-											
 									<westBoundLongitude>
 										<gco:Decimal><xsl:copy-of select="math:min(exslt:node-set($boxes)/*[name(.)='xmin'])"/></gco:Decimal>
 									</westBoundLongitude>
@@ -332,7 +331,7 @@
 								wms:Capability/wms:Request/*|
                                 wcs:Capability/wcs:Request/*|
                                 ows:OperationsMetadata/ows:Operation|
-                                ows11:OperationsMetadata/ows:Operation|
+                                ows11:OperationsMetadata/ows11:Operation|
                                 wps:ProcessOfferings/*|
                                 wps1:ProcessOfferings/*">
 			<!-- Some services provide information about ows:ExtendedCapabilities TODO ? -->
@@ -373,7 +372,7 @@
 					</srv:DCP>
                     <xsl:if test="name(.)='wps:Process' or name(.)='wps11:ProcessOfferings'">
                       <srv:operationDescription>
-                          <gco:CharacterString><xsl:value-of select="ows:Abstract|ows11:Title"/></gco:CharacterString> 
+                          <gco:CharacterString><xsl:value-of select="ows:Abstract|ows:Title|ows11:Abstract|ows11:Title"/></gco:CharacterString> 
                       </srv:operationDescription> 
                       <srv:invocationName>
                           <gco:CharacterString><xsl:value-of select="ows:Identifier|ows11:Identifier"/></gco:CharacterString> 
@@ -381,8 +380,8 @@
                     </xsl:if>
                     <xsl:variable name="formats">
 			<xsl:choose>
-                    		<xsl:when test="$operationName='GetGmlObject'"><xsl:value-of select="../ows:Operation[@name='GetFeature']/ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value[contains(upper-case(.),'GML')]"/></xsl:when>
-                    		<xsl:otherwise><xsl:value-of select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value"/></xsl:otherwise>
+                    		<xsl:when test="$operationName='GetGmlObject'"><xsl:value-of select="../ows:Operation[@name='GetFeature']/ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value[contains(upper-case(.),'GML')]|../ows11:Operation[@name='GetFeature']/ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:Value[contains(upper-case(.),'GML')]"/></xsl:when>
+                    		<xsl:otherwise><xsl:value-of select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:AllowedValues/ows:Value|ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:AllowedValues/ows11:Value"/></xsl:otherwise>
 			</xsl:choose> 
                    </xsl:variable>
                     <xsl:if test="count($formats)>0">
@@ -391,7 +390,7 @@
 								<linkage>
 									<xsl:variable name="urls">
 										<xsl:choose>
-											<xsl:when test="$ows='true'"><xsl:value-of select=".//ows:Get[1]/@xlink:href"/></xsl:when>
+											<xsl:when test="$ows='true'"><xsl:value-of select=".//ows:Get[1]/@xlink:href|.//ows11:Get[1]/@xlink:href"/></xsl:when>
 											<xsl:otherwise><xsl:value-of select=".//Get/OnlineResource[1]/@xlink:href|.//wms:Get/wms:OnlineResource[1]/@xlink:href"/></xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
@@ -405,7 +404,7 @@
 								<protocol>
 									<gco:CharacterString>
 										<xsl:choose>
-											<xsl:when test="$operationName='GetCapabilities' or $operationName='GetMap' or $operationName='GetFeatureInfo'">
+											<xsl:when test="$operationName='GetCapabilities' or $operationName='GetMap' or $operationName='GetFeatureInfo' or $operationName='GetTile'">
 												<xsl:call-template name="get-protocol-by-operation">
 													<xsl:with-param name="operationName" select="$operationName"/>
 													<xsl:with-param name="ogctype" select="$ogctype"/>
@@ -599,7 +598,7 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each>
-		<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]/ows:Keywords">
+		<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]/ows:Keywords|//wfs:FeatureType[wfs:Name=$Name]/ows11:Keywords">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:apply-templates select="." mode="Keywords"/>
@@ -684,11 +683,11 @@
 									<xsl:variable name="boxes">
 										<xsl:choose>
 											<xsl:when test="$ows='true'">
-												<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:LowerCorner">
+												<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:LowerCorner|//wfs:FeatureType[wfs:Name=$Name]/ows11:WGS84BoundingBox/ows11:LowerCorner">
 													<xmin><xsl:value-of	select="substring-before(., ' ')"/></xmin>
 													<ymin><xsl:value-of	select="substring-after(., ' ')"/></ymin>
 												</xsl:for-each>
-												<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:UpperCorner">
+												<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:UpperCorner|//wfs:FeatureType[wfs:Name=$Name]/ows11:WGS84BoundingBox/ows11:UpperCorner">
 													<xmax><xsl:value-of	select="substring-before(., ' ')"/></xmax>
 													<ymax><xsl:value-of	select="substring-after(., ' ')"/></ymax>
 												</xsl:for-each>
@@ -813,8 +812,10 @@
 					<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
                	</xsl:choose>
 			</xsl:when>
+			<xsl:when test="$operationName='GetTile'">OGC:WMTS-1.0.0-http-get-tile</xsl:when>
 			<xsl:when test="$operationName='GetFeatureInfo'">
                	<xsl:choose>
+               		<xsl:when test="$ogctype='WMTS1.0.0'">OGC:WMTS-1.0.0-http-get-featureinfo</xsl:when>
                		<xsl:when test="$ogctype='WMS1.1.1'">OGC:WMS-1.1.1-http-get-featureinfo</xsl:when>
                		<xsl:when test="$ogctype='WMS1.3.0'">OGC:WMS-1.3.0-http-get-featureinfo</xsl:when>
 					<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
