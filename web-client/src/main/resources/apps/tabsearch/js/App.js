@@ -12,6 +12,7 @@ GeoNetwork.app = function(){
     var editorWindow;
     var editorPanel;
     var cookie;
+    var siteId;
 
     /**
      * Application parameters are :
@@ -339,6 +340,13 @@ GeoNetwork.app = function(){
         });
         
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
+        if (GeoNetwork.Settings.nodeType.toLowerCase() == "vmm") {
+			var siteId = this.siteId;
+			catalogueField.store.on('load', function(store, records, options) {
+				catalogueField.onStoreLoad(store, records, options);
+				catalogueField.setValue(siteId);
+			});
+        }
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
         // Disabled for AGIV
@@ -961,6 +969,7 @@ GeoNetwork.app = function(){
 
     function createHeader(){
         var info = catalogue.getInfo();
+        this.siteId = info.siteId;
         Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/logo' + GeoNetwork.Settings.nodeType.toLowerCase() + (GeoNetwork.Settings.nodeType.toLowerCase() != "vmm" ? '.gif' : '.png') + '" title="'  + info.name + '"/>';
         document.title = info.name;
     }

@@ -146,6 +146,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
     	var showHarvesterLogo = (!GeoNetwork.Settings || GeoNetwork.Settings.nodeType.toLowerCase()!='agiv') ? true : false;
     	var isGeopunt = (GeoNetwork.Settings && GeoNetwork.Settings.nodeType.toLowerCase()=='geopunt') ? true : false;
     	var isAgiv = (GeoNetwork.Settings && GeoNetwork.Settings.nodeType.toLowerCase()=='agiv') ? true : false;
+    	var isVmm = (GeoNetwork.Settings && GeoNetwork.Settings.nodeType.toLowerCase()=='vmm') ? true : false;
         GeoNetwork.Templates.SIMPLE = new Ext.XTemplate(
             '<ul>',
             '<tpl for=".">',
@@ -154,7 +155,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<td style="width:75px;">',
 //            isAgiv ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>' + '<tpl if="isharvested==\'n\'">' + GeoNetwork.Templates.GEOPUNT_LOGO + '</tpl>' : '',
             !isAgiv ? GeoNetwork.Templates.LOGO : '',
-            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{catalogue.URL}/apps/tabsearch/images/{type}.png"/></div>' : '',
+            (isAgiv || isGeopunt || isVmm) ? '<br/><div class="md-logo-type"><img title="{type}" src="{catalogue.URL}/apps/tabsearch/images/{type}.png"/></div>' : '',
 			'</td>',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
@@ -245,7 +246,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
             '<td class="left">',
 //        	isAgiv ? '<tpl if="isharvested==\'y\'">' + GeoNetwork.Templates.LOGO + '</tpl>' + '<tpl if="isharvested==\'n\'">' + GeoNetwork.Templates.GEOPUNT_LOGO + '</tpl>' : '',
         	!isAgiv ? GeoNetwork.Templates.LOGO : '',
-            (isAgiv || isGeopunt) ? '<br/><div class="md-logo-type"><img title="{type}" src="{catalogue.URL}/apps/tabsearch/images/{type}.png"/></div>' : '',
+            (isAgiv || isGeopunt || isVmm) ? '<br/><div class="md-logo-type"><img title="{type}" src="{catalogue.URL}/apps/tabsearch/images/{type}.png"/></div>' : '',
             '</td>',
             '<td id="{uuid}">',
             GeoNetwork.Templates.TITLE,
