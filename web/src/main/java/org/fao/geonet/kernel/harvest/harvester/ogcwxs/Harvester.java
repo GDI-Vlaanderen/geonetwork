@@ -870,7 +870,7 @@ class Harvester
 		    if (bIsWMS) {
 		    	mdUrlXPath = XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='TC211' or @type='FGDC' or @type='ISO19115:2005' or @type='ISO19115:2003') and " + dummyNsPrefix + "Format='" + format + "']/" + dummyNsPrefix + "OnlineResource");
 		    } else if (bIsWFS) {
-		    	mdUrlXPath = XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='TC211' or @type='FGDC' or @type='19115' or @type='19139') and " + dummyNsPrefix + "Format='" + format + "']");
+		    	mdUrlXPath = XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[(@type='TC211' or @type='FGDC' or @type='19115' or @type='19139') and @format='" + format + "']");
 		    }
 		    if (addNsPrefix) mdUrlXPath.addNamespace("x", layer.getNamespace().getURI());
 		    onLineSrc = (Element) mdUrlXPath.selectSingleNode (layer);
