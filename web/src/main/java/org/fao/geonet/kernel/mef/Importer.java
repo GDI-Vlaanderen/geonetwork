@@ -240,7 +240,7 @@ public class Importer {
 				String groupId = null;
 				Element categs = null;
 				Element privileges;
-				boolean validate = false;
+				boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
 				
 				// Apply a stylesheet transformation if requested
@@ -297,7 +297,7 @@ public class Importer {
 						uuid = dm.extractUUID(schema, md.get(index));						
 					}
 
-					validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
+//					validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
 				}
                 else {
@@ -653,14 +653,16 @@ public class Importer {
 			// boolean groupOwner = group.getAttributeValue("groupOwner") != null;
 			String grpId = mapLocalEntity(locGrps, grpName);
 
-			if (grpId == null)
-                if(Log.isDebugEnabled(Geonet.MEF))
+			if (grpId == null) {
+                if(Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, " - Skipping non-existent group : " + grpName);
-			else {
+                }
+			} else {
 				// --- metadata group exists locally
 
-                    if(Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
+                if(Log.isDebugEnabled(Geonet.MEF)) {
+                    Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
+                }
 				addOperations(context, dm, dbms, group, id, grpId);
 				//***
 				// if (groupOwner) {

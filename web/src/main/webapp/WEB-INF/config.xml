@@ -5,7 +5,7 @@
 	<general>
 		<profiles>user-profiles.xml</profiles>
 		<!-- Size must be in megabyte (integer), 100MB by default -->
-		<maxUploadSize>0.5</maxUploadSize> <uploadDir>./data/tmp</uploadDir>
+		<maxUploadSize>1.0</maxUploadSize> <uploadDir>./data/tmp</uploadDir>
 		<debug>true</debug>
 	</general>
 

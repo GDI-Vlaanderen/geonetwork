@@ -88,7 +88,7 @@
             <xsl:for-each select="/root/gui/schematrons/schemas/schema">
 	            <xsl:for-each select="schematronname">
 	                <xsl:if test=". != 'schematron-rules-none.xsl'">
-                        <tr><td/><td><input class="content" type="checkbox" name="{../schemaname}-{.}" id="{../schemaname}-{.}"/>
+                        <tr><td/><td><input class="content" type="checkbox" name="{../schemaname}-{.}" id="{../schemaname}-{.}" onclick="$('validate').checked=true"/>
                         	<xsl:value-of select="/root/gui/strings/schematronRules"/><xsl:text> </xsl:text>
                         	<xsl:choose>
                         		<xsl:when test="contains(lower-case(.),'rules-gdi-vlaanderen')">
