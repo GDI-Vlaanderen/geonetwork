@@ -14,6 +14,8 @@
 
 	<uri    name="http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd"
 					uri="http://www.isotc211.org/2005/srv"/>
+	<uri    name="http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd"
+					uri="http://www.isotc211.org/2005/gmd"/>
 
 	<!-- These are to map schemaLocation hints to local schemas to make sure that
        GeoNetwork edits and validates against a schema it knows about. -->
@@ -32,6 +34,8 @@
 	        uri="schema/gss/gss.xsd"/>
 	<system systemId="http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd"
 					uri="schema/srv/srv.xsd"/>
+	<system systemId="http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd"
+					uri="schema/gmd/gmd.xsd"/>
 
 	<!-- hope this isn't being used as a schema hint but if it is, map it -->
 

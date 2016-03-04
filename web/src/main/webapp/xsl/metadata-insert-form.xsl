@@ -85,7 +85,7 @@
                 
                 displayElement('gn.type',display);
                 displayElement('gn.stylesheet',display);
-                displayElement('gn.validate',display);
+                //displayElement('gn.validate',display);
                 displayElement('gn.groups',display);
                 displayElement('gn.categories',display);
                 displayElement('gn.assign',mefdisplay);
