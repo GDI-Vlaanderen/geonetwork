@@ -23,6 +23,13 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
@@ -31,6 +38,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,10 +47,6 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.Namespace;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 //=============================================================================
 
@@ -101,7 +105,14 @@ public class Insert implements Service
         if (schema == null)
         	throw new BadParameterEx("Can't detect schema for metadata automatically.", schema);
 
-		if (validate) dataMan.validateMetadata(schema, null, xml, context);
+        Map<String, Set<String>> schemaSchematronMap = new HashMap<String, Set<String>>();
+        if(validate) {
+        	try {
+                schemaSchematronMap = Util.getSchemaSchematronMapping(params);
+        	} catch (Exception e) {
+        	}
+        }
+		if (validate) dataMan.validateMetadata(schema, schemaSchematronMap, xml, context);
 
 		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist and is not a template we generate it

@@ -38,8 +38,10 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //=============================================================================
 
@@ -151,12 +153,12 @@ public final class Util
      * @param prefix
      * @return
      */
-    public static Map<String, String> getParamsByPrefix(Element el, String prefix) {
+    public static Map<String, String> getParamsBySubstring(Element el, String prefix) {
         Map<String, String> result = new HashMap<String, String>();
         List children = el.getChildren();
         for(Object child : children) {
             Element childE = (Element) child;
-            if(childE.getName().startsWith(prefix)) {
+            if(childE.getName().contains(prefix)) {
                 result.put(childE.getName(), childE.getTextTrim());
             }
         }
@@ -345,6 +347,39 @@ public final class Util
         }
 		return "";
 	}
+    /**
+     * TODO this method is duplicated in ImportFromDir.
+     *
+     * @param params
+     * @return
+     */
+    public static Map<String, Set<String>> getSchemaSchematronMapping(Element params) {
+        //
+        // create a mapping to know which schemas should be invoking which of their schematrons as indicated by the user
+        //
+        Map<String, String> schematronsParams = Util.getParamsBySubstring(params, "schematron-");
+        System.out.println("found # " + schematronsParams.size() + " sctr params" );
+        Map<String, Set<String>> schemaSchematronMap = new HashMap<String, Set<String>>();
+        for(String param: schematronsParams.keySet()) {
+            // strip prefix 'schematron-'
+            int firstHyphen = param.indexOf('-');
+            if(firstHyphen < 0) {
+                System.out.println("WARNING: unexpected schematron parameter seen in ImportFromDir, ignoring it: " + param);
+            }
+            else {
+                String schemaName = param.substring(0, firstHyphen);
+                String schematronFileName = param.substring(++firstHyphen);
+                System.out.println("Found schematronparameter for schema " + schemaName + " with file name " + schematronFileName );
+                Set<String> schematronsForSchema = schemaSchematronMap.get(schemaName);
+                if(schematronsForSchema == null) {
+                    schematronsForSchema = new HashSet<String>();
+                }
+                schematronsForSchema.add(schematronFileName);
+                schemaSchematronMap.put(schemaName, schematronsForSchema);
+            }
+        }
+        return schemaSchematronMap;
+    }
 }
 
 //=============================================================================

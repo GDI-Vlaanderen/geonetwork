@@ -333,42 +333,6 @@ public class ImportFromDir implements Service {
 
     /**
      *
-     * TODO this method is duplicated in Import.
-     *
-     * @param params
-     * @return
-     */
-    private Map<String, Set<String>> getSchemaSchematronMapping(Element params) {
-        //
-        // create a mapping to know which schemas should be invoking which of their schematrons as indicated by the user
-        //
-        Map<String, String> schematronsParams = Util.getParamsByPrefix(params, "schematron-");
-        System.out.println("found # " + schematronsParams.size() + " sctr params" );
-        Map<String, Set<String>> schemaSchematronMap = new HashMap<String, Set<String>>();
-        for(String param: schematronsParams.keySet()) {
-            // strip prefix 'schematron-'
-            param = param.substring("schematron-".length());
-            int firstHyphen = param.indexOf('-');
-            if(firstHyphen < 0) {
-                System.out.println("WARNING: unexpected schematron parameter seen in ImportFromDir, ignoring it: " + param);
-            }
-            else {
-                String schemaName = param.substring(0, firstHyphen);
-                String schematronName = param.substring(++firstHyphen);
-                System.out.println("found schematronparameter for schema " + schemaName + " with sctr name " + schematronName );
-                Set<String> schematronsForSchema = schemaSchematronMap.get(schemaName);
-                if(schematronsForSchema == null) {
-                    schematronsForSchema = new HashSet<String>();
-                }
-                schematronsForSchema.add(schematronName);
-                schemaSchematronMap.put(schemaName, schematronsForSchema);
-            }
-        }
-        return schemaSchematronMap;
-    }
-
-    /**
-     *
      * @param params
      * @param context
      * @return
@@ -385,7 +349,7 @@ public class ImportFromDir implements Service {
 
         Map<String, Set<String>> schemaSchematronMap = new HashMap<String, Set<String>>();
         if(validate) {
-            schemaSchematronMap = getSchemaSchematronMapping(params);
+            schemaSchematronMap = Util.getSchemaSchematronMapping(params);
         }
 
 		File files[] = new File(dir).listFiles(mdFilter);
@@ -424,7 +388,7 @@ public class ImportFromDir implements Service {
 
         Map<String, Set<String>> schemaSchematronMap = new HashMap<String, Set<String>>();
         if(validate) {
-            schemaSchematronMap = getSchemaSchematronMapping(params);
+            schemaSchematronMap = Util.getSchemaSchematronMapping(params);
         }
 
 		File sites[] = new File(dir).listFiles(filter);

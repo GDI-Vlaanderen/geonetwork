@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import jeeves.exceptions.BadFormatEx;
+import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
@@ -45,6 +46,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
@@ -337,7 +339,21 @@ public class Importer {
 
 				if (validate) {
 					// Validate xsd and schematron
-					dm.validateMetadata(schema, schemaSchematronMap, metadata, context);
+					if (info.getChildren().size() == 0) {
+						dm.validateMetadata(schema, schemaSchematronMap, metadata, context);						
+					} else {
+						try {
+							dm.validateMetadata(schema, schemaSchematronMap, metadata, context);						
+						} catch (SchematronValidationErrorEx e) {
+							Log.error(Geonet.MEF, e.toString());
+							id.add("!" + uuid + ":" + Xml.getString(((Element) e.getObject())));
+			                return;
+						} catch (XSDValidationErrorEx e) {
+							Log.error(Geonet.MEF, e.toString());
+							id.add("!" + uuid + ":" + Xml.getString(((Element) e.getObject())));
+			                return;
+						}
+					}
                 }
 
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION,
@@ -352,9 +368,22 @@ public class Importer {
 		            	throw new Exception("Metadatarecord met uuid: " + uuid + " niet verwerkt omdat er geen gerelateerde groep gevonden kon worden");
 	            	}
 				}
-        		importRecord(uuid, localId, uuidAction, md, schema, index,
-						source, sourceName, context, id, createDate,
-						changeDate, groupId, isTemplate, dbms);
+				if (info.getChildren().size() == 0) {
+	        		importRecord(uuid, localId, uuidAction, md, schema, index,
+							source, sourceName, context, id, createDate,
+							changeDate, groupId, isTemplate, dbms);
+				} else {
+					try {
+		        		importRecord(uuid, localId, uuidAction, md, schema, index,
+								source, sourceName, context, id, createDate,
+								changeDate, groupId, isTemplate, dbms);
+					} catch (Exception e) {
+						Log.error(Geonet.MEF, e.toString());
+						id.add("?" + uuid + ":" + e.getMessage());
+						dbms.abort();
+		                return;
+					}					
+				}
 
 				if (fc.size() != 0 && fc.get(index) != null) {
 					// UUID is set as @uuid in root element

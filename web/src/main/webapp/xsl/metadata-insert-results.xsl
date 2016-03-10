@@ -40,20 +40,19 @@
                     <xsl:for-each select="/root/response/exceptions/exception">
                       <li>
                         <!-- Handle different types of errors -->
+                        <xsl:value-of select="concat('UUID:',@uuid)"/><br/>
                         <xsl:choose>
                             <xsl:when test="geonet:schematronerrors">
                                 <xsl:call-template name="metadata-validation-report">
                                     <xsl:with-param name="report" select="geonet:schematronerrors/geonet:report"/>
                                 </xsl:call-template>
                             </xsl:when>
-
                             <xsl:when test="xsderrors">
                                <xsl:for-each select="xsderrors/error">
 			                        <xsl:value-of select="message"/>
   		                            <br/><br/>
 		                        </xsl:for-each>
                             </xsl:when>
-
                             <xsl:otherwise>
                                 <xsl:value-of select="."/>
                             </xsl:otherwise>
