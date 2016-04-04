@@ -490,7 +490,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 		<xsl:for-each select="gmd:fileIdentifier/gco:CharacterString">
-			<Field name="fileId" string="{string(.)}" store="false" index="true"/>
+			<Field name="fileId" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		

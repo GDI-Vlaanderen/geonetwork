@@ -62,6 +62,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.validation.agiv.AGIVValidation;
@@ -74,6 +75,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
+import org.jfree.util.Log;
 
 
 //=============================================================================
@@ -475,8 +477,10 @@ class Harvester
 				Element operation = new Element ("operationName", srv);
 				Element operationValue = new Element ("CharacterString", gco);
 				
-				if (params.ogctype.startsWith("WMS") || params.ogctype.startsWith("WMTS"))
+				if (params.ogctype.startsWith("WMS"))
 					operationValue.setText("GetMap"); 
+				else if (params.ogctype.startsWith("WMTS"))
+					operationValue.setText("GetTile"); 
 				else if (params.ogctype.startsWith("WFS"))
 					operationValue.setText("GetFeature");
 				else if (params.ogctype.startsWith("WCS"))
@@ -614,84 +618,89 @@ class Harvester
 			Element onLineSrc = null;
 			Element identifier = null;
 			if (bIsWMTS) {
-				identifier = getMetadataIdentifier(layer);
+				Map<String,String> identifiersMap = getDatasetIdentifiersMap(layer);
+            	String datasetIdentifier = identifiersMap.get("datasetIdentifier");
+            	String fileIdentifier = identifiersMap.get("fileIdentifier");
+            	if (StringUtils.isNotBlank(datasetIdentifier) && StringUtils.isNotBlank(fileIdentifier)) {
+	            	if(log.isDebugEnabled()) log.debug("===Processing layer " + reg.name);
+	            	reg.uuid = fileIdentifier;
+	            	reg.mduuid = datasetIdentifier;
+					result.layerUuidExist ++;
+	            	loaded = true;
+	            }
 			} else {
 				onLineSrc = getMetadataURL(layer, bIsWMS, bIsWFS);
-			}
-			
-            if (onLineSrc != null || identifier!=null) {
-				org.jdom.Attribute href = null;
+	            if (onLineSrc != null) {
+					org.jdom.Attribute href = null;
 
-				if (bIsWMS) {
-					href = onLineSrc.getAttribute ("href", xlink);
-				}
+					if (bIsWMS) {
+						href = onLineSrc.getAttribute ("href", xlink);
+					}
 
-				if ((bIsWMS && href != null) || (bIsWFS && onLineSrc.getValue()!=null) || bIsWMTS) {
-					if(log.isDebugEnabled()) log.debug("===Processing layer " + reg.name);
-					mdXml = (bIsWMTS ? dataMan.getSiteURL() + "/csw?Service=CSW&version=2.0.2&Request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementSetName=full&id=" + identifier.getValue() : (bIsWMS ? href.getValue() : onLineSrc.getValue()));
-					try {
-						GetRecordByIdRequest request = new GetRecordByIdRequest(this.context);
-						request.setElementSetName(ElementSetName.FULL);
-						request.setUrl(new URL(mdXml));
-						request.setMethod(CatalogRequest.Method.GET);
-						if (params.useAccount) {
-							request.setCredentials(params.username, params.password);
-						}	
-//						xml = Xml.loadFile (new URL(mdXml));
-//						xml = new XmlRequest(new URL(mdXml)).execute();
-						if(log.isDebugEnabled()) log.debug("===Loading MetadataUrl " + mdXml);
-						xml = request.execute();
+					if ((bIsWMS && href != null) || (bIsWFS && onLineSrc.getValue()!=null)) {
+						if(log.isDebugEnabled()) log.debug("===Processing layer " + reg.name);
+						mdXml = (bIsWMS ? href.getValue() : onLineSrc.getValue());
+						try {
+							GetRecordByIdRequest request = new GetRecordByIdRequest(this.context);
+							request.setElementSetName(ElementSetName.FULL);
+							request.setUrl(new URL(mdXml));
+							request.setMethod(CatalogRequest.Method.GET);
+							if (params.useAccount) {
+								request.setCredentials(params.username, params.password);
+							}	
+//							xml = Xml.loadFile (new URL(mdXml));
+//							xml = new XmlRequest(new URL(mdXml)).execute();
+							if(log.isDebugEnabled()) log.debug("===Loading MetadataUrl " + mdXml);
+							xml = request.execute();
 
-                        // If url is CSW GetRecordById remove envelope
-                        if (xml.getName().equals("GetRecordByIdResponse")) {
-                            xml = (Element) xml.getChildren().get(0);
-                        }
+	                        // If url is CSW GetRecordById remove envelope
+	                        if (xml.getName().equals("GetRecordByIdResponse")) {
+	                            xml = (Element) xml.getChildren().get(0);
+	                        }
 
-						schema = dataMan.autodetectSchema (xml); // ie. iso19115 or 139 or DC
-						// Extract uuid from loaded xml document
-						// FIXME : uuid could be duplicate if metadata already exist in catalog
-						reg.uuid = dataMan.extractUUID(schema, xml);
-						existingMdId = dataMan.getMetadataId(dbms, reg.uuid);
-						
-						if (existingMdId!=null) {
-							Element md = dataMan.getMetadata(dbms,existingMdId);
-							reg.mduuid = dataMan.extractMetadataUUID(dataMan.autodetectSchema (md), md);
-/*
-							String query = "INSERT INTO Relations (id, relatedId) " + "VALUES (?, ?)";
-							dbms.execute(query, parentId, childId);
-*/
-//							log.warning("    Metadata uuid already exist in the catalogue. Metadata will not be loaded.");
-							result.layerUuidExist ++;
-							// FIXME : return null, service and metadata will not be linked by default.
-//							return null;
-						}
-						
-						if (schema == null) {
-							log.warning("===Failed to detect schema from metadataUrl file. Use GetCapabilities document instead for that layer.");
-							result.unknownSchema ++;
-							loaded = false;
-						} else { 
-							log.info("===Load layer metadataUrl document ok: " + mdXml);
+							schema = dataMan.autodetectSchema (xml); // ie. iso19115 or 139 or DC
+							// Extract uuid from loaded xml document
+							// FIXME : uuid could be duplicate if metadata already exist in catalog
+							reg.uuid = dataMan.extractUUID(schema, xml);
+							existingMdId = dataMan.getMetadataId(dbms, reg.uuid);
 							
-							loaded = true;
-							result.layerUsingMdUrl ++;
+							if (existingMdId!=null) {
+								Element md = dataMan.getMetadata(dbms,existingMdId);
+								reg.mduuid = dataMan.extractMetadataUUID(dataMan.autodetectSchema (md), md);
+	/*
+								String query = "INSERT INTO Relations (id, relatedId) " + "VALUES (?, ?)";
+								dbms.execute(query, parentId, childId);
+	*/
+//								log.warning("    Metadata uuid already exist in the catalogue. Metadata will not be loaded.");
+								result.layerUuidExist ++;
+								// FIXME : return null, service and metadata will not be linked by default.
+//								return null;
+							}
+							
+							if (schema == null) {
+								log.warning("===Failed to detect schema from metadataUrl file. Use GetCapabilities document instead for that layer.");
+								result.unknownSchema ++;
+							} else { 
+								log.info("===Load layer metadataUrl document ok: " + mdXml);
+								
+								loaded = true;
+								result.layerUsingMdUrl ++;
+							}
+						// TODO : catch other exception
+						}catch (Exception e) {
+							log.error("  - Failed to load layer using metadataUrl attribute : " + e.getMessage());
 						}
-					// TODO : catch other exception
-					}catch (Exception e) {
-						log.error("  - Failed to load layer using metadataUrl attribute : " + e.getMessage());
-						nonExistingMetadata.add(reg.name);
-						loaded = false;
+					} else {
+						log.info("  - No metadataUrl attribute with format text/xml found for that layer");
 					}
 				} else {
-					log.info("  - No metadataUrl attribute with format text/xml found for that layer");
-					nonExistingMetadata.add(reg.name);
-					loaded = false;
+					log.info("  - No OnlineResource found for that layer");
 				}
-			} else {
-				log.info("  - No OnlineResource found for that layer");
-				nonExistingMetadata.add(reg.name);
-				loaded = false;
 			}
+			if (!loaded) {
+				nonExistingMetadata.add(reg.name);
+			}
+			
 		}
 		
 		
@@ -888,7 +897,8 @@ class Harvester
 	 * @throws JDOMException 
      *                   
      */
-	private Element getMetadataIdentifier (Element layer) throws JDOMException {
+	private Map<String,String> getDatasetIdentifiersMap (Element layer) throws JDOMException {
+	    Map identifierMap = new HashMap<String,String>();
 		Element identifierElement = null;
         String dummyNsPrefix = "";
 //        boolean addNsPrefix = !layer.getNamespace().equals(Namespace.NO_NAMESPACE);
@@ -905,7 +915,18 @@ class Harvester
 		    identifierXPath.addNamespace("ows", "http://www.opengis.net/ows");
 		    identifierElement = (Element) identifierXPath.selectSingleNode (layer); 
 	    }
-	    return identifierElement;
+	    if (identifierElement!=null) {
+        	identifierMap.put("datasetIdentifier",identifierElement.getValue());
+	        try {
+	            String fieldValue = LuceneSearcher.getMetadataFromIndexByDatasetIdentifier(context, "dut", identifierElement.getValue(), "fileId");
+	            if(fieldValue != null) {
+	            	identifierMap.put("fileIdentifier", fieldValue);
+	            }
+	        } catch (Exception e) {
+    			Log.error(e.getMessage());
+	        }
+	    }
+	    return identifierMap;
 	}
 
 	/** 

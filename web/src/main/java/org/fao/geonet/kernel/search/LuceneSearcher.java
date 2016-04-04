@@ -1628,6 +1628,34 @@ public class LuceneSearcher extends MetaSearcher {
             return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_id", id, fieldnames).get(fieldname);
     }
 
+    public static String getMetadataFromIndexByDatasetIdentifier(ServiceContext context, String priorityLang, String id, String fieldname) throws Exception {
+        IndexReader reader;
+        SearchManager searchmanager = null;
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        searchmanager = gc.getSearchmanager();
+        reader = searchmanager.getIndexReader(priorityLang);
+    	List<String> fieldnames = new ArrayList<String>();
+        fieldnames.add(fieldname);
+        return LuceneSearcher.getMetadataFromIndex(searchmanager, null, reader, priorityLang, "identifier", id, fieldnames).get(fieldname);
+    }
+
+    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, List<String> fieldnames) throws Exception {
+        IndexReader reader;
+        LuceneIndexReaderFactory factory = null;
+        SearchManager searchmanager = null;
+        ServiceContext context = ServiceContext.get();
+        if (context != null) {
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            searchmanager = gc.getSearchmanager();
+            reader = searchmanager.getIndexReader(priorityLang);
+        } else {
+            File luceneDir = new File(System.getProperty(webappName + ".lucene.dir", webappName), "nonspatial");
+            factory = new LuceneIndexReaderFactory(luceneDir);
+            reader = factory.getReader(priorityLang);
+        }
+        return getMetadataFromIndex(searchmanager, factory, reader, priorityLang, idField, id, fieldnames);    
+    }
+
     /**
      * TODO javadoc.
      *
@@ -1645,6 +1673,9 @@ public class LuceneSearcher extends MetaSearcher {
     /**
      * TODO javadoc.
      *
+     * @param searchmanager
+     * @param factory
+     * @param reader
      * @param webappName
      * @param priorityLang
      * @param idField
@@ -1653,28 +1684,14 @@ public class LuceneSearcher extends MetaSearcher {
      * @return
      * @throws Exception
      */
-    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, List<String> fieldnames) throws Exception {
+    private static Map<String,String> getMetadataFromIndex(SearchManager searchmanager, LuceneIndexReaderFactory factory, IndexReader reader, String priorityLang, String idField, String id, List<String> fieldnames) throws Exception {
         MapFieldSelector selector = new MapFieldSelector(fieldnames);
-        IndexReader reader;
-        LuceneIndexReaderFactory factory = null;
-        SearchManager searchmanager = null;
-        ServiceContext context = ServiceContext.get();
-        if (context != null) {
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            searchmanager = gc.getSearchmanager();
-            reader = searchmanager.getIndexReader(priorityLang);
-        } else {
-            File luceneDir = new File(System.getProperty(webappName + ".lucene.dir", webappName), "nonspatial");
-            factory = new LuceneIndexReaderFactory(luceneDir);
-            reader = factory.getReader(priorityLang);
-        }
         Searcher searcher = new IndexSearcher(reader);
-
         Map<String, String> values = new HashMap<String, String>();
 
         try {
             TermQuery query = new TermQuery(new Term(idField, id));
-            SettingInfo settingInfo = _sm.get_settingInfo();
+            SettingInfo settingInfo = _sm!=null ? _sm.get_settingInfo() : searchmanager.get_settingInfo();
             boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
             if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "sortRequestedLanguageOnTop: " + sortRequestedLanguageOnTop);

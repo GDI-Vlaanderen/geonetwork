@@ -29,6 +29,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -83,7 +84,7 @@ public class Import implements Service {
 
         Map<String, Set<String>> schemaSchematronMap = new HashMap<String, Set<String>>();
         if(validate) {
-            schemaSchematronMap = getSchemaSchematronMapping(params);
+            schemaSchematronMap = Util.getSchemaSchematronMapping(params);
         }
 		List<String> id = MEFLib.doImport(params, schemaSchematronMap, context, file, stylePath);
         String ids = "";
@@ -109,12 +110,28 @@ public class Import implements Service {
             result = new Element(Jeeves.Elem.RESPONSE);
             if ((fileType.equals("single") && (id.size() == 1))) {
                 result.addContent(new Element(Params.ID).setText(id.get(0) +""));
-        		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);               DataManager dm = gc.getDataManager();
+        		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        		DataManager dm = gc.getDataManager();
                 Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
                 result.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(dbms, id.get(0) +""))));
             } else {
                 result.addContent(new Element("records").setText(id.size() +""));
-
+                Element exceptions = new Element("exceptions");
+                result.addContent(exceptions);
+                iter = id.iterator();
+                while (iter.hasNext()) {
+                    String item = (String) iter.next();
+                    if (item.startsWith("!") || item.startsWith("?")) {
+	                	int iPos = item.indexOf(':');
+	                	Element exception = new Element("exception");
+	                	exception.setAttribute(Params.UUID,item.substring(1,iPos));
+	                    if (item.startsWith("!")) {
+	                    	exceptions.addContent(exception.addContent(Xml.loadString(item.substring(iPos + 1),false)));
+	                    } else if (item.startsWith("?")) {
+	                    	exceptions.addContent(exception.setText(item.substring(iPos + 1)));
+	                    }
+                    }
+                }
             }
 
         }
@@ -122,41 +139,6 @@ public class Import implements Service {
 		// --- return success with all metadata id
 		return result;
 	}
-
-    /**
-     * TODO this method is duplicated in ImportFromDir.
-     *
-     * @param params
-     * @return
-     */
-    private Map<String, Set<String>> getSchemaSchematronMapping(Element params) {
-        //
-        // create a mapping to know which schemas should be invoking which of their schematrons as indicated by the user
-        //
-        Map<String, String> schematronsParams = Util.getParamsByPrefix(params, "schematron-");
-        System.out.println("found # " + schematronsParams.size() + " sctr params" );
-        Map<String, Set<String>> schemaSchematronMap = new HashMap<String, Set<String>>();
-        for(String param: schematronsParams.keySet()) {
-            // strip prefix 'schematron-'
-            param = param.substring("schematron-".length());
-            int firstHyphen = param.indexOf('-');
-            if(firstHyphen < 0) {
-                System.out.println("WARNING: unexpected schematron parameter seen in ImportFromDir, ignoring it: " + param);
-            }
-            else {
-                String schemaName = param.substring(0, firstHyphen);
-                String schematronName = param.substring(++firstHyphen);
-                System.out.println("found schematronparameter for schema " + schemaName + " with sctr name " + schematronName );
-                Set<String> schematronsForSchema = schemaSchematronMap.get(schemaName);
-                if(schematronsForSchema == null) {
-                    schematronsForSchema = new HashSet<String>();
-                }
-                schematronsForSchema.add(schematronName);
-                schemaSchematronMap.put(schemaName, schematronsForSchema);
-            }
-        }
-        return schemaSchematronMap;
-    }
 }
 
 // =============================================================================

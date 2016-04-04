@@ -53,8 +53,8 @@ public class MailSender extends Thread
 			_mail.setFrom(from, fromDescr);
 			_mail.addTo(to);
 			_mail.setSubject(subject);
+			_mail.setCharset("utf-8");
 			_mail.setMsg(message);
-
 			start();
 		}
 		catch(EmailException e)
@@ -75,6 +75,7 @@ public class MailSender extends Thread
 			_mail.setFrom(from, fromDescr);
 			_mail.addTo(to);
 			_mail.setSubject(subject);
+			_mail.setCharset("utf-8");
 			_mail.setMsg(message);
 			List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
 			addressColl.add(new InternetAddress(replyTo, replyToDesc));
