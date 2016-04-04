@@ -24,6 +24,8 @@
 
 	<!-- ============================================================================= -->
 
+	<xsl:variable name="service-types-thesaurus" select="lower-case('GDI-Vlaanderen Service Types')"/>
+	<xsl:variable name="trefwoorden-thesaurus" select="lower-case('GDI-Vlaanderen Trefwoorden')"/>
 	<xsl:template match="*" mode="SrvDataIdentification">
 		<xsl:param name="topic"/>
 		<xsl:param name="ogctype"/>
@@ -157,11 +159,7 @@
 		<!-- graphOver -->
 		<!-- dsFormat-->
 		<xsl:for-each select="$s/KeywordList|$s/wms:KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
-				</MD_Keywords>
-			</descriptiveKeywords>
+			<xsl:apply-templates select="." mode="Keywords"/>
 		</xsl:for-each>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -578,39 +576,19 @@
 		<!-- graphOver -->
 		<!-- dsFormat-->
 		<xsl:for-each select="//Layer[Name=$Name]/KeywordList|keywords">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
-				</MD_Keywords>
-			</descriptiveKeywords>
+			<xsl:apply-templates select="." mode="Keywords"/>
 		</xsl:for-each>
 		<xsl:for-each select="//wms:Layer[wms:Name=$Name]/wms:KeywordList|wms:KeywordList">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
-				</MD_Keywords>
-			</descriptiveKeywords>
+			<xsl:apply-templates select="." mode="Keywords"/>
 		</xsl:for-each>
 		<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
-				</MD_Keywords>
-			</descriptiveKeywords>
+			<xsl:apply-templates select="." mode="Keywords"/>
 		</xsl:for-each>
 		<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]/ows:Keywords|//wfs:FeatureType[wfs:Name=$Name]/ows11:Keywords">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
-				</MD_Keywords>
-			</descriptiveKeywords>
+			<xsl:apply-templates select="." mode="Keywords"/>
 		</xsl:for-each>
 		<xsl:for-each select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:keywords">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
-				</MD_Keywords>
-			</descriptiveKeywords>
+			<xsl:apply-templates select="." mode="Keywords"/>
 		</xsl:for-each>
 		
 		
@@ -774,14 +752,88 @@
 
 	<xsl:template match="*" mode="Keywords">
 		<!-- TODO : tokenize WFS 100 keywords list -->
-		<xsl:for-each select="Keyword|wms:Keyword|ows:Keyword|ows11:Keyword|wfs:Keywords|wcs:keyword">
-			<xsl:variable name="keywordValue" select="normalize-space(.)" />
-			<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
-				<keyword>
-					<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-				</keyword>
-			</xsl:if>
-		</xsl:for-each>
+		<xsl:if test="count(Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(wms:Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(ows:Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(ows11:Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(wfs:Keywords[lower-case(@vocabulary)=$service-types-thesaurus]) + count(wcs:keyword[lower-case(@vocabulary)=$service-types-thesaurus]) > 0">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
+						<xsl:if test='lower-case(@vocabulary)=$service-types-thesaurus'>
+							<xsl:variable name="keywordValue" select="normalize-space(.)" />
+							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
+								<keyword>
+									<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+								</keyword>
+							</xsl:if>
+						</xsl:if>
+					</xsl:for-each>
+					<thesaurusName>
+						<CI_Citation>
+							<title>
+								<gco:CharacterString>GDI-Vlaanderen Service Types</gco:CharacterString>
+							</title>
+							<date>
+								<CI_Date>
+									<date>
+										<gco:Date>2016-03-11</gco:Date>
+									</date>
+									<dateType>
+										<CI_DateTypeCode codeListValue="publication" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode">publication</CI_DateTypeCode>
+									</dateType>
+								</CI_Date>
+							</date>
+						</CI_Citation>
+					</thesaurusName>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</xsl:if>
+		<xsl:if test="count(Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(wms:Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(ows:Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(ows11:Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(wfs:Keywords[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(wcs:keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) > 0">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
+						<xsl:if test='lower-case(@vocabulary)=$trefwoorden-thesaurus'>
+							<xsl:variable name="keywordValue" select="normalize-space(.)" />
+							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
+								<keyword>
+									<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+								</keyword>
+							</xsl:if>
+						</xsl:if>
+					</xsl:for-each>
+					<thesaurusName>
+						<CI_Citation>
+							<title>
+								<gco:CharacterString>GDI-Vlaanderen Trefwoorden</gco:CharacterString>
+							</title>
+							<date>
+								<CI_Date>
+									<date>
+										<gco:Date>2014-02-26</gco:Date>
+									</date>
+									<dateType>
+										<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+									</dateType>
+								</CI_Date>
+							</date>
+						</CI_Citation>
+					</thesaurusName>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</xsl:if>
+		<xsl:if test="count(Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(wms:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(ows:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(ows11:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(wfs:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(wcs:keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) > 0">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
+						<xsl:if test='lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus'>
+							<xsl:variable name="keywordValue" select="normalize-space(.)" />
+							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
+								<keyword>
+									<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+								</keyword>
+							</xsl:if>
+						</xsl:if>
+					</xsl:for-each>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</xsl:if>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- 

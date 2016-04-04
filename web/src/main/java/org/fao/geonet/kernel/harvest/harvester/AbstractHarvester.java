@@ -639,6 +639,7 @@ public abstract class AbstractHarvester
 			h.processWithFastIndexing();
 	    } catch(Throwable t) {
 	    	bException = true;
+	    	System.out.println(t.getMessage());
 			try{
 				rm.abort();
 			}
