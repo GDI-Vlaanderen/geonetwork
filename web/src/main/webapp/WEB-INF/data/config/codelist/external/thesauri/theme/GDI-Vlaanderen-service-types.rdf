@@ -38,5 +38,7 @@
   <skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/GDI-Vlaanderen-Service-Types/INSPIREATOMOPENSEARCH">
     <skos:prefLabel xml:lang="nl">INSPIRE:ATOM - Opensearch</skos:prefLabel>
   </skos:Concept>
-  </rdf:RDF>
-
+  <skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/GDI-Vlaanderen-Service-Types/INSPIRESDS">
+    <skos:prefLabel xml:lang="nl">INSPIRE:Spatial Data Service</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>
