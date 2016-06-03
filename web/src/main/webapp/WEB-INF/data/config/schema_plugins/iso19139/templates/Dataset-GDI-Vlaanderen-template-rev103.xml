@@ -107,7 +107,7 @@
 			<gmd:citation>
 				<gmd:CI_Citation>
 					<gmd:title>
-						<gco:CharacterString>Metadata-sjabloon voor &lt;b&gt; datasets &lt;/b&gt; v1.0.2, conform GDI-Vlaanderen Best Practices v1.0</gco:CharacterString>
+						<gco:CharacterString>Metadata-sjabloon voor &lt;b&gt; datasets &lt;/b&gt; v1.0.3, conform GDI-Vlaanderen Best Practices v1.0</gco:CharacterString>
 					</gmd:title>
 					<gmd:alternateTitle>
 						<gco:CharacterString/>
