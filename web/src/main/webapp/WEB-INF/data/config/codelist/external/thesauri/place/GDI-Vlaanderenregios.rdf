@@ -2,15 +2,15 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:fn="http://www.w3.org/2005/02/xpath-functions" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:gml="http://www.opengis.net/gml#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <!-- Scheme -->
   <skos:ConceptScheme rdf:about="http://mir.geopunt.be/cl/Geopunt/VlaamseAdminRegios">
-    <dc:title>Vlaamse regio's</dc:title>
-    <dc:description>Vlaamse regio's.</dc:description>
+    <dc:title>Vlaamse regio&apos;s</dc:title>
+    <dc:description>Vlaamse regio&apos;s.</dc:description>
     <dc:creator>
       <foaf:Organization>
         <foaf:name>AGIV</foaf:name>
       </foaf:Organization>
     </dc:creator>
     <dc:rights>Vrij gebruik</dc:rights>
-    <dcterms:issued>2013-09-25</dcterms:issued>
+    <dcterms:issued>2013-04-18</dcterms:issued>
     <dcterms:modified>2013-09-25</dcterms:modified>
   </skos:ConceptScheme>
   <!-- Main Concept-->

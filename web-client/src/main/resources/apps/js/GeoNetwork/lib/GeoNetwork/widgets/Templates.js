@@ -453,12 +453,15 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate('');
 GeoNetwork.Templates.Relation = {
         SHORT: ['<div class="{type}">',
                    '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\',\'{istemplate}\');return false;" title="{abstract}"',
-		                   '<tpl if="values.workspace==\'true\'">',
+		                   '<tpl if="values.workspace==\'true\' || values.status==\'3\'">',
 								' style="color:red"',
 		                   '</tpl>',
 		                   '>{title}',
 							'<tpl if="values.workspace==\'true\'">',
-							      ' (niet publieke versie)',
+							      ' (Versie in editmodus)',
+							'</tpl>',
+							'<tpl if="values.status==\'3\'">',
+							      ' (Versie gedepubliceerd)',
 							'</tpl>',
                  '</a></div>']
 };

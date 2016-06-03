@@ -18,12 +18,14 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template match="*" mode="RespParty">
-
-		<xsl:for-each select="ContactPersonPrimary/ContactPerson|wms:ContactPersonPrimary/wms:ContactPerson|wcs:individualName|ows:ServiceContact/ows:IndividualName|ows11:ServiceContact/ows11:IndividualName">
-			<individualName>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</individualName>
-		</xsl:for-each>
+		<xsl:param name="forAuthorData" select="false()"/>
+		<xsl:if test="$forAuthorData">
+			<xsl:for-each select="ContactPersonPrimary/ContactPerson|wms:ContactPersonPrimary/wms:ContactPerson|wcs:individualName|ows:ServiceContact/ows:IndividualName|ows11:ServiceContact/ows11:IndividualName">
+				<individualName>
+					<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+				</individualName>
+			</xsl:for-each>
+		</xsl:if>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -35,12 +37,22 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="ContactPosition|wms:ContactPosition|wcs:positionName|ows:ServiceContact/ows:PositionName|ows11:ServiceContact/ows11:PositionName">
-			<positionName>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</positionName>
-		</xsl:for-each>
-
+		<xsl:if test="$forAuthorData">
+			<xsl:for-each select="ContactPosition|wms:ContactPosition|wcs:positionName|ows:ServiceContact/ows:PositionName|ows11:ServiceContact/ows11:PositionName">
+				<xsl:variable name="positionName" select="normalize-space(.)"/>
+				<positionName>
+					<xsl:choose>
+						<xsl:when test="$positionName='custodian' or $positionName='owner' or $positionName='user' or $positionName='distributor' or $positionName='originator' or $positionName='pointOfContact' or $positionName='principalInvestigator' or $positionName='processor' or $positionName='publisher' or $positionName='author'">
+							<CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="{$positionName}"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:message>Value of PositionName in capabilities is not one of values in the role code list (http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode): <xsl:value-of select="$positionName"/></xsl:message>
+							<gco:CharacterString><xsl:value-of select="$positionName"/></gco:CharacterString>
+						</xsl:otherwise>
+					</xsl:choose>
+				</positionName>
+			</xsl:for-each>
+		</xsl:if>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<contactInfo>

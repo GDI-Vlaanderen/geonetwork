@@ -40,23 +40,29 @@
 			
 						<!-- 'Internet', 'Intranet' and GUEST groups -->
 
-						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
-							<xsl:with-param name="lang" select="$lang"/>
-<!--							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
-							<xsl:with-param name="disabled" select="true()"/>
-						</xsl:apply-templates>
-
-						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
-							<xsl:with-param name="lang" select="$lang"/>
-<!--							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
-							<xsl:with-param name="disabled" select="true()"/>
-						</xsl:apply-templates>
-
-						<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
-							<xsl:with-param name="lang" select="$lang"/>
-<!--							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
-							<xsl:with-param name="disabled" select="true()"/>
-						</xsl:apply-templates>
+						<xsl:choose>
+							<xsl:when test="contains(/root/gui/reqService,'metadata.batch')">
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
+									<xsl:with-param name="lang" select="$lang"/>
+<!--								<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
+									<xsl:with-param name="disabled" select="true()"/>
+								</xsl:apply-templates>
+		
+								<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
+									<xsl:with-param name="lang" select="$lang"/>
+<!--								<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
+									<xsl:with-param name="disabled" select="true()"/>
+								</xsl:apply-templates>
+		
+								<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
+									<xsl:with-param name="lang" select="$lang"/>
+<!--								<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Hoofdeditor')"/>-->
+									<xsl:with-param name="disabled" select="true()"/>
+								</xsl:apply-templates>
+							</xsl:otherwise>
+						</xsl:choose>
 
 						<tr>
 							<td class="dots"/>

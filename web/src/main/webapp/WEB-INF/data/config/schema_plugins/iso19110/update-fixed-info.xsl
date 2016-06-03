@@ -6,6 +6,7 @@
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
   	xmlns:gmx="http://www.isotc211.org/2005/gmx"
+  	xmlns:util="java:java.util.UUID"	
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<!-- =================================================================-->
@@ -16,13 +17,27 @@
 
 	<!-- =================================================================-->
 	
-	<xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType[not(parent::node())]">
+	<xsl:template match="gfc:FC_FeatureCatalogue">
 		 <xsl:copy>
 		 	<xsl:attribute name="uuid"><xsl:value-of select="/root/env/uuid"/></xsl:attribute>
 		 	<xsl:apply-templates select="@*[name(.) != 'uuid']|node()"/>
 		 </xsl:copy>
 	</xsl:template>
-	
+
+	<xsl:template match="gfc:FC_FeatureType">
+		 <xsl:copy>
+		 	<xsl:if test="not(parent::node())">
+  		 		<xsl:attribute name="uuid"><xsl:value-of select="/root/env/uuid"/></xsl:attribute>
+  		 	</xsl:if>
+<!--
+		 	<xsl:if test="not(@uuid)">
+  		 		<xsl:attribute name="uuid"><xsl:value-of select="util:toString(util:randomUUID())"/></xsl:attribute>
+  		 	</xsl:if>
+ -->
+		 	<xsl:apply-templates select="@*[name(.) != 'uuid']|node()"/>
+		 </xsl:copy>
+	</xsl:template>
+		
 	<!-- ================================================================= -->
 	<!-- Emptying title if created from template -->
 	<!-- ================================================================= -->

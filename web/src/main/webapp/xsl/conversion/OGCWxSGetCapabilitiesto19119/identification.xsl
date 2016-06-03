@@ -24,8 +24,14 @@
 
 	<!-- ============================================================================= -->
 
-	<xsl:variable name="service-types-thesaurus" select="lower-case('GDI-Vlaanderen Service Types')"/>
-	<xsl:variable name="trefwoorden-thesaurus" select="lower-case('GDI-Vlaanderen Trefwoorden')"/>
+	<xsl:variable name="gdi-vlaanderen-regios-thesaurus">GDI-Vlaanderen regio&apos;s</xsl:variable>
+	<xsl:variable name="gdi-vlaanderen-service-types-thesaurus" select="'GDI-Vlaanderen Service Types'"/>
+	<xsl:variable name="gdi-vlaanderen-trefwoorden-thesaurus" select="'GDI-Vlaanderen Trefwoorden'"/>
+	<xsl:variable name="gemet-thesaurus" select="'GEMET - Concepten, versie 2.4'"/>
+ 	<xsl:variable name="inspire-service-taxonomy-thesaurus" select="'D.4 van de verordening (EG) NR. 1205/2008 van de Commissie'"/>
+	<!--<xsl:variable name="inspire-service-taxonomy-thesaurus" select="'Not supported yet'"/>-->
+	<xsl:variable name="inspire-theme-thesaurus">GEMET - INSPIRE thema&apos;s, versie 1.0</xsl:variable>
+
 	<xsl:template match="*" mode="SrvDataIdentification">
 		<xsl:param name="topic"/>
 		<xsl:param name="ogctype"/>
@@ -99,7 +105,9 @@
 					Service/ContactInformation">
 					<pointOfContact>
 						<CI_ResponsibleParty>
-							<xsl:apply-templates select="." mode="RespParty"/>
+							<xsl:apply-templates select="." mode="RespParty">
+					            <xsl:with-param name="forAuthorData" select="false()"/>
+				            </xsl:apply-templates>
 						</CI_ResponsibleParty>
 					</pointOfContact>
 				</xsl:for-each>
@@ -345,29 +353,22 @@
 					<srv:operationName>
 						<gco:CharacterString><xsl:value-of select="$operationName"/></gco:CharacterString>
 					</srv:operationName>
-					<!--  CHECKME : DCPType/SOAP ? -->
-<!--
-						<xsl:for-each select="DCPType/HTTP/*|wfs:DCPType/wfs:HTTP/*|wms:DCPType/wms:HTTP/*|
+					<xsl:for-each select="DCPType/HTTP/*|wfs:DCPType/wfs:HTTP/*|wms:DCPType/wms:HTTP/*|
 							wcs:DCPType/wcs:HTTP/*|ows:DCP/ows:HTTP/*|ows11:DCP/ows11:HTTP/*">
 						<srv:DCP>
-							<srv:DCPList codeList="./resources/codeList.xml#DCPList">
-								<xsl:variable name="dcp">
-									<xsl:choose>
-										<xsl:when test="name(.)='Get' or name(.)='wfs:Get' or name(.)='wms:Get' or name(.)='wcs:Get' or name(.)='ows:Get' or name(.)='ows11:Get'">HTTP-GET</xsl:when>
-										<xsl:when test="name(.)='Post' or name(.)='wfs:Post' or name(.)='wms:Post' or name(.)='wcs:Post' or name(.)='ows:Post' or name(.)='ows11:Post'">HTTP-POST</xsl:when>
-										<xsl:otherwise>WebServices</xsl:otherwise>
-									</xsl:choose>
-								</xsl:variable>
+							<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList">
+								<xsl:variable name="dcp"><xsl:choose><xsl:when test="local-name(.)='Get'">httpGet</xsl:when><xsl:when test="local-name(.)='Post'">httpPost</xsl:when><xsl:otherwise>WebServices</xsl:otherwise></xsl:choose></xsl:variable>
 								<xsl:attribute name="codeListValue">
 									<xsl:value-of select="$dcp"/>
 								</xsl:attribute>
 							</srv:DCPList>
 						</srv:DCP>
 					</xsl:for-each>
--->          
-					<srv:DCP gco:nilReason="missing">
-						<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue=""/>
-					</srv:DCP>
+					<xsl:if test="count(DCPType/HTTP/*) + count(wfs:DCPType/wfs:HTTP/*) + count(wms:DCPType/wms:HTTP/*) + count(wcs:DCPType/wcs:HTTP/*) + count(ows:DCP/ows:HTTP/*) + count(ows11:DCP/ows11:HTTP/*)=0">
+							<srv:DCP>
+								<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="WebServices"/>
+							</srv:DCP>
+					</xsl:if>
                     <xsl:if test="name(.)='wps:Process' or name(.)='wps11:ProcessOfferings'">
                       <srv:operationDescription>
                           <gco:CharacterString><xsl:value-of select="ows:Abstract|ows:Title|ows11:Abstract|ows11:Title"/></gco:CharacterString> 
@@ -378,8 +379,8 @@
                     </xsl:if>
                     <xsl:variable name="formats">
 			<xsl:choose>
-                    		<xsl:when test="$operationName='GetGmlObject'"><xsl:value-of select="../ows:Operation[@name='GetFeature']/ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value[contains(upper-case(.),'GML')]|../ows11:Operation[@name='GetFeature']/ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:Value[contains(upper-case(.),'GML')]"/></xsl:when>
-                    		<xsl:otherwise><xsl:value-of select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:AllowedValues/ows:Value|ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:AllowedValues/ows11:Value"/></xsl:otherwise>
+                    		<xsl:when test="$operationName='GetGmlObject'"><xsl:value-of select="../ows:Operation[@name='GetFeature']/ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value[contains(upper-case(.),'GML')]|../ows11:Operation[@name='GetFeature']/ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:AllowedValues/ows11:Value[contains(upper-case(.),'GML')]"/></xsl:when>
+                    		<xsl:otherwise><xsl:value-of select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value|ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:AllowedValues/ows11:Value"/></xsl:otherwise>
 			</xsl:choose> 
                    </xsl:variable>
                     <xsl:if test="count($formats)>0">
@@ -752,77 +753,54 @@
 
 	<xsl:template match="*" mode="Keywords">
 		<!-- TODO : tokenize WFS 100 keywords list -->
-		<xsl:if test="count(Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(wms:Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(ows:Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(ows11:Keyword[lower-case(@vocabulary)=$service-types-thesaurus]) + count(wfs:Keywords[lower-case(@vocabulary)=$service-types-thesaurus]) + count(wcs:keyword[lower-case(@vocabulary)=$service-types-thesaurus]) > 0">
+		<xsl:call-template name="get-vocabulary-keywords">
+			<xsl:with-param name="thesaurusTitle" select="$gdi-vlaanderen-regios-thesaurus"/>
+			<xsl:with-param name="thesaurusDate" select="'2013-04-18'"/>
+		</xsl:call-template>
+		<xsl:call-template name="get-vocabulary-keywords">
+			<xsl:with-param name="thesaurusTitle" select="$gdi-vlaanderen-service-types-thesaurus"/>
+			<xsl:with-param name="thesaurusDate" select="'2016-03-11'"/>
+		</xsl:call-template>
+		<xsl:call-template name="get-vocabulary-keywords">
+			<xsl:with-param name="thesaurusTitle" select="$gdi-vlaanderen-trefwoorden-thesaurus"/>
+			<xsl:with-param name="thesaurusDate" select="'2014-02-26'"/>
+		</xsl:call-template>
+		<xsl:call-template name="get-vocabulary-keywords">
+			<xsl:with-param name="thesaurusTitle" select="$gemet-thesaurus"/>
+			<xsl:with-param name="thesaurusDate" select="'2010-01-13'"/>
+		</xsl:call-template>
+		<xsl:call-template name="get-vocabulary-keywords">
+			<xsl:with-param name="thesaurusTitle" select="$inspire-service-taxonomy-thesaurus"/>
+			<xsl:with-param name="thesaurusDate" select="'2008-12-03'"/>
+		</xsl:call-template>
+		<xsl:call-template name="get-vocabulary-keywords">
+			<xsl:with-param name="thesaurusTitle" select="$inspire-theme-thesaurus"/>
+			<xsl:with-param name="thesaurusDate" select="'2008-06-01'"/>
+		</xsl:call-template>
+		<xsl:if test="count(Keyword[lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-regios-thesaurus) and lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-service-types-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-trefwoorden-thesaurus) and lower-case(@vocabulary)!=lower-case($gemet-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($inspire-service-taxonomy-thesaurus) and lower-case(@vocabulary)!=lower-case($inspire-theme-thesaurus)]) + 
+						count(wms:Keyword[lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-regios-thesaurus) and lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-service-types-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-trefwoorden-thesaurus) and lower-case(@vocabulary)!=lower-case($gemet-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($inspire-service-taxonomy-thesaurus) and lower-case(@vocabulary)!=lower-case($inspire-theme-thesaurus)]) + 
+						count(ows:Keyword[lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-regios-thesaurus) and lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-service-types-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-trefwoorden-thesaurus) and lower-case(@vocabulary)!=lower-case($gemet-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($inspire-service-taxonomy-thesaurus) and lower-case(@vocabulary)!=lower-case($inspire-theme-thesaurus)]) + 
+						count(ows11:Keyword[lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-regios-thesaurus) and lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-service-types-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-trefwoorden-thesaurus) and lower-case(@vocabulary)!=lower-case($gemet-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($inspire-service-taxonomy-thesaurus) and lower-case(@vocabulary)!=lower-case($inspire-theme-thesaurus)]) + 
+						count(wfs:Keyword[lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-regios-thesaurus) and lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-service-types-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-trefwoorden-thesaurus) and lower-case(@vocabulary)!=lower-case($gemet-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($inspire-service-taxonomy-thesaurus) and lower-case(@vocabulary)!=lower-case($inspire-theme-thesaurus)]) + 
+						count(wcs:keyword[lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-regios-thesaurus) and lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-service-types-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-trefwoorden-thesaurus) and lower-case(@vocabulary)!=lower-case($gemet-thesaurus) and
+									lower-case(@vocabulary)!=lower-case($inspire-service-taxonomy-thesaurus) and lower-case(@vocabulary)!=lower-case($inspire-theme-thesaurus)]) > 0">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
-						<xsl:if test='lower-case(@vocabulary)=$service-types-thesaurus'>
-							<xsl:variable name="keywordValue" select="normalize-space(.)" />
-							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
-								<keyword>
-									<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-								</keyword>
-							</xsl:if>
-						</xsl:if>
-					</xsl:for-each>
-					<thesaurusName>
-						<CI_Citation>
-							<title>
-								<gco:CharacterString>GDI-Vlaanderen Service Types</gco:CharacterString>
-							</title>
-							<date>
-								<CI_Date>
-									<date>
-										<gco:Date>2016-03-11</gco:Date>
-									</date>
-									<dateType>
-										<CI_DateTypeCode codeListValue="publication" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode">publication</CI_DateTypeCode>
-									</dateType>
-								</CI_Date>
-							</date>
-						</CI_Citation>
-					</thesaurusName>
-				</MD_Keywords>
-			</descriptiveKeywords>
-		</xsl:if>
-		<xsl:if test="count(Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(wms:Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(ows:Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(ows11:Keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(wfs:Keywords[lower-case(@vocabulary)=$trefwoorden-thesaurus]) + count(wcs:keyword[lower-case(@vocabulary)=$trefwoorden-thesaurus]) > 0">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
-						<xsl:if test='lower-case(@vocabulary)=$trefwoorden-thesaurus'>
-							<xsl:variable name="keywordValue" select="normalize-space(.)" />
-							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
-								<keyword>
-									<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-								</keyword>
-							</xsl:if>
-						</xsl:if>
-					</xsl:for-each>
-					<thesaurusName>
-						<CI_Citation>
-							<title>
-								<gco:CharacterString>GDI-Vlaanderen Trefwoorden</gco:CharacterString>
-							</title>
-							<date>
-								<CI_Date>
-									<date>
-										<gco:Date>2014-02-26</gco:Date>
-									</date>
-									<dateType>
-										<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
-									</dateType>
-								</CI_Date>
-							</date>
-						</CI_Citation>
-					</thesaurusName>
-				</MD_Keywords>
-			</descriptiveKeywords>
-		</xsl:if>
-		<xsl:if test="count(Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(wms:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(ows:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(ows11:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(wfs:Keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) + count(wcs:keyword[lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus]) > 0">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
-						<xsl:if test='lower-case(@vocabulary)!=$service-types-thesaurus and lower-case(@vocabulary)!=$trefwoorden-thesaurus'>
+						<xsl:if test="lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-regios-thesaurus) and lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-service-types-thesaurus) and
+									  lower-case(@vocabulary)!=lower-case($gdi-vlaanderen-trefwoorden-thesaurus) and lower-case(@vocabulary)!=lower-case($gemet-thesaurus) and
+									  lower-case(@vocabulary)!=lower-case($inspire-service-taxonomy-thesaurus) and lower-case(@vocabulary)!=lower-case($inspire-theme-thesaurus)">
 							<xsl:variable name="keywordValue" select="normalize-space(.)" />
 							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
 								<keyword>
@@ -965,4 +943,40 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template name="get-vocabulary-keywords">
+		<xsl:param name="thesaurusTitle"/>
+		<xsl:param name="thesaurusDate"/>
+		<xsl:variable name="lowerCaseThesaurusTitle" select="lower-case($thesaurusTitle)"/>
+		<xsl:if test="count(Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wms:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(ows:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(ows11:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wfs:Keywords[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wcs:keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) > 0">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
+						<xsl:if test="lower-case(@vocabulary)=$lowerCaseThesaurusTitle">
+							<xsl:variable name="keywordValue" select="normalize-space(.)" />
+							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService'">
+								<keyword><gco:CharacterString><xsl:value-of select="$keywordValue"/></gco:CharacterString></keyword>
+							</xsl:if>
+						</xsl:if>
+					</xsl:for-each>
+					<thesaurusName>
+						<CI_Citation>
+							<title>
+								<gco:CharacterString><xsl:value-of select="$thesaurusTitle"/></gco:CharacterString>
+							</title>
+							<date>
+								<CI_Date>
+									<date>
+										<gco:Date><xsl:value-of select="$thesaurusDate"/></gco:Date>
+									</date>
+									<dateType>
+										<CI_DateTypeCode codeListValue="publication" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode">publication</CI_DateTypeCode>
+									</dateType>
+								</CI_Date>
+							</date>
+						</CI_Citation>
+					</thesaurusName>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</xsl:if>
+	</xsl:template>
 </xsl:stylesheet>
