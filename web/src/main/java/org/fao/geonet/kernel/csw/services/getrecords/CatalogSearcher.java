@@ -461,7 +461,7 @@ public class CatalogSearcher {
 
 		Query groups = getGroupsQuery(context);
 		if (sort == null) {
-			List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
+			List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.DATE, true));
             sort = LuceneSearcher.makeSort(fields, context.getLanguage(), false);
 		}
 

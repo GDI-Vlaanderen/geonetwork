@@ -131,7 +131,9 @@ Mapping between :
 						ows11:ServiceProvider">
 						<contact>
 							<CI_ResponsibleParty>
-								<xsl:apply-templates select="." mode="RespParty"/>
+								<xsl:apply-templates select="." mode="RespParty">
+						            <xsl:with-param name="forAuthorData" select="false()"/>
+					            </xsl:apply-templates>
 							</CI_ResponsibleParty>
 						</contact>
 					</xsl:for-each>

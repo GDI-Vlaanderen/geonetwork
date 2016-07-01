@@ -52,7 +52,10 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
     }, {
 	    name: 'workspace',
 	    convert: getWorkspace
-	}];
+    }, {
+        name: 'status',
+        convert: getStatusCode
+    }];
     
     function getWorkspace(v, record){
 		var isWorkspace = Ext.DomQuery.selectValue("isWorkspace",record);
@@ -61,6 +64,17 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
         } else {
             return 'false';
         }
+    }
+
+    function getStatusCode(v, record){
+    	var geonet_info = Ext.DomQuery.selectNode("info",record);
+        if (geonet_info) {
+			var status = Ext.DomQuery.selectValue("status", geonet_info);
+			if (status) {
+				return status;
+			}
+        }
+        return '0';
     }
 
     if (grouping) {

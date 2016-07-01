@@ -105,7 +105,7 @@ public class BatchUpdatePrivileges implements Service
 
 				if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
 					skip = true;
-
+				skip = true;
 				dm.deleteMetadataOper(dbms, id, skip);
 
 				//--- set new ones

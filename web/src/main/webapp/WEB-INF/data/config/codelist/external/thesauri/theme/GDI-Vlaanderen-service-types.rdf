@@ -6,12 +6,12 @@
     <dc:description>GDI-Vlaanderen Service Types</dc:description>
     <dc:creator>
       <foaf:Organization>
-        <foaf:name>Informatie Vlaanderen</foaf:name>
+        <foaf:name>Agentschap Geografische Informatie Vlaanderen</foaf:name>
       </foaf:Organization>
     </dc:creator>
     <dc:rights>Vrij gebruik</dc:rights>
     <dcterms:issued>2016-03-11</dcterms:issued>
-    <dcterms:modified>2016-03-11</dcterms:modified>
+    <dcterms:modified>2016-05-25</dcterms:modified>
   </skos:ConceptScheme>
   <!-- Concept list -->
   <skos:Concept rdf:about="http://mir.geopunt.be/cl/Geopunt/GDI-Vlaanderen-Service-Types/OGCWMS">
