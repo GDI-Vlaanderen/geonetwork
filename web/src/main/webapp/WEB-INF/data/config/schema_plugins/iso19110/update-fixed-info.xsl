@@ -7,7 +7,7 @@
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
   	xmlns:gmx="http://www.isotc211.org/2005/gmx"
   	xmlns:util="java:java.util.UUID"	
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exclude-result-prefixes="#all">
 
 	<!-- =================================================================-->
 	
