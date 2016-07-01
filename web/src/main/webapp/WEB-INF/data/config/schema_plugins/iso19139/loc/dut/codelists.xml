@@ -1879,17 +1879,17 @@ telecommunicatie, radio.</description>
 			<label>Webdiensten</label>
 		</entry>
 		<entry>
-			<code>httpGet</code>
+			<code>HTTPGet</code>
 			<label>HTTP Get</label>
 			<description>Vraagt een representatie van de specifieke resource, door middel van een URL codering of naam/waarde paar.</description>
 		</entry>
 		<entry>
-			<code>httpPost</code>
+			<code>HTTPPost</code>
 			<label>HTTP Post</label>
 			<description>Verzend gebruikersdata naar de ge&#239;dentificeerde resource. De data is opgenomen in de "request".</description>
 		</entry>
 		<entry>
-			<code>httpSoap</code>
+			<code>HTTPSoap</code>
 			<label>HTTP SOAP</label>
 			<description>Verzend gebruikersdata naar de ge&#239;dentificeerde resource over HTTP Post. De data is opgenomen
 in de "request". Deze "request" is een "SOAP request".</description>

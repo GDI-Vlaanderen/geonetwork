@@ -357,7 +357,7 @@
 							wcs:DCPType/wcs:HTTP/*|ows:DCP/ows:HTTP/*|ows11:DCP/ows11:HTTP/*">
 						<srv:DCP>
 							<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList">
-								<xsl:variable name="dcp"><xsl:choose><xsl:when test="local-name(.)='Get'">httpGet</xsl:when><xsl:when test="local-name(.)='Post'">httpPost</xsl:when><xsl:otherwise>WebServices</xsl:otherwise></xsl:choose></xsl:variable>
+								<xsl:variable name="dcp"><xsl:choose><xsl:when test="local-name(.)='Get'">HTTPGet</xsl:when><xsl:when test="local-name(.)='Post'">HTTPPost</xsl:when><xsl:otherwise>WebServices</xsl:otherwise></xsl:choose></xsl:variable>
 								<xsl:attribute name="codeListValue">
 									<xsl:value-of select="$dcp"/>
 								</xsl:attribute>

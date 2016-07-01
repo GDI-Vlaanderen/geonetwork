@@ -29,11 +29,9 @@
 		 	<xsl:if test="not(parent::node())">
   		 		<xsl:attribute name="uuid"><xsl:value-of select="/root/env/uuid"/></xsl:attribute>
   		 	</xsl:if>
-<!--
-		 	<xsl:if test="not(@uuid)">
-  		 		<xsl:attribute name="uuid"><xsl:value-of select="util:toString(util:randomUUID())"/></xsl:attribute>
+		 	<xsl:if test="not(@id)">
+  		 		<xsl:attribute name="id">ID_<xsl:value-of select="util:toString(util:randomUUID())"/></xsl:attribute>
   		 	</xsl:if>
- -->
 		 	<xsl:apply-templates select="@*[name(.) != 'uuid']|node()"/>
 		 </xsl:copy>
 	</xsl:template>
