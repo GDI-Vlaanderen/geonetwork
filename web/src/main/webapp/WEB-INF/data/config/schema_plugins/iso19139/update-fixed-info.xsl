@@ -28,28 +28,30 @@
 			<xsl:apply-templates select="gmd:language"/>
 			<xsl:apply-templates select="gmd:characterSet"/>
 			
-			<xsl:choose>
-				<xsl:when test="/root/env/parentUuid!=''">
-					<gmd:parentIdentifier>
-						<gco:CharacterString>
-							<xsl:value-of select="/root/env/parentUuid"/>
-						</gco:CharacterString>
-					</gmd:parentIdentifier>
-				</xsl:when>
-<!--
-				<xsl:when test="gmd:parentIdentifier">
-					<xsl:copy-of select="gmd:parentIdentifier"/>
-				</xsl:when>
- -->
-				<xsl:when test="gmd:parentIdentifier">
-					<xsl:apply-templates select="gmd:parentIdentifier"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<gmd:parentIdentifier gco:nilReason="missing">
-						<gco:CharacterString/>
-					</gmd:parentIdentifier>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:if test="/root/env/createdFromTemplate='y'">
+				<gmd:parentIdentifier gco:nilReason="missing">
+					<gco:CharacterString/>
+				</gmd:parentIdentifier>
+			</xsl:if>
+			<xsl:if test="/root/env/createdFromTemplate='n'">
+				<xsl:choose>
+					<xsl:when test="/root/env/parentUuid!=''">
+						<gmd:parentIdentifier>
+							<gco:CharacterString>
+								<xsl:value-of select="/root/env/parentUuid"/>
+							</gco:CharacterString>
+						</gmd:parentIdentifier>
+					</xsl:when>
+					<xsl:when test="gmd:parentIdentifier">
+						<xsl:apply-templates select="gmd:parentIdentifier"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<gmd:parentIdentifier gco:nilReason="missing">
+							<gco:CharacterString/>
+						</gmd:parentIdentifier>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
 			<xsl:apply-templates select="node()[name()!='gmd:language' and name()!='gmd:characterSet' and name()!='gmd:parentIdentifier']"/>
 		</xsl:copy>
 	</xsl:template>
