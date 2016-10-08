@@ -28,7 +28,9 @@ Mapping between :
                                         xmlns:wmts="http://www.opengis.net/wmts/1.0"
                                         xmlns:wps="http://www.opengeospatial.net/wps"
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
-										extension-element-prefixes="wcs ows wfs ows11 wps wps1 owsg">
+                                        xmlns:insp_com="http://inspire.ec.europa.eu/schemas/common/1.0" 
+                                        xmlns:insp_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
+										extension-element-prefixes="wcs ows wfs ows11 wps wps1 owsg insp_com insp_vs">
 
 	<!-- ============================================================================= -->
 	
@@ -80,8 +82,20 @@ Mapping between :
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+			<xsl:variable name="inspireMetadataUrl">
+				<xsl:choose>
+					<xsl:when test="$ogctype='WMS1.3.0'"><xsl:value-of select="//insp_com:MetadataUrl/insp_com:URL"/></xsl:when>
+					<xsl:when test="$ogctype='WFS1.1.0'"><xsl:value-of select="//insp_com:MetadataUrl/insp_com:URL"/></xsl:when>
+					<xsl:when test="$ogctype='WMTS1.0.0'"><xsl:value-of select="//insp_com:MetadataUrl/insp_com:URL"/></xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:message select="concat('The inspireMetadataUrl is ', $inspireMetadataUrl)"/>
+			<xsl:variable name="leftPart" select="substring-before(upper-case($inspireMetadataUrl),'ID=')"/>
+			<xsl:variable name="rightPart" select="substring($inspireMetadataUrl,string-length($leftPart)+1)"/>
+			<xsl:variable name="idPart"><xsl:if test="contains($rightPart,'&amp;')"><xsl:value-of select="substring(substring-before($rightPart,'&amp;'),4)"/></xsl:if><xsl:if test="not(contains($rightPart,'&amp;'))"><xsl:value-of select="substring($rightPart,4)"/></xsl:if></xsl:variable>
 			<fileIdentifier>
-				<gco:CharacterString><xsl:value-of select="$uuid"/></gco:CharacterString>
+				<gco:CharacterString><xsl:if test="string-length($idPart)>0"><xsl:value-of select="$idPart"/></xsl:if><xsl:if test="not(string-length($idPart)>0)"><xsl:value-of select="$uuid"/></xsl:if></gco:CharacterString>
 			</fileIdentifier>
 		
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -348,68 +362,100 @@ Mapping between :
                    </transferOptions>
                </MD_Distribution>
             </distributionInfo> 
+			<xsl:variable name="inspireCommonUri">
+				<xsl:choose>
+					<xsl:when test="$ogctype='WMS1.3.0'"><xsl:value-of select="//insp_com:Conformity/insp_com:Specification/insp_com:URI"/></xsl:when>
+					<xsl:when test="$ogctype='WFS1.1.0'"><xsl:value-of select="//insp_com:Conformity/insp_com:Specification/insp_com:URI"/></xsl:when>
+					<xsl:when test="$ogctype='WMTS1.0.0'"><xsl:value-of select="//insp_com:Conformity/insp_com:Specification/insp_com:URI"/></xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:variable name="inspireCommonConformanceDegree">
+				<xsl:choose>
+					<xsl:when test="$ogctype='WMS1.3.0'"><xsl:value-of select="//insp_com:Conformity/insp_com:Degree"/></xsl:when>
+					<xsl:when test="$ogctype='WFS1.1.0'"><xsl:value-of select="//insp_com:Conformity/insp_com:Degree"/></xsl:when>
+					<xsl:when test="$ogctype='WMTS1.0.0'"><xsl:value-of select="//insp_com:Conformity/insp_com:Degree"/></xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:message select="concat('The inspireCommonUri is ',$inspireCommonUri)"/>
+			<xsl:message select="concat('The inspireCommonConformanceDegree is ',$inspireCommonConformanceDegree)"/>
 			<!--dqInfo-->
-			<dataQualityInfo>
-				<DQ_DataQuality>
-					<scope>
-						<DQ_Scope>
-							<level>
-								<MD_ScopeCode codeListValue="service"
-									codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" />
-							</level>
-							<levelDescription>
-								<MD_ScopeDescription>
-									<other><gco:CharacterString>Service</gco:CharacterString></other>
-								</MD_ScopeDescription>
-							</levelDescription>
-						</DQ_Scope>
-					</scope>
-					<report>
-						<DQ_DomainConsistency>
-							<measureIdentification>
-								<RS_Identifier>
-									<code gco:nilReason="missing">
-										<gco:CharacterString />
-									</code>
-									<codeSpace gco:nilReason="missing">
-										<gco:CharacterString />
-									</codeSpace>
-								</RS_Identifier>
-							</measureIdentification>
-							<result>
-								<DQ_ConformanceResult>
-									<specification>
-										<CI_Citation>
-											<title>
-												<gco:CharacterString>Verordening (EG) nr. 976/2009 van de Commissie van 19 oktober 2009 tot uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad wat betreft de netwerkdiensten</gco:CharacterString>
-											</title>
-											<alternateTitle gco:nilReason="missing">
-												<gco:CharacterString />
-											</alternateTitle>
-											<date>
-												<CI_Date>
-													<date>
-														<gco:Date>2009-10-19</gco:Date>
-													</date>
-													<dateType>
-														<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</CI_DateTypeCode>
-													</dateType>
-												</CI_Date>
-											</date>
-										</CI_Citation>
-									</specification>
-									<explanation>
-										<gco:CharacterString>Zie de gerefereerde specificatie.</gco:CharacterString>
-									</explanation>
-									<pass>
-										<gco:Boolean>true</gco:Boolean>
-									</pass>
-								</DQ_ConformanceResult>
-							</result>
-						</DQ_DomainConsistency>
-					</report>
-				</DQ_DataQuality>
-			</dataQualityInfo>
+			<xsl:if test="starts-with($inspireCommonUri,'OJ:L:2010:323:0011:0102:')">
+				<dataQualityInfo>
+					<DQ_DataQuality>
+						<scope>
+							<DQ_Scope>
+								<level>
+									<MD_ScopeCode codeListValue="service"
+										codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" />
+								</level>
+								<levelDescription>
+									<MD_ScopeDescription>
+										<other><gco:CharacterString>Service</gco:CharacterString></other>
+									</MD_ScopeDescription>
+								</levelDescription>
+							</DQ_Scope>
+						</scope>
+						<report>
+							<DQ_DomainConsistency>
+								<measureIdentification>
+									<RS_Identifier>
+										<code gco:nilReason="missing">
+											<gco:CharacterString />
+										</code>
+										<codeSpace gco:nilReason="missing">
+											<gco:CharacterString />
+										</codeSpace>
+									</RS_Identifier>
+								</measureIdentification>
+								<result>
+									<DQ_ConformanceResult>
+										<specification>
+											<CI_Citation>
+												<title>
+													<gco:CharacterString>VERORDENING (EU) Nr. 1089/2010 VAN DE COMMISSIE van 23 november 2010 ter uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens</gco:CharacterString>
+												</title>
+												<alternateTitle gco:nilReason="missing">
+													<gco:CharacterString />
+												</alternateTitle>
+												<date>
+													<CI_Date>
+														<date>
+															<gco:Date>2010-12-08</gco:Date>
+														</date>
+														<dateType>
+															<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</CI_DateTypeCode>
+														</dateType>
+													</CI_Date>
+												</date>
+											</CI_Citation>
+										</specification>
+										<explanation>
+											<gco:CharacterString>Zie de gerefereerde specificatie.</gco:CharacterString>
+										</explanation>
+										<xsl:choose>
+											<xsl:when test="$inspireCommonConformanceDegree='notConformant'">
+												<pass>
+													<gco:Boolean>false</gco:Boolean>
+												</pass>
+											</xsl:when>
+											<xsl:when test="$inspireCommonConformanceDegree='conformant'">
+												<pass>
+													<gco:Boolean>true</gco:Boolean>
+												</pass>
+											</xsl:when>
+											<xsl:otherwise>
+												<pass gco:nilReason="missing"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</DQ_ConformanceResult>
+								</result>
+							</DQ_DomainConsistency>
+						</report>
+					</DQ_DataQuality>
+				</dataQualityInfo>
+			</xsl:if>
 			<!--mdConst -->
 			<!--mdMaint-->
 
