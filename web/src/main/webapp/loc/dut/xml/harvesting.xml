@@ -386,6 +386,8 @@
 		<datasetAdded>Datasets</datasetAdded>
 		<datasetExist>Bestaande datasets</datasetExist>
 		<datasetMdUrl>Gebruikte Metadata Url</datasetMdUrl>
+		<belongsToAnotherHarvester>UUID reeds geharvest door andere harvester</belongsToAnotherHarvester>
+		<serviceUuidExist>UUID reeds in gebruik door ander metadata record</serviceUuidExist>
 		<thumbnails>Thumbnails</thumbnails>
 		<thumbnailsFailed>Thumbnails mislukt</thumbnailsFailed>	
 		<serviceRecords>Services Added</serviceRecords>

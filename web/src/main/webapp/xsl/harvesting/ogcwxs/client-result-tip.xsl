@@ -47,6 +47,10 @@
 				<td class="tipCell"><xsl:value-of select="layer"/></td>
 			</tr>
 			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/serviceUuidExist"/></td>
+				<td class="tipCell"><xsl:value-of select="serviceUuidExist"/></td>					
+			</tr>
+			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/datasetExist"/></td>
 				<td class="tipCell"><xsl:value-of select="layerUuidExist"/></td>
 			</tr>
@@ -64,13 +68,10 @@
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/thumbnailsFailed"/></td>
 				<td class="tipCell"><xsl:value-of select="thumbnailsFailed"/></td>
 			</tr>
-
-
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unknownSchema"/></td>
 				<td class="tipCell"><xsl:value-of select="unknownSchema"/></td>					
 			</tr>
-
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unretrievable"/></td>
 				<td class="tipCell"><xsl:value-of select="unretrievable"/></td>					

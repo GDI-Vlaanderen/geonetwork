@@ -201,6 +201,7 @@ public class OgcWxSHarvester extends AbstractHarvester
 			add(res, "added",          		result.added);
 			add(res, "layer",          		result.layer);
 			add(res, "layerUuidExist",		result.layerUuidExist);
+			add(res, "serviceUuidExist",	result.serviceUuidExist);
 			add(res, "layerUsingMdUrl",		result.layerUsingMdUrl);
 			add(res, "unknownSchema",  		result.unknownSchema);
 			add(res, "removed",        		result.locallyRemoved);
@@ -245,6 +246,7 @@ class OgcWxSResult
 	public int added;			// = total
 	public int layer;			// = md for data
 	public int layerUuidExist;	// = uuid already in catalogue
+	public int serviceUuidExist;// = uuid already in catalogue
 	public int layerUsingMdUrl;	// = md for data using metadata URL document if ok
 	public int locallyRemoved;	// = md removed
 	public int unknownSchema;	// = md with unknown schema (should be 0 if no layer loaded using md url)

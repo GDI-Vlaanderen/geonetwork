@@ -128,14 +128,18 @@
 	<xsl:template name="addHyperlinksAndLineBreaksToSingleWord">
 		<xsl:param name="word"/>
 		<xsl:variable name="maxWordLength" select="56"/>		
+		<xsl:variable name="maxLinkLength" select="1024"/>		
 
 		<!-- if word contains ), remove remainder from processing here  -->
 		<!-- this is to cope with texts containing "(http://blah.org)," -->
 		<!-- (the part from the ')' is not part of the hyperlink)       -->
 		<xsl:variable name="word-to-use">
 			<xsl:choose>
-				<xsl:when test="contains($word, ')')">
-					<xsl:value-of select="substring-before($word, ')')"/>
+				<xsl:when test="ends-with($word, '. ')">
+					<xsl:value-of select="substring($word,1,string-length($word)-2)"/>
+				</xsl:when>
+				<xsl:when test="ends-with($word, ') ')">
+					<xsl:value-of select="substring($word,1,string-length($word)-2)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of  select="$word"/>
@@ -152,7 +156,7 @@
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>
-						<xsl:with-param name="maxWordLength" select="$maxWordLength"/>
+						<xsl:with-param name="maxWordLength" select="$maxLinkLength"/>
 					</xsl:call-template>
 				</a>
 			</xsl:when>			
@@ -164,7 +168,7 @@
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>
-						<xsl:with-param name="maxWordLength" select="$maxWordLength"/>
+						<xsl:with-param name="maxWordLength" select="$maxLinkLength"/>
 					</xsl:call-template>
 				</a>
 			</xsl:when>
@@ -176,7 +180,7 @@
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>
-						<xsl:with-param name="maxWordLength" select="$maxWordLength"/>
+						<xsl:with-param name="maxWordLength" select="$maxLinkLength"/>
 					</xsl:call-template>
 				</a>
 			</xsl:when>
@@ -188,7 +192,7 @@
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>
-						<xsl:with-param name="maxWordLength" select="$maxWordLength"/>
+						<xsl:with-param name="maxWordLength" select="$maxLinkLength"/>
 					</xsl:call-template>
 				</a>
 			</xsl:when>
@@ -200,9 +204,16 @@
 			</xsl:otherwise>			
 		</xsl:choose>
 
-		<xsl:if test="contains($word, ')')">
-			<xsl:text>)</xsl:text><xsl:value-of select="substring-after($word, ')')"/>
-		</xsl:if>
+		<xsl:choose>
+			<xsl:when test="ends-with($word, ') ')">
+				<xsl:text>) </xsl:text>
+			</xsl:when>
+			<xsl:when test="ends-with($word, '. ')">
+				<xsl:text>. </xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+			</xsl:otherwise>
+		</xsl:choose>
 
 	</xsl:template>
 
@@ -219,102 +230,118 @@
 	<xsl:template name="addLineBreaksAndHyperlinks">
 		<xsl:param name="txt"/>
 		
+		<xsl:if test="string-length(normalize-space($txt))>0">
 		<xsl:choose>
 			<xsl:when test="/root/gui/env/clickablehyperlinks/enable = 'true'">
 				<xsl:choose>
 					<xsl:when test="contains($txt,'&#13;&#10;')">
+						<xsl:variable name="firstPart" select="substring-before($txt,'&#13;&#10;')"/>
+						<xsl:if test="string-length(normalize-space($firstPart))>0 and normalize-space($firstPart)!='&#13;&#10;'">
 						<p>
 							<xsl:choose>
 								<xsl:when test="contains($txt,'&#13;&#10;')">
 									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;&#10;')"/>							
+										<xsl:with-param name="txt" select="$firstPart"/>							
 									</xsl:call-template>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;&#10;')"/>							
+										<xsl:with-param name="txt" select="$firstPart"/>							
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
 						</p>
-						<p>
+						</xsl:if>
+						<xsl:variable name="lastPart" select="substring-after($txt,'&#13;&#10;')"/>
+						<xsl:if test="string-length(normalize-space($lastPart))>0">
 							<xsl:choose>
 								<xsl:when test="contains($txt,'&#13;&#10;')">
 									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;&#10;')"/>							
+										<xsl:with-param name="txt" select="$lastPart"/>							
 									</xsl:call-template>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;&#10;')"/>							
+										<xsl:with-param name="txt" select="$lastPart"/>							
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
-						</p>
+						</xsl:if>
 					</xsl:when>
 					<xsl:when test="contains($txt,'&#13;')">
+						<xsl:variable name="firstPart" select="substring-before($txt,'&#13;')"/>
+						<xsl:if test="string-length(normalize-space($firstPart))>0 and normalize-space($firstPart)!='&#13;'">
 						<p>
 							<xsl:choose>
 								<xsl:when test="contains($txt,'&#13;')">
 									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;')"/>							
+										<xsl:with-param name="txt" select="$firstPart"/>							
 									</xsl:call-template>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;')"/>							
+										<xsl:with-param name="txt" select="$firstPart"/>							
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
 						</p>
-						<p>
+						</xsl:if>
+						<xsl:variable name="lastPart" select="substring-after($txt,'&#13;')"/>
+						<xsl:if test="starts-with($lastPart,'&#13;')">
+							<br/>
+						</xsl:if>
+						<xsl:if test="string-length(normalize-space($lastPart))>0">
 							<xsl:choose>
 								<xsl:when test="contains($txt,'&#13;')">
 									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;')"/>							
+										<xsl:with-param name="txt" select="$lastPart"/>							
 									</xsl:call-template>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;')"/>							
+										<xsl:with-param name="txt" select="$lastPart"/>							
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
-						</p>
+						</xsl:if>
 					</xsl:when>
 					<xsl:when test="contains($txt,'&#10;')">
+						<xsl:variable name="firstPart" select="substring-before($txt,'&#10;')"/>
+						<xsl:if test="string-length(normalize-space($firstPart))>0 and normalize-space($firstPart)!='&#10;'">
 						<p>
 							<xsl:choose>
 								<xsl:when test="contains($txt,'&#10;')">
 									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#10;')"/>							
+										<xsl:with-param name="txt" select="$firstPart"/>							
 									</xsl:call-template>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#10;')"/>							
+										<xsl:with-param name="txt" select="$firstPart"/>							
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
 						</p>
-						<p>
+						</xsl:if>
+						<xsl:variable name="lastPart" select="substring-after($txt,'&#10;')"/>
+						<xsl:if test="string-length(normalize-space($lastPart))>0">
 							<xsl:choose>
 								<xsl:when test="contains($txt,'&#10;')">
 									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#10;')"/>							
+										<xsl:with-param name="txt" select="$lastPart"/>							
 									</xsl:call-template>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#10;')"/>							
+										<xsl:with-param name="txt" select="$lastPart"/>							
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
-						</p>
+						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="addHyperlinksAndLineBreaks">
-							<xsl:with-param name="txt"  select="$txt"/>
+							<xsl:with-param name="txt"  select="normalize-space($txt)"/>
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -322,36 +349,59 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="contains($txt,'&#13;&#10;')">
+						<xsl:variable name="firstPart" select="substring-before($txt,'&#13;&#10;')"/>
+						<xsl:if test="string-length(normalize-space($firstPart))>0 and normalize-space($firstPart)!='&#13;&#10;'">
 						<p>
-							<xsl:value-of select="substring-before($txt,'&#13;&#10;')"/>
-						</p><p>
-						<xsl:call-template name="addLineBreaksAndHyperlinks">
-							<xsl:with-param name="txt"  select="substring-after($txt,'&#13;&#10;')"/>
-						</xsl:call-template>
+							<xsl:value-of select="$firstPart"/>
 						</p>
+						</xsl:if>
+						<xsl:variable name="lastPart" select="substring-after($txt,'&#13;&#10;')"/>
+						<xsl:if test="string-length(normalize-space($lastPart))>0">
+						<xsl:call-template name="addLineBreaksAndHyperlinks">
+							<xsl:with-param name="txt"  select="$lastPart"/>
+						</xsl:call-template>
+						</xsl:if>
 					</xsl:when>
 					<xsl:when test="contains($txt,'&#13;')">
-						<p><xsl:value-of select="substring-before($txt,'&#13;')"/>
-						</p><p>
-						<xsl:call-template name="addLineBreaksAndHyperlinks">
-							<xsl:with-param name="txt"  select="substring-after($txt,'&#13;')"/>
-						</xsl:call-template>
+						<xsl:variable name="firstPart" select="substring-before($txt,'&#13;')"/>
+						<xsl:if test="string-length(normalize-space($firstPart))>0 and normalize-space($firstPart)!='&#13;'">
+						<p>
+							<xsl:value-of select="$firstPart"/>
 						</p>
+						</xsl:if>
+						<xsl:variable name="lastPart" select="substring-after($txt,'&#13;')"/>
+						<xsl:if test="starts-with($lastPart,'&#13;')">
+							<br/>
+						</xsl:if>
+						<xsl:if test="string-length(normalize-space($lastPart))>0">
+						<xsl:call-template name="addLineBreaksAndHyperlinks">
+							<xsl:with-param name="txt"  select="$lastPart"/>
+						</xsl:call-template>
+						</xsl:if>
 					</xsl:when>
 					<xsl:when test="contains($txt,'&#10;')">
-						<p><xsl:value-of select="substring-before($txt,'&#10;')"/>
-						</p><p>
-						<xsl:call-template name="addLineBreaksAndHyperlinks">
-							<xsl:with-param name="txt"  select="substring-after($txt,'&#10;')"/>
-						</xsl:call-template>
+						<xsl:variable name="firstPart" select="substring-before($txt,'&#10;')"/>
+						<xsl:if test="string-length(normalize-space($firstPart))>0 and normalize-space($firstPart)!='&#10;'">
+						<p>
+							<xsl:value-of select="$firstPart"/>
 						</p>
+						</xsl:if>
+						<xsl:variable name="lastPart" select="substring-after($txt,'&#10;')"/>
+						<xsl:if test="string-length(normalize-space($lastPart))>0">
+						<xsl:call-template name="addLineBreaksAndHyperlinks">
+							<xsl:with-param name="txt"  select="$lastPart"/>
+						</xsl:call-template>
+						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="$txt"/>
+						<p>
+						<xsl:value-of select="normalize-space($txt)"/>
+						</p>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+		</xsl:if>
 	</xsl:template>
 	
 

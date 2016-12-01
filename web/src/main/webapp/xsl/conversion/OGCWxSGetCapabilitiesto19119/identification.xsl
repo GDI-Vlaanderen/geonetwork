@@ -19,7 +19,9 @@
                                         xmlns:gml="http://www.opengis.net/gml"
 										xmlns:math="http://exslt.org/math"
 										xmlns:exslt="http://exslt.org/common"
-										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml"
+                                        xmlns:insp_com="http://inspire.ec.europa.eu/schemas/common/1.0" 
+                                        xmlns:insp_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
+										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml insp_com insp_vs"
 										exclude-result-prefixes="#all">
 
 	<!-- ============================================================================= -->
@@ -51,12 +53,45 @@
 					</xsl:variable>
 					<gco:CharacterString><xsl:value-of select="normalize-space($title)"/></gco:CharacterString>
 				</title>
+<!--			<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>-->
+				<xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
+				<xsl:variable name="inspireCommonDateOfCreation">
+					<xsl:choose>
+						<xsl:when test="$ogctype='WMS1.3.0'"><xsl:value-of select="//insp_com:TemporalReference/insp_com:DateOfCreation"/></xsl:when>
+						<xsl:when test="$ogctype='WFS1.1.0'"><xsl:value-of select="//insp_com:TemporalReference/insp_com:DateOfCreation"/></xsl:when>
+						<xsl:when test="$ogctype='WMTS1.0.0'"><xsl:value-of select="//insp_com:TemporalReference/insp_com:DateOfCreation"/></xsl:when>
+						<xsl:otherwise/>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:if test="string-length($inspireCommonDateOfCreation)>0">
+					<date>
+						<CI_Date>
+							<date>
+								<gco:Date><xsl:value-of select="$inspireCommonDateOfCreation"/></gco:Date>
+							</date>
+							<dateType>
+								<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="creation"/>
+							</dateType>
+						</CI_Date>
+					</date>
+<!--
+					<date>
+						<CI_Date>
+							<date>
+								<gco:Date><xsl:value-of select="$inspireCommonDateOfCreation"/></gco:Date>
+							</date>
+							<dateType>
+								<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+							</dateType>
+						</CI_Date>
+					</date>
+-->
+				</xsl:if>
+				<xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
 				<date>
 					<CI_Date>
-<!-- 						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>-->
-						<xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
 						<date>
-<!--							<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>-->
+<!--						<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>-->
 							<gco:Date><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:Date>
 						</date>
 						<dateType>
@@ -175,10 +210,12 @@
 		<resourceConstraints>
 			<MD_Constraints>
 				<useLimitation>
+					<xsl:variable name="accessConstraint1" select="normalize-space($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees)"/>
+					<xsl:variable name="accessConstraint2" select="normalize-space($s/AccessConstraints|$s/wms:AccessConstraints|$s/wfs:AccessConstraints|$s/ows:AccessConstraints|$s/ows11:AccessConstraints)"/>
 					<gco:CharacterString>
 						<xsl:call-template name="get-accessConstraint">
 							<xsl:with-param name="type" select="1"/>
-							<xsl:with-param name="accessConstraint" select="concat(normalize-space($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees),'. ',normalize-space($s/AccessConstraints|$s/wms:AccessConstraints|$s/wfs:AccessConstraints|$s/ows:AccessConstraints|$s/ows11:AccessConstraints))"/>
+							<xsl:with-param name="accessConstraint"><xsl:if test="string-length($accessConstraint1)>0"><xsl:value-of select="$accessConstraint1"/><xsl:if test="not(ends-with($accessConstraint1,'.'))">.</xsl:if></xsl:if> <xsl:if test="string-length($accessConstraint2)>0"><xsl:value-of select="concat('&#13;',$accessConstraint2)"/><xsl:if test="not(ends-with($accessConstraint2,'.'))">.</xsl:if></xsl:if></xsl:with-param>
 						</xsl:call-template>
 					</gco:CharacterString>
 				</useLimitation>
@@ -377,25 +414,19 @@
                           <gco:CharacterString><xsl:value-of select="ows:Identifier|ows11:Identifier"/></gco:CharacterString> 
                       </srv:invocationName> 
                     </xsl:if>
-                    <xsl:variable name="formats">
-			<xsl:choose>
-                    		<xsl:when test="$operationName='GetGmlObject'"><xsl:value-of select="../ows:Operation[@name='GetFeature']/ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value[contains(upper-case(.),'GML')]|../ows11:Operation[@name='GetFeature']/ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:AllowedValues/ows11:Value[contains(upper-case(.),'GML')]"/></xsl:when>
-                    		<xsl:otherwise><xsl:value-of select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value|ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:AllowedValues/ows11:Value"/></xsl:otherwise>
-			</xsl:choose> 
-                   </xsl:variable>
-                    <xsl:if test="count($formats)>0">
+                    <xsl:variable name="formats" select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows:Value|ows11:Parameter[@name='AcceptFormats' or @name='outputFormat']/ows11:AllowedValues/ows11:Value"/>
+                    <xsl:variable name="types" select="ows:Parameter[@name='resultType']/ows:Value|ows11:Parameter[@name='resultType']/ows11:AllowedValues/ows11:Value"/>
+                    <xsl:variable name="versions" select="ows:Parameter[@name='AcceptVersions']/ows:Value|ows11:Parameter[@name='AcceptVersions']/ows11:AllowedValues/ows11:Value"/>
+					<xsl:variable name="urls">
+						<xsl:choose>
+							<xsl:when test="$ows='true'"><xsl:value-of select=".//ows:Get[1]/@xlink:href|.//ows11:Get[1]/@xlink:href"/></xsl:when>
+							<xsl:otherwise><xsl:value-of select=".//Get/OnlineResource[1]/@xlink:href|.//wms:Get/wms:OnlineResource[1]/@xlink:href"/></xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:if test="not(normalize-space($urls[1])='')">
 						<srv:connectPoint>
 							<CI_OnlineResource>
 								<linkage>
-									<xsl:variable name="urls">
-										<xsl:choose>
-											<xsl:when test="$ows='true'"><xsl:value-of select=".//ows:Get[1]/@xlink:href|.//ows11:Get[1]/@xlink:href"/></xsl:when>
-											<xsl:otherwise><xsl:value-of select=".//Get/OnlineResource[1]/@xlink:href|.//wms:Get/wms:OnlineResource[1]/@xlink:href"/></xsl:otherwise>
-										</xsl:choose>
-									</xsl:variable>
-									<xsl:if test="normalize-space($urls[1])=''">
-										<xsl:attribute name="gco:nilReason" select="'missing'"/>
-									</xsl:if>
 									<URL>
 										<xsl:value-of select="$urls[1]"/><xsl:if test="not(contains($urls[1],'?'))">?</xsl:if>
 									</URL>
@@ -430,8 +461,7 @@
                                     <gco:CharacterString/>
                                 </name>
 								<description>
-                                    <gco:CharacterString>Formats : <xsl:value-of select="string-join($formats,', ')"/>
-                                    </gco:CharacterString>
+                                    <gco:CharacterString><xsl:if test="count($formats)>0">Formaten:&#13;<xsl:value-of select="string-join($formats,'&#13;')"/></xsl:if><xsl:if test="count($types)>0">&#13;&#13;Result types:&#13;<xsl:value-of select="string-join($types,'&#13;')"/></xsl:if><xsl:if test="count($versions)>0">&#13;&#13;Accepted versions:&#13;<xsl:value-of select="string-join($versions,'&#13;')"/></xsl:if></gco:CharacterString>
                                 </description>
 <!-- 
 								<function>
@@ -446,14 +476,13 @@
 							WCS has no output format
 					-->
                     <xsl:variable name="wfsformats" select="wfs:ResultFormat/*"/>
-                    <xsl:if test="count($wfsformats)>0">
+                    <xsl:variable name="wfstypes" select="ows:Parameter[@name='resultType']/ows:Value|ows11:Parameter[@name='resultType']/ows11:AllowedValues/ows11:Value"/>
+                    <xsl:variable name="wfsversions" select="ows:Parameter[@name='AcceptVersions']/ows:Value|ows11:Parameter[@name='AcceptVersions']/ows11:AllowedValues/ows11:Value"/>
+					<xsl:variable name="urls" select="..//wfs:Get[1]/@onlineResource"/>
+					<xsl:if test="not(normalize-space($urls[1])='')">
 						<srv:connectPoint>
 							<CI_OnlineResource>
 								<linkage>
-									<xsl:variable name="urls" select="..//wfs:Get[1]/@onlineResource"/>
-									<xsl:if test="normalize-space($urls[1])=''">
-										<xsl:attribute name="gco:nilReason" select="'missing'"/>
-									</xsl:if>
 									<URL>
 										<xsl:value-of select="$urls[1]"/><xsl:if test="not(contains($urls[1],'?'))">?</xsl:if>
 									</URL>
@@ -465,8 +494,7 @@
                                     <gco:CharacterString/>
                                 </name>
 								<description>
-                                    <gco:CharacterString>Format(s) : <xsl:value-of select="string-join($wfsformats,', ')"/>
-                                    </gco:CharacterString>
+                                    <gco:CharacterString><xsl:if test="count($wfsformats)>0">Formaten:&#13;<xsl:value-of select="string-join($wfsformats,'&#13;')"/></xsl:if><xsl:if test="count($wfstypes)>0">&#13;&#13;Result types:&#13;<xsl:value-of select="string-join($wfstypes,'&#13;')"/></xsl:if><xsl:if test="count($wfsversions)>0">&#13;&#13;Accepted versions:&#13;<xsl:value-of select="string-join($wfsversions,'&#13;')"/></xsl:if></gco:CharacterString>
                                 </description>
 <!--
 								<function>
@@ -752,7 +780,6 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template match="*" mode="Keywords">
-		<!-- TODO : tokenize WFS 100 keywords list -->
 		<xsl:call-template name="get-vocabulary-keywords">
 			<xsl:with-param name="thesaurusTitle" select="$gdi-vlaanderen-regios-thesaurus"/>
 			<xsl:with-param name="thesaurusDate" select="'2013-04-18'"/>
@@ -878,9 +905,9 @@
 		<xsl:param name="type"/>
 		<xsl:param name="accessConstraint"/>
 		<xsl:choose>
-			<xsl:when test="string-length($accessConstraint) > 2"><xsl:value-of select="$accessConstraint"/></xsl:when>
+			<xsl:when test="string-length($accessConstraint) > 0"><xsl:value-of select="$accessConstraint"/></xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="$type=1">Geen voorwaarde van toepassing. Vrij gebruik onder voorbehoud van vermelding van de bron en de datum van de laatste wijziging.</xsl:if>
+				<xsl:if test="$type=1">Geen voorwaarde van toepassing.&#13;Vrij gebruik onder voorbehoud van vermelding van de bron en de datum van de laatste wijziging.</xsl:if>
 				<xsl:if test="$type=2">Geen publieke toegangsrestricties volgens INSPIRE.</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -947,7 +974,7 @@
 		<xsl:param name="thesaurusTitle"/>
 		<xsl:param name="thesaurusDate"/>
 		<xsl:variable name="lowerCaseThesaurusTitle" select="lower-case($thesaurusTitle)"/>
-		<xsl:if test="count(Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wms:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(ows:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(ows11:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wfs:Keywords[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wcs:keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) > 0">
+		<xsl:if test="(count(//insp_com:Keyword[ends-with(@xsi:type,'inspireTheme_dut')]/insp_com:KeywordValue) > 0 and $lowerCaseThesaurusTitle=lower-case($inspire-theme-thesaurus)) or (count(Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wms:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(ows:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(ows11:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wfs:Keywords[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) + count(wcs:keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle]) > 0)">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:for-each select="Keyword | wms:Keyword | ows:Keyword | ows11:Keyword | wfs:Keyword | wcs:keyword">
@@ -958,6 +985,18 @@
 							</xsl:if>
 						</xsl:if>
 					</xsl:for-each>
+					<xsl:if test="$lowerCaseThesaurusTitle=lower-case($inspire-theme-thesaurus)">
+						<xsl:variable name="inspire-theme-thesaurus-keywords-1"><xsl:value-of select="concat('[',string-join(Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle],'],['),']')"/></xsl:variable>
+						<xsl:variable name="inspire-theme-thesaurus-keywords-2"><xsl:value-of select="concat('[',string-join(*:Keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle],'],['),']')"/></xsl:variable>
+						<xsl:variable name="inspire-theme-thesaurus-keywords-3"><xsl:value-of select="concat('[',string-join(wcs:keyword[lower-case(@vocabulary)=$lowerCaseThesaurusTitle],'],['),']')"/></xsl:variable>
+						<xsl:variable name="inspire-theme-thesaurus-keywords"><xsl:value-of select="concat($inspire-theme-thesaurus-keywords-1,',',$inspire-theme-thesaurus-keywords-2,',',$inspire-theme-thesaurus-keywords-3)"/></xsl:variable>
+						<xsl:for-each select="//insp_com:Keyword[ends-with(@xsi:type,'inspireTheme_dut')]/insp_com:KeywordValue">
+							<xsl:variable name="keywordValue" select="normalize-space(.)" />
+							<xsl:if test="$keywordValue!='infoMapAccessService' and $keywordValue!='infoFeatureAccessService' and not(contains($inspire-theme-thesaurus-keywords,concat('[',$keywordValue,']')))">
+								<keyword><gco:CharacterString><xsl:value-of select="$keywordValue"/></gco:CharacterString></keyword>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:if>
 					<thesaurusName>
 						<CI_Citation>
 							<title>
