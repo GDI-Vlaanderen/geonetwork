@@ -209,6 +209,7 @@ public class CswHarvester extends AbstractHarvester
 			add(res, "removed",      result.locallyRemoved);
 			add(res, "unretrievable",result.unretrievable);
             add(res, "doesNotValidate",result.doesNotValidate);
+            add(res, "belongsToAnotherHarvester",result.belongsToAnotherHarvester);
 		}
 		return res;
 	}
@@ -249,4 +250,5 @@ class CswResult {
 	public int unknownSchema;
 	public int unretrievable;
     public int doesNotValidate;	    
+    public int belongsToAnotherHarvester;	    
 }

@@ -243,7 +243,7 @@ class Harvester
         
         dbms.commit ();
             
-        result.total = result.added + result.layer;
+        result.total = result.added + result.layer + result.serviceUuidExist;
     
 		return result;
 	}
@@ -318,12 +318,18 @@ class Harvester
 		param.put("uuid", uuid);
 		
 		Element md = Xml.transform (capa, styleSheet, param);
-		
-		String schema = dataMan.autodetectSchema (md); // ie. iso19139; 
 
+		String schema = dataMan.autodetectSchema (md); // ie. iso19139; 
 		if (schema == null) {
 			log.warning("Skipping metadata with unknown schema.");
 			result.unknownSchema ++;
+			return;
+		}
+
+		uuid = dataMan.extractUUID(schema, md);
+		if (dataMan.existsMetadataUuid(dbms, uuid)) {
+			result.serviceUuidExist++;
+			return;
 		}
 
 

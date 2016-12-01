@@ -301,6 +301,7 @@ public class Aligner
 
 		if (date == null) {
 			log.error("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+			result.belongsToAnotherHarvester++;
 		}
 		else
 		{

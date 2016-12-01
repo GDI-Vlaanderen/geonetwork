@@ -90,7 +90,6 @@ Mapping between :
 					<xsl:otherwise/>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:message select="concat('The inspireMetadataUrl is ', $inspireMetadataUrl)"/>
 			<xsl:variable name="leftPart" select="substring-before(upper-case($inspireMetadataUrl),'ID=')"/>
 			<xsl:variable name="rightPart" select="substring($inspireMetadataUrl,string-length($leftPart)+1)"/>
 			<xsl:variable name="idPart"><xsl:if test="contains($rightPart,'&amp;')"><xsl:value-of select="substring(substring-before($rightPart,'&amp;'),4)"/></xsl:if><xsl:if test="not(contains($rightPart,'&amp;'))"><xsl:value-of select="substring($rightPart,4)"/></xsl:if></xsl:variable>
@@ -378,8 +377,6 @@ Mapping between :
 					<xsl:otherwise/>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:message select="concat('The inspireCommonUri is ',$inspireCommonUri)"/>
-			<xsl:message select="concat('The inspireCommonConformanceDegree is ',$inspireCommonConformanceDegree)"/>
 			<!--dqInfo-->
 			<xsl:if test="starts-with($inspireCommonUri,'OJ:L:2010:323:0011:0102:')">
 				<dataQualityInfo>
