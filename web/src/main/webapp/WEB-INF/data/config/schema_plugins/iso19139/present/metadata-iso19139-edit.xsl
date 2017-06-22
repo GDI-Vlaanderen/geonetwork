@@ -399,13 +399,29 @@
 				<xsl:apply-templates mode="addElement" select="geonet:child[@name='otherConstraints' and @prefix='gmd']">
 		            <xsl:with-param name="schema" select="$schema"/>
 		            <xsl:with-param name="edit"   select="$edit"/>
-		            <xsl:with-param name="visible"   select="count(gmd:otherConstraints)=0"/>
+		            <xsl:with-param name="visible"   select="true()"/>	            
+<!--		            <xsl:with-param name="visible"   select="count(gmd:otherConstraints)=0"/>-->
 				</xsl:apply-templates>
 			</xsl:if>
 	        <xsl:for-each select="gmd:otherConstraints">
-	       		<xsl:apply-templates mode="elementEP" select=".">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
+	        	<xsl:message select="concat('Ik kom hier en editmode is ',$edit)"/>
+		        <xsl:apply-templates mode="complexElement" select=".">
+		            <xsl:with-param name="schema"   select="$schema"/>
+		            <xsl:with-param name="edit"     select="$edit"/>
+		            <xsl:with-param name="content">
+		            	<xsl:if test="gmx:Anchor">
+				       		<xsl:apply-templates mode="elementEP" select=".">
+					            <xsl:with-param name="schema" select="$schema"/>
+					            <xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+		            	</xsl:if>
+		            	<xsl:if test="gco:CharacterString">
+							<xsl:apply-templates mode="simpleElement" select="gco:CharacterString/.">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+		            	</xsl:if>
+					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:for-each>
 		</xsl:if>
@@ -1257,11 +1273,11 @@
                   match="*[gmx:Anchor]" priority="99">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
-
+<!--
         <xsl:apply-templates mode="complexElement" select=".">
             <xsl:with-param name="schema"   select="$schema"/>
             <xsl:with-param name="edit"     select="$edit"/>
-            <xsl:with-param name="content">
+            <xsl:with-param name="content">-->
                 <xsl:choose>
                     <xsl:when test="$edit=true()">
                         <!-- existing content -->
@@ -1269,13 +1285,43 @@
                             <xsl:with-param name="schema" select="$schema"/>
                             <xsl:with-param name="edit"   select="$edit"/>
                         </xsl:apply-templates>
+			            <xsl:apply-templates mode="simpleAttribute" select="gmx:Anchor/@xlink:href">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit" select="$edit"/>
+			            </xsl:apply-templates>
                     </xsl:when>
                     <xsl:otherwise>
-                        <a href="{gmx:Anchor/@xlink:href}" target="_blank"><xsl:value-of select="gmx:Anchor"/></a>
+				        <xsl:apply-templates mode="complexElement" select=".">
+				            <xsl:with-param name="schema"   select="$schema"/>
+				            <xsl:with-param name="edit"     select="$edit"/>
+				            <xsl:with-param name="content">
+		                        <xsl:apply-templates mode="simpleElement" select="gmx:Anchor">
+		                            <xsl:with-param name="schema" select="$schema"/>
+		                            <xsl:with-param name="edit"   select="$edit"/>
+		                        </xsl:apply-templates>
+		                    </xsl:with-param>
+		                </xsl:apply-templates>
+<!--
+		                <xsl:apply-templates mode="simpleElement" select=".">
+		                    <xsl:with-param name="schema"  select="$schema"/>
+		                    <xsl:with-param name="text">
+	                        	<a href="{gmx:Anchor/@xlink:href}" target="_blank"><xsl:value-of select="gmx:Anchor"/></a>
+		                    </xsl:with-param>
+		                </xsl:apply-templates>
+-->
+<!--
+				        <xsl:apply-templates mode="complexElement" select=".">
+				            <xsl:with-param name="schema"   select="$schema"/>
+				            <xsl:with-param name="edit"     select="$edit"/>
+				            <xsl:with-param name="content">
+	                        	<a href="{gmx:Anchor/@xlink:href}" target="_blank"><xsl:value-of select="gmx:Anchor"/></a>
+	                        </xsl:with-param>
+				        </xsl:apply-templates>
+-->				        
                     </xsl:otherwise>
                 </xsl:choose>
-            </xsl:with-param>
-        </xsl:apply-templates>
+<!--            </xsl:with-param>
+        </xsl:apply-templates>-->
     </xsl:template>
 
     <!-- Add exception to update-fixed-info to avoid URL creation for downloadable resources -->
@@ -5048,7 +5094,6 @@ This parameter define the class of the textarea (see CSS). -->
           or name(.)='gmd:measureDescription'
           or name(.)='gmd:maintenanceNote'
           or name(.)='gmd:useLimitation'
-          or name(.)='gmd:otherConstraints'
           or name(.)='gmd:handlingDescription'
           or name(.)='gmd:userNote'
           or name(.)='gmd:checkPointDescription'

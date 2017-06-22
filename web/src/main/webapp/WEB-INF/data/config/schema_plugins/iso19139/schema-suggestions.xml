@@ -245,6 +245,11 @@
     <suggest name="gmd:otherContraints"/>
   </field>
   
+  <field name="gmd:otherContraints">
+	<suggest name="gco:CharacterString"/>
+    <suggest name="gmx:Anchor"/>
+  </field>
+
   <field name="gmd:MD_SecurityContraints">
     <suggest name="gmd:classification"/>
     <suggest name="gmd:useLimitation"/>

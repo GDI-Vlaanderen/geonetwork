@@ -1641,13 +1641,13 @@ public class SchemaManager {
 							.equals("http://www.isotc211.org/2005/gmd")) {
 				// if document has srv namespace then add srv schemaLocation
 				if (md.getNamespace("srv") != null) {
-					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd";					
+					schemaLocation = "http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd " + "http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd";					
 				}
 				// otherwise add gmd schemaLocation
 				// (but not both! as that is invalid, the schemas describe
 				// partially the same schema types)
 				else {
-					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
+					schemaLocation = "http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd " + "http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
 				}
 				Attribute schemaLocationA = new Attribute("schemaLocation",
 						schemaLocation, Csw.NAMESPACE_XSI);
@@ -1658,9 +1658,9 @@ public class SchemaManager {
 			if (schemaLocation!=null && (schemaLocation.contains("gmd.xsd") || schemaLocation.contains("srv.xsd"))) {
 				md.removeAttribute(existingSchemaLocation);
 				if (md.getNamespace("srv") != null) {
-					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd";					
+					schemaLocation = "http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd " + "http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd";					
 				} else {
-					schemaLocation = /*"http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd " + */"http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
+					schemaLocation = "http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd " + "http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
 				}
 				md.setAttribute(new Attribute("schemaLocation", schemaLocation, Csw.NAMESPACE_XSI));
 			}

@@ -1251,7 +1251,7 @@
 		<entry>
 			<code>planned</code>
 			<label>gepland</label>
-			<description>Datum is al bekend wanneer de data gecre&#233;erd of geactualiseerd moet zijn.</description>
+			<description>Datum is al bekend wanneer de data gecre&#235;erd of geactualiseerd moet zijn.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1263,7 +1263,7 @@
 		<entry>
 			<code>underDevelopment</code>
 			<label>in ontwikkeling</label>
-			<description>Data wordt momenteel gecre&#233;erd.</description>
+			<description>Data wordt momenteel gecre&#235;erd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1275,7 +1275,7 @@
 			<description>Exclusief recht voor publicatie, productie,
 of verkoop van rechten op een literair,
 theater, muzikaal of artistiek werk, of op
-het gebruik van een commerci&#233;le druk of
+het gebruik van een commerci&#235;le druk of
 label, toegekend bij wet voor een
 specifieke periode of tijd aan een auteur,
 componist, artiest of distributeur.</description>
@@ -1545,7 +1545,7 @@ grondstoffen, erosie.</description>
 			<label>gezondheid</label>
 			<description>Gezondheid(szorg), menselijke ecologie
 en veiligheid.
-Vb: ziekten, hygi&#233;ne, gezondheidszorg.</description>
+Vb: ziekten, hygi&#235;ne, gezondheidszorg.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>

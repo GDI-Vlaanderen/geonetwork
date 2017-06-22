@@ -188,9 +188,65 @@
     </hours>
     <minutes>
         <minute label="00">0</minute>
+        <minute label="01">1</minute>
+        <minute label="02">2</minute>
+        <minute label="03">3</minute>
+        <minute label="04">4</minute>
+        <minute label="05">5</minute>
+        <minute label="06">6</minute>
+        <minute label="07">7</minute>
+        <minute label="08">8</minute>
+        <minute label="09">9</minute>
+        <minute label="10">10</minute>
+        <minute label="11">11</minute>
+        <minute label="12">12</minute>
+        <minute label="13">13</minute>
+        <minute label="14">14</minute>
         <minute label="15">15</minute>
+        <minute label="16">16</minute>
+        <minute label="17">17</minute>
+        <minute label="18">18</minute>
+        <minute label="19">19</minute>
+        <minute label="20">20</minute>
+        <minute label="21">21</minute>
+        <minute label="22">22</minute>
+        <minute label="23">23</minute>
+        <minute label="24">24</minute>
+        <minute label="25">25</minute>
+        <minute label="26">26</minute>
+        <minute label="27">27</minute>
+        <minute label="28">28</minute>
+        <minute label="29">29</minute>
         <minute label="30">30</minute>
+        <minute label="31">31</minute>
+        <minute label="32">32</minute>
+        <minute label="33">33</minute>
+        <minute label="34">34</minute>
+        <minute label="35">35</minute>
+        <minute label="36">36</minute>
+        <minute label="37">37</minute>
+        <minute label="38">38</minute>
+        <minute label="39">39</minute>
+        <minute label="40">40</minute>
+        <minute label="41">41</minute>
+        <minute label="42">42</minute>
+        <minute label="43">43</minute>
+        <minute label="44">44</minute>
         <minute label="45">45</minute>
+        <minute label="46">46</minute>
+        <minute label="47">47</minute>
+        <minute label="48">48</minute>
+        <minute label="49">49</minute>
+        <minute label="50">50</minute>
+        <minute label="51">51</minute>
+        <minute label="52">52</minute>
+        <minute label="53">53</minute>
+        <minute label="54">54</minute>
+        <minute label="55">55</minute>
+        <minute label="56">56</minute>
+        <minute label="57">57</minute>
+        <minute label="58">58</minute>
+        <minute label="59">59</minute>
     </minutes>
 
 	<options>Options</options>

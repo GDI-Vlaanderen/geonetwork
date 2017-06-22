@@ -47,10 +47,10 @@
     <alert.M9.use><div>Overige beperkingen moeten gedefinieerd zijn indien de gebruiksbeperkingen ingesteld zijn als "andere".<br/>
         <span class="validationReportSuggestion">Suggestie: Voeg een overige beperkingen element toe en vul dit in.</span>        
     </div></alert.M9.use>
-    <alert.M9><div>'Eenheden zijn verplicht voor de maximum en/of minum waarde .</div></alert.M9>
-    <report.M9.units>Eenheden:</report.M9.units>
-    <report.M9.max>Max waarde:</report.M9.max>
-    <report.M9.min>Min waarde:</report.M9.min>
+    <alert.M10><div>'Eenheden zijn verplicht voor de maximum en/of minum waarde .</div></alert.M10>
+    <report.M10.units>Eenheden:</report.M10.units>
+    <report.M10.max>Max waarde:</report.M10.max>
+    <report.M10.min>Min waarde:</report.M10.min>
     <alert.M11><div>Beschrijving is verplicht indien de begrenzing van de bron niet gedefinieerd is.
         <span class="validationReportSuggestion">Suggestie: Voeg een bescrhijving en/of begrenzing van de bron toe.</span>
     </div></alert.M11>

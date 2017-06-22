@@ -231,6 +231,30 @@
 		</xsl:copy>
 	</xsl:template>
 
+	<xsl:template match="*[gmx:Anchor]">
+		<xsl:call-template name="updateElementWithAnchorChild"/>
+	</xsl:template>
+
+	<xsl:template name="updateElementWithAnchorChild">
+		<xsl:copy>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:choose>
+				<xsl:when test="normalize-space(gmx:Anchor)=''">
+					<xsl:attribute name="gco:nilReason">
+						<xsl:choose>
+							<xsl:when test="@gco:nilReason"><xsl:value-of select="@gco:nilReason"/></xsl:when>
+							<xsl:otherwise>missing</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+				</xsl:when>
+				<xsl:when test="@gco:nilReason!='missing' and normalize-space(gmx:Anchor)!=''">
+					<xsl:copy-of select="@gco:nilReason"/>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:apply-templates select="*"/>
+		</xsl:copy>
+	</xsl:template>
+
 	<!-- ================================================================= -->
 	<!-- codelists: set @codeList path -->
 	<!-- ================================================================= -->

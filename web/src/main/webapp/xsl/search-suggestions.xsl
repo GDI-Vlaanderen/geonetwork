@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
  <xsl:output method="text" indent="no" media-type="application/json"/>
 
  <xsl:variable name="siteURL"
@@ -10,7 +10,7 @@
   <!-- Add Completions (required) -->
   , 
     [<xsl:for-each
-     select="/root/items/item"> "<xsl:value-of select="@term"/>" <xsl:if test="position()!=last()"
+     select="/root/items/item"> "<xsl:value-of select="replace(@term,'&quot;','\\&quot;')"/>" <xsl:if test="position()!=last()"
       >,</xsl:if>
     </xsl:for-each> ]
   <!-- Add Descriptions (not required) 

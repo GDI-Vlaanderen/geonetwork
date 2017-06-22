@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NoLimitations xmlns:gmd="http://www.isotc211.org/2005/gmd"
+	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmd:resourceConstraints>
+		<gmd:MD_LegalConstraints>
+			<gmd:useLimitation>
+				<gco:CharacterString>Toegangs- en (her)gebruiksvoorwaarden</gco:CharacterString>
+			</gmd:useLimitation>
+			<gmd:useConstraints>
+				<gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
+			</gmd:useConstraints>
+			<gmd:otherConstraints>
+				<gmx:Anchor xlink:href="https://overheid.vlaanderen.be/sites/default/files/documenten/ict-egov/licenties/hergebruik/modellicentie_gratis_hergebruik_v1_0.html">Hergebruik is in overeenstemming met het decreet van 27 april 2007 betreffende Hergebruik van Overheidsinformatie, geregeld aan de hand van de Modellicentie Gratis Hergebruik - v1.0. Dit betekent dat elk commercieel of niet-commercieel hergebruik is toegelaten, zonder dat daar kosten aan verbonden zijn, en zonder dat het gebruik moet geregistreerd worden. Als enige gebruiksvoorwaarde geldt een bronvermeldingsplicht.</gmx:Anchor>
+			</gmd:otherConstraints>
+			<gmd:otherConstraints>
+				<gmx:Anchor xlink:href="https://codex.vlaanderen.be/PrintDocument.ashx?id=1017838">Het gebruik van de informatie op niveau van de overheid (het zg. gebruik voor taken van algemeen belang door of in relatie tot overheidsinstanties), is geregeld door het decreet van 20 februari 2009 betreffende de Geografische Data-Infrastructuur Vlaanderen. De dataset is toegevoegd aan de GDI</gmx:Anchor>
+			</gmd:otherConstraints>
+			<gmd:otherConstraints>
+				<gmx:Anchor xlink:href="https://overheid.vlaanderen.be/gebruiksvoorwaarden-voor-het-hergebruik-van-overheidsinformatie#bronvermelding2">Bronvermeldingsvoorschrift</gmx:Anchor>
+			</gmd:otherConstraints>
+		</gmd:MD_LegalConstraints>
+	</gmd:resourceConstraints>
+</NoLimitations>
