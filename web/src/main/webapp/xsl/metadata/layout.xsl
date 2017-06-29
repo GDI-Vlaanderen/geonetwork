@@ -2462,9 +2462,16 @@
 							</xsl:for-each>
 						</xsl:when>
 						<xsl:when test="$name='gmd:otherConstraints'">
+							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:otherConstraints']/subtemplate/option">
+								<option name="{concat('gmd:otherConstraints;',@value)}" title="{@title}"><xsl:value-of select="normalize-space(.)"/></option>
+							</xsl:for-each>
+						</xsl:when>
+<!--
+						<xsl:when test="$name='gmd:otherConstraints'">
 							<option name="gmd:otherConstraints|gco:CharacterString" selected="selected" title="Beschrijving (gco:CharacterString)">Beschrijving</option>
 							<option name="gmd:otherConstraints|gmx:Anchor" selected="selected" title="Beschrijving en URL (gmx:Anchor)">Beschrijving en URL</option>
 						</xsl:when>
+-->
 						<xsl:when test="$name='gmd:report'">
 				        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
 					          	<xsl:if test="$service=false()">

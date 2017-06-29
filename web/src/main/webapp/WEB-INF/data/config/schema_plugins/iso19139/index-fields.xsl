@@ -103,48 +103,35 @@
 					<Field name="any" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
-				<xsl:message select="concat('Dates indexed for metadata with uuid ', //gmd:fileIdentifier/gco:CharacterString)"/>
-				<xsl:message>Revision dates</xsl:message>
 				<xsl:variable name="revisionSortDate">
 					<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision' or gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation' or gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date">
 						<xsl:sort select="." order="descending"/>
-						<xsl:message select="string(gco:Date|gco:DateTime)"/>
-						<xsl:if test="position()=1"><xsl:message select="concat('Revision date:',string(gco:Date|gco:DateTime))"/><xsl:value-of select="string(gco:Date|gco:DateTime)"/></xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
 
-				<xsl:message>Creation dates</xsl:message>
 				<xsl:variable name="creationSortDate">
 					<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date">
 						<xsl:sort select="." order="descending"/>
-						<xsl:message select="string(gco:Date|gco:DateTime)"/>
-						<xsl:if test="position()=1"><xsl:message select="concat('Creation date:',string(gco:Date|gco:DateTime))"/><xsl:value-of select="string(gco:Date|gco:DateTime)"/></xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
 
-				<xsl:message>Publication dates</xsl:message>
 				<xsl:variable name="publicationSortDate">
 					<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date">
 						<xsl:sort select="." order="descending"/>
-						<xsl:message select="string(gco:Date|gco:DateTime)"/>
-						<xsl:if test="position()=1"><xsl:message select="concat('Publication date:',string(gco:Date|gco:DateTime))"/><xsl:value-of select="string(gco:Date|gco:DateTime)"/></xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
 
 				<xsl:if test="string-length(normalize-space($publicationSortDate))>0">
-					<xsl:message select="concat('Sortdate is :', $publicationSortDate)"/>
 					<Field name="sortDate" string="{$publicationSortDate}" store="true" index="true"/>
 					<Field name="_sortDate" string="{$publicationSortDate}" store="true" index="true"/>
 				</xsl:if>
 				<xsl:if test="string-length(normalize-space($publicationSortDate))=0">
 					<xsl:if test="string-length(normalize-space($revisionSortDate))>0">
-						<xsl:message select="concat('Sortdate is :', $revisionSortDate)"/>
 						<Field name="sortDate" string="{$revisionSortDate}" store="true" index="true"/>
 						<Field name="_sortDate" string="{$revisionSortDate}" store="true" index="true"/>
 					</xsl:if>
 					<xsl:if test="string-length(normalize-space($revisionSortDate))=0">
 						<xsl:if test="string-length(normalize-space($creationSortDate))>0">
-							<xsl:message select="concat('Sortdate is :', $creationSortDate)"/>
 							<Field name="sortDate" string="{$creationSortDate}" store="true" index="true"/>
 							<Field name="_sortDate" string="{$creationSortDate}" store="true" index="true"/>
 						</xsl:if>

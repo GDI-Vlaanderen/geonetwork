@@ -1878,6 +1878,10 @@
 	<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 8.2: conditioneel - indien de toegangsbeperking gedefinieerd is als anders.</mandatoryTooltip>
+		<subtemplate>
+			<option value="OtherConstraintsCharacterString" title="Beschrijving">Beschrijving</option>
+			<option value="OtherConstraintsAnchor" title="Beschrijving en URL">Beschrijving en URL</option>
+		</subtemplate>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gco:CharacterString" context="gmd:otherConstraints">

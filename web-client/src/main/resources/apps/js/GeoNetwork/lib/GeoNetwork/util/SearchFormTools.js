@@ -425,6 +425,7 @@ GeoNetwork.util.SearchFormTools = {
             data: [['relevance#', OpenLayers.i18n('relevance')], 
                     ['title#reverse', OpenLayers.i18n('title')], 
                     ['sortDate#', OpenLayers.i18n('changeDate')],
+                    ['changeDate#', OpenLayers.i18n('changeDate') + '2'],
                 // removed for AGIV
                 //    ['rating#', OpenLayers.i18n('rating')],
                     // AGIV: Removed popularity
