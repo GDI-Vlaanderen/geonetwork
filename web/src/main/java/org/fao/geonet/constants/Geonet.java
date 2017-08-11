@@ -187,6 +187,16 @@ public class Geonet {
         public static final String SERVER_HOST = "system/server/host";
         public static final String SERVER_PORT = "system/server/port";
         public static final String SERVER_PROTOCOL = "system/server/protocol";
+		public static final String SYSTEM_FEEDBACK_EMAIL = "system/feedback/email";
+        public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "system/feedback/mailServer/host";
+        public static final String SYSTEM_FEEDBACK_MAILSERVER_PORT = "system/feedback/mailServer/port";
+        public static final String SYSTEM_FEEDBACK_MAILSERVER_USERNAME = "system/feedback/mailServer/username";
+        public static final String SYSTEM_FEEDBACK_MAILSERVER_PASSWORD = "system/feedback/mailServer/password";
+        public static final String SYSTEM_FEEDBACK_MAILSERVER_SSL = "system/feedback/mailServer/ssl";
+        public static final String SYSTEM_FEEDBACK_MAILSERVER_TLS = "system/feedback/mailServer/tls";
+        public static final String SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS =
+            "system/feedback/mailServer/ignoreSslCertificateErrors";
+
     }
 
     /**

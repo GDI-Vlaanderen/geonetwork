@@ -41,9 +41,11 @@ function ConfigView(strLoader)
 		{ id:'oai.cachesize',   type:'integer',  minValue:10, maxValue:1000, empty:false },
 
 		{ id:'feedback.email',     type:'length',   minSize :0,  maxSize :200 },		
-		{ id:'feedback.mail.host', type:'length',   minSize :0,  maxSize :200 },
-		{ id:'feedback.mail.host', type:'hostname' },
-		{ id:'feedback.mail.port', type:'integer',  minValue:25, maxValue:65535, empty:true },
+		{ id:'feedback.mailserver.host', type:'length',   minSize :0,  maxSize :200 },
+		{ id:'feedback.mailserver.host', type:'hostname' },
+		{ id:'feedback.mailserver.port', type:'integer',  minValue:25, maxValue:65535, empty:true },
+		{ id:'feedback.mailserver.username', type:'length',  minSize :0,  maxSize :200 },
+		{ id:'feedback.mailserver.password', type:'length',  minSize :0,  maxSize :200 },
 		
 		{ id:'proxy.host',     type:'length',   minSize :0,  maxSize :200 },
 		{ id:'proxy.host',     type:'hostname' },
@@ -254,8 +256,13 @@ ConfigView.prototype.setData = function(data)
 	$('proxy.password').value = data['PROXY_PASS'];
 	
 	$('feedback.email')    .value = data['FEEDBACK_EMAIL'];
-	$('feedback.mail.host').value = data['FEEDBACK_MAIL_HOST'];
-	$('feedback.mail.port').value = data['FEEDBACK_MAIL_PORT'];
+	$('feedback.mailserver.host').value = data['FEEDBACK_MAILSERVER_HOST'];
+	$('feedback.mailserver.port').value = data['FEEDBACK_MAILSERVER_PORT'];
+	$('feedback.mailserver.username').value = data['FEEDBACK_MAILSERVER_USERNAME'];
+	$('feedback.mailserver.password').value = data['FEEDBACK_MAILSERVER_PASSWORD'];
+	$('feedback.mailserver.ssl').checked = data['FEEDBACK_MAILSERVER_SSL'] == 'true';
+	$('feedback.mailserver.tls').checked = data['FEEDBACK_MAILSERVER_TLS'] == 'true';
+	$('feedback.mailserver.ignoreSslCertificateErrors').checked = data['FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS'] == 'true';
 	
 	$('removedMd.dir').value = data['REMOVEDMD_DIR'];
 
@@ -388,8 +395,13 @@ ConfigView.prototype.getData = function()
 		PROXY_PASS : $('proxy.password').value,
 		
 		FEEDBACK_EMAIL     : $('feedback.email')    .value,
-		FEEDBACK_MAIL_HOST : $('feedback.mail.host').value,
-		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,		
+		FEEDBACK_MAILSERVER_HOST : $('feedback.mailserver.host').value,
+		FEEDBACK_MAILSERVER_PORT : $('feedback.mailserver.port').value,		
+		FEEDBACK_MAILSERVER_USERNAME : $('feedback.mailserver.username').value,
+		FEEDBACK_MAILSERVER_PASSWORD : $('feedback.mailserver.password').value,
+		FEEDBACK_MAILSERVER_SSL : $('feedback.mailserver.ssl').checked,
+		FEEDBACK_MAILSERVER_TLS : $('feedback.mailserver.tls').checked,
+		FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS : $('feedback.mailserver.ignoreSslCertificateErrors').checked,
 
 		REMOVEDMD_DIR : $('removedMd.dir').value,
 		

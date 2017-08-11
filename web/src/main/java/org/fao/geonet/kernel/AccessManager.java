@@ -501,7 +501,6 @@ public class AccessManager {
                 "AND u.profile = '"+Geonet.Profile.REVIEWER+"' "+
                 "ORDER BY u.id";
 
-        System.out.println("** getContentHoofdeditors query: " + query);
         return dbms.select(query);
     }
 
@@ -524,8 +523,7 @@ public class AccessManager {
                 "AND u.profile = '"+ profile +"' "+
                 "ORDER BY u.id";
 
-        System.out.println("** getContentUsers query: " + query);
-        return dbms.select(query);
+       return dbms.select(query);
     }
 
     public Element getContentAdmins(Dbms dbms, Set<String> metadataUUIDs) throws Exception {
@@ -546,7 +544,6 @@ public class AccessManager {
                 "AND u.profile = '"+Geonet.Profile.ADMINISTRATOR+"' "+
                 "ORDER BY u.id";
 
-        System.out.println("** getContentAdmins query: " + query);
         return dbms.select(query);
     }
     

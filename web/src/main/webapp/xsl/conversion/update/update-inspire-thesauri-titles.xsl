@@ -26,12 +26,10 @@
 	</xsl:template>
 	
 	<xsl:template match="gco:CharacterString[contains(.,'GEMET - INSPIRE them')]" priority="10">
-		<xsl:message>Found GEMET - INSPIRE thema thesaurus title for: <xsl:value-of select="//gmd:fileIdentifier/gco:CharacterString"/></xsl:message>
 	    <xsl:copy>GEMET - INSPIRE themes, version 1.0</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="gco:CharacterString[contains(.,'GEMET - Concept')]" priority="10">
-		<xsl:message>Found GEMET - INSPIRE Concepten thesaurus title for: <xsl:value-of select="//gmd:fileIdentifier/gco:CharacterString"/></xsl:message>
 	    <xsl:copy>GEMET - Concepts, version 2.4</xsl:copy>
 	</xsl:template>
 	

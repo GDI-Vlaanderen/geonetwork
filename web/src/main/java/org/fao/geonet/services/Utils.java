@@ -17,6 +17,7 @@ import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Settings;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -137,10 +138,10 @@ public class Utils {
 		SettingManager sm = gc.getSettingManager();
 		AccessManager am = gc.getAccessManager();
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
+		String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+		String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+		String from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 		boolean emailNotes = true;
-		String from = sm.getValue("system/feedback/email");
 
 		if (host.length() == 0) {
 			context.error("Mail server host not configured, email notifications won't be sent.");
@@ -164,7 +165,7 @@ public class Utils {
 			String styleSheet = context.getAppPath() + 	File.separator + Geonet.Path.STYLESHEETS + File.separator + Geonet.File.STATUS_CHANGE_EMAIL;
 			Element emailElement = Xml.transform(params, styleSheet);
 			MailSender sender = new MailSender(context);
-			sender.sendWithReplyTo(host, Integer.parseInt(port), from,
+			sender.sendWithReplyTo(sm, from,
 					fromDescr, sendTo, null, replyTo, replyToDescr, emailElement.getChildText("subject"),
 					emailElement.getChildText("message"));
 		}

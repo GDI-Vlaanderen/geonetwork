@@ -28,8 +28,6 @@
 -->
 		<xsl:variable name="sourceId" select="/root/response/source/gmd:MD_Metadata/geonet:info/id"/>
 		<xsl:variable name="targetId" select="/root/response/target/gmd:MD_Metadata/geonet:info/id"/>
-		<xsl:message><xsl:value-of select="$sourceId"/></xsl:message>
-		<xsl:message><xsl:value-of select="$targetId"/></xsl:message>
 		<xsl:variable name="compareSameDoc" select="$sourceId=$targetId"/>
 		
         <html>

@@ -673,13 +673,39 @@
 				
 				<tr>
 					<td class="padded"><xsl:value-of select="/root/gui/config/smtpHost"/></td>
-					<td class="padded"><input id="feedback.mail.host" class="content" type="text" value=""/></td>
+					<td class="padded"><input id="feedback.mailserver.host" class="content" type="text" value=""/></td>
 				</tr>
 				
 				<tr>
 					<td class="padded"><xsl:value-of select="/root/gui/config/smtpPort"/></td>
-					<td class="padded"><input id="feedback.mail.port" class="content" type="text" value=""/></td>
+					<td class="padded"><input id="feedback.mailserver.port" class="content" type="text" value=""/></td>
 				</tr>
+
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/smtpUsername"/></td>
+					<td class="padded"><input id="feedback.mailserver.username" class="content" type="text" value=""/></td>
+				</tr>
+				
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/smtpPassword"/></td>
+					<td class="padded"><input id="feedback.mailserver.password" class="content" type="text" value=""/></td>
+				</tr>
+				
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/smtpSSL"/></td>
+					<td class="padded"><input id="feedback.mailserver.ssl" class="content" type="checkbox"/></td>
+				</tr>
+				
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/smtpTLS"/></td>
+					<td class="padded"><input id="feedback.mailserver.tls" class="content" type="checkbox"/></td>
+				</tr>
+				
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/smtpIgnoreSslCertificateErrors"/></td>
+					<td class="padded"><input id="feedback.mailserver.ignoreSslCertificateErrors" class="content" type="checkbox"/></td>
+				</tr>
+				
 			</table>
 		</div>
 	</xsl:template>

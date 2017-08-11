@@ -404,7 +404,6 @@
 				</xsl:apply-templates>
 			</xsl:if>
 	        <xsl:for-each select="gmd:otherConstraints">
-	        	<xsl:message select="concat('Ik kom hier en editmode is ',$edit)"/>
 		        <xsl:apply-templates mode="complexElement" select=".">
 		            <xsl:with-param name="schema"   select="$schema"/>
 		            <xsl:with-param name="edit"     select="$edit"/>

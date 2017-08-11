@@ -2434,8 +2434,6 @@
 				    <xsl:choose>
 						<xsl:when test="$name='gmd:resourceConstraints'">
 							<option name="gmd:MD_Constraints" selected="selected" title="Gebruiksrecht - Beperkingen">Invulblok Beperkingen</option>
-							<option name="gmd:MD_LegalConstraints" title="Gebruiksrecht - Legale beperkingen voor toegang en gebruik">Invulblok Legale beperkingen voor toegang en gebruik</option>
-							<option name="gmd:MD_SecurityConstraints" title="Gebruiksrecht - Veiligheidsbeperkingen">Invulblok Veiligheidsbeperkingen</option>
 <!--
 							<option name="gmd:MD_Constraints">
 								<xsl:attribute name="selected">selected</xsl:attribute>
@@ -2460,6 +2458,7 @@
 							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:resourceConstraints']/subtemplate/option">
 								<option name="{concat('gmd:resourceConstraints;',@value)}" title="{@title}"><xsl:value-of select="normalize-space(.)"/></option>
 							</xsl:for-each>
+							<option name="gmd:MD_SecurityConstraints" title="Gebruiksrecht - Veiligheidsbeperkingen">Invulblok Veiligheidsbeperkingen</option>
 						</xsl:when>
 						<xsl:when test="$name='gmd:otherConstraints'">
 							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:otherConstraints']/subtemplate/option">

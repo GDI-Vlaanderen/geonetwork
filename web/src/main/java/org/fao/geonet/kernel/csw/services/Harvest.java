@@ -39,6 +39,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Settings;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -843,11 +844,9 @@ public class Harvest extends AbstractOperation implements CatalogService {
         private void sendByEmail(String harvestResponse) {
             GeonetContext geonetContext = (GeonetContext) serviceContext.getHandlerContext(Geonet.CONTEXT_NAME);
             SettingManager settingManager = geonetContext.getSettingManager();
-            String host = settingManager.getValue("system/feedback/mailServer/host");
-            String port = settingManager.getValue("system/feedback/mailServer/port");
             String to = responseHandler.substring(Protocol.EMAIL.toString().length());
             MailSender sender = new MailSender(serviceContext);
-            sender.send(host, Integer.parseInt(port), "noreply@geonetwork.org", "GeoNetwork CSW Server", to, null,
+            sender.send(settingManager, "noreply@geonetwork.org", "GeoNetwork CSW Server", to, null,
                     "Asynchronous CSW Harvest results delivery", harvestResponse);
         }
 

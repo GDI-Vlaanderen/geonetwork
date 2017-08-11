@@ -24,7 +24,6 @@
             <xsl:variable name="mapNodes" select="exslt:node-set($map)"/>
             <xsl:variable name="currentValue" select="gco:CharacterString"/>
             <xsl:variable name="newValue" select="$mapNodes/map[@key=$currentValue]/@value"/>
-            <!--<xsl:message>Mapping '<xsl:value-of select="$currentValue"/>' with '<xsl:value-of select="$newValue"/>'</xsl:message>-->
             <gco:CharacterString>
                 <xsl:choose>
                     <xsl:when test="$newValue!=''">

@@ -131,6 +131,11 @@
 	<email>E-mail</email>
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Poort</smtpPort>
+	<smtpUsername>Gebruikersnaam</smtpUsername>
+	<smtpPassword>Wachtwoord</smtpPassword>
+	<smtpSSL>Gebruik SSL</smtpSSL>
+	<smtpTLS>Gebruik TLS</smtpTLS>
+	<smtpIgnoreSslCertificateErrors>Negeer fouten veroorzaakt door het mail server's SSL certificaat</smtpIgnoreSslCertificateErrors>
 	
 	<userSelfRegistration>gebruikers zelf-registratie</userSelfRegistration>
 	

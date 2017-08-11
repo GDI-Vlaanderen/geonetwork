@@ -34,6 +34,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.constants.Geonet.Settings;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -106,9 +107,9 @@ public class Download implements Service
 
 		if (doNotify)
 		{
-			String host = sm.getValue("system/feedback/mailServer/host");
-			String port = sm.getValue("system/feedback/mailServer/port");
-			String from = sm.getValue("system/feedback/email");
+			String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+			String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+			String from   = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
 			String fromDescr = "GeoNetwork administrator";
 
@@ -149,7 +150,7 @@ public class Download implements Service
 						try
 						{
 							MailSender sender = new MailSender(context);
-							sender.send(host, Integer.parseInt(port), from, fromDescr, email, null, subject, message);
+							sender.send(sm, from, fromDescr, email, null, subject, message);
 						}
 						catch (Exception e)
 						{
