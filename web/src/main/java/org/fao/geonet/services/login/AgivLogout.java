@@ -52,49 +52,6 @@ public class AgivLogout implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		/*
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        String protocol = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
-		String host    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-		String port    = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
-		String url = protocol + "://" + host + (("80".equals(port) || "443".equals(port)) ? "" : ":" + port) + this.context.getBaseUrl() + "/apps/tabsearch/images/???.png;
-*/
-/*		
-		URL url = new URL("https://auth.beta.agiv.be/sts/?wa=wsignout1.0&wreply=");
-		HttpURLConnection connection = null;
-		connection = (HttpsURLConnection)url.openConnection();
-		connection.setRequestMethod("GET");
-		int returnCode = connection.getResponseCode();
-		InputStream connectionIn = null;
-		if (returnCode==200) {
-			connectionIn = connection.getInputStream();
-		}
-		else {
-			connectionIn = connection.getErrorStream();
-		}
-		BufferedReader buffer = new BufferedReader(new InputStreamReader(connectionIn));
-		String inputLine;
-		while ((inputLine = buffer.readLine()) != null)
-		{
-			System.out.println(inputLine);
-		}
-		buffer.close();
-		if (returnCode==200) {
-			UserSession userSession = context.getUserSession();
-			HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
-			if (httpSession!=null) {
-				httpSession.invalidate();
-			}
-			context.getUserSession().clear();
-		} else {
-			UserSession userSession = context.getUserSession();
-			HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
-			if (httpSession!=null) {
-				httpSession.invalidate();
-			}
-			context.getUserSession().clear();
-		}
-*/
 		UserSession userSession = context.getUserSession();
 		HttpSession httpSession = (HttpSession) userSession.getProperty("realSession");
 		if (httpSession!=null) {

@@ -77,6 +77,6 @@ GeoNetwork.Settings.isProduction = false;
 GeoNetwork.Settings.nodeType = "Geopunt";
 GeoNetwork.Settings.useSTS = true;
 GeoNetwork.Settings.ga = true;
-GeoNetwork.Settings.logoutUrlSTS = "https://auth." + (GeoNetwork.Settings.isProduction ? "" : "beta.") + "agiv.be/sts/";
-GeoNetwork.Settings.nodeFooterInfo = "Build: 10/08/2017 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
+GeoNetwork.Settings.logoutUrlSTS = "https://" + (GeoNetwork.Settings.isProduction ? "" : "beta.") + "auth.vlaanderen.be/sts/";
+GeoNetwork.Settings.nodeFooterInfo = "Build: 20/09/2017 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
 

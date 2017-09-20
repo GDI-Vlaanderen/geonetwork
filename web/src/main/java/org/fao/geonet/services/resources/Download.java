@@ -111,7 +111,7 @@ public class Download implements Service
 			String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
 			String from   = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
-			String fromDescr = "GeoNetwork administrator";
+			String fromDescr = context.getServlet().getFromDescription();
 
 			if (host.trim().length() == 0 || from.trim().length() == 0)
                 if(context.isDebug())

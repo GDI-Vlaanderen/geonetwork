@@ -374,7 +374,7 @@ public class DownloadArchive implements Service
 			String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
 			String from   = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
-			String fromDescr = "GeoNetwork administrator";
+			String fromDescr = context.getServlet().getFromDescription();
 
 			String dateTime = now();
 			context.info("DOWNLOADED:"+theFile+","+id+","+uuid+","+context.getIpAddress()+","+username);

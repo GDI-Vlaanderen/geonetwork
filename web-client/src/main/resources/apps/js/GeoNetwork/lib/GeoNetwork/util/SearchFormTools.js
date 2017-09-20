@@ -424,8 +424,8 @@ GeoNetwork.util.SearchFormTools = {
             fields: ['id', 'name'],
             data: [['relevance#', OpenLayers.i18n('relevance')], 
                     ['title#reverse', OpenLayers.i18n('title')], 
-                    ['sortDate#', OpenLayers.i18n('changeDate')],
-                    ['changeDate#', OpenLayers.i18n('changeDate') + '2'],
+                    ['sortDate#', OpenLayers.i18n('sortDate')],
+                    ['changeDate#', OpenLayers.i18n('changeDate')],
                 // removed for AGIV
                 //    ['rating#', OpenLayers.i18n('rating')],
                     // AGIV: Removed popularity
@@ -446,6 +446,7 @@ GeoNetwork.util.SearchFormTools = {
             fields: ['id', 'name'],
             data: [['relevance#', OpenLayers.i18n('relevance')],
                 ['title#reverse', OpenLayers.i18n('title')],
+                ['sortDate#', OpenLayers.i18n('sortDate')],
                 ['changeDate#', OpenLayers.i18n('changeDate')],
                 ['rating#', OpenLayers.i18n('rating')],
                 // AGIV: Removed popularity

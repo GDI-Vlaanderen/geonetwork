@@ -46,7 +46,7 @@
 					</xsl:if>
 				</xsl:if>
 				<xsl:if test="$status='2' or $status='9'">
-						<xsl:text>&#10;&#13;Voor meer informatie kan je steeds terecht op onze website </xsl:text><xsl:value-of select="/root/siteUrl"/><xsl:text>, of mail naar contactpunt@agiv.be.</xsl:text>
+						<xsl:text>&#10;&#13;Voor meer informatie kan je steeds terecht op onze website </xsl:text><xsl:value-of select="/root/siteUrl"/><xsl:text>, of mail naar informatie.vlaanderen@vlaanderen.be.</xsl:text>
 				</xsl:if>
 				<xsl:text>&#10;&#13;&#10;&#13;Met vriendelijke groeten,&#10;&#13;Het Metadata-team</xsl:text>
 			</message>

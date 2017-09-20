@@ -92,7 +92,7 @@ public class XmlUpdate implements Service
 			DataManager dm = gc.getDataManager();
 	        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 	        String[] tableNames = {"Metadata","Workspace"};
-            Element result = dbms.select("SELECT id, uuid, lockedby FROM " + tableNames[Integer.parseInt(scope)] + " where not (isharvested='y') and istemplate='n' and schemaid = 'iso19139' ORDER BY id ASC");
+            Element result = dbms.select("SELECT id, uuid, lockedby FROM " + tableNames[Integer.parseInt(scope)] + " where not (isharvested='y') and istemplate='n' and (schemaid = 'iso19139' OR schemaid = 'iso19110') ORDER BY id ASC");
             for(int i = 0; i < result.getContentSize(); i++) {
                 Element record = (Element) result.getContent(i);
                 String id = record.getChildText("id");
@@ -111,7 +111,7 @@ public class XmlUpdate implements Service
     	            md = Xml.transform(md, stylePath +"/"+ style);
     	            int newLength = Xml.getString(md).length();
     	            if (newLength != oldLength) {
-	            		System.out.println("Updating record with uuid" + uuid);
+//	            		System.out.println("Updating record with uuid" + uuid);
 	            		if (scope.equals("0")) {
 	    	                dm.getXmlSerializer().update(dbms, id, md, null, false, context);
 	            		} else {

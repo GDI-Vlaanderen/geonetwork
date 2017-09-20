@@ -2029,7 +2029,7 @@
 	          </xsl:for-each>
 	        </select>
       </xsl:when>
-      <xsl:when test="$edit=true() and $class='' and name(.)!='gmx:Anchor'">
+      <xsl:when test="$edit=true() and $class='' and name(.)!='gmx:Anchor' and not (name(.)='gco:CharacterString' and name(..)='gmd:otherConstraints')">
         <xsl:choose>
           <!-- heikki doeleman: for gco:Boolean, use checkbox.
             Default value set to false. -->
@@ -2176,7 +2176,7 @@
 <!-- 		<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1' and not(../../@gco:nilReason='missing')) or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>-->
 			<xsl:variable name="mandatory" select="false()"/>
 			<textarea name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
-				<xsl:attribute name="class">md <xsl:value-of select="$class"/><xsl:if test="name(.)='gmx:Anchor'">small</xsl:if></xsl:attribute>
+				<xsl:attribute name="class">md <xsl:choose><xsl:when test="name(.)='gmx:Anchor' or (name(.)='gco:CharacterString' and name(..)='gmd:otherConstraints')">small</xsl:when><xsl:otherwise><xsl:value-of select="$class"/></xsl:otherwise></xsl:choose></xsl:attribute>
                 <xsl:if test="$isXLinked and name(.)!='gmx:Anchor'"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 				<xsl:if test="$visible = false()"><xsl:attribute name="style">display:none;</xsl:attribute></xsl:if>
 				<xsl:if test="($mandatory or not($agivmandatory = '')) and $edit"><xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute></xsl:if>
