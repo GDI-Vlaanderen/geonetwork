@@ -1620,8 +1620,6 @@
       </xsl:choose>
       <xsl:variable name="accessConstraints_count"
                     select="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)])"/>
-      <xsl:variable name="accessConstraints_classification_count"
-                    select="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)]) + count(gmd:resourceConstraints/*/gmd:classification/*[string(@codeListValue)])"/>
       <xsl:variable name="accessConstraints"
                     select="     count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])&gt;0      and (     not(gmd:resourceConstraints/*/gmd:otherConstraints)          or gmd:resourceConstraints/*/gmd:otherConstraints[@gco:nilReason='missing']     )"/>
       <xsl:variable name="otherConstraintCharacterStringInfo"
@@ -1631,11 +1629,11 @@
 
 		    <!--ASSERT -->
 <xsl:choose>
-         <xsl:when test="$accessConstraints_classification_count"/>
+         <xsl:when test="$accessConstraints_count"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
                                 parent="#_{geonet:element/@parent}"
-                                test="$accessConstraints_classification_count">
+                                test="$accessConstraints_count">
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
@@ -1649,10 +1647,10 @@
       </xsl:choose>
 
 		    <!--REPORT -->
-<xsl:if test="$accessConstraints_classification_count">
+<xsl:if test="$accessConstraints_count">
          <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
                                  parent="#_{geonet:element/@parent}"
-                                 test="$accessConstraints_classification_count">
+                                 test="$accessConstraints_count">
             <xsl:attribute name="location">
                <xsl:apply-templates select="." mode="schematron-select-full-path"/>
             </xsl:attribute>
@@ -1715,8 +1713,6 @@
                        context="//gmd:MD_DataIdentification/gmd:resourceConstraints/*|    //*[@gco:isoType='gmd:MD_DataIdentification']/gmd:resourceConstraints/*|    //srv:SV_ServiceIdentification/gmd:resourceConstraints/*|    //*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceConstraints/*"/>
       <xsl:variable name="accessConstraints"
                     select="string-join(gmd:accessConstraints/*/@codeListValue, ', ')"/>
-      <xsl:variable name="classification"
-                    select="string-join(gmd:classification/*/@codeListValue, ', ')"/>
 
 		    <!--REPORT -->
 <xsl:if test="$accessConstraints!=''">
@@ -1732,25 +1728,6 @@
                <xsl:text/>
 				           <xsl:text/>
                <xsl:copy-of select="$accessConstraints"/>
-               <xsl:text/>
-			         </svrl:text>
-         </svrl:successful-report>
-      </xsl:if>
-
-		    <!--REPORT -->
-<xsl:if test="$classification!=''">
-         <svrl:successful-report xmlns:svrl="http://purl.oclc.org/dsdl/svrl" ref="#_{geonet:element/@ref}"
-                                 parent="#_{geonet:element/@parent}"
-                                 test="$classification!=''">
-            <xsl:attribute name="location">
-               <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-            </xsl:attribute>
-            <svrl:text>
-				           <xsl:text/>
-               <xsl:copy-of select="$loc/strings/report.M45.class/div"/>
-               <xsl:text/>
-				           <xsl:text/>
-               <xsl:copy-of select="$classification"/>
                <xsl:text/>
 			         </svrl:text>
          </svrl:successful-report>

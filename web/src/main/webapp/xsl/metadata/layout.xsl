@@ -2433,7 +2433,7 @@
 				<options>
 				    <xsl:choose>
 						<xsl:when test="$name='gmd:resourceConstraints'">
-							<option name="gmd:MD_Constraints" selected="selected" title="Gebruiksrecht - Beperkingen">Invulblok Beperkingen</option>
+ 							<option name="gmd:MD_Constraints" selected="selected" title="Gebruiksrecht - Beperkingen">Invulblok inhoudelijke beperkingen</option>
 <!--
 							<option name="gmd:MD_Constraints">
 								<xsl:attribute name="selected">selected</xsl:attribute>
@@ -2458,7 +2458,7 @@
 							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:resourceConstraints']/subtemplate/option">
 								<option name="{concat('gmd:resourceConstraints;',@value)}" title="{@title}"><xsl:value-of select="normalize-space(.)"/></option>
 							</xsl:for-each>
-							<option name="gmd:MD_SecurityConstraints" title="Gebruiksrecht - Veiligheidsbeperkingen">Invulblok Veiligheidsbeperkingen</option>
+							<option name="gmd:MD_SecurityConstraints" title="Gebruiksrecht - Veiligheidsbeperkingen">Invulblok veiligheidsbeperkingen</option>
 						</xsl:when>
 						<xsl:when test="$name='gmd:otherConstraints'">
 							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:otherConstraints']/subtemplate/option">
@@ -2543,10 +2543,13 @@
 		    <xsl:call-template name="simpleElementGui">
 				<xsl:with-param name="id" select="concat('_',$parentName,'_',$name,'_subtemplate_row')"/>
 				<xsl:with-param name="title">
-					<xsl:call-template name="getTitle">
-						<xsl:with-param name="name" select="$name"/>
-						<xsl:with-param name="schema" select="$schema"/>
-					</xsl:call-template>
+					<xsl:if test="@name='resourceConstraints'">Beschikbare invulblokken</xsl:if>
+					<xsl:if test="not(@name='resourceConstraints')">
+						<xsl:call-template name="getTitle">
+							<xsl:with-param name="name" select="$name"/>
+							<xsl:with-param name="schema" select="$schema"/>
+						</xsl:call-template>
+					</xsl:if>
 				</xsl:with-param>
 				<xsl:with-param name="text" select="$text"/>
 				<xsl:with-param name="addLink" select="$addLink"/>

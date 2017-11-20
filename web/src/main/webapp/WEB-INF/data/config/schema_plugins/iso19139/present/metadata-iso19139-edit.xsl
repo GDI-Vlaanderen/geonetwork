@@ -221,13 +221,13 @@
     <!-- ===================================================================== -->
 
     <xsl:template mode="iso19139" match="gmd:DQ_DataQuality|gmd:identificationInfo|gmd:distributionInfo|gmd:thesaurusName|
-              gmd:resourceConstraints|gmd:spatialRepresentationInfo|gmd:pointOfContact|
+              gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|gmd:distributor|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:projection|gmd:ellipsoid|srv:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|
               gmd:geographicBox|gmd:temporalElement|
               srv:serviceType|srv:containsOperations|srv:coupledResource|
               gmd:metadataConstraints|gmd:DQ_ConformanceResult|gmd:DQ_QuantitativeResult|gmd:applicationSchemaInfo|gmd:aggregationInfo|gmd:resourceSpecificUsage|gmd:verticalElement|gmd:specification|gmd:LI_Lineage|
-              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS|gmd:onLine|gmd:processor">
+              gmd:distributionOrderProcess|gmd:lineage|gmd:LI_Source|gmd:processStep|gmd:verticalCRS|gmd:onLine|gmd:processor|gmd:otherConstraints">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 
@@ -355,94 +355,100 @@
     <xsl:template mode="iso19139" match="gmd:MD_Constraints|gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints ">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-		<xsl:if test="$edit=true()">
-			<xsl:apply-templates mode="addElement" select="geonet:child[@name='useLimitation' and @prefix='gmd']">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-	            <xsl:with-param name="visible"   select="count(gmd:useLimitation)=0"/>
-			</xsl:apply-templates>
-		</xsl:if>
-        <xsl:for-each select="gmd:useLimitation">
-       		<xsl:apply-templates mode="elementEP" select=".">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
-		</xsl:for-each>
-		<xsl:if test="name(.)='gmd:MD_LegalConstraints'">
-			<xsl:if test="$edit=true()">
-				<xsl:apply-templates mode="addElement" select="geonet:child[@name='accessConstraints' and @prefix='gmd']">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-		            <xsl:with-param name="visible"   select="count(gmd:accessConstraints)=0"/>
-				</xsl:apply-templates>
-			</xsl:if>
-	        <xsl:for-each select="gmd:accessConstraints">
-	       		<xsl:apply-templates mode="elementEP" select=".">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
-			</xsl:for-each>
-			<xsl:if test="$edit=true()">
-				<xsl:apply-templates mode="addElement" select="geonet:child[@name='useConstraints' and @prefix='gmd']">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-		            <xsl:with-param name="visible"   select="count(gmd:useConstraints)=0"/>
-				</xsl:apply-templates>
-			</xsl:if>
-	        <xsl:for-each select="gmd:useConstraints">
-	       		<xsl:apply-templates mode="elementEP" select=".">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
-			</xsl:for-each>
-			<xsl:if test="$edit=true()">
-				<xsl:apply-templates mode="addElement" select="geonet:child[@name='otherConstraints' and @prefix='gmd']">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-		            <xsl:with-param name="visible"   select="true()"/>	            
-<!--		            <xsl:with-param name="visible"   select="count(gmd:otherConstraints)=0"/>-->
-				</xsl:apply-templates>
-			</xsl:if>
-	        <xsl:for-each select="gmd:otherConstraints">
-		        <xsl:apply-templates mode="complexElement" select=".">
-		            <xsl:with-param name="schema"   select="$schema"/>
-		            <xsl:with-param name="edit"     select="$edit"/>
-		            <xsl:with-param name="content">
-		            	<xsl:if test="gmx:Anchor">
-				       		<xsl:apply-templates mode="elementEP" select=".">
-					            <xsl:with-param name="schema" select="$schema"/>
-					            <xsl:with-param name="edit"   select="$edit"/>
-							</xsl:apply-templates>
-		            	</xsl:if>
-		            	<xsl:if test="gco:CharacterString">
-							<xsl:apply-templates mode="simpleElement" select="gco:CharacterString/.">
-								<xsl:with-param name="schema" select="$schema"/>
-								<xsl:with-param name="edit"   select="$edit"/>
-							</xsl:apply-templates>
-		            	</xsl:if>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:for-each>
-		</xsl:if>
-		<xsl:if test="name(.)='gmd:MD_SecurityConstraints'">
-			<xsl:if test="$edit=true()">
-				<xsl:apply-templates mode="addElement" select="geonet:child[@name='classification' and @prefix='gmd']">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-		            <xsl:with-param name="visible"   select="count(gmd:classification)=0"/>
-				</xsl:apply-templates>
-			</xsl:if>
-	        <xsl:for-each select="gmd:classification">
-	       		<xsl:apply-templates mode="elementEP" select=".">
-		            <xsl:with-param name="schema" select="$schema"/>
-		            <xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
-			</xsl:for-each>
-       		<xsl:apply-templates mode="elementEP" select="*[not(name()='gmd:useLimitation' or name()='gmd:classification')]">
-	            <xsl:with-param name="schema" select="$schema"/>
-	            <xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
-		</xsl:if>
+        <xsl:apply-templates mode="complexElement" select=".">
+            <xsl:with-param name="schema"   select="$schema"/>
+            <xsl:with-param name="edit"     select="$edit"/>
+            <xsl:with-param name="content">
+				<xsl:if test="$edit=true()">
+					<xsl:apply-templates mode="addElement" select="geonet:child[@name='useLimitation' and @prefix='gmd']">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+			            <xsl:with-param name="visible"   select="count(gmd:useLimitation)=0"/>
+					</xsl:apply-templates>
+				</xsl:if>
+		        <xsl:for-each select="gmd:useLimitation">
+		       		<xsl:apply-templates mode="elementEP" select=".">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+					</xsl:apply-templates>
+				</xsl:for-each>
+				<xsl:if test="name(.)='gmd:MD_LegalConstraints'">
+					<xsl:if test="$edit=true()">
+						<xsl:apply-templates mode="addElement" select="geonet:child[@name='accessConstraints' and @prefix='gmd']">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+				            <xsl:with-param name="visible"   select="count(gmd:accessConstraints)=0"/>
+						</xsl:apply-templates>
+					</xsl:if>
+			        <xsl:for-each select="gmd:accessConstraints">
+			       		<xsl:apply-templates mode="elementEP" select=".">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+						</xsl:apply-templates>
+					</xsl:for-each>
+					<xsl:if test="$edit=true()">
+						<xsl:apply-templates mode="addElement" select="geonet:child[@name='useConstraints' and @prefix='gmd']">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+				            <xsl:with-param name="visible"   select="count(gmd:useConstraints)=0"/>
+						</xsl:apply-templates>
+					</xsl:if>
+			        <xsl:for-each select="gmd:useConstraints">
+			       		<xsl:apply-templates mode="elementEP" select=".">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+						</xsl:apply-templates>
+					</xsl:for-each>
+					<xsl:if test="$edit=true()">
+						<xsl:apply-templates mode="addElement" select="geonet:child[@name='otherConstraints' and @prefix='gmd']">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+				            <xsl:with-param name="visible"   select="true()"/>	            
+		<!--		            <xsl:with-param name="visible"   select="count(gmd:otherConstraints)=0"/>-->
+						</xsl:apply-templates>
+					</xsl:if>
+			        <xsl:for-each select="gmd:otherConstraints">
+				        <xsl:apply-templates mode="complexElement" select=".">
+				            <xsl:with-param name="schema"   select="$schema"/>
+				            <xsl:with-param name="edit"     select="$edit"/>
+				            <xsl:with-param name="content">
+				            	<xsl:if test="gmx:Anchor">
+						       		<xsl:apply-templates mode="elementEP" select=".">
+							            <xsl:with-param name="schema" select="$schema"/>
+							            <xsl:with-param name="edit"   select="$edit"/>
+									</xsl:apply-templates>
+				            	</xsl:if>
+				            	<xsl:if test="gco:CharacterString">
+									<xsl:apply-templates mode="simpleElement" select="gco:CharacterString/.">
+										<xsl:with-param name="schema" select="$schema"/>
+										<xsl:with-param name="edit"   select="$edit"/>
+									</xsl:apply-templates>
+				            	</xsl:if>
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</xsl:for-each>
+				</xsl:if>
+				<xsl:if test="name(.)='gmd:MD_SecurityConstraints'">
+					<xsl:if test="$edit=true()">
+						<xsl:apply-templates mode="addElement" select="geonet:child[@name='classification' and @prefix='gmd']">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+				            <xsl:with-param name="visible"   select="count(gmd:classification)=0"/>
+						</xsl:apply-templates>
+					</xsl:if>
+			        <xsl:for-each select="gmd:classification">
+			       		<xsl:apply-templates mode="elementEP" select=".">
+				            <xsl:with-param name="schema" select="$schema"/>
+				            <xsl:with-param name="edit"   select="$edit"/>
+						</xsl:apply-templates>
+					</xsl:for-each>
+		       		<xsl:apply-templates mode="elementEP" select="*[not(name()='gmd:useLimitation' or name()='gmd:classification')]">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+					</xsl:apply-templates>
+				</xsl:if>
+			</xsl:with-param>
+        </xsl:apply-templates>
 	</xsl:template>
 	
     <!-- ===================================================================== -->
@@ -672,12 +678,12 @@
 	            <xsl:with-param name="edit"   select="$edit"/>
 	            <xsl:with-param name="text"   select="$text"/>
 	            <xsl:with-param name="editAttributes" select="false()"/>
-                   <xsl:with-param name="title">
-                       <xsl:call-template name="getTitle">
-                           <xsl:with-param name="name" select="name(.)"/>
-                           <xsl:with-param name="schema" select="$schema"/>
-                       </xsl:call-template>
-                   </xsl:with-param>
+                 <xsl:with-param name="title">
+                     <xsl:call-template name="getTitle">
+                         <xsl:with-param name="name" select="name(.)"/>
+                         <xsl:with-param name="schema" select="$schema"/>
+                     </xsl:call-template>
+                 </xsl:with-param>
 			</xsl:apply-templates>
        	</xsl:if>
         <!--<xsl:apply-templates mode="iso19139" select="*">
@@ -1272,55 +1278,25 @@
                   match="*[gmx:Anchor]" priority="99">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
-<!--
-        <xsl:apply-templates mode="complexElement" select=".">
-            <xsl:with-param name="schema"   select="$schema"/>
-            <xsl:with-param name="edit"     select="$edit"/>
-            <xsl:with-param name="content">-->
-                <xsl:choose>
-                    <xsl:when test="$edit=true()">
-                        <!-- existing content -->
-                        <xsl:apply-templates mode="simpleElement" select="gmx:Anchor/.">
-                            <xsl:with-param name="schema" select="$schema"/>
-                            <xsl:with-param name="edit"   select="$edit"/>
-                        </xsl:apply-templates>
-			            <xsl:apply-templates mode="simpleAttribute" select="gmx:Anchor/@xlink:href">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit" select="$edit"/>
-			            </xsl:apply-templates>
-                    </xsl:when>
-                    <xsl:otherwise>
-				        <xsl:apply-templates mode="complexElement" select=".">
-				            <xsl:with-param name="schema"   select="$schema"/>
-				            <xsl:with-param name="edit"     select="$edit"/>
-				            <xsl:with-param name="content">
-		                        <xsl:apply-templates mode="simpleElement" select="gmx:Anchor">
-		                            <xsl:with-param name="schema" select="$schema"/>
-		                            <xsl:with-param name="edit"   select="$edit"/>
-		                        </xsl:apply-templates>
-		                    </xsl:with-param>
-		                </xsl:apply-templates>
-<!--
-		                <xsl:apply-templates mode="simpleElement" select=".">
-		                    <xsl:with-param name="schema"  select="$schema"/>
-		                    <xsl:with-param name="text">
-	                        	<a href="{gmx:Anchor/@xlink:href}" target="_blank"><xsl:value-of select="gmx:Anchor"/></a>
-		                    </xsl:with-param>
-		                </xsl:apply-templates>
--->
-<!--
-				        <xsl:apply-templates mode="complexElement" select=".">
-				            <xsl:with-param name="schema"   select="$schema"/>
-				            <xsl:with-param name="edit"     select="$edit"/>
-				            <xsl:with-param name="content">
-	                        	<a href="{gmx:Anchor/@xlink:href}" target="_blank"><xsl:value-of select="gmx:Anchor"/></a>
-	                        </xsl:with-param>
-				        </xsl:apply-templates>
--->				        
-                    </xsl:otherwise>
-                </xsl:choose>
-<!--            </xsl:with-param>
-        </xsl:apply-templates>-->
+		<xsl:choose>
+		    <xsl:when test="$edit=true()">
+		       <!-- existing content -->
+		       <xsl:apply-templates mode="simpleElement" select="gmx:Anchor/.">
+		           <xsl:with-param name="schema" select="$schema"/>
+		           <xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+				<xsl:apply-templates mode="simpleAttribute" select="gmx:Anchor/@xlink:href">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit" select="$edit"/>
+		   		</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+         		<xsl:apply-templates mode="simpleElement" select="gmx:Anchor">
+             		<xsl:with-param name="schema" select="$schema"/>
+             		<xsl:with-param name="edit"   select="$edit"/>
+          		</xsl:apply-templates>
+		    </xsl:otherwise>
+		</xsl:choose>
     </xsl:template>
 
     <!-- Add exception to update-fixed-info to avoid URL creation for downloadable resources -->
@@ -1583,13 +1559,13 @@
                         <!-- codelist in edit mode -->
                         <select class="md" name="_{../geonet:element/@ref}_{name(.)}" id="_{../geonet:element/@ref}_{name(.)}" size="1">
 <!-- 		        	<xsl:variable name="mandatory" select="../../geonet:element/@min='1' and not(../../@gco:nilReason)"/>-->
-			        	<xsl:variable name="mandatory" select="false()"/>
-					          <xsl:variable name="agivmandatory">
+			        		<xsl:variable name="mandatory" select="false()"/>
+					        <xsl:variable name="agivmandatory">
 					          	<xsl:call-template name="getMandatoryType">
 							    	<xsl:with-param name="name"><xsl:value-of select="name(../..)"/></xsl:with-param>
 							    	<xsl:with-param name="schema"><xsl:value-of select="$schema"/></xsl:with-param>
 								</xsl:call-template>
-					          </xsl:variable>
+					        </xsl:variable>
                             <xsl:if test="$mandatory or $agivmandatory != ''">
                                 <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
                             </xsl:if>
@@ -1597,7 +1573,9 @@
                                 <xsl:attribute name="disabled">disabled</xsl:attribute>
                             </xsl:if>
 							<xsl:variable name="sort" select="not(contains(concat('MD_CharacterSetCode','MD_ScopeCode','MD_SpatialRepresentationTypeCode','CI_RoleCode','CI_DateTypeCode','MD_ProgressCode','MD_MaintenanceFrequencyCode','MD_RestrictionCode','MD_ClassificationCode','DS_AssociationTypeCode','MD_MediumNameCode'),$name))"/>
-                            <option name=""/>
+                            <xsl:if test="$name!='MD_ClassificationCode'">
+	                            <option name=""/>
+                            </xsl:if>
                             <xsl:if test="not($sort)">
 	                            <xsl:for-each select="$codelist/entry[not(@hideInEditMode)]">
 	                                <option>
@@ -3175,20 +3153,47 @@
 							<xsl:value-of select="/root/gui/strings/constraintsTab"/>
 						</xsl:with-param>
 			            <xsl:with-param name="content">
+					        <xsl:for-each select="gmd:resourceConstraints">
+						        <xsl:apply-templates mode="complexElement" select=".">
+						            <xsl:with-param name="schema" select="$schema"/>
+						            <xsl:with-param name="edit"   select="$edit"/>
+					                <xsl:with-param name="flat"   select="$flat"/>
+						        </xsl:apply-templates>
+							</xsl:for-each>
+<!--
 				            <xsl:apply-templates mode="elementEP" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
 				                <xsl:with-param name="schema" select="$schema"/>
 				                <xsl:with-param name="edit"   select="$edit"/>
 				                <xsl:with-param name="flat"   select="$flat"/>
 				            </xsl:apply-templates>
+-->
 			            </xsl:with-param>	            
 					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:otherwise>
+			        <xsl:call-template name="complexElementGuiWrapper">
+			            <xsl:with-param name="schema" select="$schema"/>
+			            <xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="content">
+					        <xsl:for-each select="gmd:resourceConstraints">
+						        <xsl:apply-templates mode="complexElement" select=".">
+						            <xsl:with-param name="schema" select="$schema"/>
+						            <xsl:with-param name="edit"   select="$edit"/>
+					                <xsl:with-param name="flat"   select="$flat"/>
+						        </xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:with-param>
+			            <xsl:with-param name="title">
+							<xsl:value-of select="/root/gui/strings/constraintsTab"/>
+						</xsl:with-param>
+			        </xsl:call-template>
+<!--
 		            <xsl:apply-templates mode="iso19139-view" select="gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
 		                <xsl:with-param name="schema" select="$schema"/>
 		                <xsl:with-param name="edit"   select="$edit"/>
 		                <xsl:with-param name="flat"   select="$flat"/>
 		            </xsl:apply-templates>
+-->
 				</xsl:otherwise>
             </xsl:choose>
         </xsl:for-each>
@@ -5638,6 +5643,7 @@ to build the XML fragment in the editor. -->
 		            <xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="content">
 				        <xsl:for-each select="../gmd:resourceConstraints|geonet:child[string(@name)='resourceConstraints']">
+<!--
 					        <xsl:if test="count(./child::*[name() = 'gmd:MD_Constraints'])>0">
 						        <xsl:apply-templates mode="iso19139" select="./gmd:MD_Constraints/gmd:useLimitation">
 				                    <xsl:with-param name="schema" select="$schema"/>
@@ -5645,11 +5651,12 @@ to build the XML fragment in the editor. -->
 				                </xsl:apply-templates>
 							</xsl:if>
 					        <xsl:if test="count(./child::*[name() = 'gmd:MD_Constraints'])=0">
+-->
 						        <xsl:apply-templates mode="complexElement" select="*">
 						            <xsl:with-param name="schema" select="$schema"/>
 						            <xsl:with-param name="edit"   select="$edit"/>
 						        </xsl:apply-templates>
-					        </xsl:if>
+<!-- 					        </xsl:if>-->
 						</xsl:for-each>
 					</xsl:with-param>
 		            <xsl:with-param name="title">

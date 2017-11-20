@@ -182,7 +182,7 @@
 				<thesaurusName>
 					<CI_Citation>
 						<title>
-							<gco:CharacterString>D.4 van de verordening (EG) NR. 1205/2008 van de Commissie</gco:CharacterString>
+							<gco:CharacterString><xsl:value-of select="$inspire-service-taxonomy-thesaurus"/></gco:CharacterString>
 						</title>
 						<date>
 							<CI_Date>
@@ -260,6 +260,9 @@
 -->
 		<resourceConstraints>
 			<MD_LegalConstraints>
+				<useLimitation>
+					<gco:CharacterString>Beperking(en) op de publieke toegang</gco:CharacterString>
+				</useLimitation>
 				<accessConstraints>
 					<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
 				</accessConstraints>

@@ -499,8 +499,9 @@ USA.
 
 			<!-- cardinality of accessconstraints is [1..n] -->
 			<sch:let name="accessConstraints_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)])"/>
+			<!--
 			<sch:let name="accessConstraints_classification_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)]) + count(gmd:resourceConstraints/*/gmd:classification/*[string(@codeListValue)])"/>
-
+			-->
 
 			<!-- If the value of accessConstraints is otherRestrictions
 				there shall be instances of otherConstraints expressing
@@ -523,13 +524,21 @@ USA.
 
 			<sch:let name="otherConstraintAnchorInfo" 
 				value="gmd:resourceConstraints/*/gmd:otherConstraints/gmx:Anchor"/>
-
+<!--
 			<sch:assert test="$accessConstraints_classification_count">
 				<sch:value-of select="$loc/strings/alert.M45.ca/div"/>
 			</sch:assert>
 			<sch:report test="$accessConstraints_classification_count">
 				<sch:value-of select="$loc/strings/report.M45.ca/div"/>
 			</sch:report>
+-->
+			<sch:assert test="$accessConstraints_count">
+				<sch:value-of select="$loc/strings/alert.M45.ca/div"/>
+			</sch:assert>
+			<sch:report test="$accessConstraints_count">
+				<sch:value-of select="$loc/strings/report.M45.ca/div"/>
+			</sch:report>
+
 			<sch:assert test="not($accessConstraints)">
 				<sch:value-of select="$loc/strings/alert.M45.or/div"/>
 			</sch:assert>
@@ -548,15 +557,17 @@ USA.
 			//srv:SV_ServiceIdentification/gmd:resourceConstraints/*|
 			//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceConstraints/*">
 			<sch:let name="accessConstraints" value="string-join(gmd:accessConstraints/*/@codeListValue, ', ')"/>
-			<sch:let name="classification" value="string-join(gmd:classification/*/@codeListValue, ', ')"/>
+<!--			<sch:let name="classification" value="string-join(gmd:classification/*/@codeListValue, ', ')"/>-->
 			<sch:report test="$accessConstraints!=''">
 				<sch:value-of select="$loc/strings/report.M45.ac/div"/>
 				<sch:value-of select="$accessConstraints"/>
 			</sch:report>
+<!--
 			<sch:report test="$classification!=''">
 				<sch:value-of select="$loc/strings/report.M45.class/div"/>
 				<sch:value-of select="$classification"/>
 			</sch:report>
+-->			
 		</sch:rule>
 
 		<sch:rule context="//gmd:MD_DataIdentification|

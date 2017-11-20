@@ -128,11 +128,11 @@
         MD_Metadata.identificationInfo[1].MD_Identification.resourceConstraints</h2></div></alert.M45.rc>
     <report.M45.ac><div>Toegangsbeperkingen (accessConstraints) aanwezig:</div></report.M45.ac>
     <report.M45.class><div>Toegangsbeperkingen (classification) aanwezig:</div></report.M45.class>
-    <alert.M45.ca><div>Er moet minstens één voorkomen zijn van MD_LegalConstraints/accessConstraints of MD_SecurityConstraints/classification.</div></alert.M45.ca> 
-    <report.M45.ca><div>Er moet minstens één voorkomen zijn van MD_LegalConstraints/accessConstraints of MD_SecurityConstraints/classification.</div></report.M45.ca>
+    <alert.M45.ca><div>Er moet minstens één voorkomen zijn van MD_LegalConstraints/accessConstraints.</div></alert.M45.ca> 
+    <report.M45.ca><div>Er moet minstens één voorkomen zijn van MD_LegalConstraints/accessConstraints.</div></report.M45.ca>
 
     <alert.M45.or><div>De waarde van toegansbeperking (accessConstraints) moet anders (otherRestrictions) zijn, 
-    	als er voorkomens zijn van 'otherConstraints' </div></alert.M45.or>
+    	als er voorkomens zijn van 'otherConstraints', en de 'otherConstraints' moeten ingevuld zijn.</div></alert.M45.or>
     <report.M45.or><div>Toegangsbeperkingen (otherConstraints) aanwezig:</div></report.M45.or>
     <alert.M45.us><div>Gebruiksbeperkingen ontbreken.</div></alert.M45.us>
     <report.M45.us><div>Gebruiksbeperkingen aanwezig:</div></report.M45.us>

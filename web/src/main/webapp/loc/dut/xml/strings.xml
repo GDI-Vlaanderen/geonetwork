@@ -447,7 +447,7 @@
 	<confirmBatchDelete>Weet u zeker dat u alle $1 geselecteerde metadata wilt verwijderen uit de database?</confirmBatchDelete>
 	<confirmNewPassword>Bevestig nieuw wachtwoord</confirmNewPassword>
 	<confirmPassword>Bevestig wachtwoord</confirmPassword>
-	<constraintsTab>Gebruiksrecht</constraintsTab>
+	<constraintsTab>Toegangs- en gebruiksbeperkingen</constraintsTab>
 	<contactUs>Contact</contactUs>
 	<contains>Bevat</contains>
 	<contentInfoTab>Inhoud</contentInfoTab>
