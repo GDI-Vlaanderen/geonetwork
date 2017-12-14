@@ -4,11 +4,10 @@
 	
 	<xsl:variable name="responsibleParty">
 		<gmd:CI_ResponsibleParty>
-			<gmd:individualName gco:nilReason="missing">
-				<gco:CharacterString />
+			<gmd:individualName>
+				<gco:CharacterString>Helpdesk Informatie Vlaanderen</gco:CharacterString>
 			</gmd:individualName>
-			<gmd:organisationName>
-				<gco:CharacterString>Agentschap Informatie Vlaanderen</gco:CharacterString>
+			<gmd:organisationName><gco:CharacterString>agentschap Informatie Vlaanderen</gco:CharacterString>
 			</gmd:organisationName>
 			<gmd:contactInfo>
 				<gmd:CI_Contact>
@@ -25,7 +24,7 @@
 					<gmd:address>
 						<gmd:CI_Address>
 							<gmd:deliveryPoint>
-								<gco:CharacterString>Boudewijnlaan 30, bus 30</gco:CharacterString>
+								<gco:CharacterString>Havenlaan 88</gco:CharacterString>
 							</gmd:deliveryPoint>
 							<gmd:city>
 								<gco:CharacterString>Brussel</gco:CharacterString>

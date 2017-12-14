@@ -1890,6 +1890,7 @@
 			<option value="OtherConstraintsBronVV" title="Bronvermeldingsvoorschrift:">Bronvermeldingsvoorschrift</option>
 			<option value="OtherConstraintsPubToeg" title="Geen beperkingen op de publieke toegang.">Geen beperking op de publieke toegang</option>
 			<option value="OtherConstraintsAutRecht" title="De gegevens zijn beschermd door het auteursrecht. …">Regeling voor niet vermeld type van gebruik</option>
+<!--
 			<option value="OtherConstraintsPubToegArt13_1a" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(a) of the INSPIRE Directive</option>
 			<option value="OtherConstraintsPubToegArt13_1b" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(b) of the INSPIRE Directive</option>
 			<option value="OtherConstraintsPubToegArt13_1c" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(c) of the INSPIRE Directive</option>
@@ -1898,6 +1899,7 @@
 			<option value="OtherConstraintsPubToegArt13_1f" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(f) of the INSPIRE Directive</option>
 			<option value="OtherConstraintsPubToegArt13_1g" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(g) of the INSPIRE Directive</option>
 			<option value="OtherConstraintsPubToegArt13_1h" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(h) of the INSPIRE Directive</option>
+-->
 		</subtemplate>
 	</element>
 	<!-- ==================================================== -->

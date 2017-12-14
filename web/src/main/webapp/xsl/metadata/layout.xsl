@@ -2543,13 +2543,16 @@
 		    <xsl:call-template name="simpleElementGui">
 				<xsl:with-param name="id" select="concat('_',$parentName,'_',$name,'_subtemplate_row')"/>
 				<xsl:with-param name="title">
-					<xsl:if test="@name='resourceConstraints'">Beschikbare invulblokken</xsl:if>
-					<xsl:if test="not(@name='resourceConstraints')">
-						<xsl:call-template name="getTitle">
-							<xsl:with-param name="name" select="$name"/>
-							<xsl:with-param name="schema" select="$schema"/>
-						</xsl:call-template>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="@name='resourceConstraints'">Beschikbare invulblokken</xsl:when>
+						<xsl:when test="@name='otherConstraints'">Beschikbare invulblokken Overige beperkingen</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="getTitle">
+								<xsl:with-param name="name" select="$name"/>
+								<xsl:with-param name="schema" select="$schema"/>
+							</xsl:call-template>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:with-param>
 				<xsl:with-param name="text" select="$text"/>
 				<xsl:with-param name="addLink" select="$addLink"/>

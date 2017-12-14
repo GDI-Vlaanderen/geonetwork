@@ -18,6 +18,25 @@
 	<xsl:template match="gmd:MD_Metadata">
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
+	        <xsl:variable name="service" select="../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
+			<xsl:if test="$service and count(@*[local-name()='srv'])=0">
+				<xsl:namespace name="srv">http://www.isotc211.org/2005/srv</xsl:namespace>
+			</xsl:if>
+			<xsl:if test="count(@*[local-name()='gmd'])=0">
+				<xsl:namespace name="gmd">http://www.isotc211.org/2005/gmd</xsl:namespace>
+			</xsl:if>
+			<xsl:if test="count(@*[local-name()='gml'])=0">
+				<xsl:namespace name="gml">http://www.opengis.net/gml</xsl:namespace>
+			</xsl:if>
+			<xsl:if test="count(@*[local-name()='xsi'])=0">
+				<xsl:namespace name="xsi">http://www.w3.org/2001/XMLSchema-instance</xsl:namespace>
+			</xsl:if>
+			<xsl:if test="count(@*[local-name()='gmx'])=0">
+				<xsl:namespace name="gmx">http://www.isotc211.org/2005/gmx</xsl:namespace>
+			</xsl:if>
+			<xsl:if test="count(@*[local-name()='gco'])=0">
+				<xsl:namespace name="gco">http://www.isotc211.org/2005/gco</xsl:namespace>
+			</xsl:if>
 			
 			<gmd:fileIdentifier>
 				<gco:CharacterString>

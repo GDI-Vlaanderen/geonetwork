@@ -23,27 +23,24 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.mef.Importer;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.services.metadata.validation.agiv.AGIVValidation;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.tuckey.web.filters.urlrewrite.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 //=============================================================================
 
@@ -83,6 +80,7 @@ public class XmlUpdate implements Service
 		response.addContent(lockedbyRecords);
 		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
 		String scope      = Util.getParam(params, "scope", "0");
+		String validationType      = Util.getParam(params, "validationType", "0");
         if (!style.equals("_none_") && !StringUtils.isBlank(scope) && (scope.equals("0") || scope.equals("1"))) {
 
     		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -92,12 +90,13 @@ public class XmlUpdate implements Service
 			DataManager dm = gc.getDataManager();
 	        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 	        String[] tableNames = {"Metadata","Workspace"};
-            Element result = dbms.select("SELECT id, uuid, lockedby FROM " + tableNames[Integer.parseInt(scope)] + " where not (isharvested='y') and istemplate='n' and (schemaid = 'iso19139' OR schemaid = 'iso19110') ORDER BY id ASC");
+            Element result = dbms.select("SELECT id, uuid, lockedby, schemaid FROM " + tableNames[Integer.parseInt(scope)] + " where not (isharvested='y') and istemplate='n' and (schemaid = 'iso19139' OR schemaid = 'iso19110') ORDER BY id ASC");
             for(int i = 0; i < result.getContentSize(); i++) {
                 Element record = (Element) result.getContent(i);
                 String id = record.getChildText("id");
                 String uuid = record.getChildText("uuid");
                 String lockedby = record.getChildText("lockedby");
+                String schema = record.getChildText("schemaid");
                 if (!StringUtils.isBlank(lockedby) && scope.equals("0")) {
                     lockedbyRecords.addContent(new Element(Params.UUID).setText(uuid));
                 }
@@ -109,8 +108,34 @@ public class XmlUpdate implements Service
     	            md.detach();
     	            int oldLength = Xml.getString(md).length();
     	            md = Xml.transform(md, stylePath +"/"+ style);
+            		if (validationType.equals("2")) {
+            	        try {
+        	        	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+        	                dm.doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, false, valTypeAndStatus).two();
+//            	        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
+        	                	if ("iso19139".equals(schema)) {
+        	                		md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+        	                	}
+//        	        		}
+            			}
+            	        finally {
+            	        }
+            		}
     	            int newLength = Xml.getString(md).length();
     	            if (newLength != oldLength) {
+                		if (validationType.equals("1")) {
+                	        try {
+            	        	    Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+            	                dm.doValidate(context/*session*/, dbms, schema,id,md,/*lang,*/ false, false, valTypeAndStatus).two();
+//                	        		if (servContext.getServlet().getNodeType().toLowerCase().equals("agiv") || servContext.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
+            	                	if ("iso19139".equals(schema)) {
+            	                		md = new AGIVValidation(context/*, dbms*/).addConformKeywords(md, valTypeAndStatus, schema/*now, workspace*/);
+            	                	}
+//            	        		}
+                			}
+                	        finally {
+                	        }
+                		}
 //	            		System.out.println("Updating record with uuid" + uuid);
 	            		if (scope.equals("0")) {
 	    	                dm.getXmlSerializer().update(dbms, id, md, null, false, context);
@@ -118,12 +143,15 @@ public class XmlUpdate implements Service
 	    	                dm.getXmlSerializer().updateWorkspace(dbms, id, md, null, false, context, null, false);
 	            		}
     	                dbms.commit();
+	                    System.out.println(uuid + ",(Aantal bytes gewijzigd van " + oldLength +  " naar " + newLength + ")");
 	                    modifiedRecords.addContent(new Element(Params.UUID).setText(uuid + " (Aantal bytes gewijzigd van " + oldLength +  " naar " + newLength + ")"));
     	            } else {
+	                    System.out.println(uuid + ",(Onveranderd aantal bytes " + oldLength + ")");
 	            		unchangedRecords.addContent(new Element(Params.UUID).setText(uuid));
     	            }
                     //dm.indexInThreadPoolIfPossible(dbms, metadataId, workspace);
             	} catch (Exception e) {
+                    System.out.println(uuid + ",(Exception thrown)");
             		unchangedByErrorRecords.addContent(new Element(Params.UUID).setText(uuid));
             	}
             }
