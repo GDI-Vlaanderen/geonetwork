@@ -712,6 +712,7 @@ function isException(el) {
 					  'stip.iso19139|gmd:temporalElement|gmd:EX_Extent|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement||gmd:temporalElement',
 					  'stip.iso19139|gmd:verticalElement|gmd:EX_Extent|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:verticalElement||gmd:verticalElement',
 					  'stip.iso19139|gmd:resourceConstraints|gmd:MD_DataIdentification|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints||gmd:resourceConstraints',
+					  'stip.iso19139|gmd:otherConstraints|gmd:MD_LegalConstraints|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints||gmd:otherConstraints',
 					  'stip.iso19139|gmd:EX_GeographicBoundingBox|gmd:geographicElement|gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox||gmd:EX_GeographicBoundingBox'
                       ];
 	for (var i = 0; i < exceptions.length; i++) {

@@ -46,7 +46,6 @@
 							<CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="{$positionName}"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:message>Value of PositionName in capabilities is not one of values in the role code list (http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode): <xsl:value-of select="$positionName"/></xsl:message>
 							<gco:CharacterString><xsl:value-of select="$positionName"/></gco:CharacterString>
 						</xsl:otherwise>
 					</xsl:choose>

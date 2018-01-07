@@ -1417,7 +1417,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation" context="gmd:MD_Constraints">
-		<label>Beperkingen</label>
+		<label>Beschrijving</label>
 		<description>Beperkingen die van toepassing zijn op de wijze van toegang of het gebruik van een databron of metadata</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1534,12 +1534,12 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Constraints">
-		<label>Beperkingen</label>
+		<label>Inhoudelijke gebruiksbeperkingen</label>
 		<description>Beperkingen van de dataset of datasetserie.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_LegalConstraints">
-		<label>Legale beperkingen voor toegang en gebruik</label>
+		<label>Legale beperkingen</label>
 		<description>Toegangsbeperkingen en legale vereisten voor toegang en gebruik van de dataset of datasetserie.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1875,7 +1875,38 @@
 	<element name="gmd:otherConstraints">
 		<label>Overige beperkingen</label>
 		<description>Andere restricties of beperkingen die niet in andere velden kunnen worden ondergebracht, bijvoorbeeld de naam van de copyrighthouder.</description>
-	<condition>mandatory</condition>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.2: conditioneel - indien de toegangsbeperking gedefinieerd is als anders.</mandatoryTooltip>
+		<subtemplate>
+			<option value="OtherConstraintsCharacterString" title="Beschrijving">Beschrijving</option>
+			<option value="OtherConstraintsAnchor" title="Beschrijving en URL">Beschrijving en URL</option>
+			<option value="OtherConstraintsUB1" title="Toegang en gebruik voor het uitvoeren van taken va…">Gebruik door Vlaamse instanties</option>
+			<option value="OtherConstraintsUB2" title="Toegang en gebruik voor het uitvoeren van taken va…">Gebruik door niet-Vlaamse instanties</option>
+			<option value="OtherConstraintsHergebrEig" title="Deze dataset betreft overheidsinformatie. Indien u…">Licentie voor hergebruik op te vragen</option>
+			<option value="OtherConstraintsModLicGH" title="In uitvoering van het Vlaamse decreet voor hergebr…">Vlaamse Modellicentie voor gratis hergebruik</option>
+			<option value="OtherConstraintsModLicHTV" title="In uitvoering van het Vlaamse decreet voor hergebr…">Vlaamse Modellicentie voor hergebruik tegen vergoeding</option>
+			<option value="OtherConstraintsCC0" title="Verklaring waarmee de auteursrechthebbende aangeef…">CC0 verklaring</option>
+			<option value="OtherConstraintsBronVV" title="Bronvermeldingsvoorschrift:">Bronvermeldingsvoorschrift</option>
+			<option value="OtherConstraintsPubToeg" title="Geen beperkingen op de publieke toegang.">Geen beperking op de publieke toegang</option>
+			<option value="OtherConstraintsAutRecht" title="De gegevens zijn beschermd door het auteursrecht. …">Regeling voor niet vermeld type van gebruik</option>
+<!--
+			<option value="OtherConstraintsPubToegArt13_1a" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(a) of the INSPIRE Directive</option>
+			<option value="OtherConstraintsPubToegArt13_1b" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(b) of the INSPIRE Directive</option>
+			<option value="OtherConstraintsPubToegArt13_1c" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(c) of the INSPIRE Directive</option>
+			<option value="OtherConstraintsPubToegArt13_1d" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(d) of the INSPIRE Directive</option>
+			<option value="OtherConstraintsPubToegArt13_1e" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(e) of the INSPIRE Directive</option>
+			<option value="OtherConstraintsPubToegArt13_1f" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(f) of the INSPIRE Directive</option>
+			<option value="OtherConstraintsPubToegArt13_1g" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(g) of the INSPIRE Directive</option>
+			<option value="OtherConstraintsPubToegArt13_1h" title="Public access to spatial data sets and services wo…">Public access limited according to Article 13(1)(h) of the INSPIRE Directive</option>
+-->
+		</subtemplate>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gco:CharacterString" context="gmd:otherConstraints">
+		<label>Beschrijving</label>
+		<description>Andere restricties of beperkingen die niet in andere velden kunnen worden ondergebracht, bijvoorbeeld de naam van de copyrighthouder.</description>
+		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 8.2: conditioneel - indien de toegangsbeperking gedefinieerd is als anders.</mandatoryTooltip>
 	</element>
@@ -2064,24 +2095,18 @@
 		<description>resolutie</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:resourceConstraints">
-		<label>Beperkingen van de omschreven data</label>
+	<element name="gmd:resourceConstraints" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints">
+		<label>Beperkingen van de dataset(serie)</label>
 		<description>Geeft informatie over de beperkingen van de beschreven databron.</description>
 		<subtemplate>
-			<option value="LicentieDefault" title="Default Licentie">Default Licentie</option>
-<!-- 
-			<option value="ModellicentieHergebruik1" title="Hergebruik: CC0-verklaring - v1.0">Modellicentie Hergebruik 1 - CC0-verklaring v1.0</option>
-			<option value="ModellicentieHergebruik2" title="Hergebruik: Gratis Open - v1.0"> Modellicentie Hergebruik 2 - Gratis Open Data Licentie v1.0</option>
-			<option value="ModellicentieHergebruik2b" title="Hergebruik: Gratis Open (niet toegevoegd aan de GDI) - v1.0"> Modellicentie Hergebruik 2b - Gratis Open Data Licentie voor gegevens niet toegevoegd aan de GDI v1.0</option>
-			<option value="ModellicentieHergebruik3" title="Hergebruik: Open tegen Billijke Vergoeding - v1.0"> Modellicentie Hergebruik 3 - Open Data Licentie tegen Billijke Vergoeding v1.0</option>
-			<option value="ModellicentieHergebruik4" title="Hergebruik: Gratis Open voor Niet-Commercieel Hergebruik en Open voor Commercieel Hergebruik - v1.0"> Modellicentie Hergebruik 4a+4b - Gratis Open Data Licentie voor Niet-Commercieel Hergebruik en Open Data Licentie voor Commercieel Hergebruik v1.0</option>
-			<option value="ModellicentieHergebruik5" title="Hergebruik: CC0-verklaring - v1.2"> Modellicentie Hergebruik 1 - CC0-verklaring v1.2</option>
-			<option value="ModellicentieHergebruik6" title="Hergebruik: Gratis Open - v1.2"> Modellicentie Hergebruik 2 - Gratis Open Data Licentie v1.2</option>
-			<option value="ModellicentieHergebruik6b" title="Hergebruik: Gratis Open (niet toegevoegd aan de GDI) - v1.2"> Modellicentie Hergebruik 2b - Gratis Open Data Licentie voor gegevens niet toegevoegd aan de GDI v1.2</option>
-			<option value="ModellicentieHergebruik7" title="Hergebruik: Open tegen Billijke Vergoeding - v1.2"> Modellicentie Hergebruik 3 - Open Data Licentie tegen Billijke Vergoeding v1.2</option>
-			<option value="ModellicentieHergebruik8" title="Hergebruik: Gratis Open voor Niet-Commercieel Hergebruik en Open voor Commercieel Hergebruik - v1.2">Modellicentie Hergebruik 4a+4b - Gratis Open Data Licentie voor Niet-Commercieel Hergebruik en Open Data Licentie voor Commercieel Hergebruik v1.2</option>
--->
-		</subtemplate>
+			<option value="DefaultAccessConstraints" title="Gebruiksrecht - Legale beperkingen voor toegang">Invulblok legale beperkingen voor toegang</option>
+			<option value="DefaultUseConstraints" title="Gebruiksrecht - Legale beperkingen voor gebruik">Invulblok legale beperkingen voor gebruik</option>
+ 		</subtemplate>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:resourceConstraints" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints">
+		<label>Beperkingen van de service</label>
+		<description>Geeft informatie over de beperkingen van de beschreven databron.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceFormat">
@@ -2399,15 +2424,19 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation" context="gmd:MD_LegalConstraints">
-		<label>Beschrijving legale beperkingen</label>
+		<label>Beschrijving</label>
 		<description>Toepassingen waarvoor de data niet mag gebruikt worden.</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
 		<mandatoryTooltip>INSPIRE B 8.1: conditioneel - minstens 1 gebruiksbeperking (useLimitation) moet beschreven zijn.</mandatoryTooltip>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gco:CharacterString" context="gmd:useLimitation">
+		<label>Beschrijving</label>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:useLimitation" context="gmd:MD_SecurityConstraints">
-		<label>Beschrijving veiligheidsbeperkingen</label>
+		<label>Beschrijving</label>
 		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
 		<condition>mandatory</condition>
 		<mandatoryType>inspire</mandatoryType>
@@ -3002,6 +3031,17 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
         <label>Bron URL</label>
         <description>URL van het document.</description>
     </element>
+	<element name="gmx:Anchor" context="gmd:otherConstraints">
+		<label>Beschrijving</label>
+		<description>Ondertsteunt hyper-linking mogelijkheden en verzekert een web-like implementatie van tekenreeksen (Characterstrings)</description>
+		<condition>mandatory</condition>
+		<mandatoryType>inspire</mandatoryType>
+		<mandatoryTooltip>INSPIRE B 8.2: conditioneel - indien de toegangsbeperking gedefinieerd is als anders.</mandatoryTooltip>
+	</element>
+		<element name="xlink:href" context="gmx:Anchor">
+			<label>URL</label>
+			<description>Geeft de informatie die een XLink applicatie toelaat om de bron of bronfragment te vinden [W3C XLINK]</description>
+		</element>
 		<element name="gmx:Anchor">
 				<label>Anchor</label>
 				<description>Ondertsteunt hyper-linking mogelijkheden en verzekert een web-like implementatie van tekenreeksen (Characterstrings)</description>
@@ -3252,12 +3292,16 @@ het verplichte element linkage, uit de klasse CI_OnlineResource.</description>
 	<condition>conditional</condition>
 	</element>
 	<element name="gmd:useLimitation" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints">
-		<label>Beschrijving legale beperkingen</label>
+		<label>Beschrijving</label>
 		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
 	</element>
 	<element name="gmd:useLimitation" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints">
-		<label>Beschrijving veiligheidsbeperkingen</label>
+		<label>Beschrijving</label>
 		<description>Toepassingen waarvoor de data niet geschikt is. Bijvoorbeeld: Niet geschikt voor navigatie.</description>
+	</element>
+	<element name="gmx:Anchor" context="gmd:useLimitation">
+		<label>Beschrijving</label>
+		<description>Ondertsteunt hyper-linking mogelijkheden en verzekert een web-like implementatie van tekenreeksen (Characterstrings)</description>
 	</element>
 	<element name="gmd:description" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:description">
 		<label>Omschrijving geografische begrenzing</label>

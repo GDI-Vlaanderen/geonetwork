@@ -42,6 +42,7 @@ import jeeves.utils.BinaryFile;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Settings;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -92,9 +93,9 @@ public class DefaultStatusActions implements StatusActions {
 		SettingManager sm = gc.getSettingManager();
 		am = gc.getAccessManager();
 
-		host = sm.getValue("system/feedback/mailServer/host");
-		port = sm.getValue("system/feedback/mailServer/port");
-		from = sm.getValue("system/feedback/email");
+		host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+		port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+		from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
 		if (host.length() == 0) {
 			context.error("Mail server host not configured, email notifications won't be sent.");

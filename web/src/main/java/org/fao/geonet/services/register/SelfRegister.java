@@ -33,6 +33,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.constants.Geonet.Settings;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.IDFactory;
@@ -111,9 +112,9 @@ public class SelfRegister implements Service {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
 		
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
-		String from = sm.getValue("system/feedback/email");
+		String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+		String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+		String from   = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 		String thisSite = sm.getValue("system/site/name");
 
 		// Do not allow an unconfigured site to send out self-registration emails

@@ -46,7 +46,7 @@
 					</xsl:if>
 				</xsl:if>
 				<xsl:if test="$status='2' or $status='9'">
-						<xsl:text>&#10;&#13;Voor meer informatie kan je steeds terecht op onze website </xsl:text><xsl:value-of select="/root/siteUrl"/><xsl:text>, of mail naar contactpunt@agiv.be.</xsl:text>
+						<xsl:text>&#10;&#13;Voor meer informatie kan je steeds terecht op onze website </xsl:text><xsl:value-of select="/root/siteUrl"/><xsl:text>, of mail naar informatie.vlaanderen@vlaanderen.be.</xsl:text>
 				</xsl:if>
 				<xsl:text>&#10;&#13;&#10;&#13;Met vriendelijke groeten,&#10;&#13;Het Metadata-team</xsl:text>
 			</message>
@@ -88,7 +88,7 @@
 					<xsl:call-template name="changeMessage" />
 				</xsl:when>
 				<xsl:when test="$status='5' or $status='9'">
-					<xsl:text>Jouw wijzigingen aan </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:text> konden niet gevalideerd worden door </xsl:text><xsl:if test="$status='5'">jouw hoofdeditor.</xsl:if><xsl:if test="$status='9'">het AGIV.</xsl:if>
+					<xsl:text>Jouw wijzigingen aan </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:text> konden niet gevalideerd worden door </xsl:text><xsl:if test="$status='5'">jouw hoofdeditor.</xsl:if><xsl:if test="$status='9'">Informatie Vlaanderen.</xsl:if>
 					<xsl:call-template name="changeMessage" />
 					<xsl:text>&#10;&#13;&#10;&#13;Je kan de metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> wijzigen via </xsl:text><xsl:value-of select="/root/siteUrl"/><xsl:text> en opnieuw indienen.</xsl:text>				
 				</xsl:when>
@@ -103,10 +103,10 @@
 			</xsl:choose>
 		</xsl:if>
 		<xsl:if test="$currentStatus='10' or $currentStatus='11'">
-			<xsl:text>Het </xsl:text><xsl:if test="$currentStatus='10'">depubliceren</xsl:if><xsl:if test="$currentStatus='11'">verwijderen</xsl:if><xsl:text> van </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:if test="$status='13' or $status='14'"><xsl:text> kon</xsl:text><xsl:if test="$metadataCount>1">den</xsl:if> niet gevalideerd worden</xsl:if><xsl:if test="$status!='13' and $status!='14'"><xsl:text> </xsl:text>werd<xsl:if test="$metadataCount>1">en</xsl:if> gevalideerd</xsl:if><xsl:text> door het AGIV.</xsl:text>
+			<xsl:text>Het </xsl:text><xsl:if test="$currentStatus='10'">depubliceren</xsl:if><xsl:if test="$currentStatus='11'">verwijderen</xsl:if><xsl:text> van </xsl:text><xsl:if test="$metadataCount>1">volgende</xsl:if><xsl:if test="$metadataCount=1">de</xsl:if><xsl:text> metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:if test="$metadataCount=1"><xsl:text> met titel '</xsl:text><xsl:value-of select="$title"/><xsl:text>'</xsl:text></xsl:if><xsl:if test="$status='13' or $status='14'"><xsl:text> kon</xsl:text><xsl:if test="$metadataCount>1">den</xsl:if> niet gevalideerd worden</xsl:if><xsl:if test="$status!='13' and $status!='14'"><xsl:text> </xsl:text>werd<xsl:if test="$metadataCount>1">en</xsl:if> gevalideerd</xsl:if><xsl:text> door Informatie Vlaanderen.</xsl:text>
 			<xsl:if test="$status='13' or $status='14'">
 				<xsl:call-template name="changeMessage" />
-<!-- 				<xsl:text>&#10;&#13;&#10;&#13;De metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> werd</xsl:text><xsl:if test="$metadataCount>1">en</xsl:if><xsl:text> om die reden terug naar zijn oorspronkelijke status "Goedgekeurd door AGIV en gepubliceerd" gebracht.</xsl:text>-->
+<!-- 				<xsl:text>&#10;&#13;&#10;&#13;De metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> werd</xsl:text><xsl:if test="$metadataCount>1">en</xsl:if><xsl:text> om die reden terug naar zijn oorspronkelijke status "Goedgekeurd door Informatie Vlaanderen en gepubliceerd" gebracht.</xsl:text>-->
 				<xsl:text>&#10;&#13;&#10;&#13;De metadatarecord</xsl:text><xsl:if test="$metadataCount>1">s</xsl:if><xsl:text> werd</xsl:text><xsl:if test="$metadataCount>1">en</xsl:if><xsl:text> om die reden terug naar zijn oorspronkelijke status</xsl:text><xsl:if test="$metadataCount=1"><xsl:call-template name="previousStatus"/></xsl:if><xsl:text> gebracht.</xsl:text>
 			</xsl:if>				
 		</xsl:if>
@@ -120,16 +120,16 @@
 				<xsl:choose>
 					<xsl:when test="$status='0'">onbekend</xsl:when>
 					<xsl:when test="$status='1'">ontwerp</xsl:when>
-					<xsl:when test="$status='2'">goedgekeurd door AGIV en gepubliceerd</xsl:when>
+					<xsl:when test="$status='2'">goedgekeurd door Informatie Vlaanderen en gepubliceerd</xsl:when>
 					<xsl:when test="$status='3'">gedepubliceerd</xsl:when>
 					<xsl:when test="$status='4'">intern ingediend bij de hoofdeditor ter validatie</xsl:when>
 					<xsl:when test="$status='5'">afgekeurd door Hoofdeditor</xsl:when>
 					<xsl:when test="$status='6'">pas gecreëerd</xsl:when>
-					<xsl:when test="$status='7'">intern goedgekeurd en ingediend bij het AGIV ter validatie</xsl:when>
+					<xsl:when test="$status='7'">intern goedgekeurd en ingediend bij Informatie Vlaanderen ter validatie</xsl:when>
 					<xsl:when test="$status='8'">is klaar voor publicatie</xsl:when>
-					<xsl:when test="$status='9'">afgekeurd door AGIV-validator</xsl:when>
-					<xsl:when test="$status='10'">ingediend bij het AGIV ter validatie</xsl:when>
-					<xsl:when test="$status='11'">ingediend bij het AGIV ter validatie</xsl:when>
+					<xsl:when test="$status='9'">afgekeurd door validator Informatie Vlaanderen</xsl:when>
+					<xsl:when test="$status='10'">ingediend bij Informatie Vlaanderen ter validatie</xsl:when>
+					<xsl:when test="$status='11'">ingediend bij Informatie Vlaanderen ter validatie</xsl:when>
 					<xsl:when test="$status='12'">verwijderd</xsl:when>
 					<xsl:otherwise></xsl:otherwise>
 				</xsl:choose>
@@ -169,14 +169,14 @@
 		<xsl:choose>
 			<xsl:when test="$status='0'">Onbekend</xsl:when>
 			<xsl:when test="$status='1'">Ontwerp</xsl:when>
-			<xsl:when test="$status='2'">Goedgekeurd door AGIV en gepubliceerd</xsl:when>
+			<xsl:when test="$status='2'">Goedgekeurd door Informatie Vlaanderen en gepubliceerd</xsl:when>
 			<xsl:when test="$status='3'">Gedepubliceerd</xsl:when>
 			<xsl:when test="$status='4'">Intern ingediend</xsl:when>
 			<xsl:when test="$status='5'">Afgekeurd door Hoofdeditor</xsl:when>
 			<xsl:when test="$status='6'">Pas gecreëerd</xsl:when>
-			<xsl:when test="$status='7'">Intern goedgekeurd en ingediend bij AGIV</xsl:when>
+			<xsl:when test="$status='7'">Intern goedgekeurd en ingediend bij Informatie Vlaanderen</xsl:when>
 			<xsl:when test="$status='8'">klaar voor publicatie</xsl:when>
-			<xsl:when test="$status='9'">Afgekeurd door AGIV-validator</xsl:when>
+			<xsl:when test="$status='9'">Afgekeurd door validator Informatie Vlaanderen</xsl:when>
 			<xsl:when test="$status='10'">Ingediend voor depubliceren</xsl:when>
 			<xsl:when test="$status='11'">Ingediend voor verwijderen</xsl:when>
 			<xsl:when test="$status='12'">Verwijderd</xsl:when>

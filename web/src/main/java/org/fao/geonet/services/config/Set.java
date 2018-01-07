@@ -35,6 +35,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Settings;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -204,9 +205,14 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/username",           "system/proxy/username"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/password",           "system/proxy/password"),
 
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/email",           "system/feedback/email"),
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/mailServer/host", "system/feedback/mailServer/host"),
-		new ConfigEntry(ConfigEntry.Type.INT,    false, "feedback/mailServer/port", "system/feedback/mailServer/port"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/email",           Settings.SYSTEM_FEEDBACK_EMAIL),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/mailServer/host", Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST),
+		new ConfigEntry(ConfigEntry.Type.INT,    false, "feedback/mailServer/port", Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/mailServer/username", Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/mailServer/password", Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "feedback/mailServer/ssl", Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "feedback/mailServer/tls", Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "feedback/mailServer/ignoreSslCertificateErrors", Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS),
 
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "removedMetadata/dir",      "system/removedMetadata/dir"),
 

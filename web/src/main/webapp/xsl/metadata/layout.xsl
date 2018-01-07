@@ -573,8 +573,7 @@
        <xsl:if test="not(geonet:element/@del='true') or ($currTab = 'simple' and ($siblingsCount = 0))">
 <!-- 		<xsl:if test="not(geonet:element/@del='true')"> -->
 			<xsl:if test="$schema!='iso19139' or (name(.) != 'gmd:supplementalInformation' and name(.) != 'gmd:useLimitation' and
-				name(.) != 'gmd:accessConstraints' and name(.) != 'gmd:useConstraints'and
-				name(.) != 'gmd:otherConstraints' and name(.) != 'gmd:transferSize')">
+				name(.) != 'gmd:accessConstraints' and name(.) != 'gmd:useConstraints' and name(.) != 'gmd:transferSize')">
         	<xsl:text>!OPTIONAL</xsl:text>
         </xsl:if>
       </xsl:if>
@@ -623,7 +622,7 @@
   <xsl:template name="addLink">
     <xsl:param name="id"/>
 
-	<xsl:if test="not(name(.)='gmd:spatialResolution')">
+	<xsl:if test="not(name(.)='gmd:spatialResolution' or name(.)='gmd:otherConstraints')">
 	    <xsl:variable name="name" select="name(.)"/>
 	    <xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
 	    <xsl:variable name="nb">
@@ -883,6 +882,7 @@
 			name(.) != 'gmd:distributionOrderProcess' and
 			name(.) != 'gmd:temporalElement' and
 			name(.) != 'gmd:verticalElement' and
+			name(.) != 'gmd:otherConstraints' and
 			name(.) != 'gmd:resourceConstraints')">
 	        	<xsl:text>!OPTIONAL</xsl:text>
         	</xsl:if>
@@ -1473,6 +1473,7 @@
           * non codelist element
           * empty field with nilReason attributes
         -->
+<!--        <xsl:message select="concat('Executing simpleElementGui for element ', name(.))"/>-->
         <xsl:choose>
           <xsl:when
             test="$edit and $editAttributes
@@ -1481,7 +1482,7 @@
             ">
             <!-- Display attributes if used and not only contains a gco:nilReason = missing. -->
             <xsl:variable name="countGeonetAttributes" select="count(@geonet:xsderror|@geonet:inserted|@geonet:deleted|@geonet:class|@class|@geonet:updatedText)"/>
-            <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and name(.)!='frame' and  normalize-space()!='missing']) - $countGeonetAttributes > 0"/>
+            <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and name(.)!='frame' and  normalize-space()!='missing']) - $countGeonetAttributes > 0 and name(.)!='gmx:Anchor'"/>
 <!--
             <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and  normalize-space()!='missing']) > 0"/>
 -->
@@ -2028,7 +2029,7 @@
 	          </xsl:for-each>
 	        </select>
       </xsl:when>
-      <xsl:when test="$edit=true() and $class=''">
+      <xsl:when test="$edit=true() and $class='' and name(.)!='gmx:Anchor' and not (name(.)='gco:CharacterString' and name(..)='gmd:otherConstraints')">
         <xsl:choose>
           <!-- heikki doeleman: for gco:Boolean, use checkbox.
             Default value set to false. -->
@@ -2174,8 +2175,9 @@
 			</div>
 <!-- 		<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1' and not(../../@gco:nilReason='missing')) or (../geonet:element/@min='1' and not(../@gco:nilReason='missing'))"/>-->
 			<xsl:variable name="mandatory" select="false()"/>
-			<textarea class="md {$class}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
-				<xsl:if test="$isXLinked"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+			<textarea name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
+				<xsl:attribute name="class">md <xsl:choose><xsl:when test="name(.)='gmx:Anchor' or (name(.)='gco:CharacterString' and name(..)='gmd:otherConstraints')">small</xsl:when><xsl:otherwise><xsl:value-of select="$class"/></xsl:otherwise></xsl:choose></xsl:attribute>
+                <xsl:if test="$isXLinked and name(.)!='gmx:Anchor'"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 				<xsl:if test="$visible = false()"><xsl:attribute name="style">display:none;</xsl:attribute></xsl:if>
 				<xsl:if test="($mandatory or not($agivmandatory = '')) and $edit"><xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute></xsl:if>
 				<xsl:if test="text()"><xsl:value-of select="string(text())"/></xsl:if>
@@ -2431,9 +2433,7 @@
 				<options>
 				    <xsl:choose>
 						<xsl:when test="$name='gmd:resourceConstraints'">
-							<option name="gmd:MD_Constraints" selected="selected" title="Gebruiksrecht - Beperkingen">Invulblok Beperkingen</option>
-							<option name="gmd:MD_LegalConstraints" title="Gebruiksrecht - Legale beperkingen voor toegang en gebruik">Invulblok Legale beperkingen voor toegang en gebruik</option>
-							<option name="gmd:MD_SecurityConstraints" title="Gebruiksrecht - Veiligheidsbeperkingen">Invulblok Veiligheidsbeperkingen</option>
+ 							<option name="gmd:MD_Constraints" selected="selected" title="Gebruiksrecht - Beperkingen">Invulblok inhoudelijke beperkingen</option>
 <!--
 							<option name="gmd:MD_Constraints">
 								<xsl:attribute name="selected">selected</xsl:attribute>
@@ -2458,7 +2458,19 @@
 							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:resourceConstraints']/subtemplate/option">
 								<option name="{concat('gmd:resourceConstraints;',@value)}" title="{@title}"><xsl:value-of select="normalize-space(.)"/></option>
 							</xsl:for-each>
+							<option name="gmd:MD_SecurityConstraints" title="Gebruiksrecht - Veiligheidsbeperkingen">Invulblok veiligheidsbeperkingen</option>
 						</xsl:when>
+						<xsl:when test="$name='gmd:otherConstraints'">
+							<xsl:for-each select="/root/gui/schemas/iso19139/labels/element[@name='gmd:otherConstraints']/subtemplate/option">
+								<option name="{concat('gmd:otherConstraints;',@value)}" title="{@title}"><xsl:value-of select="normalize-space(.)"/></option>
+							</xsl:for-each>
+						</xsl:when>
+<!--
+						<xsl:when test="$name='gmd:otherConstraints'">
+							<option name="gmd:otherConstraints|gco:CharacterString" selected="selected" title="Beschrijving (gco:CharacterString)">Beschrijving</option>
+							<option name="gmd:otherConstraints|gmx:Anchor" selected="selected" title="Beschrijving en URL (gmx:Anchor)">Beschrijving en URL</option>
+						</xsl:when>
+-->
 						<xsl:when test="$name='gmd:report'">
 				        	<xsl:variable name="service" select="../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'"/>
 					          	<xsl:if test="$service=false()">
@@ -2513,7 +2525,7 @@
 		</xsl:variable>
 		<xsl:variable name="addLink">
 			<xsl:choose>
-				<xsl:when test="$name='gmd:supplementalInformation' or $name='gmd:useLimitation' or $name='gmd:accessConstraints' or $name='gmd:useConstraints' or $name='gmd:otherConstraints' or $name='gmd:classification'"><xsl:value-of select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,'_',$parentName,'_',$name,'_subtemplate_row',$apos,',',$apos,'add',$apos,',',@max,');')"/></xsl:when>
+				<xsl:when test="$name='gmd:supplementalInformation' or $name='gmd:useLimitation' or $name='gmd:accessConstraints' or $name='gmd:useConstraints' or $name='gmd:classification'"><xsl:value-of select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,'_',$parentName,'_',$name,'_subtemplate_row',$apos,',',$apos,'add',$apos,',',@max,');')"/></xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="function">Ext.getCmp('editorPanel').retrieveSubTemplate</xsl:variable>
 					<xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'_subtemplate.value,',$ommitNameTag,');')"/>
@@ -2531,10 +2543,16 @@
 		    <xsl:call-template name="simpleElementGui">
 				<xsl:with-param name="id" select="concat('_',$parentName,'_',$name,'_subtemplate_row')"/>
 				<xsl:with-param name="title">
-					<xsl:call-template name="getTitle">
-						<xsl:with-param name="name" select="$name"/>
-						<xsl:with-param name="schema" select="$schema"/>
-					</xsl:call-template>
+					<xsl:choose>
+						<xsl:when test="@name='resourceConstraints'">Beschikbare invulblokken</xsl:when>
+						<xsl:when test="@name='otherConstraints'">Beschikbare invulblokken Overige beperkingen</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="getTitle">
+								<xsl:with-param name="name" select="$name"/>
+								<xsl:with-param name="schema" select="$schema"/>
+							</xsl:call-template>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:with-param>
 				<xsl:with-param name="text" select="$text"/>
 				<xsl:with-param name="addLink" select="$addLink"/>

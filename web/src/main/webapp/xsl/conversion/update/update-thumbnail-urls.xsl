@@ -12,7 +12,6 @@
         <!-- ================================================================= -->
 
         <xsl:template match="gmd:MD_Metadata">
-                <xsl:message>Checking thumbnail for uuid: <xsl:value-of select="gmd:fileIdentifier/gco:CharacterString"/></xsl:message>
                 <xsl:copy>
                         <xsl:apply-templates select="@*"/>
                         <xsl:apply-templates select="node()"/>
@@ -26,12 +25,10 @@
         </xsl:template>
 
         <xsl:template match="gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString[starts-with(.,'http://metadata.beta.agiv.be') and contains(.,'resources')]" priority="10">
-                <xsl:message>Modifying thumbnail for uuid: <xsl:value-of select="//gmd:fileIdentifier/gco:CharacterString"/></xsl:message>
                 <gco:CharacterString><xsl:value-of select="replace(replace(.,'http://','https://'),':80','')"/></gco:CharacterString>
         </xsl:template>
 
         <xsl:template match="gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString[starts-with(.,'http://metadata.agiv.be') and contains(.,'resources')]" priority="10">
-                <xsl:message>Modifying thumbnail for uuid: <xsl:value-of select="//gmd:fileIdentifier/gco:CharacterString"/></xsl:message>
                 <gco:CharacterString><xsl:value-of select="replace(replace(.,'http://','https://'),':80','')"/></gco:CharacterString>
         </xsl:template>
 </xsl:stylesheet>

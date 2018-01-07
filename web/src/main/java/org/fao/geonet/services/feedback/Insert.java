@@ -27,8 +27,10 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Settings;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.MailSender;
@@ -66,12 +68,10 @@ public class Insert implements Service
 		String comments = Util.getParam(params, Params.COMMENTS);
 		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");  // TODO : i18n
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
-		String to   = sm.getValue("system/feedback/email");
+		String to   = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
 		MailSender sender = new MailSender(context);
-		sender.send(host, Integer.parseInt(port), email, name +" ("+org+")", to, null, subject, comments);
+		sender.send(sm, email, name +" ("+org+")", to, null, subject, comments);
 
 		return new Element("response").addContent(params.cloneContent());
 	}

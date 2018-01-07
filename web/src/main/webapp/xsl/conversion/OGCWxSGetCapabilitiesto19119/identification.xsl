@@ -2,6 +2,7 @@
 
 <xsl:stylesheet version="2.0" xmlns    ="http://www.isotc211.org/2005/gmd"
 										xmlns:gco="http://www.isotc211.org/2005/gco"
+										xmlns:gmx="http://www.isotc211.org/2005/gmx" 
 										xmlns:gts="http://www.isotc211.org/2005/gts"
 										xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 										xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -181,7 +182,7 @@
 				<thesaurusName>
 					<CI_Citation>
 						<title>
-							<gco:CharacterString>D.4 van de verordening (EG) NR. 1205/2008 van de Commissie</gco:CharacterString>
+							<gco:CharacterString><xsl:value-of select="$inspire-service-taxonomy-thesaurus"/></gco:CharacterString>
 						</title>
 						<date>
 							<CI_Date>
@@ -208,6 +209,29 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		
 		<resourceConstraints>
+			<xsl:variable name="accessConstraint1" select="normalize-space($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees)"/>
+			<xsl:variable name="accessConstraint2" select="normalize-space($s/AccessConstraints|$s/wms:AccessConstraints|$s/wfs:AccessConstraints|$s/ows:AccessConstraints|$s/ows11:AccessConstraints)"/>
+			<MD_LegalConstraints>
+				<useLimitation>
+					<gco:CharacterString>Toegangs- en (her)gebruiksvoorwaarden</gco:CharacterString>
+				</useLimitation>
+				<xsl:if test="string-length($accessConstraint1)>0 or string-length($accessConstraint2)>0">
+					<useConstraints>
+						<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+					</useConstraints>
+				</xsl:if>
+				<xsl:if test="string-length($accessConstraint2)>0">
+					<otherConstraints>
+						<gco:CharacterString><xsl:value-of select="$accessConstraint2"/><xsl:if test="not(ends-with($accessConstraint2,'.'))">.</xsl:if></gco:CharacterString>
+					</otherConstraints>
+				</xsl:if>
+				<xsl:if test="string-length($accessConstraint1)>0">
+					<otherConstraints>
+						<gco:CharacterString><xsl:value-of select="$accessConstraint1"/><xsl:if test="not(ends-with($accessConstraint1,'.'))">.</xsl:if></gco:CharacterString>
+					</otherConstraints>
+				</xsl:if>
+			</MD_LegalConstraints>
+<!--
 			<MD_Constraints>
 				<useLimitation>
 					<xsl:variable name="accessConstraint1" select="normalize-space($s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees)"/>
@@ -220,8 +244,9 @@
 					</gco:CharacterString>
 				</useLimitation>
 			</MD_Constraints>
+-->
 		</resourceConstraints>
-
+<!-- 
 		<resourceConstraints>
 			<MD_LegalConstraints>
 				<accessConstraints>
@@ -232,7 +257,20 @@
 				</otherConstraints>
 			</MD_LegalConstraints>
 		</resourceConstraints>
-
+-->
+		<resourceConstraints>
+			<MD_LegalConstraints>
+				<useLimitation>
+					<gco:CharacterString>Beperking(en) op de publieke toegang</gco:CharacterString>
+				</useLimitation>
+				<accessConstraints>
+					<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+				</accessConstraints>
+				<otherConstraints>
+					<gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">Geen beperkingen op de publieke toegang.</gmx:Anchor>
+				</otherConstraints>
+			</MD_LegalConstraints>
+		</resourceConstraints>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		
 		<srv:serviceType>

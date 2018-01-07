@@ -44,12 +44,12 @@
     <alert.M9.use><div>Les autres contraintes sont obligatoires si les contraintes d'utilisation ont la valeur 'Autres restrictions'.<br/>
         <span class="validationReportSuggestion">Suggestion : Ajouter un élément autres contraintes.</span>        
     </div></alert.M9.use>
-    <alert.M9><div>L'unité de la longueur d'onde est obligatoire si la valeur min ou la valeur max est renseignée.
+    <alert.M10><div>L'unité de la longueur d'onde est obligatoire si la valeur min ou la valeur max est renseignée.
         <span class="validationReportSuggestion">Suggestion : Ajouter une unité.</span>
-    </div></alert.M9>
-    <report.M9.units>Unités :</report.M9.units>
-    <report.M9.max>Valeur max :</report.M9.max>
-    <report.M9.min>Valeur min :</report.M9.min>
+    </div></alert.M10>
+    <report.M10.units>Unités :</report.M10.units>
+    <report.M10.max>Valeur max :</report.M10.max>
+    <report.M10.min>Valeur min :</report.M10.min>
     <alert.M11><div>La description du référentiel est obligatoire si une étendue des données sources n'est pas renseignée.<br/>
         <span class="validationReportSuggestion">Suggestion: Ajouter une description ou une étendue.</span>
     </div></alert.M11>

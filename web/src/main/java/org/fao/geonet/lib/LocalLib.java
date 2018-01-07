@@ -185,6 +185,24 @@ public class LocalLib {
 	}
 
     /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param baseTable
+     * @param id
+     * @param label
+     * @throws SQLException
+     */
+	public void update(Dbms dbms, String baseTable, String id, String label) throws SQLException {
+		Set<String> langs = getLanguages(dbms).keySet();
+		
+		for (String langId : langs)
+		{
+			update(dbms, baseTable, id, langId, label);
+		}
+	}
+
+	/**
      *  TODO javadoc.
      *
      * @param dbms

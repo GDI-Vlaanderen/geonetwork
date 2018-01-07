@@ -97,9 +97,14 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			PROXY_USER        : xml.evalXPath(node, 'proxy/username'),
 			PROXY_PASS        : xml.evalXPath(node, 'proxy/password'),
 			FEEDBACK_EMAIL    : xml.evalXPath(node, 'feedback/email'),
-			FEEDBACK_MAIL_HOST: xml.evalXPath(node, 'feedback/mailServer/host'),
-			FEEDBACK_MAIL_PORT: xml.evalXPath(node, 'feedback/mailServer/port'),
-			REMOVEDMD_DIR     : xml.evalXPath(node, 'removedMetadata/dir'),
+			FEEDBACK_MAILSERVER_HOST: xml.evalXPath(node, 'feedback/mailServer/host'),
+			FEEDBACK_MAILSERVER_PORT: xml.evalXPath(node, 'feedback/mailServer/port'),
+        	FEEDBACK_MAILSERVER_USERNAME: xml.evalXPath(node, 'feedback/mailServer/username'),
+	        FEEDBACK_MAILSERVER_PASSWORD: xml.evalXPath(node, 'feedback/mailServer/password'),
+	        FEEDBACK_MAILSERVER_SSL: xml.evalXPath(node, 'feedback/mailServer/ssl'),
+	        FEEDBACK_MAILSERVER_TLS: xml.evalXPath(node, 'feedback/mailServer/tls'),
+	        FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS: xml.evalXPath(node, 'feedback/mailServer/ignoreSslCertificateErrors'),
+	        REMOVEDMD_DIR     : xml.evalXPath(node, 'removedMetadata/dir'),
 
 			LDAP_USE          : xml.evalXPath(node, 'ldap/use'),
 			LDAP_HOST         : xml.evalXPath(node, 'ldap/host'),
@@ -263,8 +268,13 @@ ConfigModel.updateTemp =
 '	<feedback>'+
 '		<email>{FEEDBACK_EMAIL}</email>'+
 '		<mailServer>'+
-'			<host>{FEEDBACK_MAIL_HOST}</host>'+
-'			<port>{FEEDBACK_MAIL_PORT}</port>'+
+'			<host>{FEEDBACK_MAILSERVER_HOST}</host>'+
+'			<port>{FEEDBACK_MAILSERVER_PORT}</port>'+
+'			<username>{FEEDBACK_MAILSERVER_USERNAME}</username>'+
+'			<password>{FEEDBACK_MAILSERVER_PASSWORD}</password>'+
+'			<ssl>{FEEDBACK_MAILSERVER_SSL}</ssl>'+
+'			<tls>{FEEDBACK_MAILSERVER_TLS}</tls>'+
+'			<ignoreSslCertificateErrors>{FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS}</ignoreSslCertificateErrors>'+
 '		</mailServer>'+
 '	</feedback>'+
 '	<removedMetadata>'+

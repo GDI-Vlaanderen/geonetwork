@@ -52,6 +52,16 @@
 				                </select>
 				            </td>
 				        </tr>
+				        <tr id="gn.validationType">
+				            <th class="padded">Validatie</th>
+				            <td class="padded">
+				                <select class="content" id="validationType" name="validationType" size="1">
+				                    <option value="0" selected="true">Niet uitvoeren</option>
+				                    <option value="1">Uitvoeren op gewijzigde metadata</option>
+				                    <option value="2">Uitvoeren op alle metadata</option>
+				                </select>
+				            </td>
+				        </tr>
 			        </table>
                     <table id="gn.result" style="display:none;">
 	                    <tr>

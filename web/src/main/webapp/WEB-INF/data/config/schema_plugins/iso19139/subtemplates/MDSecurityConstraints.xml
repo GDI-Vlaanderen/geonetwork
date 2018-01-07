@@ -4,6 +4,6 @@
 		<gco:CharacterString/>
 	</gmd:useLimitation>
 	<gmd:classification>
-		<gmd:MD_ClassificationCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xmll#MD_ClassificationCode" codeListValue=""/>
+		<gmd:MD_ClassificationCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xmll#MD_ClassificationCode" codeListValue="unclassified"/>
 	</gmd:classification>
 </gmd:MD_SecurityConstraints>

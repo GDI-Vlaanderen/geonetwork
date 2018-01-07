@@ -59,6 +59,7 @@ USA.
 	<sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
 	<sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 	<sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+	<sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
 	<sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
 	<sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
 	<sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
@@ -498,8 +499,9 @@ USA.
 
 			<!-- cardinality of accessconstraints is [1..n] -->
 			<sch:let name="accessConstraints_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)])"/>
+			<!--
 			<sch:let name="accessConstraints_classification_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints/*[string(@codeListValue)]) + count(gmd:resourceConstraints/*/gmd:classification/*[string(@codeListValue)])"/>
-
+			-->
 
 			<!-- If the value of accessConstraints is otherRestrictions
 				there shall be instances of otherConstraints expressing
@@ -517,21 +519,33 @@ USA.
 				or gmd:resourceConstraints/*/gmd:otherConstraints[@gco:nilReason='missing']
 				)"/>
 
-			<sch:let name="otherConstraintInfo" 
+			<sch:let name="otherConstraintCharacterStringInfo" 
 				value="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
 
+			<sch:let name="otherConstraintAnchorInfo" 
+				value="gmd:resourceConstraints/*/gmd:otherConstraints/gmx:Anchor"/>
+<!--
 			<sch:assert test="$accessConstraints_classification_count">
 				<sch:value-of select="$loc/strings/alert.M45.ca/div"/>
 			</sch:assert>
 			<sch:report test="$accessConstraints_classification_count">
 				<sch:value-of select="$loc/strings/report.M45.ca/div"/>
 			</sch:report>
+-->
+			<sch:assert test="$accessConstraints_count">
+				<sch:value-of select="$loc/strings/alert.M45.ca/div"/>
+			</sch:assert>
+			<sch:report test="$accessConstraints_count">
+				<sch:value-of select="$loc/strings/report.M45.ca/div"/>
+			</sch:report>
+
 			<sch:assert test="not($accessConstraints)">
 				<sch:value-of select="$loc/strings/alert.M45.or/div"/>
 			</sch:assert>
-			<sch:report test="$otherConstraintInfo!='' and not($accessConstraints)">
+			<sch:report test="($otherConstraintCharacterStringInfo!='' or $otherConstraintAnchorInfo!='') and not($accessConstraints)">
 				<sch:value-of select="$loc/strings/report.M45.or/div"/>
-				<sch:value-of select="$otherConstraintInfo"/>
+				<sch:value-of select="$otherConstraintCharacterStringInfo"/>
+				<sch:value-of select="$otherConstraintAnchorInfo"/>
 			</sch:report>
 			
 		</sch:rule>
@@ -543,16 +557,17 @@ USA.
 			//srv:SV_ServiceIdentification/gmd:resourceConstraints/*|
 			//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceConstraints/*">
 			<sch:let name="accessConstraints" value="string-join(gmd:accessConstraints/*/@codeListValue, ', ')"/>
-			<sch:let name="classification" value="string-join(gmd:classification/*/@codeListValue, ', ')"/>
-			<sch:let name="otherConstraints" value="gmd:otherConstraints/gco:CharacterString/text()"/>
+<!--			<sch:let name="classification" value="string-join(gmd:classification/*/@codeListValue, ', ')"/>-->
 			<sch:report test="$accessConstraints!=''">
 				<sch:value-of select="$loc/strings/report.M45.ac/div"/>
 				<sch:value-of select="$accessConstraints"/>
 			</sch:report>
+<!--
 			<sch:report test="$classification!=''">
 				<sch:value-of select="$loc/strings/report.M45.class/div"/>
 				<sch:value-of select="$classification"/>
 			</sch:report>
+-->			
 		</sch:rule>
 
 		<sch:rule context="//gmd:MD_DataIdentification|

@@ -382,7 +382,7 @@ GeoNetwork.util.SearchFormTools = {
         });
         
         //AGIV specific: default value for sorting
-        sortByField.setValue("changeDate");
+        sortByField.setValue("sortDate");
         
         var sortOrderField = new Ext.form.TextField({
             name: 'E_sortOrder',
@@ -424,6 +424,7 @@ GeoNetwork.util.SearchFormTools = {
             fields: ['id', 'name'],
             data: [['relevance#', OpenLayers.i18n('relevance')], 
                     ['title#reverse', OpenLayers.i18n('title')], 
+                    ['sortDate#', OpenLayers.i18n('sortDate')],
                     ['changeDate#', OpenLayers.i18n('changeDate')],
                 // removed for AGIV
                 //    ['rating#', OpenLayers.i18n('rating')],
@@ -445,6 +446,7 @@ GeoNetwork.util.SearchFormTools = {
             fields: ['id', 'name'],
             data: [['relevance#', OpenLayers.i18n('relevance')],
                 ['title#reverse', OpenLayers.i18n('title')],
+                ['sortDate#', OpenLayers.i18n('sortDate')],
                 ['changeDate#', OpenLayers.i18n('changeDate')],
                 ['rating#', OpenLayers.i18n('rating')],
                 // AGIV: Removed popularity

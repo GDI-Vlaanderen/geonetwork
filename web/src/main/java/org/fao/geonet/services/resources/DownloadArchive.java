@@ -23,30 +23,6 @@
 
 package org.fao.geonet.services.resources;
 
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.ResourceNotFoundEx;
-import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
-import org.fao.geonet.util.MailSender;
-import org.jdom.Element;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -63,6 +39,32 @@ import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.ResourceNotFoundEx;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Settings;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
+import org.fao.geonet.util.MailSender;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -368,11 +370,11 @@ public class DownloadArchive implements Service
 		if (doNotify) {
 			
 			String site = sm.getValue("system/site/siteId");
-			String host = sm.getValue("system/feedback/mailServer/host");
-			String port = sm.getValue("system/feedback/mailServer/port");
-			String from = sm.getValue("system/feedback/email");
+			String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+			String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+			String from   = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
-			String fromDescr = "GeoNetwork administrator";
+			String fromDescr = context.getServlet().getFromDescription();
 
 			String dateTime = now();
 			context.info("DOWNLOADED:"+theFile+","+id+","+uuid+","+context.getIpAddress()+","+username);
@@ -410,7 +412,7 @@ public class DownloadArchive implements Service
 
 						try {
 							MailSender sender = new MailSender(context);
-							sender.send(host, Integer.parseInt(port), from, fromDescr, email, null, subject, message);
+							sender.send(sm, from, fromDescr, email, null, subject, message);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

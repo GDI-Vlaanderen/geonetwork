@@ -41,27 +41,29 @@ public class MetadataVersioningMessageHandler implements MessageHandler {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
                 SvnManager svnManager = gc.getSvnManager();
-                dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                String idMd;
+                if (svnManager!=null) {
+                    dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+                    String idMd;
 
-                switch (mdVersioningMessage.getAction()) {
-                    case VERSION_MD:
-                        Element md = Xml.loadString(mdVersioningMessage.getMetadataContent(), false);
-                        idMd = (String) mdVersioningMessage.getIds().toArray()[0];
-                        
-                        svnManager.createMetadataDirWithouSendingTopic(idMd, md, mdVersioningMessage.getMetadataLogMessage());
-                        break;
+                    switch (mdVersioningMessage.getAction()) {
+                        case VERSION_MD:
+                            Element md = Xml.loadString(mdVersioningMessage.getMetadataContent(), false);
+                            idMd = (String) mdVersioningMessage.getIds().toArray()[0];
+                            
+                            svnManager.createMetadataDirWithouSendingTopic(idMd, md, mdVersioningMessage.getMetadataLogMessage());
+                            break;
 
-                    case ADD_HISTORY:
-                        svnManager.commitWithoutSendingTopic(dbms, mdVersioningMessage.getIds(),
-                                mdVersioningMessage.getMetadataLogMessage());
-                        break;
+                        case ADD_HISTORY:
+                            svnManager.commitWithoutSendingTopic(dbms, mdVersioningMessage.getIds(),
+                                    mdVersioningMessage.getMetadataLogMessage());
+                            break;
 
-                    case DELETE_MD:
-                        idMd = (String) mdVersioningMessage.getIds().toArray()[0];
+                        case DELETE_MD:
+                            idMd = (String) mdVersioningMessage.getIds().toArray()[0];
 
-                        svnManager.deleteDirWithoutSendingTopic(idMd, mdVersioningMessage.getMetadataLogMessage());
-                        break;
+                            svnManager.deleteDirWithoutSendingTopic(idMd, mdVersioningMessage.getMetadataLogMessage());
+                            break;
+                    }
                 }
 
             }

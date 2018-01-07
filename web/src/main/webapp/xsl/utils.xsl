@@ -217,7 +217,6 @@
                     <!-- Name in current schema -->
                     <xsl:variable name="propertyValueWithoutContext" select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/*[name(.)=$elementName])"/>
 
-                    <!-- <xsl:message>Names <xsl:value-of select="concat($schematitleWithContext,' | ',$schematitleWithContextIso,' | ',$schematitle)"/></xsl:message> -->
                     <xsl:choose>
 
                         <xsl:when test="normalize-space($propertyValueWithoutContext)='' and

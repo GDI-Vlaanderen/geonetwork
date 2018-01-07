@@ -43,6 +43,7 @@ USA.
 	<sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
 	<sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 	<sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+	<sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
 	<sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
 	<sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
 
@@ -103,7 +104,7 @@ USA.
 		<sch:title>$loc/strings/M9</sch:title>
 		<sch:rule context="//gmd:MD_LegalConstraints[gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']
 			|//*[@gco:isoType='gmd:MD_LegalConstraints' and gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']">
-			<sch:let name="access" value="(not(gmd:otherConstraints) or not(string(gmd:otherConstraints/gco:CharacterString)) or gmd:otherConstraints/@gco:nilReason='missing')"/>
+			<sch:let name="access" value="(not(gmd:otherConstraints) or not(string(gmd:otherConstraints/gco:CharacterString) or string(gmd:otherConstraints/gmx:Anchor)) or gmd:otherConstraints/@gco:nilReason='missing')"/>
 			<sch:assert
 				test="$access = false()"
 				>
@@ -113,11 +114,12 @@ USA.
 				test="$access = false()"
 				><sch:value-of select="$loc/strings/report.M9"/>
 				<sch:value-of select="gmd:otherConstraints/gco:CharacterString"/>
+				<sch:value-of select="gmd:otherConstraints/gmx:Anchor"/>
 			</sch:report>
 		</sch:rule>
 		<sch:rule context="//gmd:MD_LegalConstraints[gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']
 			|//*[@gco:isoType='gmd:MD_LegalConstraints' and gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']">
-			<sch:let name="use" value="(not(gmd:otherConstraints) or not(string(gmd:otherConstraints/gco:CharacterString)) or gmd:otherConstraints/@gco:nilReason='missing')"/>
+			<sch:let name="use" value="(not(gmd:otherConstraints) or not(string(gmd:otherConstraints/gco:CharacterString) or string(gmd:otherConstraints/gmx:Anchor)) or gmd:otherConstraints/@gco:nilReason='missing')"/>
 			<sch:assert
 				test="$use = false()"
 				><sch:value-of select="$loc/strings/alert.M9.use"/>
@@ -126,6 +128,7 @@ USA.
 				test="$use = false()"
 				><sch:value-of select="$loc/strings/report.M9"/>
 				<sch:value-of select="gmd:otherConstraints/gco:CharacterString"/>
+				<sch:value-of select="gmd:otherConstraints/gmx:Anchor"/>
 			</sch:report>
 		</sch:rule>
 	</sch:pattern>
@@ -138,18 +141,17 @@ USA.
 				or gmd:minValue[@gco:nilReason!='missing' or not(@gco:nilReason)]) 
 				and not(gmd:units)"/>
 			<sch:assert test="$values = false()"
-				><sch:value-of select="$loc/strings/alert.M9"/>
+				><sch:value-of select="$loc/strings/alert.M10"/>
 			</sch:assert>
 			<sch:report test="$values = false()"
 				>
-				<sch:value-of select="$loc/strings/report.M9.min"/>
+				<sch:value-of select="$loc/strings/report.M10.min"/>
 				<sch:value-of select="gmd:minValue"/> / 
-				<sch:value-of select="$loc/strings/report.M9.max"/>
+				<sch:value-of select="$loc/strings/report.M10.max"/>
 				<sch:value-of select="gmd:maxValue"/> [
-				<sch:value-of select="$loc/strings/report.M9.units"/>
+				<sch:value-of select="$loc/strings/report.M10.units"/>
 				<sch:value-of select="gmd:units"/>]
 			</sch:report>
-			<!-- FIXME : Rename to alert M10 -->
 		</sch:rule>
 	</sch:pattern>
 	<!-- anzlic/trunk/gml/3.2.0/gmd/dataQuality.xsd -->

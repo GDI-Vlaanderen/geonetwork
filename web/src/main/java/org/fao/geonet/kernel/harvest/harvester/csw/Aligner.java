@@ -38,6 +38,7 @@ import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
@@ -74,6 +75,7 @@ public class Aligner
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
+		schemaMan = gc.getSchemamanager();
 		result  = new CswResult();
 
 		//--- setup get-record-by-id request
@@ -404,6 +406,7 @@ public class Aligner
             if (params.validate) {
                 try {
                     String schema = dataMan.autodetectSchema(response);
+                    schemaMan.updateSchemaLocation(response, context);
                     dataMan.validateMetadata(schema, params.getSchemaSchematronMap(), response, context);
                     if ("iso19139".equals(schema)) {
 //                    	if (context.getServlet().getNodeType().toLowerCase().equals("agiv") || context.getServlet().getNodeType().toLowerCase().equals("geopunt")) {
@@ -451,6 +454,7 @@ public class Aligner
 	private Dbms           dbms;
 	private CswParams      params;
 	private DataManager    dataMan;
+	private SchemaManager  schemaMan;
 	private CswServer      server;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;

@@ -23,14 +23,23 @@
 
 package org.fao.geonet.util;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+
 import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
-import java.util.ArrayList;
-import java.util.List;
-import javax.mail.internet.InternetAddress;
+import org.fao.geonet.constants.Geonet.Settings;
+import org.fao.geonet.kernel.setting.SettingManager;
 
 public class MailSender extends Thread
 {
@@ -42,14 +51,12 @@ public class MailSender extends Thread
 		_logger = context.getLogger();
 	}
 
-	public void send(String server, int port, String from, String fromDescr, String to, String toDescr, String subject, String message)
+	public void send(SettingManager settings, String from, String fromDescr, String to, String toDescr, String subject, String message)
 	{
 		_mail = new SimpleEmail();
-
+		configureBasics(settings);
 		try
 		{
-			_mail.setHostName(server);
-			_mail.setSmtpPort(port);
 			_mail.setFrom(from, fromDescr);
 			_mail.addTo(to);
 			_mail.setSubject(subject);
@@ -63,15 +70,13 @@ public class MailSender extends Thread
 		}
 	}
 
-	public void sendWithReplyTo(String server, int port, String from, String fromDescr, String to, String toDescr, String replyTo, String replyToDesc, String subject, String message)
+	public void sendWithReplyTo(SettingManager settings, String from, String fromDescr, String to, String toDescr, String replyTo, String replyToDesc, String subject, String message)
 	{
 		_mail = new SimpleEmail();
-
+		
+		configureBasics(settings);
 		try
 		{
-			_mail.setDebug(true);
-			_mail.setHostName(server);
-			_mail.setSmtpPort(port);
 			_mail.setFrom(from, fromDescr);
 			_mail.addTo(to);
 			_mail.setSubject(subject);
@@ -110,5 +115,100 @@ public class MailSender extends Thread
 		_logger.error("  Message   : " + e.getMessage());
 		_logger.error("  Stack     : " + Util.getStackTrace(e));
 	}
+    /**
+     * Create data information to compose the mail
+     *
+     * @param hostName
+     * @param smtpPort
+     * @param from
+     * @param username
+     * @param password
+     * @param email
+     * @param ssl
+     * @param tls
+     * @param ignoreSslCertificateErrors
+     */
+    private void configureBasics(String hostName, Integer smtpPort,
+                                        String from, String username, String password, Boolean ssl,
+                                        Boolean tls, Boolean ignoreSslCertificateErrors) {
+        if (hostName != null) {
+            _mail.setHostName(hostName);
+        } else {
+            throw new IllegalArgumentException(
+                "Missing settings in System Configuration (see Administration menu) - cannot send mail");
+        }
+        if (StringUtils.isNotBlank(smtpPort + "")) {
+        	_mail.setSmtpPort(smtpPort);
+        } else {
+            throw new IllegalArgumentException(
+                "Missing settings in System Configuration (see Administration menu) - cannot send mail");
+        }
+        if (username != null) {
+            _mail.setAuthenticator(new DefaultAuthenticator(username, password));
+        }
+        if (tls != null && tls) {
+            _mail.setTLS(tls);
+        }
+
+        if (ssl != null && ssl) {
+            _mail.setSSL(ssl);
+            if (StringUtils.isNotBlank(smtpPort + "")) {
+                _mail.setSslSmtpPort(smtpPort + "");
+            }
+        }
+
+        if (ignoreSslCertificateErrors != null && ignoreSslCertificateErrors) {
+            try {
+                Session mailSession = _mail.getMailSession();
+                Properties p = mailSession.getProperties();
+                p.setProperty("mail.smtp.ssl.trust", "*");
+
+            } catch (EmailException e) {
+                // Ignore the exception. Can't be reached because the host name is always set above or an
+                // IllegalArgumentException is thrown.
+            }
+        }
+
+        if (StringUtils.isNotBlank(from)) {
+            try {
+                _mail.setFrom(from);
+            } catch (EmailException e) {
+                throw new IllegalArgumentException(
+                    "Invalid 'from' email setting in System Configuration (see Administration menu) - cannot send " +
+                        "mail", e);
+            }
+        } else {
+            throw new IllegalArgumentException(
+                "Missing settings in System Configuration (see Administration menu) - cannot send mail");
+        }
+    }
+
+    /**
+     * Configure the basics (hostname, port, username, password,...)
+     *
+     * @param settings
+     * @param email
+     */
+    private void configureBasics(SettingManager settings) {
+		String username = settings
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
+        String password = settings
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
+        Boolean ssl = settings
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL, false);
+        Boolean tls = settings
+            .getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS, false);
+
+        String hostName = settings.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+        Integer smtpPort = Integer.valueOf(settings
+            .getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT));
+
+        String from = settings.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+        Boolean ignoreSslCertificateErrors =
+            settings.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS, false);
+
+
+        configureBasics(hostName, smtpPort, from, username, password, ssl, tls, ignoreSslCertificateErrors);
+    }
 };
 

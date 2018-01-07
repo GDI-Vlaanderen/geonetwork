@@ -490,7 +490,6 @@ public class HarvestManager {
      * @throws Exception
      */
 	public synchronized OperResult remove(Dbms dbms, String id) throws Exception {
-        System.out.println("heikki logging HarvestManager remove ! id: " + id);
 		if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
                 Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
         }

@@ -14,6 +14,7 @@ import jeeves.utils.Log;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.FileCopyMgr;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -223,32 +224,32 @@ public class GeonetworkDataDirectory {
 
 		// Set subfolder data directory
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".lucene" + KEY_SUFFIX,
-				"index", Geonet.Config.LUCENE_DIR);
+				"index", Geonet.Config.LUCENE_DIR, false);
 /*		setResourceDir(webappName, handlerConfig, path + GEONETWORK_DEFAULT_DATA_DIR, ".config" + KEY_SUFFIX,
 				"config", Geonet.Config.CONFIG_DIR);*/
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".config" + KEY_SUFFIX,
-				"config", Geonet.Config.CONFIG_DIR);
+				"config", Geonet.Config.CONFIG_DIR, false);
 		setResourceDir(webappName, handlerConfig, systemDataDir,
 				".codeList" + KEY_SUFFIX, "config" + File.separator + "codelist",
-				Geonet.Config.CODELIST_DIR);
+				Geonet.Config.CODELIST_DIR, false);
 /*		setResourceDir(webappName, handlerConfig, path + GEONETWORK_DEFAULT_DATA_DIR, ".schema" + KEY_SUFFIX,
 				"config" + File.separator + "schema_plugins",
-				Geonet.Config.SCHEMAPLUGINS_DIR);*/
+				Geonet.Config.SCHEMAPLUGINS_DIR, false);*/
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".schema" + KEY_SUFFIX,
 				"config" + File.separator + "schema_plugins",
-				Geonet.Config.SCHEMAPLUGINS_DIR);
+				Geonet.Config.SCHEMAPLUGINS_DIR, false);
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".data" + KEY_SUFFIX,
 				"data" + File.separator + "metadata_data",
-				Geonet.Config.DATA_DIR);
+				Geonet.Config.DATA_DIR, false);
         setResourceDir(webappName, handlerConfig, systemDataDir, ".clusterconfig" + KEY_SUFFIX,
                 "config" + File.separator + "cluster",
-                Geonet.Config.CLUSTER_CONFIG);
+                Geonet.Config.CLUSTER_CONFIG, false);
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
 				"data" + File.separator + "metadata_subversion",
-				Geonet.Config.SUBVERSION_PATH);
+				Geonet.Config.SUBVERSION_PATH, true);
 		setResourceDir(webappName, handlerConfig, systemDataDir,
 				".resources" + KEY_SUFFIX, "data" + File.separator + "resources",
-				Geonet.Config.RESOURCES_DIR);
+				Geonet.Config.RESOURCES_DIR, false);
 		handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR,
 				handlerConfig.getValue(Geonet.Config.RESOURCES_DIR)
 						+ File.separator + "htmlcache");
@@ -345,7 +346,7 @@ public class GeonetworkDataDirectory {
 	 * @param handlerKey
 	 */
 	private void setResourceDir(String webappName, ServiceConfig handlerConfig,
-			String systemDataDir, String key, String folder, String handlerKey) {
+			String systemDataDir, String key, String folder, String handlerKey, boolean bDeleteAlways) {
 		String envKey = webappName + key;
 		String dir = GeonetworkDataDirectory.lookupProperty(
 				jeevesServlet, handlerConfig, envKey);
@@ -366,6 +367,15 @@ public class GeonetworkDataDirectory {
 
 		// Create directory if it does not exist
 		File file = new File(dir);
+		if (file.exists() && bDeleteAlways) {
+			try {
+				FileCopyMgr.removeDirectoryOrFile(file);
+			} catch (IOException e) {
+				Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey
+						+ " for directory " + dir
+						+ " could not be removed, but this is no issue.");
+			}
+		}
 		if (!file.exists()) {
 			file.mkdirs();
 		}
