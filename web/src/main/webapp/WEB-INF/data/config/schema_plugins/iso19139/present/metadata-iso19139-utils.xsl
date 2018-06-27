@@ -6,6 +6,8 @@
     xmlns:srv="http://www.isotc211.org/2005/srv"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:geonet="http://www.fao.org/geonetwork"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:java="java:org.fao.geonet.util.XslUtil"
     version="2.0"
     exclude-result-prefixes="#all">
@@ -476,4 +478,19 @@
 			<xsl:otherwise><xsl:value-of select="$paramValue"/></xsl:otherwise>
 		</xsl:choose>
     </xsl:template>
+
+	<xsl:template name="getAnchorByThesaurusAndLangAndTheme">
+		<xsl:param name="thesaurus"/>
+		<xsl:param name="lang"/>
+		<xsl:param name="theme"/>
+		<xsl:if test="$thesaurus">
+			<xsl:variable name="about" select="$thesaurus[skos:prefLabel/text()=$theme and skos:prefLabel/@xml:lang=$lang]/@rdf:about"/>
+			<xsl:if test="$about">
+				<xsl:message select="$about"/>
+				<xsl:value-of select="$about"/>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>	
+	
 </xsl:stylesheet>
+
