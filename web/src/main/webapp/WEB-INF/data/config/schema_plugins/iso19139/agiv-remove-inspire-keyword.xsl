@@ -8,6 +8,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
             xmlns:gmd="http://www.isotc211.org/2005/gmd"
+            xmlns:srv="http://www.isotc211.org/2005/srv"
             xmlns:gco="http://www.isotc211.org/2005/gco">
 
     <xsl:template match="/root">
@@ -15,7 +16,7 @@
     </xsl:template>
 
     <!-- match descriptiveKeywords elements -->
-    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords">
+    <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords | gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords">
         <xsl:choose>
             <!-- this descriptiveKeywords uses 'GDI-Vlaanderen Trefwoorden'  -->
             <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'GDI-Vlaanderen Trefwoorden'">
