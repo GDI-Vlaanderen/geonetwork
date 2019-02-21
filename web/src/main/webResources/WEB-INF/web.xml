@@ -170,7 +170,7 @@
         </init-param>
         <init-param>
 		    <param-name>FROM_DESCRIPTION</param-name>
-            <param-value>AGIV-Metadatacenter (beta)</param-value>
+            <param-value>AIV-Metadatacenter (beta)</param-value>
 <!--            <param-value>Geopunt-Metadatacenter</param-value>-->
         </init-param>
 		<init-param>
@@ -361,6 +361,9 @@
 		<role-name>AGIV Metadata Editor</role-name>
 		<role-name>AGIV Metadata Admin</role-name>
 		<role-name>AGIV Metadata Hoofdeditor</role-name>
+		<role-name>AIV Metadata Editor</role-name>
+		<role-name>AIV Metadata Admin</role-name>
+		<role-name>AIV Metadata Hoofdeditor</role-name>
 <!-- 
 		<role-name>Geopunt Metadata Editor</role-name>
 		<role-name>Geopunt Metadata Admin</role-name>
