@@ -10,7 +10,7 @@
   <!-- Add Completions (required) -->
   , 
     [<xsl:for-each
-     select="/root/items/item"> "<xsl:value-of select="replace(@term,'&quot;','\\&quot;')"/>" <xsl:if test="position()!=last()"
+     select="/root/items/item"> "<xsl:value-of select="replace(normalize-space(@term),'&quot;','\\&quot;')"/>" <xsl:if test="position()!=last()"
       >,</xsl:if>
     </xsl:for-each> ]
   <!-- Add Descriptions (not required) 
