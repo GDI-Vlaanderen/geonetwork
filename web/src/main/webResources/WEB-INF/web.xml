@@ -162,8 +162,7 @@
         </init-param>
         <init-param>
 		    <param-name>NODE_TYPE</param-name>
-<!-- 			<param-value>AGIV</param-value>-->
-	 		<param-value>VMM</param-value>
+	 		<param-value>Geopunt</param-value>
         </init-param>
         <init-param>
 		    <param-name>START_HARVESTER_JOBS</param-name>
@@ -195,7 +194,6 @@
             <param-name>geonetwork.dir</param-name>
 			<param-value>z:</param-value>
         </init-param>
-        
         <!-- Local folders for each node: 
                 * lucene, 
                 * svn and 

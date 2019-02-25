@@ -5543,6 +5543,8 @@ to build the XML fragment in the editor. -->
   	<xsl:choose>
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'GEMET') and contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'INSPIRE')">geonetwork.thesaurus.external.theme.inspire-theme</xsl:when>
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'GEMET')">geonetwork.thesaurus.external.theme.gemet</xsl:when>
+  		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'INSPIRE') and contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'feature concept')">geonetwork.thesaurus.external.theme.featureconcept</xsl:when>
+  		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'priority data set')">geonetwork.thesaurus.external.theme.PriorityDataset</xsl:when>
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'D.4 van de verordening')">geonetwork.thesaurus.external.theme.inspire-service-taxonomy</xsl:when>
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'Vlaamse regio')">geonetwork.thesaurus.external.place.GDI-Vlaanderenregios</xsl:when>
   		<xsl:when test="contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'GDI-Vlaanderen') and contains(normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString),'Service Types')">geonetwork.thesaurus.external.theme.GDI-Vlaanderen-service-types</xsl:when>

@@ -6,9 +6,9 @@
   
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); 
 
-  ga('create', 'UA-47782343-2', 'gim.be'); 
+  //ga('create', 'UA-47782343-2', 'gim.be'); 
   //ga('create', 'UA-28664104-7', 'agiv.be');
-  //ga('create', 'UA-36710880-2', 'geopunt.be');
+  ga('create', 'UA-36710880-2', 'geopunt.be');
   
   ga('send', 'pageview'); 
 
@@ -32,7 +32,6 @@ OpenLayers.ProxyHost = function(url){
         return OpenLayers.ProxyHostURL + encodeURIComponent(url);
     }
 };
-
 
 GeoNetwork.Util.defaultLocale = 'dut';
 // Restrict locales to a subset of languages
@@ -74,9 +73,9 @@ Ext.BLANK_IMAGE_URL = '../js/ext/resources/images/default/s.gif';
 
 GeoNetwork.Settings.ratingEnabled = false;
 GeoNetwork.Settings.isProduction = true;
+GeoNetwork.Settings.metadataCenter = "Geopunt";
 GeoNetwork.Settings.nodeType = "Geopunt";
 GeoNetwork.Settings.useSTS = false;
 GeoNetwork.Settings.ga = false;
 GeoNetwork.Settings.logoutUrlSTS = "https://" + (GeoNetwork.Settings.isProduction ? "" : "beta.") + "auth.vlaanderen.be/sts/";
-GeoNetwork.Settings.nodeFooterInfo = "Build: 14/12/2017 - " + GeoNetwork.Settings.nodeType + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");
-
+GeoNetwork.Settings.nodeFooterInfo = "Build: 21/02/2019 - " + GeoNetwork.Settings.metadataCenter + "-Metadatacenter" + (GeoNetwork.Settings.isProduction ? "" : " (beta)");

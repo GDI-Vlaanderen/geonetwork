@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -336,6 +337,9 @@ public class SearchController {
 		String styleSheet = schemaDir + prefix +"-"+ elementSetName +".xsl";
 
 		Map<String, String> params = new HashMap<String, String>();
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		ThesaurusManager thesaurusMan = gc.getThesaurusManager();
+		params.put("thesauriDir", thesaurusMan.getThesauriDirectory());
 		params.put("lang", context.getLanguage());
 		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 

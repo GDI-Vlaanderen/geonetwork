@@ -249,7 +249,6 @@ public class CatalogSearcher {
 		try {
 			Element result = Xml.transform(filterExpr, styleSheet);
 			removeEmptyBranches(result);
-            System.out.println("filterToLucene result:\n" + Xml.getString(result));
             return result;
 
 		}

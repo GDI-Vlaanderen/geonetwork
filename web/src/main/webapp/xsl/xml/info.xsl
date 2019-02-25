@@ -82,7 +82,16 @@
 
 	<xsl:template match="groups">
 		<xsl:copy>
-			<xsl:for-each select="record">
+			<xsl:for-each select="record[name='3']">
+				<group id="{id}">
+					<xsl:copy-of select="name"/>
+					<xsl:copy-of select="description"/>
+					<xsl:copy-of select="email"/>
+					<xsl:copy-of select="referrer"/>
+					<xsl:copy-of select="label"/>
+				</group>
+			</xsl:for-each>
+			<xsl:for-each select="record[not(name='3')]">
 				<xsl:sort select="label" order="ascending"/>
 				<group id="{id}">
 					<xsl:copy-of select="name"/>

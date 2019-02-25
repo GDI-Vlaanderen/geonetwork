@@ -271,6 +271,11 @@ public class JeevesServlet extends HttpServlet
 	                roleProfileMapping.put(nodeType + " Metadata Admin", "Administrator");
 	                roleProfileMapping.put(nodeType + " Metadata Editor", "Editor");
 	                roleProfileMapping.put(nodeType + " Metadata Hoofdeditor", "Hoofdeditor");
+	                if ("AGIV".equals(nodeType)) {
+		                roleProfileMapping.put("AIV Metadata Admin", "Administrator");
+		                roleProfileMapping.put("AIV Metadata Editor", "Editor");
+		                roleProfileMapping.put("AIV Metadata Hoofdeditor", "Hoofdeditor");
+	                }
 	                List<String> roleListToCheck = Arrays.asList(nodeType + " Metadata Admin", nodeType + " Metadata Hoofdeditor", nodeType + " Metadata Editor", "Authenticated");
 	                for (String item: roleListToCheck) {
 	                	if (req.isUserInRole(item)) {
@@ -311,5 +316,3 @@ public class JeevesServlet extends HttpServlet
 }
 
 //=============================================================================
-
-
