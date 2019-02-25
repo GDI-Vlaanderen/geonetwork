@@ -221,7 +221,7 @@
 			  
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
                     <xsl:variable name="keywordLower" select="lower-case(.)"/>
-                    <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+                    <Field name="keyword" string="{normalize-space(string(.))}" store="true" index="true"/>
 					<Field name="any" string="{string($keywordLower)}" store="true" index="true"/>
 					
                     <xsl:if test="$inspire='true'">
